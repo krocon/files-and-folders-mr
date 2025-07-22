@@ -6,3 +6,4 @@
  * - cypress.config.js for the implementation of file system operations
  * - cypress/support/e2e.js for the custom Cypress commands
  */
+
