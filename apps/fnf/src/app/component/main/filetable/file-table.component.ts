@@ -74,6 +74,7 @@ import {equalFileItem} from "../../../common/fn/equal-file-item.fn";
 import {fileItemSorter} from "../../../common/fn/file-item-sorter.fn";
 import {WalkdirService} from "../../../common/walkdir/walkdir.service";
 import {ExtensionCellRendererComponent} from "./renderer/extension-cell-renderer.component";
+import {ActionExecutionService} from "../../../service/action/action-execution.service";
 
 
 @Component({
@@ -188,6 +189,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly rwf: RenderWrapperFactory,
+    private readonly actionExecutionService: ActionExecutionService,
     private readonly appService: AppService,
     private readonly gridSelectionCountService: GridSelectionCountService,
     public readonly gotoAnythingDialogService: GotoAnythingDialogService,
@@ -269,6 +271,8 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.actionExecutionService.setBodyAreaModel(this._panelIndex, this.bodyAreaModel);
+    this.actionExecutionService.setSelectionManagers(this._panelIndex, this.selectionManager);
     this.appService.setBodyAreaModel(this._panelIndex, this.bodyAreaModel);
     this.appService.setSelectionManagers(this._panelIndex, this.selectionManager);
 

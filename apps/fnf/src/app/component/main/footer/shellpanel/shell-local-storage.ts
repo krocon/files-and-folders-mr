@@ -25,5 +25,9 @@ export class ShellLocalStorage {
     return this.innerService.valueChanges$;
   }
 
+  toggleShellVisible() {
+    this.setShellVisible(!this.isShellVisible());
+  }
+
 
 }

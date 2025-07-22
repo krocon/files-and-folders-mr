@@ -15,6 +15,7 @@ import {MatList} from "@angular/material/list";
 import {TaskButtonComponent} from "../../../task/task-list/task-button.component";
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
+import {ActionExecutionService} from "../../../../service/action/action-execution.service";
 
 @Component({
   selector: 'app-button-panel',
@@ -145,6 +146,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   constructor(
     private readonly appService: AppService,
     private readonly matBottomSheet: MatBottomSheet,
+    private readonly actionExecutionService: ActionExecutionService,
   ) {
   }
 
@@ -181,29 +183,28 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   onButtonClick(action: string): void {
     if (action === 'copy') {
-      this.appService.copy();
+      this.actionExecutionService.executeActionById('OPEN_COPY_DLG');
 
     } else if (action === 'edit') {
-      this.appService.onEditClicked();
+      this.actionExecutionService.executeActionById('OPEN_EDIT_DLG');
 
     } else if (action === 'view') {
-      this.appService.onViewClicked();
+      this.actionExecutionService.executeActionById('OPEN_VIEW_DLG');
 
     } else if (action === 'move') {
-      this.appService.move();
+      this.actionExecutionService.executeActionById('OPEN_MOVE_DLG');
 
     } else if (action === 'mkdir') {
-      this.triggerAction('OPEN_MKDIR_DLG');
-      // this.appService.openMakeDirDialog();
+      this.actionExecutionService.executeActionById('OPEN_MKDIR_DLG');
 
     } else if (action === 'remove') {
-      this.appService.delete();
+      this.actionExecutionService.executeActionById('OPEN_DELETE_DLG');
     }
   }
 
 
   triggerAction(id: ActionId) {
-    this.appService.triggerAction(id);
+    this.actionExecutionService.executeActionById(id);
   }
 
 

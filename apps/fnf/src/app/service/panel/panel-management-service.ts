@@ -3,9 +3,10 @@ import {TabsPanelDataService} from "../../domain/filepagedata/tabs-panel-data.se
 import {PanelSelectionService} from "../../domain/filepagedata/service/panel-selection.service";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {PanelIndex} from "@fnf/fnf-data";
+import {DOT_DOT, FileItemIf, PanelIndex} from "@fnf/fnf-data";
 import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {TabData} from "../../domain/filepagedata/data/tab.data";
+
 
 @Injectable({
   providedIn: 'root'
@@ -131,6 +132,19 @@ export class PanelManagementService {
     return this.panelSelectionService.getValue();
   }
 
+  getInactivePanelIndex(): PanelIndex {
+    return [1, 0][this.getActivePanelIndex()] as PanelIndex;
+  }
+
+  getOtherPanelSelectedTabData(): TabData {
+    const inactivePanelIndex = ([1, 0][this.getActivePanelIndex()]) as PanelIndex;
+    const panelData: TabsPanelData = this.getTabsPanelData(inactivePanelIndex);
+    return panelData.tabs[panelData.selectedTabIndex];
+  }
+
+
+
+
   getPanelSelectionChange$(): Observable<PanelIndex> {
     return this.panelSelectionService.valueChanges$();
   }
@@ -166,6 +180,13 @@ export class PanelManagementService {
       tabsPanelData.selectedTabIndex = Math.min(tabsPanelData.tabs.length - 1, selectedTabIndex);
       this.updateTabsPanelData(panelIndex, tabsPanelData);
     }
+  }
+
+  public addTab(panelIndex: PanelIndex, tabData: TabData) {
+    const tabsPanelData = this.getTabsPanelData(panelIndex);
+    tabsPanelData.tabs.push(tabData);
+    tabsPanelData.selectedTabIndex = tabsPanelData.tabs.length - 1;
+    this.updateTabsPanelData(panelIndex, tabsPanelData);
   }
 
   addNewTab() {

@@ -66,6 +66,8 @@ export const actionIds = [
   "OPEN_SETUP_DLG",
   "OPEN_ABOUT_DLG",
 
+  "OPEN_VIEW_DLG", "OPEN_EDIT_DLG",
+
   "DO_NOTHING",
   "-"
 ] as const;
