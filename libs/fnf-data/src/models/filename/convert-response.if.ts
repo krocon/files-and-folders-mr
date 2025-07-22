@@ -1,0 +1,1 @@
+export type ConvertResponseType = { [key: string]: string };

@@ -1,0 +1,131 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Group Files</h2>
+
+<mat-dialog-content>
+
+
+  <form
+      [formGroup]="formGroup"
+      [class.replacements-checked]="!formGroup.get('replacementsChecked')?.value"
+      [class.ai-mode]="formGroup.get('strategy')?.value==='AI'"
+      autocomplete="off">
+
+    <div class="row-0">
+      <mat-button-toggle-group
+          [hideSingleSelectionIndicator]="false"
+          formControlName="strategy"
+          name="strategy"
+          aria-label="Strategy">
+
+        <mat-button-toggle
+            value="Manual">Manual
+        </mat-button-toggle>
+
+        <mat-button-toggle
+            value="AI">AI
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (formGroup.get('strategy')?.value === 'AI') {
+
+        <!--mat-form-field class="target-dir-field">
+          <mat-label>Target Dir</mat-label>
+          <mat-select
+              formControlName="targetDir"
+              placeholder="Mode">
+            @for (option of groupFilesDialogData.targetDirs; track groupFilesDialogData.targetDirs) {
+              <mat-option [value]="option">{{ option }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field-->
+
+        <button
+            (click)="onFetchAiClicked()"
+            [disabled]="fetchAiButtonDisabled || !hasOpenAiApiKey"
+            data-test-id="fetch-ai-button"
+            color="primary"
+            mat-raised-button>
+          Fetch AI
+        </button>
+
+        <div class="fetch-ai-spinner">
+          @if (fetchAiButtonDisabled) {
+            <mat-spinner [diameter]="36"></mat-spinner>
+          }
+        </div>
+
+        <div>
+          @if (!hasOpenAiApiKey) {
+            <span>Your OpenAI API key is not installed properly (<a
+                href="javascript:void(0)"
+                (click)="openInfo()">More Information</a>).</span>
+          }
+        </div>
+
+        <mat-checkbox formControlName="useSourceDir">Use Source Directory</mat-checkbox>
+      }
+
+    </div>
+
+    <div class="row-1">
+
+      <mat-form-field>
+        <mat-label>Mode</mat-label>
+        <mat-select
+            formControlName="modus"
+            placeholder="Mode">
+          @for (option of options.modes; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="ignoreBrackets">Ignore Brackets</mat-checkbox>
+      <mat-checkbox formControlName="useSourceDir">Use Source Directory</mat-checkbox>
+
+@if (formGroup.get('modus')?.value === 'runnig_number') {
+      <mat-form-field>
+        <mat-label>Minimum Size</mat-label>
+        <mat-select
+            formControlName="minsize"
+            placeholder="Mode">
+          @for (option of options.minSizes; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <label>{{groupCount}} groups found</label>
+}
+    </div>
+
+    <div class="row-6">
+        <guiexpert-table
+            (tableReady)="onTableReady($event)"
+            [debounceMouseClickDelay]="150"
+            [tableModel]="tableModel"
+            [tableOptions]="tableOptions"
+            class="ge-table group-files-table"></guiexpert-table>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+
+  <button
+      (click)="onOkClicked()"
+      [disabled]="!formGroup.valid"
+      color="primary"
+      data-test-id="dialog-ok-button"
+      mat-raised-button>
+    Group
+  </button>
+</mat-dialog-actions>

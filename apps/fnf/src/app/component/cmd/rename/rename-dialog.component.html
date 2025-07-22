@@ -1,0 +1,75 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Rename</h2>
+
+<mat-dialog-content>
+  <div class="dlg-content-div">
+
+
+    <form
+        [formGroup]="formGroup"
+        autocomplete="off">
+
+      <mat-form-field>
+        <input
+            [matTooltipShowDelay]="2000" [matTooltip]="sourceTooltip"
+            formControlName="source"
+            matInput
+            placeholder="Current name"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input
+            (keydown.enter)="onOkClicked()"
+            [fnfAutofocus]="true"
+            formControlName="target"
+            matInput
+            placeholder="New name"/>
+
+        <button
+            matSuffix
+            [matMenuTriggerFor]="menuSuggestions"
+            mat-icon-button>
+          <mat-icon class="fnf-header-fg-color">expand_more</mat-icon>
+        </button>
+        <mat-menu
+            #menuSuggestions="matMenu"
+            class="fnf-suggestion-template-menu">
+          @for (s of suggestions; track s) {
+            <button
+                (click)="onSuggestionClicked(s)"
+                mat-menu-item>
+              {{s}}
+            </button>
+            <mat-divider></mat-divider>
+          }
+        </mat-menu>
+
+      </mat-form-field>
+
+      <div>
+        <mat-error>{{ errorMessage }}&nbsp;</mat-error>
+      </div>
+    </form>
+
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+
+  <button
+      (click)="onOkClicked()"
+      [disabled]="!formGroup.valid"
+      color="primary"
+      data-test-id="dialog-ok-button"
+      mat-raised-button>
+    Rename
+  </button>
+</mat-dialog-actions>

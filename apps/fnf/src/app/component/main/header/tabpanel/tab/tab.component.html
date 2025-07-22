@@ -1,0 +1,23 @@
+@if (fileItem && !this.tabfind) {
+  <div
+      appLongPress
+      [pressDuration]="500"
+      (longPress)="onLongPressNormalTab($event)"
+      class="fnf-header-fg-color not-selectable"
+      [class.fnf-activepanel-header-fg-color]="activeAndSelected">{{ shortenLabel(fileItem.base) }}
+  </div>
+}
+@if (fileItem && this.tabfind) {
+  <div
+      class="fnf-header-fg-color not-selectable"
+
+      appLongPress
+      [pressDuration]="500"
+      (longPress)="onLongPressFindTab($event)"
+
+      [matTooltipShowDelay]="2000"
+      [matTooltip]="'Search '+pattern"
+      [class.fnf-activepanel-header-fg-color]="activeAndSelected">
+    <mat-icon>search</mat-icon>
+  </div>
+}

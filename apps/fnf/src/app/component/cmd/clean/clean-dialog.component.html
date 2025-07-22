@@ -1,0 +1,106 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Clean Folders</h2>
+
+<mat-dialog-content>
+  <div class="dlg-content-div">
+
+
+    <form
+        [formGroup]="formGroup"
+        autocomplete="off">
+      <mat-form-field>
+        <mat-label>Clean in</mat-label>
+        <input
+            (keydown.enter)="onOkClicked()"
+            formControlName="folder"
+            matInput
+            placeholder="Clean in"/>
+        <fnf-select-folder-dropdown
+            (onSelected)="onFolderClicked($event)"
+            matSuffix></fnf-select-folder-dropdown>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Delete Files</mat-label>
+        <input
+            (keydown.enter)="onOkClicked()"
+            [fnfAutofocus]="true"
+            formControlName="pattern"
+            matInput
+            placeholder="Delete Pattern"/>
+        <fnf-clean-template-dropdown
+            (onSelected)="onSearchTemplateSelected($event)"
+            matSuffix></fnf-clean-template-dropdown>
+
+        <mat-hint>
+          @if (formGroup.get('pattern')?.invalid || !formGroup.get('pattern')?.value) {
+            No file will be deleted.
+
+          } @else if (walkCancelKey) {
+            Pattern found &rarr;
+            <fnf-walk-data
+                [walkData]="walkData"
+                [hideWording]="true"></fnf-walk-data>
+          }
+        </mat-hint>
+
+        <mat-error>
+          Invalid glob pattern. Must be empty or a valid pattern.
+        </mat-error>
+
+      </mat-form-field>
+
+
+      <mat-checkbox formControlName="deleteEmptyFolders">
+        Delete empty sub-folders
+      </mat-checkbox>
+
+    </form>
+
+    @if (cleaning) {
+      <div>
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+    }
+
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+
+  <div></div>
+  <!--button
+      (click)="onCheckClicked()"
+      [disabled]="!formGroup.valid || formGroup.get('pattern')?.invalid || formGroup.get('pattern')?.pending"
+      data-test-id="dialog-check-button"
+      mat-raised-button>
+    Check affected files
+  </button-->
+
+  <div class="glob-pattern-info">
+    See:
+    <a
+        href="https://code.visualstudio.com/docs/editor/glob-patterns"
+        target="_blank">Glob Patterns
+    </a>
+  </div>
+
+
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+
+  <button
+      (click)="onOkClicked()"
+      [disabled]="!formGroup.valid || formGroup.pending || cleaning"
+      color="primary"
+      data-test-id="dialog-ok-button"
+      mat-raised-button>
+    Clean
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>FnF Edit</title>
+  <link
+      href="assets/favicon-folder-open-o.ico"
+      rel="shortcut icon"
+      type="image/x-icon">
+
+  <style>
+    :root {
+      --toast-background: rgba(76, 175, 80, 0.6);
+      --toast-text-color: #ffffff;
+      --toast-animation-time: 0.5s;
+      --toast-display-time: 5s;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: clip;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    }
+
+    body {
+      --vscode-button-background: #0e639c;
+      --vscode-button-foreground: #ffffff;
+      --vscode-button-separator: rgba(255, 255, 255, 0.4);
+      --vscode-button-hoverBackground: #1177bb;
+      --vscode-focusBorder: #007fd4;
+      --vscode-button-secondaryBackground: #0e639c;
+      --vscode-button-secondaryForeground: #ffffff;
+      --vscode-button-secondaryHoverBackground: #1177bb;
+
+      --vscode-breadcrumb-background: #1e1e1e;
+      --vscode-breadcrumb-foreground: rgba(204, 204, 204, 0.8);
+      --vscode-breadcrumb-focusForeground: #e0e0e0;
+
+      --vscode-actionBar-toggledBackground: rgba(0, 127, 212, 0.4);
+      --vscode-dropdown-background: #3c3c3c;
+      --vscode-dropdown-foreground: #f0f0f0;
+      --vscode-dropdown-border: #3c3c3c;
+
+      background-color: var(--vscode-breadcrumb-background);
+      color: var(--vscode-breadcrumb-foreground);
+
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .toast {
+      background-color: var(--toast-background);
+      color: var(--toast-text-color);
+      padding: 12px 24px;
+      border-radius: 4px;
+      margin-top: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 250px;
+      max-width: 80%;
+      opacity: 0;
+      transform: translateY(-100%);
+      transition: transform var(--toast-animation-time), opacity var(--toast-animation-time);
+      pointer-events: auto;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-message {
+      flex-grow: 1;
+      margin-right: 12px;
+    }
+
+    .toast-close {
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .two-columns {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-gap: 12px;
+    }
+
+    .title-div {
+      padding: 8px 16px;
+    }
+
+    .base {
+      font-weight: bold;
+      font-size: 1.2em;
+      background-color: var(--vscode-breadcrumb-background);
+      color: var(--vscode-breadcrumb-foreground);
+    }
+
+    .dir {
+      font-weight: normal;
+      font-size: 0.8em;
+    }
+
+    .button-div {
+      padding: 8px 16px;
+      display: grid;
+      grid-template-columns:  1fr auto auto;
+      grid-gap: 12px;
+
+      > button {
+        min-width: 100px;
+      }
+    }
+
+    button {
+      padding: 8px 18px;
+      border-radius: 4px;
+      background-color: var(--vscode-button-background);
+      color: var(--vscode-button-foreground) !important;
+      border-color: var(--vscode-button-separator);
+    }
+
+    button:hover {
+      background-color: var(--vscode-button-hoverBackground);
+    }
+
+    button:focus {
+      border-color: var(--vscode-focusBorder);
+    }
+
+    button.secondary {
+      background-color: var(--vscode-button-secondaryBackground);
+      color: var(--vscode-button-secondaryForeground);
+    }
+
+    button.secondary:hover {
+      background-color: var(--vscode-button-secondaryHoverBackground);
+    }
+
+    /* Modal styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--vscode-breadcrumb-background, #1e1e1e);
+      border: 1px solid var(--vscode-focusBorder, #007fd4);
+      border-radius: 6px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.show .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid rgba(204, 204, 204, 0.05);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--vscode-breadcrumb-foreground);
+      font-size: 1.2em;
+    }
+
+    .modal-body {
+      padding: 20px;
+      color: var(--vscode-breadcrumb-foreground);
+    }
+
+    .modal-footer {
+      padding: 15px 20px;
+      border-top: solid 1px rgba(204, 204, 204, 0.05);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  </style>
+  <script src="/assets/monaco/min/vs/loader.js"></script>
+  <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+  <style>
+    .icon-button-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+    }
+
+    .icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 4px;
+      background-color: var(--vscode-button-background);
+      color: var(--vscode-button-foreground);
+      border: 1px solid var(--vscode-button-separator);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .icon-button:hover {
+      background-color: var(--vscode-button-hoverBackground);
+    }
+
+    .icon-button.active {
+      background-color: var(--vscode-actionBar-toggledBackground);
+    }
+
+    .icon-button .material-icons {
+      font-size: 20px;
+    }
+
+    .theme-selector {
+      height: 36px;
+      background-color: var(--vscode-dropdown-background);
+      color: var(--vscode-dropdown-foreground);
+      border: 1px solid var(--vscode-dropdown-border);
+      border-radius: 4px;
+      padding: 0 8px;
+      cursor: pointer;
+    }
+
+    .theme-selector:focus {
+      outline: 1px solid var(--vscode-focusBorder);
+    }
+  </style>
+</head>
+<body>
+
+<div
+    class="toast-container"
+    id="toastContainer">
+  <div
+      class="toast"
+      id="toast">
+    <div
+        class="toast-message"
+        id="toastMessage"></div>
+    <div
+        class="toast-close"
+        id="toastClose">&times;
+    </div>
+  </div>
+</div>
+
+<div
+    class="modal-overlay"
+    id="confirmModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Unsaved Changes</h3>
+    </div>
+    <div class="modal-body">
+      <p>You have unsaved changes. Do you want to close without saving?</p>
+    </div>
+    <div class="modal-footer">
+      <button
+          class="secondary"
+          id="cancelCloseBtn">Cancel
+      </button>
+      <button id="confirmCloseBtn">Close without saving</button>
+    </div>
+  </div>
+</div>
+
+<div class="two-columns">
+  <div class="title-div">
+    <div class="base">&nbsp;</div>
+    <div class="dir">&nbsp;</div>
+  </div>
+  <div class="icon-button-container">
+    <select
+        class="theme-selector"
+        id="themeSelector"
+        title="Select editor theme">
+      <option value="vs">Light</option>
+      <option
+          value="vs-dark"
+          selected>Dark
+      </option>
+      <option value="hc-black">High Contrast Dark</option>
+      <option value="hc-light">High Contrast Light</option>
+    </select>
+    <div
+        class="icon-button active"
+        id="lineNumbersToggle"
+        title="Toggle line numbers">
+      <span class="material-icons">format_list_numbered</span>
+    </div>
+    <div
+        class="icon-button active"
+        id="minimapToggle"
+        title="Toggle minimap">
+      <span class="material-icons">view_sidebar</span>
+    </div>
+    <div
+        class="icon-button"
+        id="wordWrapToggle"
+        title="Toggle word wrap">
+      <span class="material-icons">wrap_text</span>
+    </div>
+    <div
+        class="icon-button"
+        id="searchReplaceBtn"
+        title="Search and replace">
+      <span class="material-icons">search</span>
+    </div>
+  </div>
+</div>
+
+<div id="container"></div>
+
+<div class="button-div">
+  <div></div>
+  <button
+      class="secondary"
+      id="closeBtn">Close
+  </button>
+  <button id="saveBtn">Save</button>
+</div>
+
+<script>
+  // Configuration
+  const API_PORT = 3333;
+  let editor = null;
+  let fileItem = null;
+  let filePath = null;
+  let readonly = false;
+  let contentModified = false;
+
+  let userOptions = {
+    theme: "vs-dark",
+    lineNumbers: "on",
+    minimap: true,
+    wordWrap: "off"
+  };
+
+  // Language mapping for Monaco editor
+  function getMonacoLanguageFromFileSuffix(fileSuffix) {
+    const normalizedSuffix = fileSuffix.startsWith(".")
+        ? fileSuffix.toLowerCase()
+        : `.${fileSuffix.toLowerCase()}`;
+
+    const extensionToLanguageMap = {
+      ".html": "html",
+      ".htm": "html",
+      ".css": "css",
+      ".scss": "scss",
+      ".less": "less",
+      ".js": "javascript",
+      ".jsx": "javascript",
+      ".ts": "typescript",
+      ".tsx": "typescript",
+      ".json": "json",
+      ".jsonc": "json",
+      ".xml": "xml",
+      ".svg": "xml",
+      ".md": "markdown",
+      ".markdown": "markdown",
+      ".txt": "plaintext",
+      ".java": "java",
+      ".py": "python",
+      ".rb": "ruby",
+      ".php": "php",
+      ".cs": "csharp",
+      ".cpp": "cpp",
+      ".c": "c",
+      ".h": "cpp",
+      ".hpp": "cpp",
+      ".go": "go",
+      ".rs": "rust",
+      ".swift": "swift",
+      ".kt": "kotlin",
+      ".yaml": "yaml",
+      ".yml": "yaml",
+      ".toml": "toml",
+      ".ini": "ini",
+      ".config": "xml",
+      ".properties": "properties",
+      ".sh": "shell",
+      ".bash": "shell",
+      ".zsh": "shell",
+      ".ps1": "powershell",
+      ".bat": "bat",
+      ".cmd": "bat",
+      ".sql": "sql",
+      ".docker": "dockerfile",
+      ".dockerfile": "dockerfile",
+      ".graphql": "graphql",
+      ".gql": "graphql",
+    };
+
+    return extensionToLanguageMap[normalizedSuffix] || "plaintext";
+  }
+
+
+  function fixPath(dir) {
+    return dir.replace(/\/{2,}/g, "/");
+  }
+
+  // CSS utilities
+  function getVSCodeProperties(element) {
+    const computedStyle = getComputedStyle(element);
+    return Array.from(computedStyle)
+        .filter(prop => {
+          const value = computedStyle.getPropertyValue(prop);
+          return prop.startsWith("--vscode")
+              && (value.startsWith("rgb") || value.startsWith("#"));
+        })
+        .map(prop => [prop, computedStyle.getPropertyValue(prop)]);
+  }
+
+  function debugCssProps(properties) {
+    const buf = [];
+    properties.forEach(([prop, value]) => {
+      buf.push(`${prop}: ${value};`);
+    });
+    // console.log(buf.sort().join("\n"));
+  }
+
+  function applyVSCodeTheme(editorElement) {
+    const properties = getVSCodeProperties(editorElement);
+    debugCssProps(properties);
+    properties.forEach(([prop, value]) => {
+      document.body.style.setProperty(prop, value);
+    });
+  }
+
+  // File operations
+  function loadFileData() {
+    const storedData = localStorage.getItem("edit-selected-data");
+    if (!storedData) {
+      return false;
+    }
+
+    fileItem = JSON.parse(storedData);
+    updateFileInfo(fileItem);
+    filePath = fixPath(fileItem.dir + "/" + fileItem.base);
+    return true;
+  }
+
+  function updateFileInfo(fileData) {
+    document.querySelector(".base").innerText = fileData.base;
+    document.querySelector(".dir").innerText = fileData.dir;
+  }
+
+  function fetchFileContent() {
+    const url = `${location.protocol}//${location.hostname}:${API_PORT}/api/file?name=${filePath}`;
+
+    return fetch(url, {
+      headers: {
+        "Accept": "application/text"
+      }
+    })
+        .then(response => response.text());
+  }
+
+  function saveFileContent() {
+    if (!editor || !filePath) return;
+
+    const content = editor.getValue();
+    const url = `${location.protocol}//${location.hostname}:${API_PORT}/api/file?name=${filePath}`;
+
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/text"
+      },
+      body: content
+    })
+        .then(response => {
+          if (response.error) {
+            alert("Error saving file: " + response.error);
+          } else {
+            contentModified = false;
+            showToast("File saved successfully");
+          }
+        })
+        .catch(error => {
+          console.error("Error saving file:", error);
+          alert("Error saving file");
+        });
+  }
+
+
+  function createEditor(content) {
+    const editorOptions = {
+      value: content,
+      language: getMonacoLanguageFromFileSuffix(fileItem.ext),
+      theme: userOptions.theme,
+      automaticLayout: true,
+      lineNumbers: userOptions.lineNumbers,
+      minimap: {enabled: userOptions.minimap},
+      wordWrap: userOptions.wordWrap,
+      readOnly: readonly,
+    };
+
+    const editorElement = document.getElementById("container");
+    editor = monaco.editor.create(editorElement, editorOptions);
+
+    // Ensure theme is set
+    monaco.editor.setTheme(userOptions.theme);
+
+    // Add change listener to detect modifications
+    editor.onDidChangeModelContent(() => {
+      contentModified = true;
+    });
+
+    // Update UI to match current options
+    updateUIFromOptions();
+
+    return editor;
+  }
+
+  function initMonacoEditor() {
+    readonly = localStorage.getItem("edit-readonly") === "true";
+    if (readonly) {
+      document.getElementById("saveBtn").style.display = "none";
+      document.getElementById("searchReplaceBtn").style.display = "none";
+    }
+
+    require.config({paths: {vs: location.origin + "/assets/monaco/min/vs"}});
+    require(["vs/editor/editor.main"], function () {
+      monaco.editor.onDidCreateEditor(editor => {
+        setTimeout(() => {
+          const monacoElement = document.querySelector(".monaco-editor");
+          if (monacoElement) {
+            applyVSCodeTheme(monacoElement);
+          }
+        }, 100);
+      });
+
+      if (loadFileData()) {
+        fetchFileContent()
+            .then(content => {
+              createEditor(content);
+            })
+            .catch(error => {
+              console.error("Error loading file:", error);
+              alert("Error loading file content");
+            });
+      }
+    });
+  }
+
+
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    const toastMessage = document.getElementById("toastMessage");
+
+    // Set the message
+    toastMessage.textContent = message;
+
+    // Show the toast
+    toast.classList.add("show");
+
+    // Hide the toast after the display time
+    const displayTime = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--toast-display-time")) * 1000 || 5000;
+
+    // Clear any existing timeout
+    if (toast.timeoutId) {
+      clearTimeout(toast.timeoutId);
+    }
+
+    // Set new timeout
+    toast.timeoutId = setTimeout(() => {
+      hideToast();
+    }, displayTime);
+  }
+
+  function hideToast() {
+    const toast = document.getElementById("toast");
+    toast.classList.remove("show");
+  }
+
+
+  function showConfirmModal(onConfirm, onCancel) {
+    const modal = document.getElementById("confirmModal");
+    const confirmBtn = document.getElementById("confirmCloseBtn");
+    const cancelBtn = document.getElementById("cancelCloseBtn");
+
+    // Show the modal
+    modal.classList.add("show");
+
+    // Set up event listeners for the buttons
+    const confirmHandler = () => {
+      hideConfirmModal();
+      if (onConfirm) onConfirm();
+
+      // Remove event listeners
+      confirmBtn.removeEventListener("click", confirmHandler);
+      cancelBtn.removeEventListener("click", cancelHandler);
+    };
+
+    const cancelHandler = () => {
+      hideConfirmModal();
+      if (onCancel) onCancel();
+
+      // Remove event listeners
+      confirmBtn.removeEventListener("click", confirmHandler);
+      cancelBtn.removeEventListener("click", cancelHandler);
+    };
+
+    // Add event listeners
+    confirmBtn.addEventListener("click", confirmHandler);
+    cancelBtn.addEventListener("click", cancelHandler);
+
+    // Add escape key handler
+    const escHandler = (event) => {
+      if (event.key === "Escape") {
+        cancelHandler();
+        document.removeEventListener("keydown", escHandler);
+      }
+    };
+
+    document.addEventListener("keydown", escHandler);
+  }
+
+  function hideConfirmModal() {
+    const modal = document.getElementById("confirmModal");
+    modal.classList.remove("show");
+  }
+
+
+  function toggleLineNumbers() {
+    if (!editor) return;
+
+    userOptions.lineNumbers = (userOptions.lineNumbers === "on") ? "off" : "on";
+    editor.updateOptions({lineNumbers: userOptions.lineNumbers});
+
+    // Update button state
+    const button = document.getElementById("lineNumbersToggle");
+    if (userOptions.lineNumbers === "on") {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+    saveUserOptions();
+  }
+
+  function toggleMinimap() {
+    if (!editor) return;
+
+    userOptions.minimap = !userOptions.minimap;
+    editor.updateOptions({minimap: {enabled: userOptions.minimap}});
+
+    // Update button state
+    const button = document.getElementById("minimapToggle");
+    if (userOptions.minimap) {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+
+    // Save to localStorage
+    saveUserOptions();
+  }
+
+  function toggleWordWrap() {
+    if (!editor) return;
+
+    userOptions.wordWrap = userOptions.wordWrap === "off" ? "on" : "off";
+    editor.updateOptions({wordWrap: userOptions.wordWrap});
+
+    // Update button state
+    const button = document.getElementById("wordWrapToggle");
+    if (userOptions.wordWrap === "on") {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+
+    // Save to localStorage
+    saveUserOptions();
+  }
+
+  function changeTheme(theme) {
+    if (!editor) return;
+
+    userOptions.theme = theme;
+    monaco.editor.setTheme(theme);
+
+    // Save to localStorage
+    saveUserOptions();
+  }
+
+  function openSearchReplace() {
+    if (!editor) return;
+    editor.getAction("actions.find").run();
+  }
+
+  // Event handlers
+  function setupEventListeners() {
+    const closeButton = document.getElementById("closeBtn");
+    const saveButton = document.getElementById("saveBtn");
+    const toastClose = document.getElementById("toastClose");
+
+    // Editor customization buttons
+    const themeSelector = document.getElementById("themeSelector");
+    const lineNumbersToggle = document.getElementById("lineNumbersToggle");
+    const minimapToggle = document.getElementById("minimapToggle");
+    const wordWrapToggle = document.getElementById("wordWrapToggle");
+    const searchReplaceBtn = document.getElementById("searchReplaceBtn");
+
+    closeButton.addEventListener("click", () => {
+      if (contentModified) {
+        showConfirmModal(
+            // onConfirm callback - user clicked "Close without saving"
+            () => {
+              window.close();
+            },
+            // onCancel callback - user clicked "Cancel" or pressed Escape
+            () => {
+              // Do nothing, just keep the editor open
+            }
+        );
+      } else {
+        window.close();
+      }
+    });
+
+    saveButton.addEventListener("click", () => {
+      saveFileContent();
+    });
+
+    toastClose.addEventListener("click", () => {
+      hideToast();
+    });
+
+    // Add event listeners for editor customization buttons
+    themeSelector.addEventListener("change", (e) => {
+      changeTheme(e.target.value);
+      applyVSCodeTheme(document.querySelector(".monaco-editor"));
+    });
+
+    lineNumbersToggle.addEventListener("click", toggleLineNumbers);
+    minimapToggle.addEventListener("click", toggleMinimap);
+    wordWrapToggle.addEventListener("click", toggleWordWrap);
+    searchReplaceBtn.addEventListener("click", openSearchReplace);
+  }
+
+  //function renderThemeOptions() {
+  //  // Define theme options as a list of label-value pairs
+  //  const themeOptions = [
+  //    {label: "Light", value: "vs"},
+  //    {label: "Dark", value: "vs-dark"},
+  //    {label: "High Contrast Dark", value: "hc-black"},
+  //    {label: "High Contrast Light", value: "hc-light"},
+  //    //{ label: "One Dark", value: "onedark" },
+  //  ];
+  //
+  //  // Get the theme selector element
+  //  const themeSelector = document.getElementById("themeSelector");
+  //
+  //  // Clear existing options
+  //  themeSelector.innerHTML = "";
+  //
+  //  // Build options dynamically
+  //  themeOptions.forEach(option => {
+  //    const optionElement = document.createElement("option");
+  //    optionElement.value = option.value;
+  //    optionElement.textContent = option.label;
+  //
+  //    // Set the Dark theme as selected by default
+  //    if (option.value === "vs-dark") {
+  //      optionElement.selected = true;
+  //    }
+  //
+  //    themeSelector.appendChild(optionElement);
+  //  });
+  //}
+  //
+  //function initMoreThemes() {
+  // renderThemeOptions();
+    //
+    //fetch("/assets/monaco/themes/onedark.json")
+    //    .then(res => res.json())
+    //    .then(theme => {
+    //      console.info(theme);
+    //      //monaco.editor.defineTheme("onedark", theme);
+    //      //monaco.editor.setTheme("onedark");
+    //      renderThemeOptions();
+    //    });
+  //}
+
+  // Load user options from localStorage
+  function loadUserOptions() {
+    const savedOptions = localStorage.getItem("monaco-editor-user-options");
+    if (savedOptions) {
+      try {
+        const parsedOptions = JSON.parse(savedOptions);
+        // Merge saved options with default options
+        userOptions = {...userOptions, ...parsedOptions};
+      } catch (e) {
+        console.error("Error parsing saved editor options:", e);
+      }
+    }
+  }
+
+  // Save user options to localStorage
+  function saveUserOptions() {
+    localStorage.setItem("monaco-editor-user-options", JSON.stringify(userOptions));
+  }
+
+  // Apply user options to the Monaco editor
+  function applyUserOptions() {
+    if (!editor) return;
+
+    editor.updateOptions({
+      theme: userOptions.theme,
+      lineNumbers: userOptions.lineNumbers,
+      minimap: {enabled: userOptions.minimap},
+      wordWrap: userOptions.wordWrap
+    });
+
+    // Also update the UI to reflect current options
+    updateUIFromOptions();
+  }
+
+  // Update UI elements to reflect current options
+  function updateUIFromOptions() {
+    // Update theme selector
+    const themeSelector = document.getElementById("themeSelector");
+    themeSelector.value = userOptions.theme;
+
+    // Update line numbers toggle
+    const lineNumbersToggle = document.getElementById("lineNumbersToggle");
+    if (userOptions.lineNumbers === "on") {
+      lineNumbersToggle.classList.add("active");
+    } else {
+      lineNumbersToggle.classList.remove("active");
+    }
+
+    // Update minimap toggle
+    const minimapToggle = document.getElementById("minimapToggle");
+    if (userOptions.minimap) {
+      minimapToggle.classList.add("active");
+    } else {
+      minimapToggle.classList.remove("active");
+    }
+
+    // Update word wrap toggle
+    const wordWrapToggle = document.getElementById("wordWrapToggle");
+    if (userOptions.wordWrap === "on") {
+      wordWrapToggle.classList.add("active");
+    } else {
+      wordWrapToggle.classList.remove("active");
+    }
+  }
+
+  // Initialize application
+  function init() {
+    loadUserOptions();
+    setupEventListeners();
+    initMonacoEditor();
+    //initMoreThemes();
+  }
+
+  // Start the application
+  init();
+</script>
+</body>
+</html>

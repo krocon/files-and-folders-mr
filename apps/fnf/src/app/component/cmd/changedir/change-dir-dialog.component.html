@@ -1,0 +1,52 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Change Dir</h2>
+
+<mat-dialog-content>
+
+
+  <div class="table-div">
+    <div class="filter-container">
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input
+            (change)="onFilterChangedByUser($event)"
+            (keyup)="onFilterChangedByUser($event)"
+            [(ngModel)]="filterText"
+            matInput
+            placeholder="Filter"/>
+      </mat-form-field>
+
+      <div class="slider-container">
+        <mat-label>Deep: {{deep}}</mat-label>
+        <mat-slider
+            [max]="maxDeep"
+            [min]="2"
+            [step]="1"
+            [discrete]="true"
+            [showTickMarks]="true">
+          <input
+              (valueChange)="applyFilter()"
+              matSliderThumb [(ngModel)]="deep">
+        </mat-slider>
+      </div>
+    </div>
+    <guiexpert-table
+        (mouseClicked)="onMouseClicked($event)"
+        (tableReady)="onTableReady($event)"
+        [debounceMouseClickDelay]="150"
+        [tableModel]="tableModel"
+        [tableOptions]="tableOptions"
+        class="ge-table change-dir-table"></guiexpert-table>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+</mat-dialog-actions>

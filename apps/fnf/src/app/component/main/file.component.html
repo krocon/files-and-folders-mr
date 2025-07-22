@@ -1,0 +1,146 @@
+
+<div
+    #splitPaneMain
+    (keydown)="onKeyDown($event)"
+    (keyup)="onKeyUp($event)"
+    class="fnf-main-div">
+
+  <div class="header-top-div split-div fnf-header-bg-color fnf-header-fg-color">
+    <div
+        (click)="setActivePanel(0);"
+        [class.fnf-active-panel]="activePanelIndex===0"
+        class="panel-left fnf-header-fg-color">
+      @if (initialized && tabsPanelData) {
+        <app-breadcrumb
+            [tabsPanelData]="tabsPanelData[0]"
+            (pathClicked)="onBreadcrumbClicked($event, 0)">/
+        </app-breadcrumb>
+      }
+    </div>
+    <div class="panel-separator"></div>
+    <div
+        (click)="setActivePanel(1);"
+        [class.fnf-active-panel]="activePanelIndex===1"
+        class="panel-right fnf-header-fg-color">
+      @if (initialized && tabsPanelData) {
+        <app-breadcrumb
+            [tabsPanelData]="tabsPanelData[1]"
+            (pathClicked)="onBreadcrumbClicked($event, 1)">/
+        </app-breadcrumb>
+      }
+    </div>
+  </div>
+
+  <div class="header-bottom-div split-div fnf-header-bg-color fnf-header-fg-color">
+    <div
+        (click)="setActivePanel(0);"
+        [class.fnf-active-panel]="activePanelIndex===0"
+        class="panel-left">
+      @if (initialized && tabsPanelData) {
+        <app-tabpanel
+            (dataChanged)="onTabDataChanged($event, 0)"
+            [tabsPanelData]="tabsPanelData[0]"
+            [panelIndex]="0"
+            [selected]="activePanelIndex===0"
+            [dockerRoot]="dockerRoot"
+            [favs]="favs"
+            [latest]="latest"
+            [sysinfo]="sysinfo"
+            [winDrives]="winDrives"></app-tabpanel>
+      }
+    </div>
+    <div class="panel-separator"></div>
+    <div
+        (click)="setActivePanel(1);"
+        [class.fnf-active-panel]="activePanelIndex===1"
+        class="panel-right">
+      @if (initialized && tabsPanelData) {
+        <app-tabpanel
+            (dataChanged)="onTabDataChanged($event, 1)"
+            [tabsPanelData]="tabsPanelData[1]"
+            [panelIndex]="1"
+            [selected]="activePanelIndex===1"
+            [dockerRoot]="dockerRoot"
+            [favs]="favs"
+            [latest]="latest"
+            [sysinfo]="sysinfo"
+            [winDrives]="winDrives"></app-tabpanel>
+      }
+    </div>
+  </div>
+
+  <div class="content-div split-div fnf-files-panel fnf-table-background">
+    <div
+        #splitPaneLeft
+        (click)="setActivePanel(0);"
+        [class.fnf-active-panel]="activePanelIndex===0"
+        class="panel-left">
+      @if (initialized && tabsPanelData) {
+        <app-file-table
+            (selectionLabelDataChanged)="setSelectionChanged($event, 0)"
+            (buttonStatesChanged)="setButtonStatesChanged($event, 0)"
+            [selected]="activePanelIndex===0"
+            [tabsPanelData]="tabsPanelData[0]"
+            [panelIndex]="0"></app-file-table>
+      }
+    </div>
+    <div
+        class="panel-separator"
+        title="Double-click for 50% / 50%"></div>
+    <div
+        (click)="setActivePanel(1);"
+        [class.fnf-active-panel]="activePanelIndex===1"
+        class="panel-right">
+      @if (initialized && tabsPanelData) {
+        <app-file-table
+            (selectionLabelDataChanged)="setSelectionChanged($event, 1)"
+            (buttonStatesChanged)="setButtonStatesChanged($event, 1)"
+            [selected]="activePanelIndex===1"
+            [tabsPanelData]="tabsPanelData[1]"
+            [panelIndex]="1"></app-file-table>
+      }
+    </div>
+  </div>
+
+  <div class="footer-top-div split-div fnf-footer-bg-color fnf-footer-fg-color">
+    <div
+        (click)="setActivePanel(0);"
+        [class.fnf-active-panel]="activePanelIndex===0"
+        class="panel-left">
+      @if (initialized) {
+      <app-summary-label
+          [panelIndex]="0"
+          [selected]="activePanelIndex===0"
+          [selectionEvent]="selectionEvents[0]"></app-summary-label>
+      }
+    </div>
+    <div class="panel-separator"></div>
+    <div
+        (click)="setActivePanel(1);"
+        [class.fnf-active-panel]="activePanelIndex===1"
+        class="panel-right">
+      @if (initialized) {
+      <app-summary-label
+          [panelIndex]="1"
+          [selected]="activePanelIndex===1"
+          [selectionEvent]="selectionEvents[1]"></app-summary-label>
+      }
+    </div>
+  </div>
+
+  <div class="footer-center-div fnf-footer-bg-color fnf-footer-fg-color">
+    @if (shellVisible) {
+      <app-shell-panel
+          [path]="activePanelPath"
+          (focusChanged)="onShellfocusChanged($event)"></app-shell-panel>
+    }
+  </div>
+
+  <div class="footer-bottom-div fnf-footer-bg-color fnf-footer-fg-color">
+    @if (initialized) {
+    <app-button-panel
+        [buttonEnableStates]="buttonEnableStatesArr[activePanelIndex]"></app-button-panel>
+    }
+  </div>
+
+</div>

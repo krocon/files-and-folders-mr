@@ -1,0 +1,54 @@
+
+h4 {
+    margin: 10px 0;
+}
+
+.inputs-div {
+    margin: 20px 0 40px 0;
+}
+
+div.buttons-vertical-div button {
+    margin-top: 10px;
+}
+
+div.buttons-horizontal-div {
+    padding-top: 16px;
+
+    button {
+        margin-left: 20px;
+    }
+}
+
+::ng-deep .mat-form-field-flex {
+    width: 100%;
+}
+
+::ng-deep .mat-form-field-infix {
+    width: 100%;
+}
+
+.confirm-dialog-div {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 12px;
+    overflow: clip;
+}
+
+.fnf-dialog-title.mat-mdc-dialog-title {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding-left: 12px;
+}
+
+.mat-mdc-dialog-content {
+    overflow-y: auto;
+    margin-bottom: 0;
+}
+
+.buttons-horizontal-div {
+    display: flex;
+    padding: 12px 16px;
+    justify-content: flex-end;
+}
+

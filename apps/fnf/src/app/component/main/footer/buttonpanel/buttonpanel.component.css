@@ -1,0 +1,44 @@
+.button-panel-container {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 6px 12px;
+}
+
+.button-panel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+.panel-button {
+    min-width: 30px;
+    margin: 5px;
+    &.row-reverse {
+        flex-direction: row-reverse;
+        .mat-icon {
+            margin-left: 8px;
+            margin-right: 0;
+        }
+    }
+    &.icon-only {
+        padding-left: 13px;
+        padding-right: 5px;
+    }
+}
+
+.panel-button mat-icon {
+    margin-right: 5px;
+}
+
+.mdc-button.mat-mdc-button-disabled {
+    opacity: 0.3;
+}
+
+.menu-container {
+    display: grid;
+    grid-template-columns: 350px 350px 350px 350px;
+    grid-gap: 12px;
+
+}

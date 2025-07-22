@@ -1,0 +1,177 @@
+<div
+    [class.filter-active]="tabsPanelData && tabsPanelData.tabs[tabsPanelData.selectedTabIndex].filterActive"
+    class="tabpanel-div">
+
+  <div class="fnf-border-bottom">
+    <fnf-fav-menu
+        #favMenu
+        [dockerRoot]="dockerRoot"
+        [favs]="favs"
+        [latest]="latest"
+        [panelIndex]="panelIndex"
+        [winDrives]="winDrives"></fnf-fav-menu>
+  </div>
+
+  <mat-tab-group
+      (selectedIndexChange)="onSelectedIndexChanged($event)"
+      [@.disabled]="true"
+      [disablePagination]="false"
+      [selectedIndex]="tabsPanelData?.selectedTabIndex"
+      animationDuration="0ms"
+      style="">
+
+    @for (tab of tabsPanelData?.tabs; track tab.id; let i = $index) {
+      <mat-tab>
+        <ng-template mat-tab-label>
+          @if (tabsPanelData) {
+
+            <button
+                matIconButton
+                style="width: 0;overflow: clip;margin: 0;padding: 0;"
+                #matMenuTrigger="matMenuTrigger"
+                [matMenuTriggerFor]="menu"></button>
+
+            <mat-menu #menu="matMenu">
+              <button
+                  [disabled]="tabsPanelData.tabs.length < 2"
+                  (click)="onTabCloseClicked(i)"
+                  mat-menu-item>
+                <mat-icon>tab_close</mat-icon>
+                <span>Close this tab</span>
+              </button>
+
+              <button
+                  (click)="onTabMoveToOtherPanelClicked(i)"
+                  [disabled]="tabsPanelData.tabs.length < 2"
+                  mat-menu-item>
+                <mat-icon
+                    [class.fnf-rtl-mirror]="panelIndex===1">tab_move
+                </mat-icon>
+                <span>Move tab to {{ panelIndex === 0 ? 'right' : 'left' }} panel</span>
+              </button>
+
+              <button
+                  (click)="onTabCloneClicked(i)"
+                  mat-menu-item>
+                <mat-icon
+                    [class.fnf-rtl-mirror]="panelIndex===1">tab_new_right
+                </mat-icon>
+                <span>Clone this tab for {{ panelIndex === 0 ? 'right' : 'left' }} panel</span>
+              </button>
+              <mat-divider></mat-divider>
+
+              <button
+                  [disabled]="i === 0"
+                  (click)="onTabMoveLeftClicked(i)"
+                  mat-menu-item>
+                <mat-icon>west</mat-icon>
+                <span>Move this tab the left</span>
+              </button>
+
+              <button
+                  [disabled]="i >= tabsPanelData.tabs.length -1"
+                  (click)="onTabMoveRightClicked(i)"
+                  mat-menu-item>
+                <mat-icon>east</mat-icon>
+                <span>Move this tab to the right</span>
+              </button>
+
+            </mat-menu>
+
+            <button
+                matIconButton
+                style="width: 0;overflow: clip;margin: 0;padding: 0;"
+                #matMenuTrigger2="matMenuTrigger"
+                [matMenuTriggerFor]="menu2"></button>
+
+            <mat-menu #menu2="matMenu">
+              @for (dir of tab.history; track dir; let j = $index) {
+                <button
+                    (click)="onHistoryClicked(dir)"
+                    mat-menu-item>
+                  <mat-icon>arrow_forward</mat-icon>
+                  <span>{{ dir }}</span>
+                </button>
+              }
+            </mat-menu>
+
+
+            <app-tab
+                (click)="onTabClicked(i, $event, matMenuTrigger)"
+                (dblclick)="onTabDblClicked(i)"
+                (pointerdown)="onTabPointerDown(i, $event, matMenuTrigger)"
+                (contextmenu)="onTabContextMenu(i, $event, matMenuTrigger)"
+                (onLongPress)="onLongPress(i, $event, matMenuTrigger2)"
+                [activeAndSelected]="selected && i === tabsPanelData.selectedTabIndex"
+                [class.active]="i === tabsPanelData.selectedTabIndex"
+                [panelIndex]="panelIndex"
+                [tab]="tab"></app-tab>
+          }
+        </ng-template>
+      </mat-tab>
+    }
+  </mat-tab-group>
+
+  <div class="fnf-border-bottom display-flex">
+    <button
+        (click)="onAddTabClicked($event)"
+        [matTooltipShowDelay]="2000"
+        [matTooltip]="'ADD_NEW_TAB' | fnfShortcut"
+        class="icon-only-button fix-padding"
+        mat-button>
+      <mat-icon class="fnf-header-fg-color">add_circle_outline</mat-icon>
+    </button>
+    <button
+        (click)="onRemoveTabClicked($event)"
+        [matTooltipShowDelay]="2000"
+        [matTooltip]="'REMOVE_TAB' | fnfShortcut"
+        class="icon-only-button fix-padding"
+        mat-button>
+      <mat-icon class="fnf-header-fg-color">remove_circle_outline</mat-icon>
+    </button>
+  </div>
+
+  <div class="fnf-border-bottom filter-div">
+    @if (tabsPanelData) {
+
+      <button
+          [matTooltipShowDelay]="2000"
+          [matTooltip]="'TOGGLE_HIDDEN_FILES' | fnfShortcut"
+          class="icon-only-button float-right"
+          (click)="toggleHiddenFilesVisible()"
+          mat-button>
+        @if (tabsPanelData.tabs[tabsPanelData.selectedTabIndex].hiddenFilesVisible) {
+          <mat-icon class="fnf-header-fg-color">visibility</mat-icon>
+        } @else {
+          <mat-icon class="fnf-header-fg-color">visibility_off</mat-icon>
+        }
+      </button>
+
+      <button
+          [matTooltipShowDelay]="2000"
+          [matTooltip]="'TOGGLE_FILTER' | fnfShortcut"
+          class="icon-only-button float-right"
+          (click)="toggleFilterInput()"
+          mat-button>
+        @if (tabsPanelData.tabs[tabsPanelData.selectedTabIndex].filterActive) {
+          <mat-icon class="fnf-header-fg-color">filter_alt</mat-icon>
+        } @else {
+          <mat-icon class="fnf-header-fg-color">filter_alt_off</mat-icon>
+        }
+      </button><input
+          matTooltip="Double click to clear"
+          (change)="onFilterChangedByUser()"
+          (keyup)="onFilterChangedByUser()"
+          (dblclick)="clearFilter()"
+          [(ngModel)]="tabsPanelData.tabs[tabsPanelData.selectedTabIndex].filterText"
+          [class]="{
+          'hidden' : !tabsPanelData.tabs[tabsPanelData.selectedTabIndex].filterActive,
+          'panelIndex0' : panelIndex === 0
+          }"
+          [fnfAutofocus]="tabsPanelData.tabs[tabsPanelData.selectedTabIndex].filterActive"
+          class="filter border-0 float-right mr-1"
+          matInput
+          placeholder="Filter">
+    }
+  </div>
+</div>

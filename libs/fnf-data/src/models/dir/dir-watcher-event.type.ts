@@ -1,0 +1,18 @@
+export type DirWatcherEventType =
+  "all"
+  | "raw"
+  | "ready"
+  | "error"
+  | "add"
+  | "addDir"
+  | "checkOrAddFile"
+  | "checkOrAddDir"
+  | "unlinkDir"
+  | "unlink"
+  | "change"
+  | "list"
+  | "listpreview"
+  | "select"
+  | "focus"
+  | "unselect"
+  | "unselectall";

@@ -1,0 +1,30 @@
+
+.task-list-div {
+    min-height: 400px;
+    min-width: 400px;
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 16px;
+
+    .header {
+        display: grid;
+        grid-template-columns: auto auto  auto 1fr auto;
+        grid-gap: 16px;
+    }
+    .body {
+        overflow-y: auto;
+        display: block;
+        /*.row {*/
+        /*    width: 100%;*/
+        /*    display: grid;*/
+        /*    grid-template-columns: auto 1fr auto;*/
+        /*}*/
+    }
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        column-gap: 16px;
+        padding-top: 16px;
+    }
+}

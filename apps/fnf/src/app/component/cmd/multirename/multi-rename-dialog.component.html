@@ -1,0 +1,229 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Multi Rename</h2>
+
+<mat-dialog-content>
+
+
+  <form
+      [formGroup]="formGroup"
+      [class.replacements-checked]="!formGroup.get('replacementsChecked')?.value"
+      [class.ai-mode]="formGroup.get('strategy')?.value==='AI'"
+      autocomplete="off">
+
+    <div class="row-0">
+      <mat-button-toggle-group
+          [hideSingleSelectionIndicator]="false"
+          formControlName="strategy"
+          name="strategy"
+          aria-label="Strategy">
+
+        <mat-button-toggle
+            value="Manual">Manual
+        </mat-button-toggle>
+
+        <mat-button-toggle
+            value="AI">AI
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (formGroup.get('strategy')?.value === 'AI') {
+        <button
+            (click)="onFetchAiClicked()"
+            [disabled]="fetchAiButtonDisabled || !hasOpenAiApiKey"
+            data-test-id="fetch-ai-button"
+            color="primary"
+            mat-raised-button>
+          Fetch AI
+        </button>
+
+
+        <div class="fetch-ai-spinner">
+          @if (fetchAiButtonDisabled) {
+            <mat-spinner [diameter]="36"></mat-spinner>
+          }
+        </div>
+
+
+        <div>
+          @if (!hasOpenAiApiKey) {
+            <span>Your OpenAI API key is not installed properly (<a
+                href="javascript:void(0)"
+                (click)="openInfo()">More Information</a>).</span>
+          }
+        </div>
+      }
+
+    </div>
+
+    <div class="row-1">
+      <mat-form-field>
+        <mat-label>New name</mat-label>
+        <input
+            formControlName="renameTemplate"
+            matInput
+            placeholder="New name"/>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Capitalize</mat-label>
+        <mat-select
+            formControlName="capitalizeMode"
+            placeholder="Capitalize">
+          @for (option of options.capitalizeModes; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Counter Start</mat-label>
+        <mat-select
+            formControlName="counterStart"
+            placeholder="Counter Start">
+          @for (option of options.starts; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Counter Steps</mat-label>
+        <mat-select
+            formControlName="counterStep"
+            placeholder="Counter Step">
+          @for (option of options.steps; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Counter Digits</mat-label>
+        <mat-select
+            formControlName="counterDigits"
+            placeholder="Counter Digits">
+          @for (option of options.digits; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="row-2">
+      <label>
+        [N] Name,
+        [N#-#] Part of Name (Example: [N1-8]),
+        [E] Extension,
+        [E#-#] Part of Ext,
+        [C] Counter,
+        [P] Parent Dir,
+        [Q] Parent<sup>2</sup>,
+        [R] Parent<sup>3</sup>
+      </label>
+    </div>
+
+    <div class="row-3">
+      <mat-checkbox formControlName="ignoreExtension">Ignore Extension</mat-checkbox>
+      <mat-checkbox formControlName="replaceGermanUmlauts">Fix german umlauts</mat-checkbox>
+      <mat-checkbox formControlName="replaceRiskyChars">Replace risky chars</mat-checkbox>
+      <mat-checkbox formControlName="replaceSpaceToUnderscore">Space to underscore</mat-checkbox>
+      <mat-checkbox formControlName="replaceParentDir">Remove parent dir</mat-checkbox>
+      <div></div>
+    </div>
+
+
+    <div class="row-4">
+      <mat-checkbox formControlName="replacementsChecked">Search and replace</mat-checkbox>
+    </div>
+
+    <div class="row-5">
+      <ng-container formArrayName="replacements">
+        @if (replacements.controls && formGroup.get('replacementsChecked')?.value) {
+          @for (replacementForm of replacements.controls; track replacementForm; let i = $index) {
+          <div [formGroupName]="i" class="replacement-row">
+
+            <mat-checkbox formControlName="checked">Replace</mat-checkbox>
+
+            <mat-form-field>
+              <input formControlName="textFrom" matInput/>
+              <button
+                  matSuffix
+                  [matMenuTriggerFor]="menuMakros"
+                  mat-icon-button>
+                <mat-icon class="fnf-header-fg-color">expand_more</mat-icon>
+              </button>
+              <mat-menu
+                  #menuMakros="matMenu"
+                  class="fnf-search-template-menu">
+                  @for (ft of data.makros; track ft) {
+                    <button
+                        (click)="onMakroClicked(ft, i, replacementForm)"
+                        mat-menu-item>
+                      <div>
+                        <b [innerText]="ft.title"></b>
+                      </div>
+                      <small [innerText]="ft.example"></small>
+                    </button>
+                    <mat-divider></mat-divider>
+                  }
+              </mat-menu>
+            </mat-form-field>
+
+            <label>with</label>
+
+            <mat-form-field>
+              <input formControlName="textTo" matInput/>
+            </mat-form-field>
+
+            <mat-checkbox formControlName="regExpr">Use RegExp</mat-checkbox>
+
+            <mat-checkbox formControlName="ifFlag">only if match</mat-checkbox>
+
+            <mat-form-field>
+              <input formControlName="ifMatch" matInput />
+            </mat-form-field>
+          </div>
+        }
+      }
+      </ng-container>
+    </div>
+
+    <div class="row-6">
+        <guiexpert-table
+            (tableReady)="onTableReady($event)"
+            [debounceMouseClickDelay]="150"
+            [tableModel]="tableModel"
+            [tableOptions]="tableOptions"
+            class="ge-table multi-rename-table"></guiexpert-table>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      (click)="onResetClicked()"
+      data-test-id="dialog-reset-button"
+      mat-raised-button>
+    Reset
+  </button>
+
+  <div></div>
+
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+
+  <button
+      (click)="onOkClicked()"
+      [disabled]="!formGroup.valid"
+      color="primary"
+      data-test-id="dialog-ok-button"
+      mat-raised-button>
+    Rename All
+  </button>
+</mat-dialog-actions>
