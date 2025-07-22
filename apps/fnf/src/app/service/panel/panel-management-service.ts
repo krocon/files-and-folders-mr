@@ -12,6 +12,7 @@ import {TabData} from "../../domain/filepagedata/data/tab.data";
 })
 export class PanelManagementService {
 
+  public MAX_HISTORY_LENGTH = 15;
   readonly panelIndices: PanelIndex[] = [0, 1];
 
   constructor(
@@ -176,9 +177,33 @@ export class PanelManagementService {
     this.updateTabsPanelData(panelIndex, tabsPanelData);
   }
 
+  setPathToActiveTabInGivenPanel(path: string, panelIndex: PanelIndex, skipNextHistoryChange: boolean) {
+
+    console.info('setPathToActiveTabInGivenPanel ' + panelIndex, path);
+    if (path.startsWith('tabfind')) {
+      console.warn('setPathToActiveTabInGivenPanel: tabfind not supported yet');
+    }
+    let checkedPath = path;
+    const panelData: TabsPanelData = this.getTabsPanelData(panelIndex);
+    const tabData: TabData = panelData.tabs[panelData.selectedTabIndex];
+    tabData.path = checkedPath;
+    tabData.findData = undefined;
+
+    if (!skipNextHistoryChange) {
+      // add checkedPath on top:
+      tabData.history.splice(0, 0, checkedPath);
+      // remove double items:
+      tabData.history = tabData.history.filter((his, i, arr) => arr.indexOf(his) === i);
+      // max count = 10:
+      if (tabData.history.length > this.MAX_HISTORY_LENGTH) {
+        tabData.history.length = this.MAX_HISTORY_LENGTH;
+      }
+    }
+    // update ui:
+    this.updateTabsPanelData(panelIndex, panelData);
+  }
 
   private clone<T>(o: T): T {
     return JSON.parse(JSON.stringify(o));
   }
-
 }

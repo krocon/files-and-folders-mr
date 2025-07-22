@@ -88,7 +88,7 @@ export class AppService {
   public bodyAreaModels: [FileTableBodyModel | undefined, FileTableBodyModel | undefined] = [undefined, undefined];
   public selectionManagers: [SelectionManagerForObjectModels<FileItemIf> | undefined, SelectionManagerForObjectModels<FileItemIf> | undefined] = [undefined, undefined];
   public init$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  private MAX_HISTORY_LENGTH = 15;
+
   private defaultTools: CmdIf[] = [];
 
   constructor(
@@ -549,13 +549,8 @@ export class AppService {
 
   public async setPathToActiveTabInGivenPanel(
     path: string,
-    panelIndex: PanelIndex
-  ): Promise<void> {
+    panelIndex: PanelIndex) {
 
-    console.info('setPathToActiveTabInGivenPanel ' + panelIndex, path);
-    if (path.startsWith('tabfind')) {
-      console.warn('setPathToActiveTabInGivenPanel: tabfind not supported yet');
-    }
     try {
       let checkedPath = path;
       if (isZipUrl(path)) {
@@ -563,33 +558,16 @@ export class AppService {
       } else {
         checkedPath = await this.checkPath(path);
       }
-
-
-      const panelData: TabsPanelData = this.pms.getTabsPanelData(panelIndex);
-      const tabData: TabData = panelData.tabs[panelData.selectedTabIndex];
-      tabData.path = checkedPath;
-      tabData.findData = undefined;
-
-      if (!ChangeDirEventService.skipNextHistoryChange) {
-        ChangeDirEventService.skipNextHistoryChange = false;
-
-        // add checkedPath on top:
-        tabData.history.splice(0, 0, checkedPath);
-        // remove double items:
-        tabData.history = tabData.history.filter((his, i, arr) => arr.indexOf(his) === i);
-        // max count = 10:
-        if (tabData.history.length > this.MAX_HISTORY_LENGTH) {
-          tabData.history.length = this.MAX_HISTORY_LENGTH;
-        }
-        this.addLatest(checkedPath);
-      }
-      // update ui:
-      this.updateTabsPanelData(panelIndex, panelData);
+      const skipNextHistoryChange = ChangeDirEventService.skipNextHistoryChange;
+      this.pms.setPathToActiveTabInGivenPanel(checkedPath, panelIndex, skipNextHistoryChange);
+      ChangeDirEventService.skipNextHistoryChange = false;
+      if (!skipNextHistoryChange) this.addLatest(checkedPath);
 
     } catch (e) {
       console.error(e);
     }
   }
+
 
   setBodyAreaModel(panelIndex: PanelIndex, m: FileTableBodyModel) {
     this.bodyAreaModels[panelIndex] = m;
