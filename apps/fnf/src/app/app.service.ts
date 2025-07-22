@@ -2,10 +2,8 @@ import {Injectable, Output} from "@angular/core";
 import {LookAndFeelService} from "./service/look-and-feel.service";
 import {ShortcutActionMapping, ShortcutService} from "./service/shortcut.service";
 import {SysinfoService} from "./service/sysinfo.service";
-import {TabsPanelDataService} from "./domain/filepagedata/tabs-panel-data.service";
 import {ConfigService} from "./service/config.service";
 import {FileSystemService} from "./service/file-system.service";
-import {environment} from "../environments/environment";
 import {
   AllinfoIf,
   BrowserOsType,
@@ -24,10 +22,9 @@ import {
   SysinfoIf
 } from "@fnf/fnf-data";
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject} from "rxjs";
-import {map, tap} from "rxjs/operators";
+import {tap} from "rxjs/operators";
 import {QueueActionEvent} from "./domain/cmd/queue-action-event";
 import {DockerRootDeletePipe} from "./component/main/header/tabpanel/filemenu/docker-root-delete.pipe";
-import {PanelSelectionService} from "./domain/filepagedata/service/panel-selection.service";
 import {LatestDataService} from "./domain/filepagedata/service/latest-data.service";
 import {FavDataService} from "./domain/filepagedata/service/fav-data.service";
 import {ChangeDirEventService} from "./service/change-dir-event.service";
@@ -35,7 +32,6 @@ import {ChangeDirEvent} from "./service/change-dir-event";
 import {ActionId} from "./domain/action/fnf-action.enum";
 import {Theme} from "./domain/customcss/css-theme-type";
 import {TabData} from "./domain/filepagedata/data/tab.data";
-import {FileActionService} from "./service/cmd/file-action.service";
 import {FileTableBodyModel} from "./component/main/filetable/file-table-body-model";
 import {SelectionManagerForObjectModels} from "./component/main/filetable/selection-manager";
 import {CopyOrMoveOrDeleteDialogData} from "./component/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.data";
@@ -43,7 +39,6 @@ import {
   CopyOrMoveOrDeleteDialogService
 } from "./component/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.service";
 import {ClipboardService} from "./service/clipboard-service";
-import {GotoAnythingDialogService} from "./component/cmd/gotoanything/goto-anything-dialog.service";
 import {RenameDialogService} from "./component/cmd/rename/rename-dialog.service";
 import {RenameDialogData} from "./component/cmd/rename/rename-dialog.data";
 import {CommandService} from "./service/cmd/command.service";
@@ -54,7 +49,6 @@ import {ToolService} from "./service/tool.service";
 import {ActionShortcutPipe} from "./common/action-shortcut.pipe";
 import {SelectionDialogService} from "./component/cmd/selection/selection-dialog.service";
 import {SelectionDialogData} from "./component/cmd/selection/selection-dialog.data";
-import {FiletypeExtensionsService} from "./service/filetype-extensions.service";
 import {FindDialogService} from "./component/cmd/find/find-dialog.service";
 import {FindSocketService} from "./service/find.socketio.service";
 import {MultiRenameDialogService} from "./component/cmd/multirename/multi-rename-dialog.service";
@@ -65,21 +59,10 @@ import {GroupFilesDialogService} from "./component/cmd/groupfiles/group-files-di
 import {ChangeDirDialogService} from "./component/cmd/changedir/change-dir-dialog.service";
 import {ChangeDirDialogData} from "./component/cmd/changedir/data/change-dir-dialog.data";
 import {TabsPanelData} from "./domain/filepagedata/data/tabs-panel.data";
-import {WalkSocketService} from "./common/walkdir/walk.socketio.service";
-import {AiCompletionService} from "./service/ai/ai-completion.service";
 import {CleanDialogService} from "./component/cmd/clean/clean-dialog.service";
-import {GlobValidatorService} from "./service/glob-validator.service";
-import {CleanService} from "./service/clean.service";
 import {ShellLocalStorage} from "./component/main/footer/shellpanel/shell-local-storage";
-import {ShellService} from "./service/shell.service";
-import {ShellAutocompleteService} from "./service/shell-autocomplete.service";
-import {WalkdirSyncService} from "./common/walkdir/walkdir-sync.service";
-import {WalkdirService} from "./common/walkdir/walkdir.service";
 import {BrowserOsService} from "./service/browseros/browser-os.service";
-import {EditService} from "./service/edit.service";
 import {Router} from "@angular/router";
-import {ServershellService} from "./component/shell/service/servershell.service";
-import {ServershellAutocompleteService} from "./component/shell/service/servershell-autocomplete.service";
 import {PanelManagementService} from "./service/panel/panel-management-service";
 
 
@@ -113,10 +96,8 @@ export class AppService {
     private readonly lookAndFeelService: LookAndFeelService,
     private readonly shortcutService: ShortcutService,
     private readonly sysinfoService: SysinfoService,
-
     private readonly configService: ConfigService,
     private readonly fileSystemService: FileSystemService,
-
     private readonly latestDataService: LatestDataService,
     private readonly favDataService: FavDataService,
     private readonly changeDirEventService: ChangeDirEventService,
@@ -311,7 +292,6 @@ export class AppService {
   public updateTabsPanelData(panelIndex: PanelIndex, fileData: TabsPanelData) {
     this.pms.updateTabsPanelData(panelIndex, fileData);
   }
-
 
 
   getActivePanelIndex(): PanelIndex {
@@ -812,7 +792,6 @@ export class AppService {
   shellVisibilityChanges$(): BehaviorSubject<boolean> {
     return this.shellLocalStorage.valueChanges$();
   }
-
 
 
   private getSelectedData(panelIndex: PanelIndex): FileItemIf[] {

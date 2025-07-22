@@ -27,7 +27,6 @@ import {CommonModule} from "@angular/common";
 import {BreadcrumbComponent} from "./header/breadcrumb/breadcrumb.component";
 import {TabpanelComponent} from "./header/tabpanel/tabpanel.component";
 import {PanelIndex} from "@fnf/fnf-data";
-import {PanelSelectionService} from "../../domain/filepagedata/service/panel-selection.service";
 import {SummaryLabel} from "./footer/summarylabel/summary-label";
 import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {SelectionEvent} from "../../domain/filepagedata/data/selection-event";
