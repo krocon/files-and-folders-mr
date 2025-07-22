@@ -278,7 +278,7 @@ export class ServershellComponent implements OnInit, OnDestroy {
 
     // Wait for animation to complete before navigating
     setTimeout(() => {
-      this.appService.onChangeDir(this.path, this.appService.getActivePanelIndex());
+      this.appService.changeDirOnActivePabel(this.path);
       this.router.navigate(['/files']);
     }, 300); // Match the CSS transition duration
   }

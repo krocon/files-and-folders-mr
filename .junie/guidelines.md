@@ -84,3 +84,7 @@ export class ExampleComponent {
 
 These guidelines ensure consistency across the codebase while adopting the new Angular template syntax features without
 using Signals.
+
+# git
+
+You will find your public SSH key here: 'fnf-mr-junie.pub'

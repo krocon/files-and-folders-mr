@@ -10,6 +10,7 @@ import {TabsPanelData} from "./data/tabs-panel.data";
 })
 export class TabsPanelDataService {
 
+
   private readonly innerServices = [
     new TypedDataService<TabsPanelData>("tabs0", new TabsPanelData(0, [new TabData('/')], 0)),
     new TypedDataService<TabsPanelData>("tabs1", new TabsPanelData(1, [new TabData("/")], 0))

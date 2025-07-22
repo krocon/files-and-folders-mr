@@ -33,6 +33,7 @@ import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {SelectionEvent} from "../../domain/filepagedata/data/selection-event";
 import {ShellPanelComponent} from "./footer/shellpanel/shell-panel.component";
 import {takeWhile} from "rxjs/operators";
+import {PanelManagementService} from "../../service/panel/panel-management-service";
 
 
 const CONFIG: ResizeConfig = {
@@ -71,35 +72,40 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
   favs: string[] = this.appService.favs;
   readonly dockerRoot = this.appService.dockerRoot;
 
-  readonly panelIndices: PanelIndex[] = [0, 1];
-  tabsPanelData: [TabsPanelData, TabsPanelData] = this.appService.tabsPanelDatas;
+  readonly panelIndices = this.pms.getPanelIndices();
 
-  activePanelIndex: PanelIndex = this.panelSelectionService.getValue();
-  activeTabsPanelData: TabsPanelData = this.tabsPanelData[this.activePanelIndex];
+  tabsPanelData: [TabsPanelData, TabsPanelData] = [
+    this.pms.getTabsPanelData(0),
+    this.pms.getTabsPanelData(1)
+  ];
+
+  activePanelIndex: PanelIndex = this.pms.getActivePanelIndex();
+  activeTabsPanelData: TabsPanelData = this.pms.getTabsPanelData(this.activePanelIndex);
   activePanelPath: string = '';
 
+  selectionEvents: SelectionEvent[] = this.panelIndices.map(i => new SelectionEvent());
 
-  selectionEvents: SelectionEvent[] = this.panelIndices
-    .map(i => new SelectionEvent());
   buttonEnableStatesArr = [
     new ButtonEnableStates(),
     new ButtonEnableStates()
   ];
   shellVisible: boolean = this.appService.isShellVisible();
   shellInputHasFocus = false;
+
   @ViewChild('splitPaneMain') private readonly splitPaneMainRef!: ElementRef<HTMLDivElement>;
   @ViewChild('splitPaneLeft') private readonly splitPaneLeftRef!: ElementRef<HTMLDivElement>;
+
   private doCheckCount = 0;
   private idCounter = 0;
-
   private alive = true;
 
   constructor(
+    private readonly pms: PanelManagementService,
     private readonly renderer: Renderer2,
     private readonly splitPaneMouseService: SplitPaneMouseService,
     private readonly windowResizeService: WindowResizeService,
     private readonly appService: AppService,
-    private readonly panelSelectionService: PanelSelectionService,
+    // private readonly panelSelectionService: PanelSelectionService,
     private readonly cdr: ChangeDetectorRef,
   ) {
   }
@@ -122,8 +128,8 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
     this.initialized = true;
     this.cdr.detectChanges();
 
-    this.panelSelectionService
-      .valueChanges$()
+    this.pms
+      .getPanelSelectionChange$()
       .pipe(
         takeWhile(() => this.alive)
       )
@@ -132,33 +138,22 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
         this.calcActiveData();
       })
 
-
-    this.appService
-      .filePageDataChanges(0)
-      .pipe(
-        takeWhile(() => this.alive)
-      )
-      .subscribe(fd => {
-        this.normalizeFilePageData(fd);
-        this.tabsPanelData[0] = {...fd};
-        if (this.activePanelIndex === 0) {
-          this.calcActiveData();
-        }
-        this.cdr.detectChanges();
-      });
-
-    this.appService
-      .filePageDataChanges(1)
-      .pipe(
-        takeWhile(() => this.alive)
-      )
-      .subscribe(fd => {
-        this.normalizeFilePageData(fd);
-        this.tabsPanelData[1] = {...fd};
-        if (this.activePanelIndex === 1) {
-          this.calcActiveData();
-        }
-        this.cdr.detectChanges();
+    this.pms
+      .getPanelIndices()
+      .forEach(panelIndex => {
+        this.pms
+          .filePageDataChange$(panelIndex)
+          .pipe(
+            takeWhile(() => this.alive)
+          )
+          .subscribe(fd => {
+            this.normalizeFilePageData(fd);
+            this.tabsPanelData[panelIndex] = {...fd};
+            if (this.activePanelIndex === panelIndex) {
+              this.calcActiveData();
+            }
+            this.cdr.detectChanges();
+          });
       });
 
     this.appService
@@ -234,15 +229,16 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
   }
 
   setActivePanel(panelIndex: PanelIndex): void {
-    this.appService.setPanelActive(panelIndex);
+    this.pms.setPanelActive(panelIndex);
   }
 
   onTabDataChanged(tabsPanelData: TabsPanelData, panelIndex: PanelIndex): void {
-    if (this.tabsPanelData) {
-      this.tabsPanelData[panelIndex] = tabsPanelData;
-      this.updatePathes();
-      this.appService.updateTabsPanelData(panelIndex, this.tabsPanelData[panelIndex]);
-    }
+    this.pms.updateTabsPanelData(panelIndex, tabsPanelData);
+    // if (this.tabsPanelData) {
+    //   this.tabsPanelData[panelIndex] = tabsPanelData;
+    //   this.updatePathes();
+    //   this.appService.updateTabsPanelData(panelIndex, this.tabsPanelData[panelIndex]);
+    // }
   }
 
   onBreadcrumbClicked(item: FileItemIf, panelIndex: PanelIndex) {

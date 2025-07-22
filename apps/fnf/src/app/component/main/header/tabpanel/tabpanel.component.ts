@@ -27,6 +27,7 @@ import {ActionShortcutPipe} from "../../../../common/action-shortcut.pipe";
 import {takeWhile} from "rxjs/operators";
 import {MatDivider} from "@angular/material/divider";
 import {FnfAutofocusDirective} from "../../../../common/directive/fnf-autofocus.directive";
+import {PanelManagementService} from "../../../../service/panel/panel-management-service";
 
 @Component({
   selector: 'app-tabpanel',
@@ -84,6 +85,10 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
     this._tabsPanelData = value;
   }
 
+  constructor(
+    private readonly pms: PanelManagementService,
+  ) {}
+
 
   ngOnInit(): void {
     this.appService
@@ -91,12 +96,12 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeWhile(() => this.alive))
       .subscribe(action => {
         if (action === 'SELECT_LEFT_PANEL') {
-          this.appService.setPanelActive(0);
+          this.pms.setPanelActive(0);
           this.openMenu(this.panelIndex === 1);
           this.openMenu(this.panelIndex === 0);
 
         } else if (action === 'SELECT_RIGHT_PANEL') {
-          this.appService.setPanelActive(1);
+          this.pms.setPanelActive(1);
           this.openMenu(this.panelIndex === 1);
           this.openMenu(this.panelIndex === 0);
         }

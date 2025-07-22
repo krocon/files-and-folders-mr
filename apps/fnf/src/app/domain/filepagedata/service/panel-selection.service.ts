@@ -9,6 +9,7 @@ import {BehaviorSubject} from "rxjs";
 })
 export class PanelSelectionService {
 
+
   private static readonly innerService =
     new TypedDataService<PanelIndex>("activePanelIndex", 0);
 
