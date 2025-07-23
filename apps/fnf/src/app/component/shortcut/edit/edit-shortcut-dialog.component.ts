@@ -79,8 +79,8 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     this.currentShortcutInput = '';
   }
 
-  @HostListener('document:keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent): void {
+  @HostListener('document:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
     if (!this.isCapturingShortcut) {
       return;
     }

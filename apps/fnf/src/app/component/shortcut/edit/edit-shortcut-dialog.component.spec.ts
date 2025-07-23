@@ -102,7 +102,7 @@ describe('EditShortcutDialogComponent', () => {
     component.isCapturingShortcut = true;
     component.captureIndex = 0;
 
-    const mockKeyboardEvent = new KeyboardEvent('keydown', {
+    const mockKeyboardEvent = new KeyboardEvent('keyup', {
       key: 't',
       ctrlKey: true,
       shiftKey: true
@@ -111,7 +111,7 @@ describe('EditShortcutDialogComponent', () => {
     jest.spyOn(mockKeyboardEvent, 'preventDefault');
     jest.spyOn(mockKeyboardEvent, 'stopPropagation');
 
-    component.onKeyDown(mockKeyboardEvent);
+    component.onKeyUp(mockKeyboardEvent);
 
     expect(mockKeyboardEvent.preventDefault).toHaveBeenCalled();
     expect(mockKeyboardEvent.stopPropagation).toHaveBeenCalled();
@@ -124,14 +124,14 @@ describe('EditShortcutDialogComponent', () => {
   it('should not capture keyboard shortcut when not in capturing mode', () => {
     component.isCapturingShortcut = false;
 
-    const mockKeyboardEvent = new KeyboardEvent('keydown', {
+    const mockKeyboardEvent = new KeyboardEvent('keyup', {
       key: 't',
       ctrlKey: true
     });
 
     jest.spyOn(mockKeyboardEvent, 'preventDefault');
 
-    component.onKeyDown(mockKeyboardEvent);
+    component.onKeyUp(mockKeyboardEvent);
 
     expect(mockKeyboardEvent.preventDefault).not.toHaveBeenCalled();
     expect(mockShortcutService.createHarmonizedShortcutByKeyboardEvent).not.toHaveBeenCalled();
