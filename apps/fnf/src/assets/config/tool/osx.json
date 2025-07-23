@@ -10,7 +10,7 @@
   },
   {
     "id": "CMD_SHELL",
-    "label": "CMD Shell",
+    "label": "Local Shell",
     "shortcut": "cmd 0",
     "cmd": "open -a Terminal ",
     "para": " $dir ",

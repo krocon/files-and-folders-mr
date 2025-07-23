@@ -17,7 +17,7 @@
   },
   {
     "id": "CMD_SHELL",
-    "label": "CMD Shell",
+    "label": "Local Shell",
     "shortcut": "control alt c",
     "cmd": "$clidir\\cmd.bat",
     "para": " $dir ",
