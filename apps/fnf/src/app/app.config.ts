@@ -14,7 +14,7 @@ import {LookAndFeelService} from "./service/look-and-feel.service";
 import {FileSystemService} from "./service/file-system.service";
 import {FileActionService} from "./service/cmd/file-action.service";
 import {GotoAnythingDialogService} from "./component/cmd/gotoanything/goto-anything-dialog.service";
-import {ToolService} from "./service/tool.service";
+import {ToolService} from "./service/tools/tool.service";
 import {FiletypeExtensionsService} from "./service/filetype-extensions.service";
 import {AiCompletionService} from "./service/ai/ai-completion.service";
 import {GlobValidatorService} from "./service/glob-validator.service";

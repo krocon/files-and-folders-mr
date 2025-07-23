@@ -28,6 +28,7 @@ import {takeWhile} from "rxjs/operators";
 import {MatDivider} from "@angular/material/divider";
 import {FnfAutofocusDirective} from "../../../../common/directive/fnf-autofocus.directive";
 import {PanelManagementService} from "../../../../service/panel/panel-management-service";
+import {ActionExecutionService} from "../../../../service/action/action-execution.service";
 
 @Component({
   selector: 'app-tabpanel',
@@ -74,8 +75,13 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
   private alive = true;
   private resizeObserver: ResizeObserver | null = null;
 
-  private _tabsPanelData?: TabsPanelData;
+  constructor(
+    private readonly pms: PanelManagementService,
+    private readonly actionExecutionService: ActionExecutionService,
+  ) {
+  }
 
+  private _tabsPanelData?: TabsPanelData;
 
   get tabsPanelData(): TabsPanelData | undefined {
     return this._tabsPanelData;
@@ -85,13 +91,8 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
     this._tabsPanelData = value;
   }
 
-  constructor(
-    private readonly pms: PanelManagementService,
-  ) {}
-
-
   ngOnInit(): void {
-    this.appService
+    this.actionExecutionService
       .actionEvents$
       .pipe(takeWhile(() => this.alive))
       .subscribe(action => {
@@ -271,7 +272,7 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const clone = this.clone(this.tabsPanelData.tabs[i]);
     const targetPanelIndex = this.panelIndex === 0 ? 1 : 0;
-    this.appService.addTab(targetPanelIndex, clone);
+    this.pms.addTab(targetPanelIndex, clone);
   }
 
   onTabMoveToOtherPanelClicked(i: number) {
@@ -279,7 +280,7 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const clone = this.clone(this.tabsPanelData.tabs[i]);
     const targetPanelIndex = this.panelIndex === 0 ? 1 : 0;
-    this.appService.addTab(targetPanelIndex, clone);
+    this.pms.addTab(targetPanelIndex, clone);
     this.onTabCloseClicked(i);
     // Note: onTabCloseClicked already calls ensureActiveTabVisible
   }

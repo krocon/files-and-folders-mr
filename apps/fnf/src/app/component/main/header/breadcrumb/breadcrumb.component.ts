@@ -6,8 +6,8 @@ import {Subject} from "rxjs";
 import {TabsPanelData} from "../../../../domain/filepagedata/data/tabs-panel.data";
 import {TabData} from "../../../../domain/filepagedata/data/tab.data";
 import {MatTooltip} from "@angular/material/tooltip";
-import {AppService} from "../../../../app.service";
 import {FavToggleComponent} from "./fav.component";
+import {ActionExecutionService} from "../../../../service/action/action-execution.service";
 
 @Component({
   selector: 'app-breadcrumb',
@@ -33,7 +33,7 @@ export class BreadcrumbComponent {
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly appService: AppService,
+    private readonly actionExecutionService: ActionExecutionService,
   ) {
   }
 
@@ -75,11 +75,10 @@ export class BreadcrumbComponent {
         ...this.tabDataItem?.findData?.findDialogData,
         newtab: false
       };
-      this.appService.openFindDialog(findDialogData);
+      // this.appService.openFindDialog(findDialogData);
+      this.actionExecutionService.openFindDialog(findDialogData);
     }
   }
 
-  onFavClicked() {
 
-  }
 }

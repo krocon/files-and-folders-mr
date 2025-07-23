@@ -3,7 +3,7 @@ import {TabsPanelDataService} from "../../domain/filepagedata/tabs-panel-data.se
 import {PanelSelectionService} from "../../domain/filepagedata/service/panel-selection.service";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {DOT_DOT, FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf/fnf-data";
 import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {TabData} from "../../domain/filepagedata/data/tab.data";
 
@@ -20,6 +20,11 @@ export class PanelManagementService {
     private readonly tabsPanelDataService: TabsPanelDataService,
     private readonly panelSelectionService: PanelSelectionService,
   ) {
+  }
+
+  debug() {
+    console.info('tabsPanelData 0\n', this.getTabsPanelData(0));
+    console.info('tabsPanelData 1\n', this.getTabsPanelData(1));
   }
 
   getPanelIndices(): PanelIndex[] {
@@ -141,8 +146,6 @@ export class PanelManagementService {
     const panelData: TabsPanelData = this.getTabsPanelData(inactivePanelIndex);
     return panelData.tabs[panelData.selectedTabIndex];
   }
-
-
 
 
   getPanelSelectionChange$(): Observable<PanelIndex> {

@@ -64,7 +64,6 @@ import {ActionId, actionIds} from "../../../domain/action/fnf-action.enum";
 import {FnfActionLabels} from "../../../domain/action/fnf-action-labels";
 import {NotifyService} from "../../../service/cmd/notify-service";
 import {QueueNotifyEventIf} from "../../../domain/cmd/queue-notify-event.if";
-import {SelectionDialogData} from "../../cmd/selection/selection-dialog.data";
 import {FocusLocalStorage} from "./focus-local-storage";
 import {MkdirDialogData} from "../../cmd/mkdir/mkdir-dialog.data";
 import {MkdirDialogResultData} from "../../cmd/mkdir/mkdir-dialog-result.data";
@@ -313,7 +312,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
 
-    this.appService
+    this.actionExecutionService
       .actionEvents$
       .pipe(takeWhile(() => this.alive))
       .subscribe(actionEvent => {
@@ -463,6 +462,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   async actionCall(action: string) {
+    console.info('filetable> actionCall: ', action);
     if (action === 'RELOAD_DIR') {
       this.reload();
 
@@ -622,7 +622,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
             dir: para.dir,
             base: para.base
           });
-          this.appService.callActionMkDir(para);
+          this.actionExecutionService.callActionMkDir(para);
         }
       });
   }
@@ -652,11 +652,12 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private openSelectionDialog(enhance: boolean) {
-    const rows = this.appService.getSelectedOrFocussedData(this.panelIndex);
-    const s = rows.length ? rows[0].ext : '';
-    this.appService.openSelectionDialog(
-      new SelectionDialogData(s, enhance),
-      (data) => this.handleSelectionDialogResult(data, enhance));
+    console.info('filetable openSelectionDialog', enhance);
+    this.actionExecutionService.openSelectionDialog(
+      this.panelIndex,
+      enhance,
+      (data) => this.handleSelectionDialogResult(data, enhance)
+    );
   }
 
   private handleSelectionDialogResult(data: string | undefined, enhance: boolean) {

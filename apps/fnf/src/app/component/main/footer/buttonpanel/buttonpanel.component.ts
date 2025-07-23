@@ -228,7 +228,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   }
 
   onToolClicked(tool: CmdIf) {
-    this.appService.execute(tool);
+    this.actionExecutionService.executeCmd(tool);
   }
 
   getShortcutsByAction(action: ActionId) {

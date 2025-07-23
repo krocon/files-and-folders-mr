@@ -11,10 +11,8 @@ import {
   Config,
   DirEventIf,
   DirPara,
-  DOT_DOT,
   FileItemIf,
   FindData,
-  FindDialogData,
   isZipUrl,
   PanelIndex,
   Sysinfo,
@@ -32,20 +30,9 @@ import {Theme} from "./domain/customcss/css-theme-type";
 import {TabData} from "./domain/filepagedata/data/tab.data";
 import {FileTableBodyModel} from "./component/main/filetable/file-table-body-model";
 import {SelectionManagerForObjectModels} from "./component/main/filetable/selection-manager";
-import {CopyOrMoveOrDeleteDialogData} from "./component/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.data";
-import {
-  CopyOrMoveOrDeleteDialogService
-} from "./component/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.service";
-import {CommandService} from "./service/cmd/command.service";
-import {QueueFileOperationParams} from "./domain/cmd/queue-file-operation-params";
-import {ToolService} from "./service/tool.service";
+import {ToolService} from "./service/tools/tool.service";
 import {ActionShortcutPipe} from "./common/action-shortcut.pipe";
-import {SelectionDialogService} from "./component/cmd/selection/selection-dialog.service";
-import {SelectionDialogData} from "./component/cmd/selection/selection-dialog.data";
-import {FindDialogService} from "./component/cmd/find/find-dialog.service";
 import {FindSocketService} from "./service/find.socketio.service";
-import {ChangeDirDialogService} from "./component/cmd/changedir/change-dir-dialog.service";
-import {ChangeDirDialogData} from "./component/cmd/changedir/data/change-dir-dialog.data";
 import {TabsPanelData} from "./domain/filepagedata/data/tabs-panel.data";
 import {ShellLocalStorage} from "./component/main/footer/shellpanel/shell-local-storage";
 import {BrowserOsService} from "./service/browseros/browser-os.service";
@@ -71,7 +58,7 @@ export class AppService {
 
   public readonly changeDirRequest$ = new Subject<ChangeDirEvent | null>();
   public readonly dirEvents$ = new BehaviorSubject<Map<string, DirEventIf[]>>(new Map());
-  public readonly actionEvents$ = new Subject<ActionId>();
+
   public bodyAreaModels: [FileTableBodyModel | undefined, FileTableBodyModel | undefined] = [undefined, undefined];
   public selectionManagers: [SelectionManagerForObjectModels<FileItemIf> | undefined, SelectionManagerForObjectModels<FileItemIf> | undefined] = [undefined, undefined];
   public init$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -89,13 +76,8 @@ export class AppService {
     private readonly latestDataService: LatestDataService,
     private readonly favDataService: FavDataService,
     private readonly changeDirEventService: ChangeDirEventService,
-    private readonly copyOrMoveDialogService: CopyOrMoveOrDeleteDialogService,
-    private readonly commandService: CommandService,
     private readonly toolService: ToolService,
-    private readonly selectionDialogService: SelectionDialogService,
-    private readonly findDialogService: FindDialogService,
     private readonly findSocketService: FindSocketService,
-    private readonly changeDirDialogService: ChangeDirDialogService,
     private readonly shellLocalStorage: ShellLocalStorage,
     private readonly browserOsService: BrowserOsService,
   ) {
@@ -385,17 +367,9 @@ export class AppService {
     console.info('winDrives\n', JSON.stringify(this.winDrives, null, 4));
     console.info('latest\n', JSON.stringify(this.latest, null, 4));
     console.info('favs\n', JSON.stringify(this.favs, null, 4));
-    console.info('tabsPanelData 0\n', this.pms.getTabsPanelData(0));
-    console.info('tabsPanelData 1\n', this.pms.getTabsPanelData(1));
-    this.bodyAreaModels.forEach((bodyAreaModel, i) => {
-      if (bodyAreaModel) {
-        console.info('bodyAreaModel(' + i + ') focusedRowIndex:', bodyAreaModel.getFocusedRowIndex());
-        console.info('bodyAreaModel(' + i + ') row count', bodyAreaModel.getRowCount());
-        console.info('bodyAreaModel(' + i + ') rows:', bodyAreaModel.getAllRows());
-      }
-    });
+    this.pms.debug();
+    this.actionExecutionService.debug();
   }
-
 
 
   setTheme(theme: Theme) {
@@ -500,59 +474,13 @@ export class AppService {
   }
 
   open(fileItem?: FileItemIf) {
-    const srcPanelIndex = this.pms.getActivePanelIndex();
-    if (!fileItem) {
-      const rows = this.getSelectedOrFocussedData(srcPanelIndex);
-      if (rows?.length === 1) {
-        fileItem = rows[0];
-      }
-    }
-    if (fileItem) {
-      const actionEvent = this.commandService.createQueueActionEventForOpen(
-        new QueueFileOperationParams(fileItem, srcPanelIndex, fileItem, srcPanelIndex)
-      );
-      this.commandService.addActions([actionEvent]);
-    }
+    this.actionExecutionService.openFileItem(fileItem);
   }
 
   getDefaultTools(): CmdIf[] {
     return this.defaultTools;
   }
 
-  execute(cmd: CmdIf) {
-    const currentDir = this.getActiveTabOnActivePanel().path;
-    const fileItems: FileItemIf[] = this.getSelectedOrFocussedDataForActivePanel();
-
-    const cmds: CmdIf[] = [];
-    for (let i = 0; i < fileItems.length; i++) {
-      const fileItem = fileItems[i];
-      const cmdClone = this.clone(cmd);
-      cmdClone.para = cmdClone.para
-        .replace(/\$file/g, fileItem.dir + '/' + fileItem.base)
-        .replace(/\$dir/g, currentDir);
-      cmds.push(cmdClone);
-    }
-
-    this.toolService.execute(cmds);
-  }
-
-  openSelectionDialog(data: SelectionDialogData, cb: (result: string | undefined) => void) {
-    this.selectionDialogService.open(data, cb);
-  }
-
-  getSelectedOrFocussedData(panelIndex: PanelIndex): FileItemIf[] {
-    let ret = this.selectionManagers[panelIndex]?.getSelectedRows() ?? [];
-    if (!ret?.length && this.bodyAreaModels[panelIndex]) {
-      const focusedRowIndex = this.bodyAreaModels[panelIndex]?.getFocusedRowIndex() ?? 0;
-      const frd = this.bodyAreaModels[panelIndex]?.getRowByIndex(focusedRowIndex) ?? null;
-      if (frd) {
-        ret = [frd];
-      } else {
-        ret = [];
-      }
-    }
-    return ret ?? [];
-  }
 
   getFirstShortcutByActionAsTokens(action: ActionId): string[] {
     return this.shortcutService.getFirstShortcutByActionAsTokens(action);
@@ -561,50 +489,6 @@ export class AppService {
   getShortcutAsLabelTokens(sc: string): string[] {
     return this.shortcutService.getShortcutAsLabelTokens(sc);
   }
-
-  public addTab(panelIndex: PanelIndex, tabData: TabData) {
-    const tabsPanelData = this.pms.getTabsPanelData(panelIndex);
-
-    tabsPanelData.tabs.push(tabData);
-    tabsPanelData.selectedTabIndex = tabsPanelData.tabs.length - 1;
-    this.updateTabsPanelData(panelIndex, tabsPanelData);
-  }
-
-
-  // TODO marc xxxx ActionExecutionService, aber hier leider mit data: FindDialogData  . was tun?
-  public openFindDialog(
-    data: FindDialogData | null
-  ) {
-    const panelIndex = this.pms.getActivePanelIndex();
-    if (!data) {
-      data = new FindDialogData('', '**/*.*', true, false);
-      data.folders = this.getRelevantDirsFromActiveTab();
-    }
-    this.findDialogService
-      .open(data, (result: FindDialogData | undefined) => {
-        if (result) {
-          if (result.folder) {
-            result.folders = result.folder.split(',');
-            result.folder = '';
-          }
-          const findData: FindData = this.findSocketService.createFindData(result);
-
-          if (findData.findDialogData.newtab) {
-            const tabDataFindings = new TabData(findData.dirTabKey);
-            tabDataFindings.findData = findData;
-            this.addTab(panelIndex, tabDataFindings);
-
-          } else {
-            const tabsPanel = this.pms.getTabsPanelData(panelIndex);
-            const tabData = tabsPanel.tabs[tabsPanel.selectedTabIndex];
-            tabData.path = findData.dirTabKey;
-            tabData.findData = findData;
-            this.updateTabsPanelData(panelIndex, this.pms.getTabsPanelData(panelIndex));
-          }
-        }
-      });
-  }
-
 
   requestFindings(findData: FindData) {
     this.findSocketService
@@ -616,12 +500,6 @@ export class AppService {
       });
   }
 
-  callActionMkDir(para: { dir: string; base: string; panelIndex: PanelIndex }) {
-    const actionEvent = this.commandService.createQueueActionEventForMkdir(para);
-    this.commandService.addActions([actionEvent]);
-  }
-
-
 
   isShellVisible() {
     return this.shellLocalStorage.isShellVisible();
@@ -632,37 +510,9 @@ export class AppService {
   }
 
 
-  private getSelectedData(panelIndex: PanelIndex): FileItemIf[] {
-    return this.selectionManagers[panelIndex]?.getSelectedRows() ?? [];
-  }
-
-
-  private clone<T>(o: T): T {
-    return JSON.parse(JSON.stringify(o));
-  }
-
   private getTabDataForPanelIndex(panelIndex: 0 | 1): TabData {
     const panelData: TabsPanelData = this.pms.getTabsPanelData(panelIndex);
     return panelData.tabs[panelData.selectedTabIndex];
-  }
-
-  private getSelectedDataForActivePanel(): FileItemIf[] {
-    return this.getSelectedData(this.pms.getActivePanelIndex());
-  }
-
-  private getSelectedOrFocussedDataForActivePanel(): FileItemIf[] {
-    return this.getSelectedOrFocussedData(this.pms.getActivePanelIndex());
-  }
-
-  private getRelevantDirsFromActiveTab(): string[] {
-    let fileItems = this.getSelectedDataForActivePanel().filter(fi => fi.isDir);
-    if (fileItems.length === 1 && fileItems[0].base === DOT_DOT) {
-      fileItems = [];
-    }
-    if (fileItems.length) {
-      return fileItems.map(fi => `${fi.dir}/${fi.base}`);
-    }
-    return [this.getActiveTabOnActivePanel().path];
   }
 
 
