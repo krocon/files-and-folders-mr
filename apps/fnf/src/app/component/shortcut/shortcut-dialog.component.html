@@ -31,6 +31,7 @@
         <th class="shortcut-cell">Action</th>
         <th class="shortcut-cell">Label</th>
         <th class="shortcut-cell">Shortcuts</th>
+        <th class="shortcut-cell">Edit</th>
       </tr>
       </thead>
       <tbody>
@@ -42,6 +43,13 @@
               @for (shortcut of item.shortcuts; track shortcut) {
                 <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut>
               }
+            </td>
+            <td class="shortcut-cell">
+              <a
+                  href="#"
+                  (click)="openEditDialog(item)">
+                <mat-icon>edit</mat-icon>
+              </a>
             </td>
           </tr>
         }

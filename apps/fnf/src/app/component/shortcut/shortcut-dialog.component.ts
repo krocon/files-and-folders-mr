@@ -108,4 +108,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
 
+  openEditDialog(item: ActionIdLabelShortcut) {
+    // TODO open a new edit dialog to define one or more shortcuts for the given action item.
+  }
 }

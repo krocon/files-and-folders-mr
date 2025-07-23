@@ -54,7 +54,8 @@ export const environment = {
   },
 
   shortcut: {
-    getShortcutActionMappingUrl: "assets/config/shortcut/"
+    getShortcutActionMappingUrl: "assets/config/shortcut/",
+    getShortcutApiUrl: prefix + "api/shortcut/"
   },
   filetypeExtensions: {
     getFiletypesUrl: "assets/config/filetype/filetype-extensions.json"

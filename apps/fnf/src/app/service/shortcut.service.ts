@@ -15,7 +15,7 @@ export class ShortcutService {
 
   private static readonly config = {
     getShortcutActionMappingUrl: "assets/config/shortcut/",
-    apiBaseUrl: "http://localhost:3334/shortcuts"
+    getShortcutApiUrl: "api/shortcut/"  /* on localhost: is automatically set to by configuration "http://localhost:3333/api/shortcut/" */
   };
 
   // Initialize with default shortcuts to ensure something is available before init() is called
@@ -136,7 +136,7 @@ export class ShortcutService {
    * Get shortcuts from the new API (merged defaults + custom)
    */
   getShortcutsFromApi(os: BrowserOsType): Observable<ShortcutActionMapping> {
-    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}`)
+    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.getShortcutApiUrl}/${os}`)
       .pipe(
         tap(shortcuts => {
           this.activeShortcuts = this.updateShortcutMappings(shortcuts);
@@ -164,7 +164,7 @@ export class ShortcutService {
     return this.httpClient.put<{
       success: boolean;
       message: string
-    }>(`${ShortcutService.config.apiBaseUrl}/${os}`, shortcuts)
+    }>(`${ShortcutService.config.getShortcutApiUrl}/${os}`, shortcuts)
       .pipe(
         tap(response => {
           if (response.success) {
@@ -183,7 +183,7 @@ export class ShortcutService {
    * Reset shortcuts to defaults for a specific OS
    */
   resetToDefaults(os: BrowserOsType): Observable<ShortcutActionMapping> {
-    return this.httpClient.post<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}/reset`, {})
+    return this.httpClient.post<ShortcutActionMapping>(`${ShortcutService.config.getShortcutApiUrl}/${os}/reset`, {})
       .pipe(
         tap(shortcuts => {
           this.activeShortcuts = this.updateShortcutMappings(shortcuts);
@@ -205,7 +205,7 @@ export class ShortcutService {
    * Get default shortcuts for a specific OS
    */
   getDefaults(os: BrowserOsType): Observable<ShortcutActionMapping> {
-    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}/defaults`)
+    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.getShortcutApiUrl}/${os}/defaults`)
       .pipe(
         catchError(error => {
           console.error('Failed to load default shortcuts:', error);
