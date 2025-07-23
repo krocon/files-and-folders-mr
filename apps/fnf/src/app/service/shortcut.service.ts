@@ -2,8 +2,8 @@ import {Injectable} from "@angular/core";
 import {ActionId, createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "@guiexpert/table";
 import {HttpClient} from "@angular/common/http";
 import {BrowserOsType} from "@fnf/fnf-data";
-import {Observable} from "rxjs";
-import {tap} from "rxjs/operators";
+import {Observable, of} from "rxjs";
+import {tap, catchError, map} from "rxjs/operators";
 
 export type ShortcutActionMapping = { [key: string]: string };
 
@@ -14,7 +14,8 @@ export type ShortcutActionMapping = { [key: string]: string };
 export class ShortcutService {
 
   private static readonly config = {
-    getShortcutActionMappingUrl: "assets/config/shortcut/"
+    getShortcutActionMappingUrl: "assets/config/shortcut/",
+    apiBaseUrl: "http://localhost:3334/shortcuts"
   };
 
   // Initialize with default shortcuts to ensure something is available before init() is called
@@ -127,6 +128,126 @@ export class ShortcutService {
     });
 
     return updatedMappings;
+  }
+
+  // New methods for shortcut editing functionality
+
+  /**
+   * Get shortcuts from the new API (merged defaults + custom)
+   */
+  getShortcutsFromApi(os: BrowserOsType): Observable<ShortcutActionMapping> {
+    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}`)
+      .pipe(
+        tap(shortcuts => {
+          this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+        }),
+        catchError(error => {
+          console.error('Failed to load shortcuts from API:', error);
+          // Fallback to old method
+          return this.fetchShortcutMappings(os).pipe(
+            map(shortcuts => shortcuts || {}),
+            tap(shortcuts => {
+              this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+            })
+          );
+        })
+      );
+  }
+
+  /**
+   * Save custom shortcuts for a specific OS
+   */
+  saveShortcuts(os: BrowserOsType, shortcuts: ShortcutActionMapping): Observable<{
+    success: boolean;
+    message: string
+  }> {
+    return this.httpClient.put<{
+      success: boolean;
+      message: string
+    }>(`${ShortcutService.config.apiBaseUrl}/${os}`, shortcuts)
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            // Update active shortcuts with the saved ones
+            this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+          }
+        }),
+        catchError(error => {
+          console.error('Failed to save shortcuts:', error);
+          return of({success: false, message: 'Failed to save shortcuts'});
+        })
+      );
+  }
+
+  /**
+   * Reset shortcuts to defaults for a specific OS
+   */
+  resetToDefaults(os: BrowserOsType): Observable<ShortcutActionMapping> {
+    return this.httpClient.post<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}/reset`, {})
+      .pipe(
+        tap(shortcuts => {
+          this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+        }),
+        catchError(error => {
+          console.error('Failed to reset shortcuts:', error);
+          // Fallback to loading defaults from assets
+          return this.fetchShortcutMappings(os).pipe(
+            map(shortcuts => shortcuts || {}),
+            tap(shortcuts => {
+              this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+            })
+          );
+        })
+      );
+  }
+
+  /**
+   * Get default shortcuts for a specific OS
+   */
+  getDefaults(os: BrowserOsType): Observable<ShortcutActionMapping> {
+    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.apiBaseUrl}/${os}/defaults`)
+      .pipe(
+        catchError(error => {
+          console.error('Failed to load default shortcuts:', error);
+          // Fallback to loading from assets
+          return this.fetchShortcutMappings(os).pipe(
+            map(shortcuts => shortcuts || {})
+          );
+        })
+      );
+  }
+
+  /**
+   * Validate shortcut conflicts
+   */
+  validateShortcuts(shortcuts: ShortcutActionMapping): { valid: boolean; conflicts: string[] } {
+    const conflicts: string[] = [];
+    const shortcutKeys = Object.keys(shortcuts);
+
+    // Check for duplicate shortcuts
+    const shortcutCounts = new Map<string, string[]>();
+
+    Object.entries(shortcuts).forEach(([shortcut, action]) => {
+      const harmonized = harmonizeShortcut(shortcut);
+      if (!shortcutCounts.has(harmonized)) {
+        shortcutCounts.set(harmonized, []);
+      }
+      shortcutCounts.get(harmonized)!.push(action);
+    });
+
+    shortcutCounts.forEach((actions, shortcut) => {
+      if (actions.length > 1) {
+        const uniqueActions = [...new Set(actions)];
+        if (uniqueActions.length > 1) {
+          conflicts.push(`Shortcut "${shortcut}" is assigned to multiple actions: ${uniqueActions.join(', ')}`);
+        }
+      }
+    });
+
+    return {
+      valid: conflicts.length === 0,
+      conflicts
+    };
   }
 
 }

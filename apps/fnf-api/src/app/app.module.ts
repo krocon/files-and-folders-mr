@@ -22,6 +22,7 @@ import {VolumeModule} from "./volumes/volume.module";
 import {CheckGlobModule} from "./checkglob/checkglob.module";
 import {CleanModule} from "./clean/clean.module";
 import {AiCompletionsModule} from "./ai/ai-completions.module";
+import {ShortcutModule} from "./shortcut/shortcut.module";
 
 const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
@@ -62,7 +63,8 @@ const config = new Config(
     }),
     AiCompletionsModule,
     CheckGlobModule,
-    CleanModule
+    CleanModule,
+    ShortcutModule
   ],
   controllers: [
     AppController
