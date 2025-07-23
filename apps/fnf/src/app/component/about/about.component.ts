@@ -5,6 +5,7 @@ import {SysinfoService} from "../../service/sysinfo.service";
 import {JsonPipe} from "@angular/common";
 import {FnfTextLogoComponent} from "../common/textlogo/fnf-text-logo.component";
 import {Router} from "@angular/router";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: "fnf-about",
@@ -20,6 +21,9 @@ export class AboutComponent implements OnInit, OnDestroy {
 
   info: AllinfoIf = {} as AllinfoIf;
   private alive = true;
+
+  readonly version = environment.version;
+  readonly commitHash = environment.commitHash;
 
   constructor(
     private readonly sysinfoService: SysinfoService,

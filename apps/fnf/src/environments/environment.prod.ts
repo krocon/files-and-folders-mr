@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  version: '23.07.2025 11:26',
-  commitHash: '2978a3f',
+  version: '23.07.2025 12:36',
+  commitHash: '05e7d2f',
 
   config: {
     getUrl: "/api/config"
