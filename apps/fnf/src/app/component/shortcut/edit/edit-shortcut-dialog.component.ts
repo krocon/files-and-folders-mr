@@ -7,14 +7,14 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatButton} from "@angular/material/button";
+import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
-import {ActionIdLabelShortcut} from "./action-id-label-shortcut";
-import {ShortcutComponent} from "../main/footer/buttonpanel/shortcut/shortcut.component";
-import {ShortcutService} from "../../service/shortcut.service";
+import {ActionIdLabelShortcut} from "../action-id-label-shortcut";
+import {ShortcutComponent} from "../../main/footer/buttonpanel/shortcut/shortcut.component";
+import {ShortcutService} from "../../../service/shortcut.service";
 import {BrowserOsType} from "@fnf/fnf-data";
 
 export interface EditShortcutDialogData {
@@ -37,6 +37,7 @@ export interface EditShortcutDialogData {
     MatInputModule,
     FormsModule,
     ShortcutComponent,
+    MatIconButton,
   ],
   standalone: true,
 })

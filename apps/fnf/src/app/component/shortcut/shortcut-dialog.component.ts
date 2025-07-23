@@ -21,7 +21,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserOsType} from "@fnf/fnf-data";
 import {Subject, Subscription, debounceTime, distinctUntilChanged} from "rxjs";
-import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit-shortcut-dialog.component";
+import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit/edit-shortcut-dialog.component";
 
 @Component({
   selector: "fnf-shortcut--dialog",

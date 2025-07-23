@@ -3,8 +3,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {of, throwError} from 'rxjs';
 import {EditShortcutDialogComponent, EditShortcutDialogData} from './edit-shortcut-dialog.component';
-import {ShortcutService} from '../../service/shortcut.service';
-import {ActionIdLabelShortcut} from './action-id-label-shortcut';
+import {ShortcutService} from '../../../service/shortcut.service';
+import {ActionIdLabelShortcut} from '../action-id-label-shortcut';
 import {BrowserOsType} from '@fnf/fnf-data';
 
 describe('EditShortcutDialogComponent', () => {
