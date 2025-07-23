@@ -1,5 +1,9 @@
 // Define a function to get environment variables at runtime
 const getEnvironmentVariables = () => {
+
+  const version = '23.07.2025 11:26';
+  const commitHash = '2978a3f';
+
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
 
@@ -14,6 +18,8 @@ const getEnvironmentVariables = () => {
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
+    version,
+    commitHash,
     frontendPort,
     websocketPort,
     openaiApiKey,
@@ -56,6 +62,12 @@ export const environment = {
   },
   get llamaModel() {
     return getEnvironmentVariables().llamaModel;
+  },
+  get version() {
+    return getEnvironmentVariables().version;
+  },
+  get commitHash() {
+    return getEnvironmentVariables().commitHash;
   },
   get websocketOptions() {
     const {frontendPort, websocketPort} = getEnvironmentVariables();

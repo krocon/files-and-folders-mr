@@ -4,6 +4,7 @@
   "description": "NestJS API for Files and Folders",
   "private": false,
   "scripts": {
+    "prebuild": "node ../../update-version.js",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "nest start",
@@ -17,7 +18,8 @@
     "test-controller": "jest --testPathPattern=\".*controller\\.spec\\.ts$\" --runInBand",
     "test:watch": "jest --watch --runInBand",
     "test:cov": "jest --coverage --runInBand",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "prepush": "node ../../update-version.js"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.0",

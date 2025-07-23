@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "prebuild": "node ../../update-version.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "jest --runInBand",
@@ -12,7 +13,8 @@
     "cypress:run": "cypress run",
     "e2e": "cypress run",
     "e2e-xxx": "cypress run --spec cypress/e2e/fnf-editor.cy.js",
-    "postinstall": "node postinstall.js"
+    "postinstall": "node postinstall.js",
+    "prepush": "node ../../update-version.js"
   },
   "private": false,
   "dependencies": {
