@@ -120,7 +120,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   onSave(): void {
-    // TODO we have to save all shortcuts for 'this.data.osType', not only for this one action!
     console.info('Saving shortcuts...');
     // Filter out empty shortcuts
     const validShortcuts = this.shortcuts.filter(shortcut => shortcut.trim() !== '');
@@ -131,16 +130,27 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       shortcuts: validShortcuts
     };
 
-    // Create shortcut mapping in the format expected by the service
-    // ShortcutActionMapping is { [shortcut: string]: actionId }
-    const shortcutMapping: { [key: string]: string } = {};
-    validShortcuts.forEach(shortcut => {
-      shortcutMapping[shortcut] = this.data.actionItem.actionId;
+    // Get the complete current shortcut mapping for this OS type
+    const currentShortcuts = this.shortcutService.getActiveShortcuts();
+
+    // Create a new mapping by removing old shortcuts for this action and adding new ones
+    const updatedShortcutMapping: { [key: string]: string } = {};
+
+    // Copy all existing shortcuts except those for the current action
+    Object.entries(currentShortcuts).forEach(([shortcut, actionId]) => {
+      if (actionId !== this.data.actionItem.actionId) {
+        updatedShortcutMapping[shortcut] = actionId;
+      }
     });
 
-    console.info('Saving shortcuts:', shortcutMapping);
-    // Save through the service
-    this.shortcutService.saveShortcuts(this.data.osType, shortcutMapping).subscribe({
+    // Add the new shortcuts for the current action
+    validShortcuts.forEach(shortcut => {
+      updatedShortcutMapping[shortcut] = this.data.actionItem.actionId;
+    });
+
+    console.info('Saving complete shortcut mapping for OS type:', this.data.osType, updatedShortcutMapping);
+    // Save the complete mapping through the service
+    this.shortcutService.saveShortcuts(this.data.osType, updatedShortcutMapping).subscribe({
       next: () => {
         this.dialogRef.close(updatedItem);
       },

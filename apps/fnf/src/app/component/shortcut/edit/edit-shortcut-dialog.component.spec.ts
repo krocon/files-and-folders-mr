@@ -32,11 +32,18 @@ describe('EditShortcutDialogComponent', () => {
 
     mockShortcutService = {
       createHarmonizedShortcutByKeyboardEvent: jest.fn(),
-      saveShortcuts: jest.fn()
+      saveShortcuts: jest.fn(),
+      getActiveShortcuts: jest.fn()
     } as unknown as jest.Mocked<ShortcutService>;
 
     mockShortcutService.saveShortcuts.mockReturnValue(of({success: true, message: 'Shortcuts saved successfully'}));
     mockShortcutService.createHarmonizedShortcutByKeyboardEvent.mockReturnValue('cmd shift t');
+    mockShortcutService.getActiveShortcuts.mockReturnValue({
+      'cmd shift f': 'TEST_ACTION',
+      'ctrl alt s': 'TEST_ACTION',
+      'cmd c': 'COPY',
+      'cmd v': 'PASTE'
+    });
 
     await TestBed.configureTestingModule({
       imports: [
@@ -154,9 +161,13 @@ describe('EditShortcutDialogComponent', () => {
     component.shortcuts = ['cmd shift f', '', 'ctrl alt s'];
     component.onSave();
 
+    // Should save complete shortcut mapping with existing shortcuts preserved
+    // and updated shortcuts for the current action
     expect(mockShortcutService.saveShortcuts).toHaveBeenCalledWith('osx', {
-      'cmd shift f': 'TEST_ACTION',
-      'ctrl alt s': 'TEST_ACTION'
+      'cmd c': 'COPY',           // Existing shortcuts for other actions preserved
+      'cmd v': 'PASTE',          // Existing shortcuts for other actions preserved
+      'cmd shift f': 'TEST_ACTION',  // New shortcuts for current action
+      'ctrl alt s': 'TEST_ACTION'    // New shortcuts for current action
     });
 
     // Wait for the observable to complete
