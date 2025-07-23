@@ -56,7 +56,7 @@ export class ShellSpawnManager {
     // Parse command and arguments
     const [command, ...args] = para.cmd.split(' ');
 
-    console.info(`Spawning PTY process: ${command} ${args.join(' ')}`);
+    // console.info(`Spawning PTY process: ${command} ${args.join(' ')}`);
 
     try {
       // Get shell from environment or default to bash

@@ -53,7 +53,7 @@ describe('ShellGateway', () => {
       gateway.doSpawn(para);
     });
 
-    it('should handle multiple concurrent processes', () => {
+    it('should handle multiple concurrent processes', (done) => {
       const para1: ShellSpawnParaIf = {
         cmd: 'echo "Process 1"',
         emitKey: 'test-output-1',
@@ -80,6 +80,7 @@ describe('ShellGateway', () => {
       setTimeout(() => {
         expect(emittedKeys).toContain(para1.emitKey);
         expect(emittedKeys).toContain(para2.emitKey);
+        done();
       }, 100);
     });
   });

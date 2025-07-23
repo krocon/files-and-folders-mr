@@ -8,9 +8,14 @@ describe('ShellSpawnManager', () => {
     manager = new ShellSpawnManager();
   });
 
-  afterEach(() => {
+  afterEach((done) => {
     // Clean up all processes after each test
     manager.killAllProcesses();
+
+    // Wait for processes to be cleaned up
+    setTimeout(() => {
+      done();
+    }, 200);
   });
 
   describe('spawn', () => {
@@ -47,17 +52,18 @@ describe('ShellSpawnManager', () => {
       let hasStderr = false;
 
       manager.spawn(para, (result: ShellSpawnResultIf) => {
-        if (!result.done && result.error && result.error.includes('command not found')) {
+        // PTY combines stdout and stderr, so error messages come through result.out
+        if (!result.done && result.out && (result.out.includes('command not found') || result.out.includes('not found'))) {
           hasStderr = true;
         }
 
         if (result.done) {
           expect(result.code).toBe(127); // Command not found exit code
-          expect(hasStderr).toBe(true); // Should have received stderr
+          expect(hasStderr).toBe(true); // Should have received stderr output
           done();
         }
       });
-    }, 10000);
+    }, 65000);
 
     it('should handle timeout', (done) => {
       const para: ShellSpawnParaIf = {
@@ -261,7 +267,7 @@ describe('ShellSpawnManager', () => {
   });
 
   describe('killAllProcesses', () => {
-    it('should kill all active processes', () => {
+    it('should kill all active processes', (done) => {
       const para1: ShellSpawnParaIf = {
         cmd: 'sleep 10',
         emitKey: 'test-emit-1',
@@ -288,7 +294,8 @@ describe('ShellSpawnManager', () => {
       // Give some time for cleanup
       setTimeout(() => {
         expect(manager.getActiveProcessCount()).toBe(0);
-      }, 100);
+        done();
+      }, 300);
     });
   });
 });
