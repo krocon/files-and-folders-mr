@@ -58,6 +58,7 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Clone the shortcuts array to avoid modifying the original
     this.shortcuts = [...this.data.actionItem.shortcuts];
+    console.info('EditShortcutDialogComponent.ngOnInit()', JSON.stringify(this.shortcuts, null, 4));
   }
 
   onAddShortcut(): void {
@@ -119,6 +120,7 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   onSave(): void {
+    // TODO we have to save all shortcuts for 'this.data.osType', not only for this one action!
     console.info('Saving shortcuts...');
     // Filter out empty shortcuts
     const validShortcuts = this.shortcuts.filter(shortcut => shortcut.trim() !== '');
