@@ -5,6 +5,21 @@
 <mat-dialog-content>
   <div class="dlg-content-div">
 
+    <div class="os-selector-container">
+      <mat-form-field
+          appearance="outline"
+          class="os-selector">
+        <mat-label>Operating System</mat-label>
+        <mat-select
+            [(value)]="selectedOsType"
+            (selectionChange)="onOsTypeChange($event)">
+          <mat-option value="osx">macOS</mat-option>
+          <mat-option value="windows">Windows</mat-option>
+          <mat-option value="linux">Linux</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
     <div class="filter-container">
       <mat-form-field
           appearance="outline"

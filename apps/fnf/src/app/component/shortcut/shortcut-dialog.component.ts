@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {
+  MatDialog,
   MatDialogActions,
   MatDialogContent,
   MatDialogModule,
@@ -8,6 +9,8 @@ import {
 } from "@angular/material/dialog";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {MatSelectModule} from "@angular/material/select";
+import {MatOptionModule} from "@angular/material/core";
 import {ShortcutService} from "../../service/shortcut.service";
 import {actionIds} from "../../domain/action/fnf-action.enum";
 import {ActionIdLabelShortcut} from "./action-id-label-shortcut";
@@ -16,7 +19,9 @@ import {ShortcutComponent} from "../main/footer/buttonpanel/shortcut/shortcut.co
 import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
+import {BrowserOsType} from "@fnf/fnf-data";
 import {Subject, Subscription, debounceTime, distinctUntilChanged} from "rxjs";
+import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit-shortcut-dialog.component";
 
 @Component({
   selector: "fnf-shortcut--dialog",
@@ -34,6 +39,8 @@ import {Subject, Subscription, debounceTime, distinctUntilChanged} from "rxjs";
     MatFormFieldModule,
     MatInputModule,
     MatIconButton,
+    MatSelectModule,
+    MatOptionModule,
   ],
   standalone: true,
 })
@@ -42,12 +49,14 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   actionIdLabelShortcuts: ActionIdLabelShortcut[] = [];
   allActionIdLabelShortcuts: ActionIdLabelShortcut[] = [];
   filterText = '';
+  selectedOsType: BrowserOsType = 'osx';
   private filterTextChanged = new Subject<string>();
   private subscription: Subscription | null = null;
 
   constructor(
     public readonly dialogRef: MatDialogRef<ShortcutDialogComponent>,
     public readonly shortcutService: ShortcutService,
+    private readonly dialog: MatDialog,
   ) {
     this.subscription = this.filterTextChanged
       .pipe(
@@ -60,6 +69,10 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loadShortcutsForOsType(this.selectedOsType);
+  }
+
+  private loadShortcutsForOsType(osType: BrowserOsType): void {
     this.allActionIdLabelShortcuts = actionIds
       .filter(id => !['DUMMY_ACTION', 'DO_NOTHING', 'OPEN_SHORTCUT_DLG'].includes(id))
       .map(
@@ -70,6 +83,12 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
         )
       );
     this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
+    this.applyFilter(this.filterText);
+  }
+
+  onOsTypeChange(event: any): void {
+    this.selectedOsType = event.value;
+    this.loadShortcutsForOsType(this.selectedOsType);
   }
 
   ngOnDestroy(): void {
@@ -109,6 +128,28 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
 
 
   openEditDialog(item: ActionIdLabelShortcut) {
-    // TODO open a new edit dialog to define one or more shortcuts for the given action item.
+    const dialogData: EditShortcutDialogData = {
+      actionItem: item,
+      osType: this.selectedOsType
+    };
+
+    const dialogRef = this.dialog.open(EditShortcutDialogComponent, {
+      width: '600px',
+      data: dialogData,
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe((updatedItem: ActionIdLabelShortcut | undefined) => {
+      if (updatedItem) {
+        // Update the item in our arrays
+        const index = this.allActionIdLabelShortcuts.findIndex(i => i.actionId === updatedItem.actionId);
+        if (index >= 0) {
+          this.allActionIdLabelShortcuts[index] = updatedItem;
+        }
+
+        // Refresh the filtered list
+        this.applyFilter(this.filterText);
+      }
+    });
   }
 }
