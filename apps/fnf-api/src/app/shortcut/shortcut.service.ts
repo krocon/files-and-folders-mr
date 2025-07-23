@@ -1,6 +1,5 @@
 import {Injectable, Logger} from '@nestjs/common';
-import {promises as fs} from 'fs';
-import {existsSync} from 'fs';
+import {existsSync, promises as fs} from 'fs';
 import {join} from 'path';
 import {environment} from "../../environments/environment";
 
@@ -19,11 +18,14 @@ export class ShortcutService {
    */
   async getShortcuts(os: BrowserOsType): Promise<ShortcutActionMapping> {
     try {
-      const defaults = await this.loadDefaults(os);
-      const custom = await this.loadCustom(os);
 
-      // Merge defaults with custom shortcuts (custom overrides defaults)
-      return {...defaults, ...custom};
+      const custom = await this.loadCustom(os);
+      if (custom) {
+        return custom;
+      }
+      // no custom, load defaults:
+      return await this.loadDefaults(os);
+
     } catch (error) {
       this.logger.error(`Failed to get shortcuts for ${os}:`, error);
       throw error;
