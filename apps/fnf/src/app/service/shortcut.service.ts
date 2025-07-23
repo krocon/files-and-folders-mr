@@ -31,15 +31,17 @@ export class ShortcutService {
   }
 
   getShortcuts(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {
-    return this.fetchShortcutMappings(sys)
-      .pipe(
-        tap(shortcutMappings => {
-          if (shortcutMappings) {
-            this.activeShortcuts = this.updateShortcutMappings(shortcutMappings);
-          }
-        })
-      );
+    return this.getShortcutsFromApi(sys);
+    // return this.fetchShortcutMappings(sys)
+    //   .pipe(
+    //     tap(shortcutMappings => {
+    //       if (shortcutMappings) {
+    //         this.activeShortcuts = this.updateShortcutMappings(shortcutMappings);
+    //       }
+    //     })
+    //   );
   }
+
 
   createHarmonizedShortcutByKeyboardEvent(keyboardEvent: KeyboardEvent): string {
     return createHarmonizedShortcutByKeyboardEvent(keyboardEvent)

@@ -57,9 +57,9 @@
           <tr class="shortcut-row">
             <td class="shortcut-cell">{{ item.actionId }}</td>
             <td class="shortcut-cell">{{ item.label }}</td>
-            <td class="shortcut-cell">
+            <td class="shortcut-cell sc">
               @for (shortcut of item.shortcuts; track shortcut) {
-                <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut>
+                <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut><br>
               }
             </td>
             <td class="shortcut-cell">

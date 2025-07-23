@@ -15,7 +15,7 @@
     </div>
 
     <div class="shortcuts-section">
-      <h3>Assigned Shortcuts</h3>
+      <hr>
 
       @if (shortcuts.length === 0) {
         <p class="no-shortcuts">No shortcuts assigned</p>
@@ -52,15 +52,6 @@
           }
         </div>
       }
-
-      <button
-          mat-raised-button
-          (click)="onAddShortcut()"
-          class="add-shortcut-btn"
-          [disabled]="isCapturingShortcut">
-        <mat-icon>add</mat-icon>
-        Add Shortcut
-      </button>
     </div>
 
     @if (isCapturingShortcut) {
@@ -91,6 +82,17 @@
     Reset
   </button>
   <div class="spacer"></div>
+
+  <button
+      mat-raised-button
+      (click)="onAddShortcut()"
+      class="add-shortcut-btn"
+      [disabled]="isCapturingShortcut">
+    <mat-icon>add</mat-icon>
+    Add Shortcut
+  </button>
+  <div class="spacer"></div>
+
   <button
       mat-button
       (click)="onCancel()"
