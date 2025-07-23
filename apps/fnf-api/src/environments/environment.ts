@@ -1,4 +1,6 @@
 // Define a function to get environment variables at runtime
+import {join} from "path";
+
 const getEnvironmentVariables = () => {
 
   const version = '23.07.2025 12:36';
@@ -6,6 +8,9 @@ const getEnvironmentVariables = () => {
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
+
+  const shortcutsDefaultsPath = join(__dirname, '..', 'src/assets/shortcut/defaults');
+  const shortcutsCustomPath = join(__dirname, '..', 'src/assets/shortcut/custom');
 
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
@@ -22,6 +27,10 @@ const getEnvironmentVariables = () => {
     commitHash,
     frontendPort,
     websocketPort,
+
+    shortcutsDefaultsPath,
+    shortcutsCustomPath,
+
     openaiApiKey,
     openaiApiUrl,
     openaiModel,
@@ -41,6 +50,12 @@ export const environment = {
   },
   get websocketPort() {
     return getEnvironmentVariables().websocketPort;
+  },
+  get shortcutsDefaultsPath() {
+    return getEnvironmentVariables().shortcutsDefaultsPath;
+  },
+  get shortcutsCustomPath() {
+    return getEnvironmentVariables().shortcutsCustomPath;
   },
   get openaiApiKey() {
     return getEnvironmentVariables().openaiApiKey;

@@ -6,7 +6,7 @@
 .shortcut-info {
     margin-bottom: 24px;
     padding: 16px;
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
     border-radius: 4px;
 }
 
@@ -36,7 +36,7 @@
 }
 
 .no-shortcuts {
-    color: #666;
+    /*color: #666;*/
     font-style: italic;
     margin: 16px 0;
 }
@@ -63,30 +63,30 @@
     width: 100%;
 }
 
-.shortcut-capture {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 8px 12px;
-    background-color: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 4px;
-}
+/*.shortcut-capture {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: space-between;*/
+/*    width: 100%;*/
+/*    padding: 8px 12px;*/
+/*    background-color: #fff3cd;*/
+/*    border: 1px solid #ffeaa7;*/
+/*    border-radius: 4px;*/
+/*}*/
 
-.capture-text {
-    font-weight: 500;
-    color: #856404;
-}
+/*.capture-text {*/
+/*    font-weight: 500;*/
+/*    color: #856404;*/
+/*}*/
 
-.stop-capture-btn {
-    color: #856404;
-}
+/*.stop-capture-btn {*/
+/*    color: #856404;*/
+/*}*/
 
-.empty-shortcut {
-    color: #999;
-    font-style: italic;
-}
+/*.empty-shortcut {*/
+/*    color: #999;*/
+/*    font-style: italic;*/
+/*}*/
 
 .shortcut-actions {
     display: flex;
@@ -101,10 +101,12 @@
 
 .capture-instructions {
     padding: 16px;
-    background-color: #e3f2fd;
-    border: 1px solid #bbdefb;
+    /*background-color: #e3f2fd;*/
+    /*border: 1px solid #bbdefb;*/
     border-radius: 4px;
-    margin-top: 16px;
+    /*margin-top: 16px;*/
+    display: grid;
+    grid-template-columns:  1fr auto;
 }
 
 .capture-instructions p {

@@ -1,15 +1,18 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {promises as fs} from 'fs';
+import {existsSync} from 'fs';
 import {join} from 'path';
+import {environment} from "../../environments/environment";
 
 export type ShortcutActionMapping = { [key: string]: string };
 export type BrowserOsType = 'osx' | 'windows' | 'linux';
 
 @Injectable()
 export class ShortcutService {
+
   private readonly logger = new Logger(ShortcutService.name);
-  private readonly defaultsPath = join(process.cwd(), 'apps/fnf-api/src/assets/shortcut/defaults');
-  private readonly customPath = join(process.cwd(), 'apps/fnf-api/src/assets/shortcut/custom');
+  private readonly defaultsPath = environment.shortcutsDefaultsPath;
+  private readonly customPath = environment.shortcutsCustomPath;
 
   /**
    * Get shortcuts for a specific OS, merging defaults with custom shortcuts
@@ -33,6 +36,19 @@ export class ShortcutService {
   async saveShortcuts(os: BrowserOsType, shortcuts: ShortcutActionMapping): Promise<void> {
     try {
       const customFilePath = join(this.customPath, `${os}.json`);
+
+      // Create custom file from defaults if it doesn't exist
+      const defaultFilePath = join(this.defaultsPath, `${os}.json`);
+      try {
+        const exists = existsSync(customFilePath);
+        if (!exists) {
+          this.logger.warn(`Create custom file from defaults for ${os}...`);
+          await fs.copyFile(defaultFilePath, customFilePath);
+        }
+      } catch {
+        this.logger.error(`Failed to copy file: `, defaultFilePath, customFilePath);
+      }
+
       await fs.writeFile(customFilePath, JSON.stringify(shortcuts, null, 2));
       this.logger.log(`Saved custom shortcuts for ${os}`);
     } catch (error) {

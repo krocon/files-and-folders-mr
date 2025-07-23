@@ -194,3 +194,6 @@ apps/fnf/src/assets/screens_old/
 /apps/fnf/cypress/screenshots/fnf-editor.cy.js/
 /fnf-mr-junie
 /fnf-mr-junie.pub
+/apps/fnf-api/src/assets/shortcut/custom/osx.json
+/apps/fnf-api/src/assets/shortcut/custom/windows.json
+/apps/fnf-api/src/assets/shortcut/custom/linux.json

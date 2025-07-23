@@ -15,7 +15,7 @@ export class ShortcutService {
 
   private static readonly config = {
     getShortcutActionMappingUrl: "assets/config/shortcut/",
-    getShortcutApiUrl: "api/shortcut/"  /* on localhost: is automatically set to by configuration "http://localhost:3333/api/shortcut/" */
+    getShortcutApiUrl: "api/shortcuts"  /* on localhost: is automatically set to by configuration "http://localhost:3333/api/shortcut/" */
   };
 
   // Initialize with default shortcuts to ensure something is available before init() is called
@@ -161,6 +161,7 @@ export class ShortcutService {
     success: boolean;
     message: string
   }> {
+    console.info('Saving shortcuts for OS', os, shortcuts);
     return this.httpClient.put<{
       success: boolean;
       message: string

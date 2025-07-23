@@ -119,6 +119,7 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   onSave(): void {
+    console.info('Saving shortcuts...');
     // Filter out empty shortcuts
     const validShortcuts = this.shortcuts.filter(shortcut => shortcut.trim() !== '');
 
@@ -135,6 +136,7 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       shortcutMapping[shortcut] = this.data.actionItem.actionId;
     });
 
+    console.info('Saving shortcuts:', shortcutMapping);
     // Save through the service
     this.shortcutService.saveShortcuts(this.data.osType, shortcutMapping).subscribe({
       next: () => {

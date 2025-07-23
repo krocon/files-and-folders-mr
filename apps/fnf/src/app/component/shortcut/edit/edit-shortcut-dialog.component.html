@@ -24,16 +24,7 @@
           @for (shortcut of shortcuts; track $index) {
             <div class="shortcut-item">
               @if (isCapturingShortcut && captureIndex === $index) {
-                <div class="shortcut-capture">
-                  <span class="capture-text">Press keys for shortcut...</span>
-                  <button
-                      mat-icon-button
-                      (click)="onStopCapturing()"
-                      class="stop-capture-btn"
-                      title="Stop capturing">
-                    <mat-icon>close</mat-icon>
-                  </button>
-                </div>
+
               } @else {
                 <div class="shortcut-display">
                   @if (shortcut) {
@@ -74,9 +65,18 @@
 
     @if (isCapturingShortcut) {
       <div class="capture-instructions">
-        <p><strong>Capturing shortcut...</strong></p>
-        <p>Press the key combination you want to use as a shortcut.</p>
-        <p>Example: Cmd+Shift+F, Ctrl+Alt+S, etc.</p>
+        <div>
+          <p><strong>Capturing shortcut...</strong></p>
+          <p>Press the key combination you want to use as a shortcut.</p>
+          <p>Example: Cmd+Shift+F, Ctrl+Alt+S, etc.</p>
+        </div>
+        <button
+            mat-icon-button
+            (click)="onStopCapturing()"
+            class="stop-capture-btn"
+            title="Stop capturing">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
     }
 
