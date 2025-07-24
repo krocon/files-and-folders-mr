@@ -369,6 +369,7 @@ export class AppService {
     console.info('favs\n', JSON.stringify(this.favs, null, 4));
     this.pms.debug();
     this.actionExecutionService.debug();
+    this.shortcutService.debug();
   }
 
 

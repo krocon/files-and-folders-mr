@@ -258,7 +258,7 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
     if (this.shellInputHasFocus || this.isInputElement(keyboardEvent)) return; // skip
 
     const actionByKeyEvent = this.appService.getActionByKeyEvent(keyboardEvent);
-    if (actionByKeyEvent && actionByKeyEvent !== 'DO_NOTHING') {
+    if (actionByKeyEvent && actionByKeyEvent !== 'DO_NOTHING' && actionByKeyEvent !== '-') {
       keyboardEvent.preventDefault();
       this.appService.triggerAction(actionByKeyEvent);
     }

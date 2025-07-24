@@ -3,7 +3,7 @@ import {ActionId, createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} fr
 import {HttpClient} from "@angular/common/http";
 import {BrowserOsType} from "@fnf/fnf-data";
 import {Observable, of} from "rxjs";
-import {tap, catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 
 export type ShortcutActionMapping = { [key: string]: string };
 
@@ -80,7 +80,7 @@ export class ShortcutService {
     return [];
   }
 
-  getShortcutAsLabelTokens(sc:string):string[] {
+  getShortcutAsLabelTokens(sc: string): string[] {
     const hs = harmonizeShortcut(sc);
     return hs
       .replace('num_', 'num ')
@@ -102,13 +102,9 @@ export class ShortcutService {
     return this.activeShortcuts;
   }
 
-  private fetchShortcutMappings(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {
-    return this.httpClient.get<ShortcutActionMapping>(ShortcutService.config.getShortcutActionMappingUrl + sys + '.json');
-  }
-
   public addAdditionalShortcutMappings(map: ShortcutActionMapping): void {
     Object.entries(map).forEach(([key, value]) => {
-      if (this.activeShortcuts[harmonizeShortcut(key)]){
+      if (this.activeShortcuts[harmonizeShortcut(key)]) {
         console.warn('Shortcut already exists:' + harmonizeShortcut(key));
         console.warn(this.activeShortcuts[harmonizeShortcut(key)], value);
         // throw new Error(
@@ -120,19 +116,6 @@ export class ShortcutService {
       this.activeShortcuts[harmonizeShortcut(key)] = value;
     });
   }
-
-
-  private updateShortcutMappings(fetchedMappings: ShortcutActionMapping): ShortcutActionMapping {
-    const updatedMappings: ShortcutActionMapping = {...this.activeShortcuts};
-
-    Object.entries(fetchedMappings).forEach(([key, value]) => {
-      updatedMappings[harmonizeShortcut(key)] = value;
-    });
-
-    return updatedMappings;
-  }
-
-  // New methods for shortcut editing functionality
 
   /**
    * Get shortcuts from the new API (merged defaults + custom)
@@ -181,6 +164,8 @@ export class ShortcutService {
         })
       );
   }
+
+  // New methods for shortcut editing functionality
 
   /**
    * Reset shortcuts to defaults for a specific OS
@@ -253,4 +238,21 @@ export class ShortcutService {
     };
   }
 
+  debug() {
+    console.info('active shortcuts', this.activeShortcuts);
+  }
+
+  private fetchShortcutMappings(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {
+    return this.httpClient.get<ShortcutActionMapping>(ShortcutService.config.getShortcutActionMappingUrl + sys + '.json');
+  }
+
+  private updateShortcutMappings(fetchedMappings: ShortcutActionMapping): ShortcutActionMapping {
+    const updatedMappings: ShortcutActionMapping = {...this.activeShortcuts};
+
+    Object.entries(fetchedMappings).forEach(([key, value]) => {
+      updatedMappings[harmonizeShortcut(key)] = value;
+    });
+
+    return updatedMappings;
+  }
 }

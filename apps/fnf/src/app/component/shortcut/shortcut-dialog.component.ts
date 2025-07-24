@@ -12,7 +12,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatSelectModule} from "@angular/material/select";
 import {MatOptionModule} from "@angular/material/core";
 import {ShortcutService} from "../../service/shortcut.service";
-import {actionIds} from "../../domain/action/fnf-action.enum";
+import {actionIds, PSEUDO_ACTIONS} from "../../domain/action/fnf-action.enum";
 import {ActionIdLabelShortcut} from "./action-id-label-shortcut";
 import {FnfActionLabels} from "../../domain/action/fnf-action-labels";
 import {ShortcutComponent} from "../main/footer/buttonpanel/shortcut/shortcut.component";
@@ -74,7 +74,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
 
   private loadShortcutsForOsType(osType: BrowserOsType): void {
     this.allActionIdLabelShortcuts = actionIds
-      .filter(id => !['DUMMY_ACTION', 'DO_NOTHING', 'OPEN_SHORTCUT_DLG'].includes(id))
+      .filter(id => !PSEUDO_ACTIONS.includes(id))
       .map(
         id => new ActionIdLabelShortcut(
           id,

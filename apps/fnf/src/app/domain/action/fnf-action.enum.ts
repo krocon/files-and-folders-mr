@@ -1,3 +1,10 @@
+export const PSEUDO_ACTIONS = [
+  'DUMMY_ACTION',
+  'DO_NOTHING',
+  '-',
+];
+
+
 export const actionIds = [
   "OPEN_CHDIR_DLG",
   "OPEN_CHDIR_DLG",
@@ -19,6 +26,14 @@ export const actionIds = [
   "OPEN_DESELECT_DLG",
   "OPEN_DELETE_EMPTY_FOLDERS_DLG",
   "OPEN_COLORCONFIG_DLG",
+  "OPEN_DELETE_DLG",
+  "OPEN_MKDIR_DLG",
+  "OPEN_MOVE_DLG",
+  "OPEN_COPY_DLG",
+  "OPEN_SHORTCUT_DLG",
+  "OPEN_SHELL_DLG",
+  "OPEN_SETUP_DLG",
+  "OPEN_ABOUT_DLG",
 
   "NEXT_TAB",
   "REMOVE_TAB",
@@ -52,19 +67,13 @@ export const actionIds = [
   "DUMMY_ACTION",
   "TOGGLE_PANEL",
 
-  "OPEN_DELETE_DLG",
-  "OPEN_MKDIR_DLG",
-  "OPEN_MOVE_DLG",
-  "OPEN_COPY_DLG",
+
+  "PRINT_DEBUG",
 
   "TOGGLE_FILTER",
   "TOGGLE_HIDDEN_FILES",
   "TOGGLE_SHELL",
-  "OPEN_SHORTCUT_DLG",
 
-  "OPEN_SHELL_DLG",
-  "OPEN_SETUP_DLG",
-  "OPEN_ABOUT_DLG",
 
   "OPEN_VIEW_DLG", "OPEN_EDIT_DLG",
 

@@ -204,28 +204,18 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
 
   triggerAction(id: ActionId) {
+    if (id === 'PRINT_DEBUG') {
+      this.appService.debug();
+      // although we respond to PRINT_DEBUG, we forward the ID
+    }
+
     this.actionExecutionService.executeActionById(id);
   }
-
-
-  onDebugClicked($event: MouseEvent) {
-    this.appService.debug();
-  }
-
-
-  // openCustomColors() {
-  //   const strWindowFeatures = "location=yes,height=600,width=800,scrollbars=yes,status=yes";
-  //   const url = location.href + "/../customcss";
-  //   window.open(url, "_blank", strWindowFeatures);
-  // }
 
   setTheme(theme: Theme) {
     this.appService.setTheme(theme);
   }
 
-  openShortcutDlg(evt: MouseEvent) {
-    this.triggerAction('OPEN_SHORTCUT_DLG');
-  }
 
   onToolClicked(tool: CmdIf) {
     this.actionExecutionService.executeCmd(tool);

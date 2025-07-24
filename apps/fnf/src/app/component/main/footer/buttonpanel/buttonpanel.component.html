@@ -156,14 +156,14 @@
 
 
     <button
-        (click)="openShortcutDlg($event)"
+        (click)="triggerAction('OPEN_SHORTCUT_DLG')"
         class="panel-button icon-only"
         mat-stroked-button>
       <mat-icon>keyboard</mat-icon>
     </button>
 
     <button
-        (click)="onDebugClicked($event)"
+        (click)="triggerAction('PRINT_DEBUG')"
         class="panel-button icon-only"
         mat-stroked-button>
       <mat-icon>bug_report</mat-icon>
