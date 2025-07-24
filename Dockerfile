@@ -66,6 +66,7 @@ RUN apt-get install -y  curl wget
 RUN apt-get install -y  jq
 RUN apt-get install -y  tree
 RUN apt-get install -y  file
+RUN apt-get install -y  mc
 
 
 
