@@ -6,6 +6,7 @@ import {AppService} from './app/app.service';
 import {HttpExceptionFilter} from './app/http-exception.filter';
 import {environment} from './environments/environment';
 import * as events from 'events';
+// import { Request, Response } from 'express';
 
 // Increase the max listeners to prevent the MaxListenersExceededWarning
 // Default is 10, setting to 20 to accommodate the application's needs
@@ -19,6 +20,10 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   // app.useGlobalPipes(new ValidationPipe())
   const port = process.env.PORT || 3333;
+
+  // app.use('*', (req: Request, res: Response) => {
+  //   res.redirect('/');
+  // });
 
   await app.listen(port, () => {
     Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
