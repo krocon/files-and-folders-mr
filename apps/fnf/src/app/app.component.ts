@@ -31,13 +31,13 @@ export class AppComponent implements OnInit {
     localStorage.setItem('fnf-file-table-0-sortingState', sorting);
     localStorage.setItem('fnf-file-table-1-sortingState', sorting);
 
-    console.info('        > Build Version:', environment.version);
+    console.info('        > Build Version    :', environment.version);
   }
 
   ngOnInit(): void {
     this.appService.init(() => {
       this.initialized = true;
-      console.info('        > App initialized');
+      console.info('        > App initialized 😊');
     });
   }
 }

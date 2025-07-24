@@ -121,20 +121,22 @@ export class ShortcutService {
    * Get shortcuts from the new API (merged defaults + custom)
    */
   getShortcutsFromApi(os: BrowserOsType): Observable<ShortcutActionMapping> {
-    return this.httpClient.get<ShortcutActionMapping>(`${ShortcutService.config.getShortcutApiUrl}/${os}`)
+    return this.httpClient
+      .get<ShortcutActionMapping>(`${ShortcutService.config.getShortcutApiUrl}/${os}`)
       .pipe(
         tap(shortcuts => {
-          this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+          this.activeShortcuts = shortcuts; // no merge! this.updateShortcutMappings(shortcuts);
         }),
         catchError(error => {
           console.error('Failed to load shortcuts from API:', error);
           // Fallback to old method
-          return this.fetchShortcutMappings(os).pipe(
-            map(shortcuts => shortcuts || {}),
-            tap(shortcuts => {
-              this.activeShortcuts = this.updateShortcutMappings(shortcuts);
-            })
-          );
+          return this.fetchShortcutMappings(os)
+            .pipe(
+              map(shortcuts => shortcuts || {}),
+              tap(shortcuts => {
+                this.activeShortcuts = this.updateShortcutMappings(shortcuts);
+              })
+            );
         })
       );
   }

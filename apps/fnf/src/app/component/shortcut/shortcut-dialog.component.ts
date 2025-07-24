@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
 import {
   MatDialog,
   MatDialogActions,
@@ -20,7 +20,7 @@ import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserOsType} from "@fnf/fnf-data";
-import {Subject, Subscription, debounceTime, distinctUntilChanged} from "rxjs";
+import {debounceTime, distinctUntilChanged, Subject, Subscription} from "rxjs";
 import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit/edit-shortcut-dialog.component";
 
 @Component({
@@ -43,6 +43,7 @@ import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit/edit-s
     MatOptionModule,
   ],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ShortcutDialogComponent implements OnInit, OnDestroy {
 
@@ -50,13 +51,15 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   allActionIdLabelShortcuts: ActionIdLabelShortcut[] = [];
   filterText = '';
   selectedOsType: BrowserOsType = 'osx';
+
   private filterTextChanged = new Subject<string>();
   private subscription: Subscription | null = null;
 
   constructor(
-    public readonly dialogRef: MatDialogRef<ShortcutDialogComponent>,
-    public readonly shortcutService: ShortcutService,
+    private readonly dialogRef: MatDialogRef<ShortcutDialogComponent>,
     private readonly dialog: MatDialog,
+    private readonly shortcutService: ShortcutService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.subscription = this.filterTextChanged
       .pipe(
@@ -72,20 +75,6 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
     this.loadShortcutsForOsType(this.selectedOsType);
   }
 
-  private loadShortcutsForOsType(osType: BrowserOsType): void {
-    this.allActionIdLabelShortcuts = actionIds
-      .filter(id => !PSEUDO_ACTIONS.includes(id))
-      .map(
-        id => new ActionIdLabelShortcut(
-          id,
-          FnfActionLabels.actionIdLabelMap[id],
-          this.shortcutService.getShortcutsByAction(id)
-        )
-      );
-    this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
-    this.applyFilter(this.filterText);
-  }
-
   onOsTypeChange(event: any): void {
     this.selectedOsType = event.value;
     this.loadShortcutsForOsType(this.selectedOsType);
@@ -99,7 +88,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
 
   onFilterChange(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.filterTextChanged.next(input.value);
+    this.filterTextChanged.next(input.value.trim());
   }
 
   resetFilter(): void {
@@ -107,25 +96,9 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
     this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
   }
 
-  private applyFilter(filterText: string): void {
-    if (!filterText.trim()) {
-      this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
-      return;
-    }
-
-    const lowerCaseFilter = filterText.toLowerCase();
-    this.actionIdLabelShortcuts = this.allActionIdLabelShortcuts.filter(item => 
-      item.actionId.toLowerCase().includes(lowerCaseFilter) ||
-      item.label?.toLowerCase().includes(lowerCaseFilter) ||
-      item.shortcuts?.some(shortcut => shortcut.toLowerCase().includes(lowerCaseFilter))
-    );
-  }
-
-
   onCancelClicked() {
     this.dialogRef.close(undefined);
   }
-
 
   openEditDialog(item: ActionIdLabelShortcut) {
     const dialogData: EditShortcutDialogData = {
@@ -151,5 +124,43 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
         this.applyFilter(this.filterText);
       }
     });
+  }
+
+  private loadShortcutsForOsType(osType: BrowserOsType): void {
+    this.shortcutService
+      .getShortcutsFromApi(osType)
+      .subscribe(
+        (shortcuts) => {
+          console.log('Shortcuts loaded for OS type:', osType, shortcuts);
+          this.allActionIdLabelShortcuts = actionIds
+            .filter(id => !PSEUDO_ACTIONS.includes(id))
+            .map(
+              id => new ActionIdLabelShortcut(
+                id,
+                FnfActionLabels.actionIdLabelMap[id],
+                this.shortcutService.getShortcutsByAction(id)
+              )
+            );
+          this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
+          this.applyFilter(this.filterText);
+          this.cdr.detectChanges();
+        }
+      );
+  }
+
+  private applyFilter(filterText: string): void {
+    if (!filterText.trim()) {
+      // all:
+      this.actionIdLabelShortcuts = [...this.allActionIdLabelShortcuts];
+
+    } else {
+      const lowerCaseFilter = filterText.toLowerCase();
+      this.actionIdLabelShortcuts = this.allActionIdLabelShortcuts.filter(item =>
+        item.actionId.toLowerCase().includes(lowerCaseFilter) ||
+        item.label?.toLowerCase().includes(lowerCaseFilter) ||
+        item.shortcuts?.some(shortcut => shortcut.toLowerCase().includes(lowerCaseFilter))
+      );
+    }
+    this.cdr.detectChanges();
   }
 }

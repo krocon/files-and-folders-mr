@@ -54,7 +54,7 @@ WalkdirSyncService.forRoot(environment.walkdir);
 WalkSocketService.forRoot(environment.walkdir);
 
 console.info('Files and Folders');
-console.info('        > Services initialized');
+console.info('        > Services configured');
 
 const config: SocketIoConfig = {
   url: "http://localhost:3334",

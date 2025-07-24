@@ -103,18 +103,19 @@ export class ShortcutService {
     }
   }
 
-  private async loadCustom(os: BrowserOsType): Promise<ShortcutActionMapping> {
+  private async loadCustom(os: BrowserOsType): Promise<ShortcutActionMapping | null> {
     try {
       const customFilePath = join(this.customPath, `${os}.json`);
       const content = await fs.readFile(customFilePath, 'utf-8');
       return JSON.parse(content);
+
     } catch (error) {
       // Custom file might not exist, which is fine
       if (error.code === 'ENOENT') {
-        return {};
+        return null;
       }
       this.logger.error(`Failed to load custom shortcuts for ${os}:`, error);
-      return {};
+      return null;
     }
   }
 }
