@@ -80,6 +80,18 @@ export class ShortcutService {
     return [];
   }
 
+
+  getSimplestShortcutsByAction(action: string): string[] {
+    for (const sc in this.activeShortcuts) {
+      const a = this.activeShortcuts[sc];
+      if (a === action) {
+        let shortcutAsLabelTokens = this.getShortcutAsLabelTokens(sc);
+        if (shortcutAsLabelTokens.length === 1) return shortcutAsLabelTokens;
+      }
+    }
+    return [];
+  }
+
   getShortcutAsLabelTokens(sc: string): string[] {
     const hs = harmonizeShortcut(sc);
     return hs

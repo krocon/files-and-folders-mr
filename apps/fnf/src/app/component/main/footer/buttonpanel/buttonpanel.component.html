@@ -1,26 +1,22 @@
 <div class="button-panel-container">
   <div class="button-panel">
 
-    @for (button of buttons; track button) {
+    @for (id of buttons; track id) {
       <button
-          (click)="onButtonClick(button.action)"
-          [disabled]="!buttonEnableStates[button.action]"
+          (click)="onButtonClick(id)"
+          [disabled]="!buttonEnableStates[id]"
+          [title]="getShortcutsByAction(id)"
           class="panel-button"
           color="primary"
           mat-stroked-button>
 
-        @if (button.shortcut) {
-          <b
-              [innerText]="button.shortcut"
-              class="fnf-shortcut"></b>
+        @if (getLabelByAction(id)) {
+          <span>&nbsp;{{ getLabelByAction(id) }}</span>
         }
-
-        @if (button.icon) {
-          <mat-icon [innerText]="button.icon"></mat-icon>
-        }
-
-        @if (button.label) {
-          <span>&nbsp;{{ button.label }}</span>
+        @if (getSimplestShortcutsByAction(id)) {
+          <fnf-shortcut
+              [keys]="getSimplestShortcutsByAction(id)"
+              style="float: left;margin: 0 12px 0 0;"></fnf-shortcut>
         }
 
       </button>

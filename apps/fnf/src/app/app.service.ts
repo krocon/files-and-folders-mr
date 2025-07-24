@@ -487,6 +487,10 @@ export class AppService {
     return this.shortcutService.getFirstShortcutByActionAsTokens(action);
   }
 
+  getSimplestShortcutsByAction(action: ActionId): string[] {
+    return this.shortcutService.getSimplestShortcutsByAction(action);
+  }
+
   getShortcutAsLabelTokens(sc: string): string[] {
     return this.shortcutService.getShortcutAsLabelTokens(sc);
   }

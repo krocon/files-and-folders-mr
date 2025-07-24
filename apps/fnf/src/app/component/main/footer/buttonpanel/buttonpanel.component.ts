@@ -10,7 +10,7 @@ import {AppService} from "../../../../app.service";
 import {ActionId} from "../../../../domain/action/fnf-action.enum";
 import {MatBottomSheet, MatBottomSheetConfig} from "@angular/material/bottom-sheet";
 import {TaskList} from "../../../task/task-list/task-list";
-import {ButtonEnableStates, buttonEnableStatesKey, CmdIf} from "@fnf/fnf-data";
+import {ButtonEnableStates, ButtonEnableStatesKey, CmdIf} from "@fnf/fnf-data";
 import {MatList} from "@angular/material/list";
 import {TaskButtonComponent} from "../../../task/task-list/task-button.component";
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
@@ -42,44 +42,14 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   themes = cssThemes;
 
-  // TODO merge to actionIds and config of shortcuts! apps/fnf/src/assets/config/shortcut/osx.json
-  readonly buttons: { label: string, shortcut?: string, icon?: string, action: buttonEnableStatesKey }[] = [
-    {
-      label: 'Copy',
-      icon: '',
-      action: 'OPEN_COPY_DLG',
-      shortcut: 'F3'
-    },
-    {
-      label: 'View',
-      icon: '',
-      action: 'OPEN_VIEW_DLG',
-      shortcut: '⇧ F4'
-    },
-    {
-      label: 'Edit',
-      icon: '',
-      action: 'OPEN_EDIT_DLG',
-      shortcut: 'F4'
-    },
-    {
-      label: 'Move',
-      icon: '',
-      action: 'OPEN_MOVE_DLG',
-      shortcut: 'F6'
-    },
-    {
-      label: 'Create Dir',
-      icon: '',
-      action: 'OPEN_MKDIR_DLG',
-      shortcut: 'F7'
-    },
-    {
-      label: 'Delete',
-      icon: '',
-      action: 'OPEN_DELETE_DLG',
-      shortcut: 'F8'
-    }
+
+  readonly buttons: ButtonEnableStatesKey[] = [
+    'OPEN_COPY_DLG',
+    'OPEN_VIEW_DLG',
+    'OPEN_EDIT_DLG',
+    'OPEN_MOVE_DLG',
+    'OPEN_MKDIR_DLG',
+    'OPEN_DELETE_DLG'
   ];
 
 
@@ -224,6 +194,10 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   getShortcutsByAction(action: ActionId) {
     return this.appService.getFirstShortcutByActionAsTokens(action);
+  }
+
+  getSimplestShortcutsByAction(action: ActionId) {
+    return this.appService.getSimplestShortcutsByAction(action);
   }
 
 

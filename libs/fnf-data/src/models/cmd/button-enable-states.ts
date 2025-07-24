@@ -1,4 +1,4 @@
-export type buttonEnableStatesKey = keyof ButtonEnableStates;
+export type ButtonEnableStatesKey = keyof ButtonEnableStates;
 
 export class ButtonEnableStates {
   OPEN_COPY_DLG = false;
