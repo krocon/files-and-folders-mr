@@ -47,37 +47,37 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     {
       label: 'Copy',
       icon: '',
-      action: 'copy',
+      action: 'OPEN_COPY_DLG',
       shortcut: 'F3'
     },
     {
       label: 'View',
       icon: '',
-      action: 'view',
+      action: 'OPEN_VIEW_DLG',
       shortcut: '⇧ F4'
     },
     {
       label: 'Edit',
       icon: '',
-      action: 'edit',
+      action: 'OPEN_EDIT_DLG',
       shortcut: 'F4'
     },
     {
       label: 'Move',
       icon: '',
-      action: 'move',
+      action: 'OPEN_MOVE_DLG',
       shortcut: 'F6'
     },
     {
       label: 'Create Dir',
       icon: '',
-      action: 'mkdir',
+      action: 'OPEN_MKDIR_DLG',
       shortcut: 'F7'
     },
     {
       label: 'Delete',
       icon: '',
-      action: 'remove',
+      action: 'OPEN_DELETE_DLG',
       shortcut: 'F8'
     }
   ];
@@ -181,25 +181,26 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     this.matBottomSheet.dismiss();
   }
 
-  onButtonClick(action: string): void {
-    if (action === 'copy') {
-      this.actionExecutionService.executeActionById('OPEN_COPY_DLG');
-
-    } else if (action === 'edit') {
-      this.actionExecutionService.executeActionById('OPEN_EDIT_DLG');
-
-    } else if (action === 'view') {
-      this.actionExecutionService.executeActionById('OPEN_VIEW_DLG');
-
-    } else if (action === 'move') {
-      this.actionExecutionService.executeActionById('OPEN_MOVE_DLG');
-
-    } else if (action === 'mkdir') {
-      this.actionExecutionService.executeActionById('OPEN_MKDIR_DLG');
-
-    } else if (action === 'remove') {
-      this.actionExecutionService.executeActionById('OPEN_DELETE_DLG');
-    }
+  onButtonClick(actionId: ActionId): void {
+    this.actionExecutionService.executeActionById(actionId);
+    // if (action === 'copy') {
+    //   this.actionExecutionService.executeActionById('OPEN_COPY_DLG');
+    //
+    // } else if (action === 'edit') {
+    //   this.actionExecutionService.executeActionById('OPEN_EDIT_DLG');
+    //
+    // } else if (action === 'view') {
+    //   this.actionExecutionService.executeActionById('OPEN_VIEW_DLG');
+    //
+    // } else if (action === 'move') {
+    //   this.actionExecutionService.executeActionById('OPEN_MOVE_DLG');
+    //
+    // } else if (action === 'mkdir') {
+    //   this.actionExecutionService.executeActionById('OPEN_MKDIR_DLG');
+    //
+    // } else if (action === 'remove') {
+    //   this.actionExecutionService.executeActionById('OPEN_DELETE_DLG');
+    // }
   }
 
 

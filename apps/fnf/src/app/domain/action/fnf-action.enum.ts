@@ -46,6 +46,7 @@ export const actionIds = [
   "OPEN_SETUP_DLG",
   "OPEN_SHELL_DLG",
   "OPEN_SHORTCUT_DLG",
+  "OPEN_UNPACK_DLG",
   "OPEN_VIEW_DLG",
 
   "PAGEDOWN_PRESSED",

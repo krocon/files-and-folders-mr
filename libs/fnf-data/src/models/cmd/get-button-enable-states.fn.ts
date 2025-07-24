@@ -2,12 +2,12 @@ import { ButtonEnableStates, EXP_ZIP_FILE_URL, FileItemIf } from "@fnf/fnf-data"
 
 export function getButtonEnableStates(items: FileItemIf[]): ButtonEnableStates {
   const states = new ButtonEnableStates();
-  states.copy = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-  states.edit = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-  states.move = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-  states.remove = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-  states.mkdir = true;
-  states.rename = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_COPY_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_EDIT_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_MOVE_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_DELETE_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_MKDIR_DLG = true;
+  states.OPEN_RENAME_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
   states.unpack = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
   return states;
 }

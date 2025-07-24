@@ -1,12 +1,12 @@
 export type buttonEnableStatesKey = keyof ButtonEnableStates;
 
 export class ButtonEnableStates {
-  copy = false;
-  edit = false;
-  view = false;
-  move = false;
-  remove = false;
-  mkdir = false;
-  rename = false;
-  unpack = false;
+  OPEN_COPY_DLG = false;
+  OPEN_EDIT_DLG = false;
+  OPEN_VIEW_DLG = false;
+  OPEN_MOVE_DLG = false;
+  OPEN_DELETE_DLG = false;
+  OPEN_MKDIR_DLG = false;
+  OPEN_RENAME_DLG = false;
+  OPEN_UNPACK_DLG = false;
 }
