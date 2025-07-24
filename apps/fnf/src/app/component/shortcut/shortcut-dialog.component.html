@@ -78,6 +78,9 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <div>
+    Your browser: <b>{{ browserOs }}</b>
+  </div>
   <button
       (click)="onCancelClicked()"
       data-test-id="dialog-cancel-button"

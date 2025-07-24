@@ -22,6 +22,7 @@ import {MatInputModule} from "@angular/material/input";
 import {BrowserOsType} from "@fnf/fnf-data";
 import {debounceTime, distinctUntilChanged, Subject, Subscription} from "rxjs";
 import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit/edit-shortcut-dialog.component";
+import {BrowserOsService} from "../../service/browseros/browser-os.service";
 
 @Component({
   selector: "fnf-shortcut--dialog",
@@ -51,14 +52,16 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   allActionIdLabelShortcuts: ActionIdLabelShortcut[] = [];
   filterText = '';
   selectedOsType: BrowserOsType = 'osx';
+  browserOs: BrowserOsType = 'osx';
 
   private filterTextChanged = new Subject<string>();
   private subscription: Subscription | null = null;
 
   constructor(
+    private readonly shortcutService: ShortcutService,
+    private readonly browserOsService: BrowserOsService,
     private readonly dialogRef: MatDialogRef<ShortcutDialogComponent>,
     private readonly dialog: MatDialog,
-    private readonly shortcutService: ShortcutService,
     private readonly cdr: ChangeDetectorRef,
   ) {
     this.subscription = this.filterTextChanged
@@ -73,6 +76,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadShortcutsForOsType(this.selectedOsType);
+    this.browserOs = this.browserOsService.browserOs;
   }
 
   onOsTypeChange(event: any): void {

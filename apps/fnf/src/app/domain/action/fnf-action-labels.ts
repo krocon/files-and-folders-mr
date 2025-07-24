@@ -40,6 +40,13 @@ export class FnfActionLabels {
 
     OPEN_SELECT_DLG: "Enhance Selection...",
 
+    NAVIGATE_FORWARD: "Forward",
+    OPEN_SHORTCUT_DLG: "Shortcuts...",
+    OPEN_UNPACK_DLG: "Unpack...",
+    PRINT_DEBUG: "Debug",
+    RELOAD_DIR_0: "Reload Left",
+    RELOAD_DIR_1: "Reload Right",
+
     SELECT_ALL: "Select All",
     DESELECT_ALL: "Deselect All",
     ENHANCE_SELECTION: "Enhance Selection",
