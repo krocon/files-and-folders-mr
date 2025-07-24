@@ -2,6 +2,122 @@ import {BehaviorSubject} from "rxjs";
 import {TypedDataOptions} from "./typed-data-options";
 import {TypeDataDefaultOptions} from "./type-data-default-options";
 
+
+/**
+ * A generic service for handling typed data with localStorage persistence.
+ *
+ * The TypedDataService provides a convenient way to store and retrieve typed data from
+ * localStorage with proper serialization/deserialization, change notifications, and custom data handling.
+ *
+ * @template T The type of data to be managed by this service
+ *
+ * @example
+ * // Basic usage with a string value
+ * const stringService = new TypedDataService<string>("user-name", "default-user");
+ *
+ * // Get the current value
+ * const userName = stringService.getValue();
+ *
+ * // Update the value (persists to localStorage)
+ * stringService.update("new-user-name");
+ *
+ * // Subscribe to changes
+ * stringService.valueChanges$.subscribe(newValue => {
+ *   console.log("User name changed to:", newValue);
+ * });
+ *
+ * @example
+ * // Usage with a complex object
+ * interface UserPreferences {
+ *   theme: string;
+ *   fontSize: number;
+ *   notifications: boolean;
+ * }
+ *
+ * const defaultPreferences: UserPreferences = {
+ *   theme: 'light',
+ *   fontSize: 14,
+ *   notifications: true
+ * };
+ *
+ * const preferencesService = new TypedDataService<UserPreferences>(
+ *   "user-preferences",
+ *   defaultPreferences
+ * );
+ *
+ * // Update a single property while preserving others
+ * const currentPrefs = preferencesService.getValue();
+ * preferencesService.update({
+ *   ...currentPrefs,
+ *   theme: 'dark'
+ * });
+ *
+ * @example
+ * // Using custom serialization/deserialization
+ * interface ComplexData {
+ *   createdAt: Date;
+ *   items: Map<string, number>;
+ * }
+ *
+ * const customOptions: Partial<TypedDataOptions<ComplexData>> = {
+ *   stringify: (data) => {
+ *     if (data === null) return null;
+ *     return JSON.stringify({
+ *       createdAt: data.createdAt.toISOString(),
+ *       items: Array.from(data.items.entries())
+ *     });
+ *   },
+ *   parse: (str) => {
+ *     if (str === null) return null;
+ *     const parsed = JSON.parse(str);
+ *     const result: ComplexData = {
+ *       createdAt: new Date(parsed.createdAt),
+ *       items: new Map(parsed.items)
+ *     };
+ *     return result;
+ *   },
+ *   clone: (data) => {
+ *     return {
+ *       createdAt: new Date(data.createdAt),
+ *       items: new Map(data.items)
+ *     };
+ *   }
+ * };
+ *
+ * const complexDataService = new TypedDataService<ComplexData>(
+ *   "complex-data",
+ *   { createdAt: new Date(), items: new Map() },
+ *   customOptions
+ * );
+ *
+ * @example
+ * // Real-world usage in a service
+ * @Injectable({
+ *   providedIn: 'root'
+ * })
+ * export class UserSettingsService {
+ *   private readonly settingsService: TypedDataService<UserSettings>;
+ *
+ *   constructor() {
+ *     this.settingsService = new TypedDataService<UserSettings>(
+ *       'user-settings',
+ *       DEFAULT_SETTINGS
+ *     );
+ *   }
+ *
+ *   getSettings(): UserSettings {
+ *     return this.settingsService.getValue();
+ *   }
+ *
+ *   updateSettings(settings: UserSettings): void {
+ *     this.settingsService.update(settings);
+ *   }
+ *
+ *   get settings$(): Observable<UserSettings> {
+ *     return this.settingsService.valueChanges$.asObservable();
+ *   }
+ * }
+ */
 export class TypedDataService<T> {
 
   readonly valueChanges$: BehaviorSubject<T>;
