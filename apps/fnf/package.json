@@ -31,7 +31,7 @@
     "@guiexpert/angular-table": "^20.1.79",
     "@guiexpert/table": "^1.1.79",
     "hammerjs": "^2.0.8",
-    "ngx-socket-io": "^4.8.5",
+    "ngx-socket-io": "4.9.1",
     "rxjs": "~7.8.0",
     "socket.io": "^4.8.1",
     "tslib": "^2.3.0",

@@ -71,4 +71,9 @@ function updateEnvironmentFiles() {
   });
 }
 
-updateEnvironmentFiles();
+
+try {
+  updateEnvironmentFiles();
+} catch (error) {
+  console.error("Error updating environment files:", error.message);
+}

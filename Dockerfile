@@ -5,11 +5,13 @@ ENV NODE_ENV=build
 # Create app directory
 WORKDIR /usr/src/app
 
-RUN apt-get update && \
- apt-get install python3 -y && \
- apt-get install -y build-essential make g++ && \
- apt-get install -y mc
-
+RUN apt-get update
+RUN  apt-get install -y python3
+RUN  apt-get install -y build-essential
+RUN  apt-get install -y make
+RUN  apt-get install -y g++
+RUN  apt-get install -y libc6-dev
+RUN npm install -g node-gyp
 RUN npm install -g pnpm
 
 # Copy package files first to leverage Docker cache
@@ -44,10 +46,27 @@ ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
-RUN apt-get update && \
- apt-get install rsync -y && \
- apt-get install -y libc6-dev python3 build-essential make g++ && \
- npm install -g pnpm node-gyp
+RUN apt-get update
+RUN  apt-get install -y python3
+RUN  apt-get install -y build-essential
+RUN  apt-get install -y make
+RUN  apt-get install -y g++
+RUN  apt-get install -y libc6-dev
+RUN npm install -g node-gyp
+RUN npm install -g pnpm
+
+# Optional:
+RUN apt-get install -y rsync
+RUN apt-get install -y  zip unzip
+RUN apt-get install -y  p7zip-full
+RUN apt-get install -y  tar
+RUN apt-get install -y  xz-utils
+RUN apt-get install -y  zstd
+RUN apt-get install -y  curl wget
+RUN apt-get install -y  jq
+RUN apt-get install -y  tree
+RUN apt-get install -y  file
+
 
 
 # Copy package files needed for rebuild
