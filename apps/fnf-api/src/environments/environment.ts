@@ -3,8 +3,8 @@ import {join} from "path";
 
 const getEnvironmentVariables = () => {
 
-  const version = '25.07.2025 09:44';
-  const commitHash = 'aecc53f';
+  const version = '25.07.2025 12:57';
+  const commitHash = '81b6063';
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
