@@ -14,7 +14,6 @@ export type ShortcutActionMapping = { [key: string]: string };
 export class ShortcutService {
 
   private static readonly config = {
-    getShortcutActionMappingUrl: "assets/config/shortcut/",
     getShortcutApiUrl: "api/shortcuts"  /* on localhost: is automatically set to by configuration "http://localhost:3333/api/shortcut/" */
   };
 
@@ -257,7 +256,7 @@ export class ShortcutService {
   }
 
   private fetchShortcutMappings(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {
-    return this.httpClient.get<ShortcutActionMapping>(ShortcutService.config.getShortcutActionMappingUrl + sys + '.json');
+    return this.getShortcutsFromApi(sys);
   }
 
   private updateShortcutMappings(fetchedMappings: ShortcutActionMapping): ShortcutActionMapping {
