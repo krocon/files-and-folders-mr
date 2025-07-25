@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild
 } from "@angular/core";
-import { Terminal } from 'xterm';
+import {Terminal} from '@xterm/xterm';
 import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 import { ServershellService } from "./service/servershell.service";
@@ -39,6 +39,9 @@ export class ServershellComponent implements OnInit, OnDestroy {
   private lastCompletions: string[] = [];
   private lastCompletionIndex: number = -1;
   private lastCompletionInput: string = '';
+  private commandHistory: string[] = [];
+  private historyIndex: number = -1;
+  private currentInput: string = '';
 
 
   constructor(
@@ -97,6 +100,16 @@ export class ServershellComponent implements OnInit, OnDestroy {
 
   private handleInput(data: string) {
     if (!this.terminal) return;
+
+    // Handle escape sequences (arrow keys)
+    if (data === '\u001b[A') { // Arrow Up
+      this.handleHistoryUp();
+      return;
+    } else if (data === '\u001b[B') { // Arrow Down
+      this.handleHistoryDown();
+      return;
+    }
+    
     for (const char of data) {
       if (char !== '\t') {
         this.lastCompletions = [];
@@ -121,8 +134,54 @@ export class ServershellComponent implements OnInit, OnDestroy {
       } else if (char >= ' ' && char <= '~') { // Printable
         this.inputBuffer += char;
         this.terminal.write(char);
+        // Reset history navigation when user types
+        this.historyIndex = -1;
       }
     }
+  }
+
+  private handleHistoryUp() {
+    if (!this.terminal || this.commandHistory.length === 0) return;
+
+    // Save current input if we're starting history navigation
+    if (this.historyIndex === -1) {
+      this.currentInput = this.inputBuffer;
+    }
+
+    // Move up in history
+    if (this.historyIndex < this.commandHistory.length - 1) {
+      this.historyIndex++;
+      const historyCommand = this.commandHistory[this.commandHistory.length - 1 - this.historyIndex];
+      this.replaceCurrentLine(historyCommand);
+    }
+  }
+
+  private handleHistoryDown() {
+    if (!this.terminal || this.historyIndex === -1) return;
+
+    // Move down in history
+    if (this.historyIndex > 0) {
+      this.historyIndex--;
+      const historyCommand = this.commandHistory[this.commandHistory.length - 1 - this.historyIndex];
+      this.replaceCurrentLine(historyCommand);
+    } else {
+      // Back to current input
+      this.historyIndex = -1;
+      this.replaceCurrentLine(this.currentInput);
+    }
+  }
+
+  private replaceCurrentLine(newText: string) {
+    if (!this.terminal) return;
+
+    // Clear current line
+    this.terminal.write('\r');
+    this.terminal.write(' '.repeat(this.path.length + this.prompt.length + this.inputBuffer.length));
+    this.terminal.write('\r');
+
+    // Write new prompt and text
+    this.terminal.write(this.path + this.prompt + newText);
+    this.inputBuffer = newText;
   }
 
   private async handleAutocomplete() {
@@ -179,6 +238,15 @@ export class ServershellComponent implements OnInit, OnDestroy {
   }
 
   private executeCommand(command: string) {
+    // Add command to history (avoid duplicates of the last command)
+    if (this.commandHistory.length === 0 || this.commandHistory[this.commandHistory.length - 1] !== command) {
+      this.commandHistory.push(command);
+    }
+
+    // Reset history navigation
+    this.historyIndex = -1;
+    this.currentInput = '';
+    
     const emitKey = `ServerShell${this.rid}`;
     const cancelKey = `cancelServerShell${this.rid}`;
     this.shellService.doSpawn({

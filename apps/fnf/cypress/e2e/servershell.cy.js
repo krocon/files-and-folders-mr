@@ -50,7 +50,7 @@ describe("Servershell Component", () => {
       // Wait for backend response
       cy.wait(1000);
       // Check that the terminal contains a completion (either autocompleted or options shown)
-      cy.get('.xterm').invoke('text').should('match', /cd u.*/i);
+      cy.get(".xterm-screen").invoke("text").should("match", /cd u.*/i);
     });
     it('should cycle through multiple completions with repeated TABs', () => {
       cy.get('.xterm textarea').focus();
@@ -60,7 +60,72 @@ describe("Servershell Component", () => {
       cy.get('.xterm textarea').type('\t', { delay: 50 });
       cy.wait(500);
       // Should show options or cycle through them
-      cy.get('.xterm').invoke('text').should('include', 'cd /u');
+      cy.get(".xterm-screen").invoke("text").should("include", "cd /u");
+    });
+  });
+
+  describe("Command History", () => {
+    it("should navigate through command history with arrow keys", () => {
+      // Focus the xterm terminal
+      cy.get(".xterm textarea").focus();
+
+      // Execute first command
+      cy.get(".xterm textarea").type("echo \"first command\"", {delay: 50});
+      cy.get(".xterm textarea").type("{enter}", {delay: 50});
+      cy.wait(1000);
+
+      // Execute second command
+      cy.get(".xterm textarea").type("echo \"second command\"", {delay: 50});
+      cy.get(".xterm textarea").type("{enter}", {delay: 50});
+      cy.wait(1000);
+
+      // Press arrow up to get last command
+      cy.get(".xterm textarea").type("{upArrow}", {delay: 50});
+      cy.wait(200);
+
+      // Check that the terminal shows the last command
+      cy.get(".xterm").invoke("text").should("include", "echo \"second command\"");
+
+      // Press arrow up again to get previous command
+      cy.get(".xterm textarea").type("{upArrow}", {delay: 50});
+      cy.wait(200);
+
+      // Check that the terminal shows the first command
+      cy.get(".xterm").invoke("text").should("include", "echo \"first command\"");
+
+      // Press arrow down to go back to second command
+      cy.get(".xterm textarea").type("{downArrow}", {delay: 50});
+      cy.wait(200);
+
+      // Check that the terminal shows the second command again
+      cy.get(".xterm").invoke("text").should("include", "echo \"second command\"");
+    });
+
+    it("should return to current input when navigating past history", () => {
+      // Focus the xterm terminal
+      cy.get(".xterm textarea").focus();
+
+      // Execute a command
+      cy.get(".xterm textarea").type("ls", {delay: 50});
+      cy.get(".xterm textarea").type("{enter}", {delay: 50});
+      cy.wait(1000);
+
+      // Start typing a new command
+      cy.get(".xterm textarea").type("echo \"current\"", {delay: 50});
+
+      // Press arrow up to get history
+      cy.get(".xterm textarea").type("{upArrow}", {delay: 50});
+      cy.wait(200);
+
+      // Should show the previous command
+      cy.get(".xterm").invoke("text").should("include", "ls");
+
+      // Press arrow down to return to current input
+      cy.get(".xterm textarea").type("{downArrow}", {delay: 50});
+      cy.wait(200);
+
+      // Should show the current input again
+      cy.get(".xterm").invoke("text").should("include", "echo \"current\"");
     });
   });
 });

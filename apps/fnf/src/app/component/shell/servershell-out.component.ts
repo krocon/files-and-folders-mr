@@ -12,7 +12,7 @@ import {
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {Terminal} from 'xterm';
+import {Terminal} from '@xterm/xterm';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
