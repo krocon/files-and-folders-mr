@@ -16,6 +16,8 @@ import { ShellSpawnResultIf } from "@fnf/fnf-data";
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import {AppService} from "../../app.service";
+import {PanelManagementService} from "../../service/panel/panel-management-service";
 
 @Component({
   selector: "fnf-servershell",
@@ -38,12 +40,16 @@ export class ServershellComponent implements OnInit, OnDestroy {
   private lastCompletionIndex: number = -1;
   private lastCompletionInput: string = '';
 
+
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly ngZone: NgZone,
     private readonly shellService: ServershellService,
     private readonly router: Router,
-  ) {}
+    private readonly pms: PanelManagementService,
+  ) {
+    this.path = this.pms.getActiveTabOnActivePanel().path;
+  }
 
   ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
