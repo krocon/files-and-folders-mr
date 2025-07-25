@@ -58,7 +58,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Clone the shortcuts array to avoid modifying the original
     this.shortcuts = [...this.data.actionItem.shortcuts];
-    console.info('EditShortcutDialogComponent.ngOnInit()', JSON.stringify(this.shortcuts, null, 4));
   }
 
   onAddShortcut(): void {
@@ -120,7 +119,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   onSave(): void {
-    console.info('Saving shortcuts...');
     // Filter out empty shortcuts
     const validShortcuts = this.shortcuts.filter(shortcut => shortcut.trim() !== '');
 
@@ -148,7 +146,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       updatedShortcutMapping[shortcut] = this.data.actionItem.actionId;
     });
 
-    console.info('Saving complete shortcut mapping for OS type:', this.data.osType, updatedShortcutMapping);
     // Save the complete mapping through the service
     this.shortcutService.saveShortcuts(this.data.osType, updatedShortcutMapping).subscribe({
       next: () => {
@@ -156,7 +153,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Failed to save shortcuts:', error);
-        // TODO: Show error message to user
       }
     });
   }

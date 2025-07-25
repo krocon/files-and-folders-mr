@@ -135,7 +135,6 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
       .getShortcutsFromApi(osType)
       .subscribe(
         (shortcuts) => {
-          console.log('Shortcuts loaded for OS type:', osType, shortcuts);
           this.allActionIdLabelShortcuts = actionIds
             .filter(id => !PSEUDO_ACTIONS.includes(id))
             .map(
