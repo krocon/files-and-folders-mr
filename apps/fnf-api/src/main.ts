@@ -4,13 +4,20 @@ import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app/app.module';
 import {AppService} from './app/app.service';
 import {HttpExceptionFilter} from './app/http-exception.filter';
-import {environment} from './environments/environment';
+// import {environment} from './environments/environment';
 import * as events from 'events';
 // import { Request, Response } from 'express';
 
 // Increase the max listeners to prevent the MaxListenersExceededWarning
 // Default is 10, setting to 20 to accommodate the application's needs
 events.EventEmitter.defaultMaxListeners = 20;
+
+
+// OR conditionally import based on NODE_ENV
+const environment = process.env.NODE_ENV === 'production'
+  ? require('./environments/environment.prod').environment
+  : require('./environments/environment').environment;
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -44,6 +51,7 @@ async function bootstrap() {
     })
     .filter(item => item !== undefined);
   AppService.availableRoutes = availableRoutes;
+  console.log('env:', environment.label);
   console.log('Routes:', availableRoutes);
 
 }

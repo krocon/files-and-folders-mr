@@ -3,14 +3,15 @@ import {join} from "path";
 
 const getEnvironmentVariables = () => {
 
-  const version = '25.07.2025 14:04';
-  const commitHash = '1d3e03c';
+  const label = 'prod';
+  const version = '25.07.2025 15:24';
+  const commitHash = 'aaa43ce';
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
 
-  const shortcutsDefaultsPath = join(__dirname, '..', 'assets/shortcut/defaults');
-  const shortcutsCustomPath = join(__dirname, '..', 'assets/shortcut/custom');
+  const shortcutsDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/defaults');
+  const shortcutsCustomPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/custom');
 
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
@@ -22,6 +23,7 @@ const getEnvironmentVariables = () => {
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
+    label,
     version,
     commitHash,
     frontendPort,
@@ -42,8 +44,11 @@ const getEnvironmentVariables = () => {
 
 // Create a dynamic environment object that gets values at runtime
 export const environment = {
-  production: false,
+  production: true,
 
+  get label() {
+    return getEnvironmentVariables().label;
+  },
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
   },

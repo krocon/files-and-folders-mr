@@ -3,8 +3,9 @@ import {join} from "path";
 
 const getEnvironmentVariables = () => {
 
-  const version = '25.07.2025 14:04';
-  const commitHash = '1d3e03c';
+  const label = 'dev';
+  const version = '25.07.2025 15:24';
+  const commitHash = 'aaa43ce';
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
@@ -23,6 +24,7 @@ const getEnvironmentVariables = () => {
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
+    label,
     version,
     commitHash,
     frontendPort,
@@ -45,6 +47,9 @@ const getEnvironmentVariables = () => {
 export const environment = {
   production: false,
 
+  get label() {
+    return getEnvironmentVariables().label;
+  },
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
   },

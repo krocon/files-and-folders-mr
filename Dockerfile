@@ -79,10 +79,11 @@ COPY --from=builder /usr/src/app/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 
 # Rebuild native modules for the production environment
-RUN cd node_modules/.pnpm/node-pty@1.0.0/node_modules/node-pty && node-gyp rebuild
+# RUN cd node_modules/.pnpm/node-pty@1.0.0/node_modules/node-pty && node-gyp rebuild
 
 # Copy your full app (built dist + sources if needed)
 COPY --from=builder /usr/src/app/apps/fnf-api/dist ./apps/fnf-api
+COPY --from=builder /usr/src/app/apps/fnf-api/src/assets ./apps/fnf-api/assets
 COPY --from=builder /usr/src/app/apps/fnf-api/node_modules ./apps/fnf-api/node_modules
 COPY --from=builder /usr/src/app/libs/fnf-data ./libs/fnf-data
 

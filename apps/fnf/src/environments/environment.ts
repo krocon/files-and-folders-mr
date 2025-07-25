@@ -6,8 +6,8 @@ const prefix = 'http://localhost:3333';
 
 export const environment = {
   production: false,
-  version: '25.07.2025 14:04',
-  commitHash: '1d3e03c',
+  version: '25.07.2025 15:24',
+  commitHash: 'aaa43ce',
 
   config: {
     getUrl: prefix + "/api/config"
