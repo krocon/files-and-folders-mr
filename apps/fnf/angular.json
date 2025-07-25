@@ -26,7 +26,8 @@
               "src/edit.html"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/xterm/css/xterm.css"
             ],
             "scripts": []
           },

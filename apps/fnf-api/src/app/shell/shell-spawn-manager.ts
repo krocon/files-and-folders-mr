@@ -1,10 +1,10 @@
-import * as pty from 'node-pty';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
 import {ShellSpawnParaIf, ShellSpawnResultIf} from '@fnf-data';
 
 export class ShellSpawnManager {
-  private processes: Map<string, pty.IPty> = new Map();
+  private processes: Map<string, ChildProcessWithoutNullStreams> = new Map();
   private timeouts: Map<string, NodeJS.Timeout> = new Map();
   private currentDirectories: Map<string, string> = new Map();
 
@@ -66,19 +66,14 @@ export class ShellSpawnManager {
       const cols = para.cols || 80;
       const rows = para.rows || 30;
 
-      // Spawn the process using node-pty with tracked current directory
-      const ptyProcess = pty.spawn(shell, ['-c', para.cmd], {
-        name: 'xterm-color',
-        cols: cols,
-        rows: rows,
+      // Spawn the process using child_process.spawn
+      const child = spawn(shell, ['-c', para.cmd], {
         cwd: currentDir,
         env: process.env,
       });
 
-      // Store the process for later cleanup
-      this.processes.set(para.cancelKey, ptyProcess);
+      this.processes.set(para.cancelKey, child);
 
-      // Set up timeout
       if (para.timeout > 0) {
         const timeoutId = setTimeout(() => {
           this.killProcess(para.cancelKey);
@@ -89,40 +84,50 @@ export class ShellSpawnManager {
             done: true,
             emitKey: '',
             hasAnsiEscapes: false,
-            pid: ptyProcess.pid,
+            pid: child.pid,
             currentDir: currentDir
           });
         }, para.timeout);
         this.timeouts.set(para.cancelKey, timeoutId);
       }
 
-      // Handle data from PTY (combines stdout and stderr)
-      ptyProcess.onData((data: string) => {
-        const hasAnsiEscapes = this.containsAnsiEscape(data);
+      child.stdout.on('data', (data: Buffer) => {
+        const str = data.toString();
+        const hasAnsiEscapes = this.containsAnsiEscape(str);
         onData({
-          out: data,
+          out: str,
           error: '',
           code: null,
           done: false,
           emitKey: '',
           hasAnsiEscapes: hasAnsiEscapes,
-          pid: ptyProcess.pid,
+          pid: child.pid,
           currentDir: currentDir
         });
       });
-
-
-      // Handle process exit
-      ptyProcess.onExit(({exitCode, signal}) => {
+      child.stderr.on('data', (data: Buffer) => {
+        const str = data.toString();
+        onData({
+          out: '',
+          error: str,
+          code: null,
+          done: false,
+          emitKey: '',
+          hasAnsiEscapes: false,
+          pid: child.pid,
+          currentDir: currentDir
+        });
+      });
+      child.on('exit', (code, signal) => {
         this.cleanup(para.cancelKey);
         onData({
           out: '',
           error: signal ? `Process terminated by signal: ${signal}` : '',
-          code: exitCode,
+          code: code ?? undefined,
           done: true,
           emitKey: '',
           hasAnsiEscapes: false,
-          pid: ptyProcess.pid,
+          pid: child.pid,
           currentDir: currentDir
         });
       });
@@ -145,27 +150,21 @@ export class ShellSpawnManager {
    * Kills a process by its cancelKey
    */
   killProcess(cancelKey: string): boolean {
-    const process = this.processes.get(cancelKey);
-    if (process) {
+    const child = this.processes.get(cancelKey);
+    if (child) {
       try {
-        // For PTY processes, we use kill() method
-        process.kill('SIGTERM');
-
-        // Force kill after 5 seconds if still running
+        child.kill('SIGTERM');
         setTimeout(() => {
           try {
-            process.kill('SIGKILL');
+            child.kill('SIGKILL');
           } catch (error) {
             // Process might already be dead
             console.warn('Failed to force kill process:', error.message);
           }
         }, 5000);
-
-        // Don't cleanup immediately - let the exit event handle it
         return true;
       } catch (error) {
-        console.error('Error killing PTY process:', error);
-        // Clean up manually if kill failed
+        console.error('Error killing process:', error);
         this.cleanup(cancelKey);
         return false;
       }
