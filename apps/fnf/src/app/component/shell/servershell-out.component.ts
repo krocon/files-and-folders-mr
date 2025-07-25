@@ -1,12 +1,22 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {CommonModule} from "@angular/common";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import { Terminal } from 'xterm';
-import { CanvasAddon } from '@xterm/addon-canvas';
-import { Router } from '@angular/router';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import {Terminal} from 'xterm';
+import {CanvasAddon} from '@xterm/addon-canvas';
+import {Router} from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 
 @Component({
@@ -19,51 +29,35 @@ import { MatButton, MatButtonModule } from '@angular/material/button';
     MatIcon,
     MatButtonModule,
   ],
-  template: `
-    <div #terminalContainer class="xterm-container"></div>
-    <div class="terminal-footer">
-      <div class="terminal-footer-item">
-        <button mat-icon-button (click)="close()">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
-    </div>
-  `,
-  styles: [`
-      :host {
-          display: grid;
-          grid-template-rows: 1fr auto;
-          width: 100%;
-          height: 100%;
-      }
-      .xterm-container {
-          width: 100%;
-          height: calc(100% - 58px);
-      }
-  `],
+  templateUrl: './servershell-out.component.html',
+  styleUrls: ['./servershell-out.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ServershellOutComponent implements OnInit, OnDestroy {
+
   @ViewChild('terminalContainer', {static: true}) terminalContainer!: ElementRef<HTMLDivElement>;
 
   private terminal: Terminal | null = null;
   private canvasAddon: CanvasAddon | null = null;
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly ngZone: NgZone,
+    private readonly router: Router
+  ) {
+  }
+
   private _displayText: string = '';
+
+  get displayText(): string {
+    return this._displayText;
+  }
 
   @Input()
   set displayText(value: string) {
     this._displayText = value;
     this.writeToTerminal(value);
   }
-  get displayText(): string {
-    return this._displayText;
-  }
-
-  constructor(
-    private readonly cdr: ChangeDetectorRef,
-    private readonly ngZone: NgZone,
-    private readonly router: Router
-  ) {}
 
   ngOnInit(): void {
     this.ngZone.runOutsideAngular(() => {
