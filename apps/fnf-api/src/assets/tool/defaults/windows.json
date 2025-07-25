@@ -1,0 +1,26 @@
+[
+  {
+    "id": "CMD_EDIT_FILE",
+    "label": "Edit",
+    "shortcut": "f4",
+    "cmd": "code ",
+    "fileLimit": 4,
+    "para": " $file ",
+    "local": true
+  },
+  {
+    "id": "CMD_7ZIP",
+    "label": "7z",
+    "shortcut": "control shift z",
+    "cmd": "7z",
+    "local": true
+  },
+  {
+    "id": "CMD_SHELL",
+    "label": "Local Shell",
+    "shortcut": "control alt c",
+    "cmd": "$clidir\\windows-open-terminal.bat",
+    "para": " $dir ",
+    "local": true
+  }
+]
