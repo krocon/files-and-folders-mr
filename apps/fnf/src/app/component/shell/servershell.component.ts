@@ -2,344 +2,210 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
-  Input,
+  ElementRef,
+  NgZone,
   OnDestroy,
   OnInit,
-  Output,
   ViewChild
 } from "@angular/core";
-import {debounceTime, takeWhile} from "rxjs/operators";
-import {Router} from "@angular/router";
-import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
-import {MatFormField, MatInput, MatPrefix, MatSuffix} from "@angular/material/input";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ServershellHistoryService} from "./service/servershell-history.service";
-import {ServershellService} from "./service/servershell.service";
-import {Observable, Subject} from "rxjs";
-import {MatTooltip} from "@angular/material/tooltip";
-import {ServershellOutComponent} from "./servershell-out.component";
-import {AppService} from "../../app.service";
-import {ServershellAutocompleteService} from "./service/servershell-autocomplete.service";
-import {ShellSpawnResultIf} from "@fnf/fnf-data";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-import {TypedDataService} from "../../common/typed-data.service";
-import {FnfAutofocusDirective} from "../../common/directive/fnf-autofocus.directive";
+import { Terminal } from 'xterm';
+import { CanvasAddon } from '@xterm/addon-canvas';
+import { FitAddon } from '@xterm/addon-fit';
+import { ServershellService } from "./service/servershell.service";
+import { ShellSpawnResultIf } from "@fnf/fnf-data";
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: "fnf-servershell",
   templateUrl: "./servershell.component.html",
   styleUrls: ["./servershell.component.css"],
-  imports: [
-    MatAutocomplete,
-    MatAutocompleteTrigger,
-    MatFormField,
-    MatInput,
-    MatOption,
-    MatPrefix,
-    MatSuffix,
-    ReactiveFormsModule,
-    ServershellOutComponent,
-    FormsModule,
-    MatTooltip,
-    MatButton,
-    MatIcon,
-    MatIconButton,
-    FnfAutofocusDirective,
-  ],
+  imports: [MatButtonModule, MatIconModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServershellComponent implements OnInit, OnDestroy {
+  @ViewChild('terminalContainer', {static: true}) terminalContainer!: ElementRef<HTMLDivElement>;
 
-  private readonly innerServiceLastCmd = new TypedDataService<string>("shell-last-cmd", '');
-
-  @Input() path = "/";
-  @Input() text = this.innerServiceLastCmd.getValue();
-  @Output() focusChanged = new EventEmitter<boolean>();
-
-  @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
-
-  hasFocus = false;
-  errorMsg = '';
-  filteredCommands: string[] = [];
-  isAnimatingOut = false;
-  isAnimatingIn = true;
-
-  displayText = '';
-
-  private readonly textChange$ = new Subject<string>();
-  private alive = true;
-  private historyIndex = -1;
-  private currentHistory: string[] = [];
-  private readonly rid = Math.random().toString(36).substring(2, 15);
-  private command = '';
-  private ignoreNewText = false;
-
-  private readonly dynamicCommands = [
-    "top",
-    "htop",
-    "watch",
-    "less",
-    "man",
-    "tail -f",
-    "dstat",
-    "iotop",
-    "nmon",
-    "glances",
-    "bmon",
-    "iftop",
-    "iptraf",
-    "nethogs",
-    "tig",
-    "alsamixer",
-    "cmus",
-    "mpv --vo=curses",
-    "vim",
-    "nano",
-    "tmux",
-    "screen"
-  ];
+  private terminal: Terminal | null = null;
+  private canvasAddon: CanvasAddon | null = null;
+  private fitAddon: FitAddon | null = null;
+  private inputBuffer: string = '';
+  private prompt = '$ ';
+  private path = '/';
+  private rid = Math.random().toString(36).substring(2, 15);
+  private lastCompletions: string[] = [];
+  private lastCompletionIndex: number = -1;
+  private lastCompletionInput: string = '';
 
   constructor(
-    private readonly router: Router,
     private readonly cdr: ChangeDetectorRef,
-    private readonly shellHistoryService: ServershellHistoryService,
+    private readonly ngZone: NgZone,
     private readonly shellService: ServershellService,
-    private readonly shellAutocompleteService: ServershellAutocompleteService,
-    private readonly appService: AppService,
-  ) {
-  }
+    private readonly router: Router,
+  ) {}
 
   ngOnInit(): void {
-    this.path = this.appService.getActiveTabOnActivePanel().path;
-    this.currentHistory = this.shellHistoryService.getHistory();
-    this.initAutocomplete();
-
-    // Trigger slide-in animation after component initialization
-    setTimeout(() => {
-      this.isAnimatingIn = false;
-      this.cdr.detectChanges();
-    }, 50); // Small delay to ensure the component is rendered
-  }
-
-  /**
-   * Handle selection of an autocomplete option
-   * @param command The selected option
-   */
-  onOptionSelected(command: string): void {
-    this.text = command;
-    this.cdr.detectChanges();
-  }
-
-  /**
-   * Handle keyboard events for history navigation and ESC
-   */
-  onKeyDown(event: KeyboardEvent): void {
-    switch (event.key) {
-      case 'Enter':
-        event.preventDefault();
-        this.execute();
-        break;
-
-      case 'ArrowUp':
-        event.preventDefault();
-        this.navigateHistory(-1);
-        break;
-
-      case 'ArrowDown':
-        event.preventDefault();
-        this.navigateHistory(1);
-        break;
-      case 'Escape':
-        event.preventDefault();
-        this.text = '';
-        this.historyIndex = -1;
-        this.cdr.detectChanges();
-        break;
-    }
-  }
-
-  execute() {
-    // Close the autocomplete popup if it's open
-    if (this.autocompleteTrigger && this.autocompleteTrigger.panelOpen) {
-      this.autocompleteTrigger.closePanel();
-    }
-
-    this.errorMsg = '';
-    this.command = '';
-    this.cdr.detectChanges();
-    if (!this.text || this.text.trim().length === 0) return; // skip
-
-    const command = this.text.trim();
-
-    this.innerServiceLastCmd.update(command);
-
-    if (command === 'clear' || command === 'cls') {
-      this.displayText = '';
-      this.text = '';
-      this.ignoreNewText = true;
-      this.sendCancel();
-      this.cdr.detectChanges();
-      return;
-    }
-    if (command === 'quit' || command === 'q' || command === 'bye' || command === 'exit') {
-      this.displayText = '';
-      this.cdr.detectChanges();
-      this.sendCancel();
-      this.navigateToFiles();
-      return;
-    }
-    this.ignoreNewText = false;
-    this.command = command;
-
-    // Add to history
-    this.shellHistoryService.addHistory(command);
-    this.currentHistory = this.shellHistoryService.getHistory();
-    this.historyIndex = -1;
-
-    // Generate keys for this request
-    const emitKey = `ServerShell${this.rid}`;
-    const cancelKey = `cancelServerShell${this.rid}`;
-
-    // Execute shell command
-    this.shellService.doSpawn({
-        cmd: command,
-        emitKey: emitKey,
-        cancelKey: cancelKey,
-        timeout: 60000, // 60 seconds timeout
-        dir: this.path
-      },
-      (result: ShellSpawnResultIf) => {
-
-        if (result.emitKey !== emitKey) return;// skip
-        if (this.ignoreNewText) return; // skip
-
-        // Update current directory if provided
-        if (result.currentDir && result.currentDir !== this.path) {
-          this.path = result.currentDir;
-        }
-
-        // Handle the result from shell execution
-        if (result.out /*&& !result.done*/) {
-          // Check if text starts with control characters (like cursor jump back)
-          // Common control characters: \r (carriage return), \x1b (escape), \x08 (backspace)
-          const hasControlCharsAtStart = /^[\r\x1b\x08\x0c\x07]/.test(result.out);
-          const isDynamicCommand = this.dynamicCommands.some(c => command.startsWith(c));
-
-          if (hasControlCharsAtStart || isDynamicCommand) {
-            // Replace the entire text
-            this.displayText = this.getOutTextPrefix() + result.out;
-          } else {
-            // Normal text - append:
-            this.displayText = this.displayText + this.getOutTextPrefix() + result.out;
-          }
-        }
-
-        if (result.error) {
-          this.errorMsg = result.error;
-        }
-
-        this.cdr.detectChanges();
-      }
-    );
-
-    // Clear the input
-    this.text = '';
-    this.cdr.detectChanges();
-  }
-
-  onFocusIn() {
-    this.hasFocus = true;
-    this.focusChanged.emit(true);
-  }
-
-  onFocusOut() {
-    this.hasFocus = false;
-    this.focusChanged.emit(false);
-  }
-
-  onTextChange() {
-    this.errorMsg = '';
-    this.textChange$.next(this.text);
+    this.ngZone.runOutsideAngular(() => {
+      this.terminal = new Terminal({
+        // cols and rows will be set by fitAddon
+        convertEol: true,
+        fontSize: 14,
+        theme: {
+          background: '#1e1e1e',
+          foreground: '#cccccc',
+        },
+        scrollback: 1000,
+      });
+      this.canvasAddon = new CanvasAddon();
+      this.fitAddon = new FitAddon();
+      this.terminal.loadAddon(this.canvasAddon);
+      this.terminal.loadAddon(this.fitAddon);
+      this.terminal.open(this.terminalContainer.nativeElement);
+      this.fitAddon.fit();
+      this.terminal.focus();
+      this.printPrompt();
+      this.terminal.onData(data => this.handleInput(data));
+      window.addEventListener('resize', this.handleResize);
+    });
   }
 
   ngOnDestroy(): void {
-    this.sendCancel();
-
-    this.alive = false;
-    this.textChange$.complete();
-  }
-
-  navigateToFiles(): void {
-    // Trigger the slide-out animation
-    this.isAnimatingOut = true;
-    this.cdr.detectChanges();
-
-    // Wait for animation to complete before navigating
-    setTimeout(() => {
-      this.appService.changeDirOnActivePabel(this.path);
-      this.router.navigate(['/files']);
-    }, 300); // Match the CSS transition duration
-  }
-
-  private sendCancel() {
-    const cancelKey = `cancelServerShell${this.rid}`;
-    this.shellService.doCancelSpawn(cancelKey);
-  }
-
-
-  private getOutTextPrefix(): string {
-    return '\n' + this.path + '>' + this.command + '\n';
-  }
-
-
-  private navigateHistory(direction: number): void {
-    if (this.currentHistory.length === 0) return;
-
-    const newIndex = this.historyIndex + direction;
-
-    if (newIndex >= -1 && newIndex < this.currentHistory.length) {
-      this.historyIndex = newIndex;
-
-      if (this.historyIndex === -1) {
-        this.text = '';
-      } else {
-        this.text = this.currentHistory[this.currentHistory.length - 1 - this.historyIndex];
-      }
-
-      this.cdr.detectChanges();
+    if (this.terminal) {
+      this.terminal.dispose();
+      this.terminal = null;
+    }
+    this.canvasAddon = null;
+    if (this.fitAddon) {
+      window.removeEventListener('resize', this.handleResize);
+      this.fitAddon = null;
     }
   }
 
-  private initAutocomplete(): void {
-    // Set up the textChange$ observable with debounce
-    this.textChange$
-      .pipe(
-        debounceTime(500), // 500ms debounce time
-        takeWhile(() => this.alive),
-      )
-      .subscribe(_s => {
-        if (this.text && this.text.trim().length > 0) {
-          this.filterCommands(this.text)
-            .pipe(
-              takeWhile(() => this.alive)
-            )
-            .subscribe(commands => {
-              //this.filteredCommands$.next(commands);
-              this.filteredCommands = commands;
-              this.cdr.detectChanges();
-            });
+  private printPrompt() {
+    if (this.terminal) {
+      this.terminal.write(`\r\n${this.path}${this.prompt}`);
+      this.inputBuffer = '';
+    }
+  }
+
+  private handleInput(data: string) {
+    if (!this.terminal) return;
+    for (const char of data) {
+      if (char !== '\t') {
+        this.lastCompletions = [];
+        this.lastCompletionIndex = -1;
+        this.lastCompletionInput = '';
+      }
+      if (char === '\r') { // Enter
+        this.terminal.write('\r\n');
+        const command = this.inputBuffer.trim();
+        if (command.length > 0) {
+          this.executeCommand(command);
         } else {
-          // this.filteredCommands$.next([]);
-          this.filteredCommands = [];
-          this.cdr.detectChanges();
+          this.printPrompt();
         }
-      });
+      } else if (char === '\u007F' || char === '\b') { // Backspace
+        if (this.inputBuffer.length > 0) {
+          this.inputBuffer = this.inputBuffer.slice(0, -1);
+          this.terminal.write('\b \b');
+        }
+      } else if (char === '\t') { // TAB for autocomplete
+        this.handleAutocomplete();
+      } else if (char >= ' ' && char <= '~') { // Printable
+        this.inputBuffer += char;
+        this.terminal.write(char);
+      }
+    }
   }
 
-  private filterCommands(input: string): Observable<string[]> {
-    return this.shellAutocompleteService.getAutocompleteSuggestions(input);
+  private async handleAutocomplete() {
+    if (!this.terminal) return;
+    // Split input buffer into tokens
+    const tokens = this.inputBuffer.split(/\s+/);
+    const lastToken = tokens[tokens.length - 1] || '';
+
+    let completions: string[] = [];
+    if (
+      this.lastCompletions.length > 1 &&
+      this.lastCompletionInput === this.inputBuffer
+    ) {
+      completions = this.lastCompletions;
+    } else {
+      completions = await this.shellService.getAutocomplete(this.inputBuffer);
+      this.lastCompletions = completions;
+      this.lastCompletionIndex = -1;
+      this.lastCompletionInput = this.inputBuffer;
+    }
+
+    if (completions.length === 0) {
+      this.terminal.write('\x07');
+      return;
+    }
+    if (completions.length === 1) {
+      // Complete only the last token
+      const completion = completions[0];
+      let append = '';
+      for (let i = 0; i < completion.length; i++) {
+        if (completion[i] !== lastToken[i]) {
+          append = completion.slice(i);
+          break;
+        }
+      }
+      // Replace last token in inputBuffer
+      tokens[tokens.length - 1] = completion;
+      this.inputBuffer = tokens.join(' ');
+      this.terminal.write(append);
+      this.lastCompletions = [];
+      this.lastCompletionIndex = -1;
+      this.lastCompletionInput = '';
+    } else {
+      // Cycle through completions
+      this.lastCompletionIndex = (this.lastCompletionIndex + 1) % completions.length;
+      const completion = completions[this.lastCompletionIndex];
+      // Replace last token in inputBuffer
+      tokens[tokens.length - 1] = completion;
+      this.inputBuffer = tokens.join(' ');
+      // Redraw the prompt and input
+      this.terminal.write('\r');
+      this.terminal.write(this.path + this.prompt + this.inputBuffer);
+    }
   }
 
+  private executeCommand(command: string) {
+    const emitKey = `ServerShell${this.rid}`;
+    const cancelKey = `cancelServerShell${this.rid}`;
+    this.shellService.doSpawn({
+      cmd: command,
+      emitKey: emitKey,
+      cancelKey: cancelKey,
+      timeout: 60000,
+      dir: this.path
+    }, (result: ShellSpawnResultIf) => {
+      if (result.emitKey !== emitKey) return;
+      if (result.currentDir && result.currentDir !== this.path) {
+        this.path = result.currentDir;
+      }
+      if (result.out) {
+        this.terminal?.write(result.out.replace(/\n/g, '\r\n'));
+      }
+      if (result.error) {
+        this.terminal?.write(`\r\n[Error] ${result.error}\r\n`);
+      }
+      if (result.done) {
+        this.printPrompt();
+      }
+      this.cdr.detectChanges();
+    });
+  }
+
+  navigateToFiles() {
+    this.router.navigate(['/files']);
+  }
+
+  private handleResize = () => {
+    if (this.fitAddon) {
+      this.fitAddon.fit();
+    }
+  }
 }

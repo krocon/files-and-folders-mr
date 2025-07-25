@@ -4,6 +4,9 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { Terminal } from 'xterm';
 import { CanvasAddon } from '@xterm/addon-canvas';
+import { Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 
 
 @Component({
@@ -13,19 +16,29 @@ import { CanvasAddon } from '@xterm/addon-canvas';
     MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
+    MatIcon,
+    MatButtonModule,
   ],
   template: `
     <div #terminalContainer class="xterm-container"></div>
+    <div class="terminal-footer">
+      <div class="terminal-footer-item">
+        <button mat-icon-button (click)="close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
   `,
   styles: [`
       :host {
-          display: block;
+          display: grid;
+          grid-template-rows: 1fr auto;
           width: 100%;
           height: 100%;
       }
       .xterm-container {
           width: 100%;
-          height: 100%;
+          height: calc(100% - 58px);
       }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -48,7 +61,8 @@ export class ServershellOutComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly ngZone: NgZone
+    private readonly ngZone: NgZone,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
@@ -76,6 +90,13 @@ export class ServershellOutComponent implements OnInit, OnDestroy {
       this.terminal = null;
     }
     this.canvasAddon = null;
+  }
+
+  close() {
+    this.terminal?.dispose();
+    this.terminal = null;
+    this.canvasAddon = null;
+    this.router.navigate(['/files']);
   }
 
   private writeToTerminal(text: string) {

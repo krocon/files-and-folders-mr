@@ -5,6 +5,7 @@ import {ShellCommandsWindows} from "./shell-commands-windows";
 import {ShellCommandsLinux} from "./shell-commands-linux";
 import {ShellCommandsMacOS} from "./shell-commands-macos";
 import {ShellGateway} from "./shell.gateway";
+import { DirService } from '../dir/dir-service';
 
 @Module({
   exports: [
@@ -19,6 +20,7 @@ import {ShellGateway} from "./shell.gateway";
     ShellCommandsLinux,
     ShellCommandsMacOS,
     ShellGateway
+    ,DirService
   ]
 })
 export class ShellModule {

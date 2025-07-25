@@ -59,4 +59,9 @@ export class ServershellService {
     this.socket.off(emitKey);
   }
 
+  async getAutocomplete(input: string): Promise<string[]> {
+    const result = await this.httpClient.get<string[]>(`/api/shell-autocomplete?input=${encodeURIComponent(input)}`).toPromise();
+    return result || [];
+  }
+
 }
