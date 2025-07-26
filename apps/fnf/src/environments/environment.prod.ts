@@ -64,6 +64,7 @@ export const environment = {
     findFoldersUrl: "api/findfolders"
   },
   tool: {
+    loadUrl: "api/tools",
     shellUrl: "api/shell"
   }
 };

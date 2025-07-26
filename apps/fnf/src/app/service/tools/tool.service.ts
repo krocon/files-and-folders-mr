@@ -10,8 +10,8 @@ import {PanelManagementService} from "../panel/panel-management-service";
 export class ToolService {
 
   private static readonly config = {
-    loadUrl: "/assets/config/tool/",
-    shellUrl: "/api/shell",
+    loadUrl: "api/tools",
+    shellUrl: "api/shell",
   };
 
   constructor(
@@ -27,7 +27,7 @@ export class ToolService {
 
   public fetchTools(f: BrowserOsType): Observable<CmdIf[] | undefined> {
     return this.httpClient
-      .get<CmdIf[]>(ToolService.config.loadUrl + f + '.json');
+      .get<CmdIf[]>(`${ToolService.config.loadUrl}/${f}`);
   }
 
   prepareCmdAndExecute(

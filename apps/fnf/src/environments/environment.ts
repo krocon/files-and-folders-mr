@@ -71,6 +71,7 @@ export const environment = {
     findFoldersUrl: prefix + "/api/findfolders"
   },
   tool: {
+    loadUrl: prefix + "/api/tools",
     shellUrl: prefix + "/api/shell"
   }
 };

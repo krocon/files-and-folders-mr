@@ -167,6 +167,9 @@ export class AppService {
                defaultTools,
                // volumes
              ]) => {
+
+          console.info('defaultTools', defaultTools); // TODO del
+
           this.config = config;
           this.dockerRoot = this.config?.dockerRoot ?? '';
           DockerRootDeletePipe.dockerRoot = this.dockerRoot;

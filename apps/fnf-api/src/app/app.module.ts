@@ -23,6 +23,9 @@ import {CheckGlobModule} from "./checkglob/checkglob.module";
 import {CleanModule} from "./clean/clean.module";
 import {AiCompletionsModule} from "./ai/ai-completions.module";
 import {ShortcutModule} from "./config/shortcut/shortcut.module";
+import {ColorModule} from "./config/color/color.module";
+import {FiletypeModule} from "./config/filetype/filetype.module";
+import {ToolModule} from "./config/tool/tool.module";
 
 const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
@@ -64,7 +67,10 @@ const config = new Config(
     AiCompletionsModule,
     CheckGlobModule,
     CleanModule,
-    ShortcutModule
+    ShortcutModule,
+    ColorModule,
+    FiletypeModule,
+    ToolModule
   ],
   controllers: [
     AppController
