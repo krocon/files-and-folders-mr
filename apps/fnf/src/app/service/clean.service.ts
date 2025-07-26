@@ -11,7 +11,7 @@ export class CleanService {
 
 
   private static readonly config = {
-    cleanUrl: "/api/clean"
+    apiUrl: "/api/clean"
   };
 
   constructor(private readonly httpClient: HttpClient) {
@@ -25,7 +25,7 @@ export class CleanService {
   clean(data: CleanDialogData): Observable<CleanResult> {
     return this.httpClient
       .post<CleanResult>(
-        CleanService.config.cleanUrl,
+        CleanService.config.apiUrl,
         data
       );
   }

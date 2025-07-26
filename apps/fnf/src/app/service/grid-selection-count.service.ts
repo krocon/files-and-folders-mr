@@ -23,7 +23,7 @@ export class GridSelectionCountService {
       this.getSizeSumText(allRows),
 
       this.getSelectedFileCount(selectedRows),
-      this.getFileCount(allRows),
+      this.apiUrlCount(allRows),
 
       this.getSelectedFolderCount(selectedRows),
       this.getFolderCount(allRows)
@@ -90,7 +90,7 @@ export class GridSelectionCountService {
     return ret;
   }
 
-  private getFileCount(selectedRows: FileItemIf[]): number {
+  private apiUrlCount(selectedRows: FileItemIf[]): number {
     if (!selectedRows) return 0;
 
     let ret = 0;

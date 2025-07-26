@@ -49,11 +49,11 @@ describe('copy', () => {
     expect(Array.isArray(result)).toBe(true);
 
     // Check if file was copied
-    const targetFilePath = path.join(targetDir, testFile);
-    expect(await fse.pathExists(targetFilePath)).toBe(true);
+    const tarapiUrlPath = path.join(targetDir, testFile);
+    expect(await fse.pathExists(tarapiUrlPath)).toBe(true);
 
     // Check content of copied file
-    const content = await fse.readFile(targetFilePath, 'utf8');
+    const content = await fse.readFile(tarapiUrlPath, 'utf8');
     expect(content).toBe('This is a test file for file operations.');
 
     // Check DirEvents

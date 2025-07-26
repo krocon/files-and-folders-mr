@@ -20,7 +20,7 @@ export class LookAndFeelService {
     new TypedDataService<string>("theme", LookAndFeelService.defaultTheme);
 
   private static readonly config = {
-    getApiUrl: "/api/themes"
+    apiUrl: "/api/themes"
   };
 
 
@@ -69,17 +69,17 @@ export class LookAndFeelService {
   }
 
   loadTheme(theme: string): Observable<LookAndFeelData> {
-    const url = `${LookAndFeelService.config.getApiUrl}/${theme}`;
+    const url = `${LookAndFeelService.config.apiUrl}/${theme}`;
     return this.httpClient.get<LookAndFeelData>(url);
   }
 
   loadDefaultNames(): Observable<string[]> {
-    const url = `${LookAndFeelService.config.getApiUrl}/getdefaultnames`;
+    const url = `${LookAndFeelService.config.apiUrl}/getdefaultnames`;
     return this.httpClient.get<string[]>(url);
   }
 
   loadCustomNames(): Observable<string[]> {
-    const url = `${LookAndFeelService.config.getApiUrl}/customnames`;
+    const url = `${LookAndFeelService.config.apiUrl}/customnames`;
     return this.httpClient.get<string[]>(url);
   }
 

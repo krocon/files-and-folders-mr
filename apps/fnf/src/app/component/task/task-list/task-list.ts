@@ -69,7 +69,7 @@ export class TaskList implements OnInit {
     return 'idle';
   }
 
-  getFileName(action: QueueActionEvent) {
+  apiUrlName(action: QueueActionEvent) {
     if (action?.filePara) {
       if (action.filePara.target?.base) return action.filePara.target?.base;
       if (action.filePara.source?.base) return action.filePara.source?.base;

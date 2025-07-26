@@ -15,7 +15,7 @@ export class WalkSocketService {
 
   static runningNumber = 0;
   private static readonly config = {
-    walkdirSyncUrl: "/api/walkdirsync",
+    apiUrl: "/api/walkdirsync",
     syncMode: true
   };
 

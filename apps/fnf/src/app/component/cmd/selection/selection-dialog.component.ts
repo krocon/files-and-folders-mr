@@ -81,7 +81,7 @@ export class SelectionDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.filetypeExtensionsService
-      .getFiletypes()
+      .apiUrltypes()
       .pipe(
         tap(console.info) // TODO del
       )

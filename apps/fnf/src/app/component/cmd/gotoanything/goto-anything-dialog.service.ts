@@ -15,7 +15,7 @@ import {HttpClient} from "@angular/common/http";
 export class GotoAnythingDialogService {
 
   private static readonly config = {
-    findFoldersUrl: "/api/findfolders",
+    apiUrl: "/api/findfolders",
   };
 
   constructor(
@@ -49,7 +49,7 @@ export class GotoAnythingDialogService {
       const response = await firstValueFrom(
         this.httpClient
           .post<string[]>(
-            GotoAnythingDialogService.config.findFoldersUrl,
+            GotoAnythingDialogService.config.apiUrl,
             new FindFolderPara(dirs, filterValue, 2)
           )
       );
@@ -65,7 +65,7 @@ export class GotoAnythingDialogService {
   }
 
   findFolders(para: FindFolderPara):Observable<string[]> {
-    return this.httpClient.post<string[]>(GotoAnythingDialogService.config.findFoldersUrl, para);
+    return this.httpClient.post<string[]>(GotoAnythingDialogService.config.apiUrl, para);
   }
 
 }

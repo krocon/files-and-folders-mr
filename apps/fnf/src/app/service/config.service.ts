@@ -10,7 +10,7 @@ import {HttpClient} from "@angular/common/http";
 export class ConfigService {
 
   private static readonly config = {
-    getUrl: "/api/config"
+    apiUrl: "/api/config"
   };
 
   constructor(
@@ -24,7 +24,7 @@ export class ConfigService {
 
 
   public getConfig(): Observable<Config | undefined> {
-    return this.httpClient.get<Config>(ConfigService.config.getUrl);
+    return this.httpClient.get<Config>(ConfigService.config.apiUrl);
   }
 
 }

@@ -66,11 +66,11 @@ describe('move', () => {
     expect(await fse.pathExists(sourceFilePath)).toBe(false);
 
     // Check if file exists at target
-    const targetFilePath = path.join(targetDir, testMoveFile);
-    expect(await fse.pathExists(targetFilePath)).toBe(true);
+    const tarapiUrlPath = path.join(targetDir, testMoveFile);
+    expect(await fse.pathExists(tarapiUrlPath)).toBe(true);
 
     // Check content of moved file
-    const content = await fse.readFile(targetFilePath, 'utf8');
+    const content = await fse.readFile(tarapiUrlPath, 'utf8');
     expect(content).toBe('This file will be moved.');
 
     // Check DirEvents

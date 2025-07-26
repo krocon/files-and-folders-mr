@@ -10,7 +10,7 @@ import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 export class SearchPatternsService {
 
   private static readonly config = {
-    getApiUrl: "api/searchpatterns"
+    apiUrl: "api/searchpatterns"
   };
 
   constructor(private readonly httpClient: HttpClient) {
@@ -22,6 +22,6 @@ export class SearchPatternsService {
 
 
   load(): Observable<FiletypeExtensionsIf[]> {
-    return (this.httpClient.get<FiletypeExtensionsIf[]>(SearchPatternsService.config.getApiUrl));
+    return (this.httpClient.get<FiletypeExtensionsIf[]>(SearchPatternsService.config.apiUrl));
   }
 }

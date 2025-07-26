@@ -334,7 +334,7 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
       dialogData.data = rawValue;
       if (dialogData.data.strategy !== 'AI') {
         const updateModel: GroupFilesResult = this.groupFilesService.getUpdateModel(dialogData);
-        this.rows = this.groupFilesService.getFileOperationParams(
+        this.rows = this.groupFilesService.apiUrlOperationParams(
           updateModel.rows,
           dialogData.sourcePanelIndex,
           dialogData.targetPanelIndex

@@ -45,7 +45,7 @@ export class FileController {
    * - The file content must be UTF-8 encoded text
    */
   @Get("")
-  getFile(@Query() query): string {
+  apiUrl(@Query() query): string {
     const filename = query.name;
     return readFileSync(filename, {encoding: "utf-8"});
   }

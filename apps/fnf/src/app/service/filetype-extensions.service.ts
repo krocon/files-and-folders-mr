@@ -10,7 +10,7 @@ import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 export class FiletypeExtensionsService {
 
   private static readonly config = {
-    getApiUrl: "api/filetypes"
+    apiUrl: "api/filetypes"
   };
 
   constructor(private readonly httpClient: HttpClient) {
@@ -21,7 +21,7 @@ export class FiletypeExtensionsService {
   }
 
 
-  getFiletypes(): Observable<FiletypeExtensionsIf[]> {
-    return (this.httpClient.get<FiletypeExtensionsIf[]>(FiletypeExtensionsService.config.getApiUrl));
+  apiUrltypes(): Observable<FiletypeExtensionsIf[]> {
+    return (this.httpClient.get<FiletypeExtensionsIf[]>(FiletypeExtensionsService.config.apiUrl));
   }
 }

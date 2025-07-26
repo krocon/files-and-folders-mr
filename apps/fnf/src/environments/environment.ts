@@ -10,7 +10,7 @@ export const environment = {
   commitHash: 'a8089b6',
 
   config: {
-    getUrl: prefix + "/api/config"
+    apiUrl: prefix + "/api/config"
   },
   sysinfo: {
     getDrivesUrl: prefix + "/api/drives",
@@ -31,10 +31,10 @@ export const environment = {
     hasOpenAiApiKeyUrl: prefix + "/api/ai/hasopenaiapikey"
   },
   checkGlob: {
-    checkGlobUrl: prefix + "/api/checkglob"
+    apiUrl: prefix + "/api/checkglob"
   },
   clean: {
-    cleanUrl: prefix + "/api/clean"
+    apiUrl: prefix + "/api/clean"
   },
   shell: {
     shellUrl: prefix + "/api/shell",
@@ -42,7 +42,7 @@ export const environment = {
     cancelSpawnUrl: prefix + "/api/cancelspawn",
   },
   walkdir: {
-    walkdirSyncUrl: prefix + "/api/walkdirsync",
+    apiUrl: prefix + "/api/walkdirsync",
     syncMode: true
   },
   shellAutocomplete: {
@@ -50,20 +50,20 @@ export const environment = {
   },
 
   lookAndFeel: {
-    getApiUrl: prefix + "/api/themes"
+    apiUrl: prefix + "/api/themes"
   },
 
   shortcut: {
-    getShortcutApiUrl: prefix + "/api/shortcuts"
+    apiUrl: prefix + "/api/shortcuts"
   },
   filetypeExtensions: {
-    getApiUrl: prefix + "/api/filetypes"
+    apiUrl: prefix + "/api/filetypes"
   },
   searchPatterns: {
-    getApiUrl: prefix + "/api/searchpatterns"
+    apiUrl: prefix + "/api/searchpatterns"
   },
   edit: {
-    getFile: prefix + "/api/file?name=",
+    apiUrl: prefix + "/api/file?name=",
     saveFile: prefix + "/api/file?name="
   },
   fileAction: {
@@ -71,7 +71,7 @@ export const environment = {
     multiUrl: prefix + "/api/do/multi",
   },
   gotoAnything: {
-    findFoldersUrl: prefix + "/api/findfolders"
+    apiUrl: prefix + "/api/findfolders"
   },
   tool: {
     loadUrl: prefix + "/api/tools",

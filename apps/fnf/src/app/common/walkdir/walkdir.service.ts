@@ -12,7 +12,7 @@ export class WalkdirService {
   private rid: number = Math.floor(Math.random() * 1000000) + 1;
 
   private static readonly config = {
-    walkdirSyncUrl: "/api/walkdirsync",
+    apiUrl: "/api/walkdirsync",
     syncMode: true
   };
 

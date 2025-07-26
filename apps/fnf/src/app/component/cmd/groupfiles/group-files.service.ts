@@ -403,7 +403,7 @@ export class GroupFilesService {
     return new GroupFilesResult(0, []);
   }
 
-  getFileOperationParams(
+  apiUrlOperationParams(
     rows: GroupFilesRow[],
     srcPanelIndex: PanelIndex,
     targetPanelIndex: PanelIndex): QueueFileOperationParams[] {

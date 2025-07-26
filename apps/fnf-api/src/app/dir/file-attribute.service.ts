@@ -13,7 +13,7 @@ const exec = promisify(child_process.exec);
 export class FileAttributeService {
 
 
-  async getFileAttribute(filePath: string): Promise<FileAttributeType> {
+  async apiUrlAttribute(filePath: string): Promise<FileAttributeType> {
     const platform = os.platform();
     const stats = await fs.stat(filePath);
     const basename = path.basename(filePath);

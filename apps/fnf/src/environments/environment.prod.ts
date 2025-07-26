@@ -4,7 +4,7 @@ export const environment = {
   commitHash: 'a8089b6',
 
   config: {
-    getUrl: "/api/config"
+    apiUrl: "/api/config"
   },
   sysinfo: {
     getDrivesUrl: "/api/drives",
@@ -25,10 +25,10 @@ export const environment = {
     hasOpenAiApiKeyUrl: "/api/ai/hasopenaiapikey"
   },
   checkGlob: {
-    checkGlobUrl: "/api/checkglob"
+    apiUrl: "/api/checkglob"
   },
   clean: {
-    cleanUrl: "/api/clean"
+    apiUrl: "/api/clean"
   },
   shell: {
     shellUrl: "/api/shell",
@@ -36,7 +36,7 @@ export const environment = {
     cancelSpawnUrl: "/api/cancelspawn",
   },
   walkdir: {
-    walkdirSyncUrl: "/api/walkdirsync",
+    apiUrl: "/api/walkdirsync",
     syncMode: true
   },
 
@@ -44,19 +44,19 @@ export const environment = {
     autocompleteUrl: "/api/shell-autocomplete"
   },
   lookAndFeel: {
-    getApiUrl: "/api/themes"
+    apiUrl: "/api/themes"
   },
   shortcut: {
-    getShortcutApiUrl: "/api/shortcuts"
+    apiUrl: "/api/shortcuts"
   },
   filetypeExtensions: {
-    getApiUrl: "/api/filetypes"
+    apiUrl: "/api/filetypes"
   },
   searchPatterns: {
-    getApiUrl: "/api/searchpatterns"
+    apiUrl: "/api/searchpatterns"
   },
   edit: {
-    getFile: "api/file?name=",
+    apiUrl: "api/file?name=",
     saveFile: "api/file?name="
   },
   fileAction: {
@@ -64,7 +64,7 @@ export const environment = {
     multiUrl: "api/do/multi",
   },
   gotoAnything: {
-    findFoldersUrl: "api/findfolders"
+    apiUrl: "api/findfolders"
   },
   tool: {
     loadUrl: "api/tools",

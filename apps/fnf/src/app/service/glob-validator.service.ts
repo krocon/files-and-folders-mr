@@ -14,7 +14,7 @@ export class GlobValidatorService {
 
 
   private static readonly config = {
-    checkGlobUrl: "/api/checkglob"
+    apiUrl: "/api/checkglob"
   };
 
   constructor(private readonly httpClient: HttpClient) {
@@ -36,7 +36,7 @@ export class GlobValidatorService {
     }
 
     return this.httpClient.post<GlobPatternResponse>(
-      GlobValidatorService.config.checkGlobUrl,
+      GlobValidatorService.config.apiUrl,
       {pattern}
     ).pipe(
       catchError(() => of({valid: false})),

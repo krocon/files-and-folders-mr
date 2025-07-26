@@ -67,17 +67,17 @@ export class FavToggleComponent {
   }
 
   applyFavFlag() {
-    this.fav = this._fileItem ? this.favDataService.isFav(this.getFileUrl()) : false;
+    this.fav = this._fileItem ? this.favDataService.isFav(this.apiUrlUrl()) : false;
   }
 
   onFavClicked() {
     this.fav = !this.fav;
     if (this._fileItem) {
-      this.favDataService.toggleFav(this.getFileUrl());
+      this.favDataService.toggleFav(this.apiUrlUrl());
     }
   }
 
-  private getFileUrl() {
+  private apiUrlUrl() {
     return this._fileItem?.dir ?? '';
   }
 }

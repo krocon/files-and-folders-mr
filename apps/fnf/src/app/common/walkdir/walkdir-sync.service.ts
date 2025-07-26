@@ -11,7 +11,7 @@ export class WalkdirSyncService {
 
 
   private static readonly config = {
-    walkdirSyncUrl: "/api/walkdirsync",
+    apiUrl: "/api/walkdirsync",
     syncMode: true
   };
 
@@ -29,7 +29,7 @@ export class WalkdirSyncService {
 
     const sub = this.httpClient
       .post<WalkData>(
-        WalkdirSyncService.config.walkdirSyncUrl,
+        WalkdirSyncService.config.apiUrl,
         data
       )
       .subscribe((walkData: WalkData) => {
