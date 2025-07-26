@@ -1,22 +1,19 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {existsSync, promises as fs} from 'fs';
 import {join} from 'path';
-import {environment} from "../../environments/environment";
+import {environment} from "../../../environments/environment";
+import {BrowserOsType, ToolData} from "@fnf-data";
 
-export type ShortcutActionMapping = { [key: string]: string };
-export type BrowserOsType = 'osx' | 'windows' | 'linux';
 
 @Injectable()
-export class ShortcutService {
+export class ToolService {
 
-  private readonly logger = new Logger(ShortcutService.name);
-  private readonly defaultsPath = environment.shortcutsDefaultsPath;
-  private readonly customPath = environment.shortcutsCustomPath;
+  private readonly logger = new Logger(ToolService.name);
+  private readonly defaultsPath = environment.toolDefaultsPath;
+  private readonly customPath = environment.toolCustomPath;
 
-  /**
-   * Get shortcuts for a specific OS, merging defaults with custom shortcuts
-   */
-  async getShortcuts(os: BrowserOsType): Promise<ShortcutActionMapping> {
+
+  async getTools(os: BrowserOsType): Promise<ToolData> {
     try {
 
       const custom = await this.loadCustom(os);
@@ -27,15 +24,13 @@ export class ShortcutService {
       return await this.loadDefaults(os);
 
     } catch (error) {
-      this.logger.error(`Failed to get shortcuts for ${os}:`, error);
+      this.logger.error(`Failed to get tools for ${os}:`, error);
       throw error;
     }
   }
 
-  /**
-   * Save custom shortcuts for a specific OS
-   */
-  async saveShortcuts(os: BrowserOsType, shortcuts: ShortcutActionMapping): Promise<void> {
+
+  async saveTools(os: BrowserOsType, tools: ToolData): Promise<void> {
     try {
       const customFilePath = join(this.customPath, `${os}.json`);
 
@@ -51,25 +46,23 @@ export class ShortcutService {
         this.logger.error(`Failed to copy file: `, defaultFilePath, customFilePath);
       }
 
-      await fs.writeFile(customFilePath, JSON.stringify(shortcuts, null, 2));
-      this.logger.log(`Saved custom shortcuts for ${os}`);
+      await fs.writeFile(customFilePath, JSON.stringify(tools, null, 2));
+      this.logger.log(`Saved custom tools for ${os}`);
     } catch (error) {
-      this.logger.error(`Failed to save shortcuts for ${os}:`, error);
+      this.logger.error(`Failed to save tools for ${os}:`, error);
       throw error;
     }
   }
 
-  /**
-   * Reset shortcuts to defaults by removing custom shortcuts
-   */
-  async resetToDefaults(os: BrowserOsType): Promise<ShortcutActionMapping> {
+
+  async resetToDefaults(os: BrowserOsType): Promise<ToolData> {
     try {
       const customFilePath = join(this.customPath, `${os}.json`);
 
       // Remove custom file if it exists
       try {
         await fs.unlink(customFilePath);
-        this.logger.log(`Removed custom shortcuts for ${os}`);
+        this.logger.log(`Removed custom tools for ${os}`);
       } catch (error) {
         // File might not exist, which is fine
         if (error.code !== 'ENOENT') {
@@ -80,30 +73,28 @@ export class ShortcutService {
       // Return defaults
       return await this.loadDefaults(os);
     } catch (error) {
-      this.logger.error(`Failed to reset shortcuts for ${os}:`, error);
+      this.logger.error(`Failed to reset tools for ${os}:`, error);
       throw error;
     }
   }
 
-  /**
-   * Get default shortcuts for a specific OS
-   */
-  async getDefaults(os: BrowserOsType): Promise<ShortcutActionMapping> {
+
+  async getDefaults(os: BrowserOsType): Promise<ToolData> {
     return await this.loadDefaults(os);
   }
 
-  private async loadDefaults(os: BrowserOsType): Promise<ShortcutActionMapping> {
+  private async loadDefaults(os: BrowserOsType): Promise<ToolData> {
     try {
       const defaultFilePath = join(this.defaultsPath, `${os}.json`);
       const content = await fs.readFile(defaultFilePath, 'utf-8');
       return JSON.parse(content);
     } catch (error) {
-      this.logger.error(`Failed to load default shortcuts for ${os}:`, error);
-      return {};
+      this.logger.error(`Failed to load default tools for ${os}:`, error);
+      return [];
     }
   }
 
-  private async loadCustom(os: BrowserOsType): Promise<ShortcutActionMapping | null> {
+  private async loadCustom(os: BrowserOsType): Promise<ToolData | null> {
     try {
       const customFilePath = join(this.customPath, `${os}.json`);
       const content = await fs.readFile(customFilePath, 'utf-8');
@@ -114,7 +105,7 @@ export class ShortcutService {
       if (error.code === 'ENOENT') {
         return null;
       }
-      this.logger.error(`Failed to load custom shortcuts for ${os}:`, error);
+      this.logger.error(`Failed to load custom tools for ${os}:`, error);
       return null;
     }
   }

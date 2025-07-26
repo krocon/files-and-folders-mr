@@ -13,6 +13,15 @@ const getEnvironmentVariables = () => {
   const shortcutsDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/defaults');
   const shortcutsCustomPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/custom');
 
+  const colorDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/color/defaults')
+  const colorCustomPath = join(__dirname, '../../..', 'fnf-api/assets/color/custom');
+
+  const filetypeDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/defaults')
+  const filetypeCustomPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/custom');
+
+  const toolDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/tool/defaults')
+  const toolCustomPath = join(__dirname, '../../..', 'fnf-api/assets/tool/custom');
+
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
   const openaiModel = process.env.FNF_OPENAI_MODEL || 'gpt-4';
@@ -31,6 +40,15 @@ const getEnvironmentVariables = () => {
 
     shortcutsDefaultsPath,
     shortcutsCustomPath,
+
+    colorDefaultsPath,
+    colorCustomPath,
+
+    filetypeDefaultsPath,
+    filetypeCustomPath,
+
+    toolDefaultsPath,
+    toolCustomPath,
 
     openaiApiKey,
     openaiApiUrl,

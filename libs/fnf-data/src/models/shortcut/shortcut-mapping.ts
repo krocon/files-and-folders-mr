@@ -1,0 +1,1 @@
+export type ShortcutActionMapping = { [key: string]: string };

@@ -13,6 +13,16 @@ const getEnvironmentVariables = () => {
   const shortcutsDefaultsPath = join(__dirname, '..', 'src/assets/shortcut/defaults');
   const shortcutsCustomPath = join(__dirname, '..', 'src/assets/shortcut/custom');
 
+  const colorDefaultsPath = join(__dirname, '..', 'src/assets/color/defaults')
+  const colorCustomPath = join(__dirname, '..', 'src/assets/color/custom');
+
+  const filetypeDefaultsPath = join(__dirname, '..', 'src/assets/filetype/defaults')
+  const filetypeCustomPath = join(__dirname, '..', 'src/assets/filetype/custom');
+
+  const toolDefaultsPath = join(__dirname, '..', 'src/assets/tool/defaults')
+  const toolCustomPath = join(__dirname, '..', 'src/assets/tool/custom');
+
+
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
   const openaiModel = process.env.FNF_OPENAI_MODEL || 'gpt-4';
@@ -32,6 +42,15 @@ const getEnvironmentVariables = () => {
 
     shortcutsDefaultsPath,
     shortcutsCustomPath,
+
+    colorDefaultsPath,
+    colorCustomPath,
+
+    filetypeDefaultsPath,
+    filetypeCustomPath,
+
+    toolDefaultsPath,
+    toolCustomPath,
 
     openaiApiKey,
     openaiApiUrl,
@@ -62,6 +81,26 @@ export const environment = {
   get shortcutsCustomPath() {
     return getEnvironmentVariables().shortcutsCustomPath;
   },
+
+  get colorDefaultsPath() {
+    return getEnvironmentVariables().colorDefaultsPath;
+  },
+  get colorCustomPath() {
+    return getEnvironmentVariables().colorCustomPath;
+  },
+  get filetypeDefaultsPath() {
+    return getEnvironmentVariables().filetypeDefaultsPath;
+  },
+  get filetypeCustomPath() {
+    return getEnvironmentVariables().filetypeCustomPath;
+  },
+  get toolDefaultsPath() {
+    return getEnvironmentVariables().toolDefaultsPath;
+  },
+  get toolCustomPath() {
+    return getEnvironmentVariables().toolCustomPath;
+  },
+  
   get openaiApiKey() {
     return getEnvironmentVariables().openaiApiKey;
   },

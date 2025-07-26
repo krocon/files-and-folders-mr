@@ -1,5 +1,6 @@
 import {Controller, Get, Put, Post, Param, Body, Logger} from '@nestjs/common';
-import {ShortcutService, ShortcutActionMapping, BrowserOsType} from './shortcut.service';
+import {ShortcutService} from './shortcut.service';
+import {BrowserOsType, ShortcutActionMapping} from "@fnf-data";
 
 @Controller('shortcuts')
 export class ShortcutController {

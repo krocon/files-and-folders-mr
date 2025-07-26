@@ -49,6 +49,8 @@ export * from './models/filename/convert-response.if';
 export * from './models/filename/convert-para.if';
 
 export * from './models/filetype/filetype-extensions.if';
+export * from './models/filetype/filetype-extension-mapping';
+export * from './models/shortcut/shortcut-mapping';
 
 export * from './models/find/find-dialog.data';
 export * from './models/find/find.data';
@@ -59,6 +61,10 @@ export * from './models/sysinfo/sysinfo.if';
 export * from './models/sysinfo/sysinfo';
 export * from './models/sysinfo/allinfo';
 export * from './models/sysinfo/allinfo.if';
+
+export * from './models/tool/tool-data';
+export * from './models/color/color-data';
+export * from './models/color/colors';
 
 export * from './models/shell/cmd.if';
 export * from './models/shell/shell-cmd.if';
