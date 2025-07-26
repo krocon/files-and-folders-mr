@@ -44,7 +44,7 @@ export const environment = {
     autocompleteUrl: "/api/shell-autocomplete"
   },
   lookAndFeel: {
-    getLookAndFeelUrl: "assets/config/color/%theme%.json"
+    getApiUrl: "/api/themes"
   },
   shortcut: {
     getShortcutApiUrl: "/api/shortcuts"

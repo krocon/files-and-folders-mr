@@ -50,7 +50,7 @@ export const environment = {
   },
 
   lookAndFeel: {
-    getLookAndFeelUrl: "assets/config/color/%theme%.json"
+    getApiUrl: prefix + "/api/themes"
   },
 
   shortcut: {

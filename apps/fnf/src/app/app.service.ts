@@ -26,7 +26,6 @@ import {FavDataService} from "./domain/filepagedata/service/fav-data.service";
 import {ChangeDirEventService} from "./service/change-dir-event.service";
 import {ChangeDirEvent} from "./service/change-dir-event";
 import {ActionId} from "./domain/action/fnf-action.enum";
-import {Theme} from "./domain/customcss/css-theme-type";
 import {TabData} from "./domain/filepagedata/data/tab.data";
 import {FileTableBodyModel} from "./component/main/filetable/file-table-body-model";
 import {SelectionManagerForObjectModels} from "./component/main/filetable/selection-manager";
@@ -376,7 +375,7 @@ export class AppService {
   }
 
 
-  setTheme(theme: Theme) {
+  setTheme(theme: string) {
     this.lookAndFeelService.loadAndApplyLookAndFeel(theme);
   }
 

@@ -5,8 +5,8 @@ import {LookAndFeelData} from "../domain/look-and-feel.data";
 import {DOCUMENT} from "@angular/common";
 import {TypedDataService} from "../common/typed-data.service";
 import {Socket} from "ngx-socket-io";
-import {CssColors} from "@fnf/fnf-data";
-import {cssThemes, Theme} from "../domain/customcss/css-theme-type";
+import {CssColors} from "@fnf-data";
+
 
 
 @Injectable({
@@ -17,13 +17,12 @@ export class LookAndFeelService {
   private static readonly defaultTheme = "light";
 
   private static readonly innerService =
-    new TypedDataService<Theme>("theme", LookAndFeelService.defaultTheme);
+    new TypedDataService<string>("theme", LookAndFeelService.defaultTheme);
 
   private static readonly config = {
-    getLookAndFeelUrl: "assets/config/color/%theme%.json"
+    getApiUrl: "/api/themes"
   };
 
-  // private lookAndFeelData?: LookAndFeelData;
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -39,7 +38,7 @@ export class LookAndFeelService {
   async init() {
     const themeName = this.getTheme();
     if (themeName) {
-      await this.loadAndApplyLookAndFeel(themeName);
+      this.loadAndApplyLookAndFeel(themeName);
     }
     // wir lauschen auf css-Updates aus anderen Browser-Fenstern:
     this.socket
@@ -49,21 +48,18 @@ export class LookAndFeelService {
       });
   }
 
-  getAvailableThemes(): Observable<Theme[]> {
-    return of(JSON.parse(JSON.stringify(cssThemes)));
-  }
 
-  getTheme(): Theme {
+  getTheme(): string {
     return LookAndFeelService.innerService.getValue();
   }
 
-  loadAndApplyLookAndFeel(theme: Theme) {
+  loadAndApplyLookAndFeel(theme: string) {
     const htmlElement = this.document.documentElement;
     htmlElement.setAttribute("favs-theme", theme);
     this.document.body.className = ""; // clear all
     this.document.body.classList.add(theme); // add one
 
-    const subscription = this.getColors(theme)
+    const subscription = this.loadTheme(theme)
       .subscribe(laf => {
         // this.lookAndFeelData = laf;
         this.applyLookAndFeel(laf);
@@ -72,12 +68,19 @@ export class LookAndFeelService {
       });
   }
 
-  getColors(theme: string): Observable<LookAndFeelData> {
-    const url = LookAndFeelService.config
-      .getLookAndFeelUrl
-      .replace(/%theme%/g, theme);
-
+  loadTheme(theme: string): Observable<LookAndFeelData> {
+    const url = `${LookAndFeelService.config.getApiUrl}/${theme}`;
     return this.httpClient.get<LookAndFeelData>(url);
+  }
+
+  loadDefaultNames(): Observable<string[]> {
+    const url = `${LookAndFeelService.config.getApiUrl}/getdefaultnames`;
+    return this.httpClient.get<string[]>(url);
+  }
+
+  loadCustomNames(): Observable<string[]> {
+    const url = `${LookAndFeelService.config.getApiUrl}/customnames`;
+    return this.httpClient.get<string[]>(url);
   }
 
   emitColors(colors: CssColors) {

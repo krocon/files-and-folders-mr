@@ -137,7 +137,17 @@
       <mat-icon>palette</mat-icon>
     </button>
     <mat-menu #menuSettings="matMenu">
-      @for (th of themes; track th) {
+      @for (th of themeCustomNames; track th) {
+        <button
+            (click)="setTheme(th)"
+            mat-menu-item>
+          L&F {{ th }}
+        </button>
+      }
+      @if (themeCustomNames.length && themeDefaultNames.length) {
+        <mat-divider></mat-divider>
+      }
+      @for (th of themeDefaultNames; track th) {
         <button
             (click)="setTheme(th)"
             mat-menu-item>

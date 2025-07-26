@@ -5,7 +5,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {ShortcutComponent} from './shortcut/shortcut.component';
 import {MatDivider} from '@angular/material/divider';
-import {cssThemes, Theme} from '../../../../domain/customcss/css-theme-type';
 import {AppService} from "../../../../app.service";
 import {ActionId} from "../../../../domain/action/fnf-action.enum";
 import {MatBottomSheet, MatBottomSheetConfig} from "@angular/material/bottom-sheet";
@@ -16,6 +15,7 @@ import {TaskButtonComponent} from "../../../task/task-list/task-button.component
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
 import {ActionExecutionService} from "../../../../service/action/action-execution.service";
+import {LookAndFeelService} from "../../../../service/look-and-feel.service";
 
 @Component({
   selector: 'app-button-panel',
@@ -40,8 +40,9 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   @Input() buttonEnableStates = new ButtonEnableStates();
 
-  themes = cssThemes;
 
+  themeDefaultNames: string[] = [];
+  themeCustomNames: string[] = [];
 
   readonly buttons: ButtonEnableStatesKey[] = [
     'OPEN_COPY_DLG',
@@ -117,6 +118,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     private readonly appService: AppService,
     private readonly matBottomSheet: MatBottomSheet,
     private readonly actionExecutionService: ActionExecutionService,
+    private readonly lookAndFeelService: LookAndFeelService,
   ) {
   }
 
@@ -132,7 +134,21 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
       .pipe(
         takeWhile(() => this.alive)
       )
-      .subscribe(() => this.init())
+      .subscribe(() => this.init());
+
+    this.lookAndFeelService
+      .loadDefaultNames()
+      .pipe(
+        takeWhile(() => this.alive)
+      )
+      .subscribe(arr => this.themeDefaultNames = arr);
+
+    this.lookAndFeelService
+      .loadCustomNames()
+      .pipe(
+        takeWhile(() => this.alive)
+      )
+      .subscribe(arr => this.themeCustomNames = arr);
   }
 
   init() {
@@ -153,24 +169,6 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   onButtonClick(actionId: ActionId): void {
     this.actionExecutionService.executeActionById(actionId);
-    // if (action === 'copy') {
-    //   this.actionExecutionService.executeActionById('OPEN_COPY_DLG');
-    //
-    // } else if (action === 'edit') {
-    //   this.actionExecutionService.executeActionById('OPEN_EDIT_DLG');
-    //
-    // } else if (action === 'view') {
-    //   this.actionExecutionService.executeActionById('OPEN_VIEW_DLG');
-    //
-    // } else if (action === 'move') {
-    //   this.actionExecutionService.executeActionById('OPEN_MOVE_DLG');
-    //
-    // } else if (action === 'mkdir') {
-    //   this.actionExecutionService.executeActionById('OPEN_MKDIR_DLG');
-    //
-    // } else if (action === 'remove') {
-    //   this.actionExecutionService.executeActionById('OPEN_DELETE_DLG');
-    // }
   }
 
 
@@ -183,7 +181,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     this.actionExecutionService.executeActionById(id);
   }
 
-  setTheme(theme: Theme) {
+  setTheme(theme: string) {
     this.appService.setTheme(theme);
   }
 

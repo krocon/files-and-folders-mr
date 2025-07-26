@@ -1,6 +1,8 @@
 // Export all models
 export * from './models/browseros/browser-os-type';
+
 export * from './models/customcss/css-colors.data';
+export * from './models/customcss/color-data-if';
 
 
 export * from './models/clean/clean-dialog.data';
@@ -63,8 +65,7 @@ export * from './models/sysinfo/allinfo';
 export * from './models/sysinfo/allinfo.if';
 
 export * from './models/tool/tool-data';
-export * from './models/color/color-data';
-export * from './models/color/colors';
+export * from './models/customcss/color-data-if';
 
 export * from './models/shell/cmd.if';
 export * from './models/shell/shell-cmd.if';

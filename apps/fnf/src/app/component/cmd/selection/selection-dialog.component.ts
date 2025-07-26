@@ -16,7 +16,6 @@ import {FiletypeExtensionsService} from "../../../service/filetype-extensions.se
 import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {cssThemes} from "../../../domain/customcss/css-theme-type";
 
 @Component({
   selector: "fnf-selection-dialog",
@@ -94,8 +93,6 @@ export class SelectionDialogComponent implements OnInit {
     this.dialogRef.close(undefined);
   }
 
-
-  protected readonly themes = cssThemes;
 
   setText(fe: FiletypeExtensionsIf) {
     this.formGroup.setValue({text: fe.extensions.join("|")}, {emitEvent: true});

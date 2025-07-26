@@ -2,13 +2,13 @@ import {Injectable, Logger} from '@nestjs/common';
 import {existsSync, promises as fs} from 'fs';
 import {join} from 'path';
 import {environment} from "../../../environments/environment";
-import {ColorData} from "@fnf-data";
+import {ColorDataIf} from "@fnf-data";
 
 
 @Injectable()
-export class ColorService {
+export class ThemeService {
 
-  private readonly logger = new Logger(ColorService.name);
+  private readonly logger = new Logger(ThemeService.name);
   private readonly defaultsPath = environment.colorDefaultsPath;
   private readonly customPath = environment.colorCustomPath;
 
@@ -16,7 +16,7 @@ export class ColorService {
   async getCustomNames(): Promise<string[]> {
     try {
       const names: string[] = await fs.readdir(this.customPath);
-      return names.map(name => name.replace('.json', ''));
+      return names.map(name => name.replace('.json', '')).sort();
     } catch (error) {
       this.logger.error(`Failed to get custom color names:`, error);
       throw error;
@@ -26,7 +26,7 @@ export class ColorService {
   async getDefaultNames(): Promise<string[]> {
     try {
       const names: string[] = await fs.readdir(this.defaultsPath);
-      return names.map(name => name.replace('.json', ''));
+      return names.map(name => name.replace('.json', '')).sort();
     } catch (error) {
       this.logger.error(`Failed to get default color names:`, error);
       throw error;
@@ -36,7 +36,7 @@ export class ColorService {
   /**
    * Get colors for a specific OS, merging defaults with custom colors
    */
-  async getColors(name: string): Promise<ColorData> {
+  async getColors(name: string): Promise<ColorDataIf> {
     try {
 
       const custom = await this.loadCustom(name);
@@ -55,7 +55,7 @@ export class ColorService {
   /**
    * Save custom colors for a specific OS
    */
-  async saveColors(name: string, colors: ColorData): Promise<void> {
+  async saveColors(name: string, colors: ColorDataIf): Promise<void> {
     try {
       const customFilePath = join(this.customPath, `${name}.json`);
 
@@ -82,7 +82,7 @@ export class ColorService {
   /**
    * Reset colors to defaults by removing custom colors
    */
-  async resetToDefaults(name: string): Promise<ColorData> {
+  async resetToDefaults(name: string): Promise<ColorDataIf> {
     try {
       const customFilePath = join(this.customPath, `${name}.json`);
 
@@ -108,11 +108,11 @@ export class ColorService {
   /**
    * Get default colors for a specific OS
    */
-  async getDefaults(name: string): Promise<ColorData | null> {
+  async getDefaults(name: string): Promise<ColorDataIf | null> {
     return await this.loadDefaults(name);
   }
 
-  private async loadDefaults(name: string): Promise<ColorData | null> {
+  private async loadDefaults(name: string): Promise<ColorDataIf | null> {
     try {
       const defaultFilePath = join(this.defaultsPath, `${name}.json`);
       const content = await fs.readFile(defaultFilePath, 'utf-8');
@@ -123,7 +123,7 @@ export class ColorService {
     }
   }
 
-  private async loadCustom(name: string): Promise<ColorData | null> {
+  private async loadCustom(name: string): Promise<ColorDataIf | null> {
     try {
       const customFilePath = join(this.customPath, `${name}.json`);
       const content = await fs.readFile(customFilePath, 'utf-8');
