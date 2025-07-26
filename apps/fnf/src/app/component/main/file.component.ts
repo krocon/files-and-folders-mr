@@ -219,6 +219,9 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
   ngOnDestroy(): void {
     this.windowResizeService.cleanup();
     this.alive = false;
+    if (this.focusSearchTimeout) {
+      clearTimeout(this.focusSearchTimeout);
+    }
   }
 
   ngDoCheck() {
@@ -249,8 +252,35 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
     this.appService.onChangeDir(path, panelIndex);
   }
 
+
+  focusSearches = ['', ''];
+  focusSearchTimeout: any;
+
   onKeyUp(keyboardEvent: KeyboardEvent) {
     if (this.shellInputHasFocus || this.isInputElement(keyboardEvent)) return; // skip
+
+    const key = keyboardEvent.key;
+    if (key === 'Escape' && this.focusSearches[this.activePanelIndex]) {
+      this.focusSearches[this.activePanelIndex] = '';
+      this.cdr.detectChanges();
+      return;
+    }
+    if (key.length === 1 && /^[a-zA-Z0-9]$/.test(key)) {
+      this.focusSearches[this.activePanelIndex] += key;
+      console.info('###', this.focusSearches[this.activePanelIndex])
+      this.cdr.detectChanges();
+
+      if (this.focusSearchTimeout) {
+        clearTimeout(this.focusSearchTimeout);
+      }
+      this.focusSearchTimeout = setTimeout(() => {
+        this.focusSearches[this.activePanelIndex] = '';
+        this.cdr.detectChanges();
+      }, 2000);
+      return;
+    }
+
+
     this.appService.onKeyUp$.next(keyboardEvent);
   }
 

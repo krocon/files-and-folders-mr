@@ -79,6 +79,7 @@
         <app-file-table
             (selectionLabelDataChanged)="setSelectionChanged($event, 0)"
             (buttonStatesChanged)="setButtonStatesChanged($event, 0)"
+            [focusSearch]="focusSearches[0]"
             [selected]="activePanelIndex===0"
             [tabsPanelData]="tabsPanelData[0]"
             [panelIndex]="0"></app-file-table>
@@ -95,6 +96,7 @@
         <app-file-table
             (selectionLabelDataChanged)="setSelectionChanged($event, 1)"
             (buttonStatesChanged)="setButtonStatesChanged($event, 1)"
+            [focusSearch]="focusSearches[1]"
             [selected]="activePanelIndex===1"
             [tabsPanelData]="tabsPanelData[1]"
             [panelIndex]="1"></app-file-table>

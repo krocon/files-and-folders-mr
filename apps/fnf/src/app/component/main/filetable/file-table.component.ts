@@ -93,9 +93,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() selected: boolean = false;
   @Output() selectionLabelDataChanged = new Subject<SelectionEvent>();
   @Output() buttonStatesChanged = new Subject<ButtonEnableStates>();
-
   tableModel?: TableModelIf;
-
   private readonly rowHeight = 34;
   readonly tableOptions: TableOptionsIf = {
     ...new TableOptions(),
@@ -161,7 +159,6 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.rowHeight,
     this.onFocusChanged.bind(this)
   );
-
   private readonly selectionManager = new SelectionManagerForObjectModels<FileItemIf>(
     this.bodyAreaModel,
     {
@@ -267,6 +264,19 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableApi.reSort();
       this.tableApi.repaintHard();
     }
+  }
+
+  // }
+  private _focusSearch: string = '';
+
+  get focusSearch(): string {
+    return this._focusSearch;
+  }
+
+  @Input()
+  set focusSearch(value: string) {
+    this._focusSearch = value;
+    this.jump2RowByBaseSearch(value);
   }
 
   ngOnInit(): void {
@@ -636,10 +646,22 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.focusLocalStorage.persistFocusCriteria(this.panelIndex, dir, partial);
     this.tableApi?.repaint();
-    //this.scrollToFocus();
 
     const selectedRows = this.selectionManager.getSelectionValue();
     this.calcButtonStates(selectedRows);
+  }
+
+  private jump2RowByBaseSearch(value: string) {
+    if (!value) return;
+    if (this.selected && this.tableApi && this.bodyAreaModel && value) {
+      const v = value.toLowerCase();
+      const index = this.bodyAreaModel.getFilteredRows().findIndex(
+        (row: FileItemIf, index: number, obj: FileItemIf[]) => row.base.toLowerCase().startsWith(v)
+      )
+      if (index > -1) {
+        this.bodyAreaModel.setFocusedRowIndex(index);
+      }
+    }
   }
 
   private getFocussedData(): FileItemIf | null {
@@ -853,7 +875,6 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectionManager.updateSelection();
   }
 
-
   private setFileItemSelected(fileItem: FileItemIf, selected: boolean) {
     if (!fileItem.meta) {
       fileItem.meta = new FileItemMeta();
@@ -861,6 +882,12 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  // private updateFocusIndexByCriteria() {
+  //   if (this.focusRowCriterea) {
+  //     const rowIndex = this.bodyAreaModel.getRowIndexByCriteria(this.focusRowCriterea);
+  //     this.setFocus2Index(rowIndex ?? 0);
+  //   }
+  // }
 
   private setRows(fileItems: FileItemIf[]): void {
     if (this.tableApi) {
@@ -876,13 +903,6 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       this.tableApi.repaintHard();
     }
   }
-
-  // private updateFocusIndexByCriteria() {
-  //   if (this.focusRowCriterea) {
-  //     const rowIndex = this.bodyAreaModel.getRowIndexByCriteria(this.focusRowCriterea);
-  //     this.setFocus2Index(rowIndex ?? 0);
-  //   }
-  // }
 
   private repaintTable() {
     if (this.tableApi) {
@@ -947,18 +967,17 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     return isSameDir(f1, zi.zipUrl + ":");
   }
 
+  // private scrollToFocus() {
+  //   if (this.tableApi) {
+  //     this.tableApi.ensureRowIsVisible(this.bodyAreaModel.getFocusedRowIndex());
+  //   }
+
   private filterFn(value: FileItemIf, _index: number, _array: FileItemIf[]): boolean {
     if (value.base === DOT_DOT) return true;
     return (!this.filterActive || value.base.toLowerCase().includes(this.filterText.toLowerCase()))
       && (this.hiddenFilesVisible || !value.base.startsWith('.'))
       ;
   }
-
-  // private scrollToFocus() {
-  //   if (this.tableApi) {
-  //     this.tableApi.ensureRowIsVisible(this.bodyAreaModel.getFocusedRowIndex());
-  //   }
-  // }
 
   private onFocusChanged(focusRowIndex: number) {
     this.tableApi?.ensureRowIsVisible(focusRowIndex);
