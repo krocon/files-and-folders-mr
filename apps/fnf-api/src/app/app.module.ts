@@ -13,7 +13,7 @@ import {FileActionModule} from "./file-action/file-action.module";
 import {WalkModule} from "./walk/walk.module";
 import {DirModule} from "./dir/dir.module";
 import {CustomCssModule} from "./customcss/custom-css.module";
-import {ConfigModule} from "./config/config.module";
+import {PathModule} from "./config/path/path.module";
 import {FindModule} from "./find/find.module";
 import {Config} from "@fnf/fnf-data";
 import {FindFolderModule} from "./findfolder/find-folder.module";
@@ -39,7 +39,7 @@ const config = new Config(
       envFilePath: ['.env', 'apps/fnf-api/.env'],
     }),
     SysinfoModule,
-    ConfigModule.forRoot(
+    PathModule.forRoot(
       config
     ),
     DrivesModule.forRoot(

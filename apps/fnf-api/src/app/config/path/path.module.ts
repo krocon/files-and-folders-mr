@@ -1,23 +1,23 @@
 import {DynamicModule, Logger, Module} from "@nestjs/common";
-import {ConfigService} from "./config.service";
-import {ConfigController} from "./config.controller";
-import {Config} from "@fnf/fnf-data";
+import {PathService} from "./path.service";
+import {PathController} from "./path.controller";
+import {Config} from "@fnf-data";
 
 
 @Module({
-  controllers: [ConfigController]
+  controllers: [PathController]
 })
-export class ConfigModule {
+export class PathModule {
 
   public static forRoot(config: Config): DynamicModule {
     if (config) {
-      ConfigService.config = config;
+      PathService.config = config;
       Logger.log("ConfigModule config -> " + JSON.stringify(config, null, 2));
     }
     return {
-      module: ConfigModule,
+      module: PathModule,
       providers: [
-        ConfigService
+        PathService
       ]
     };
   }

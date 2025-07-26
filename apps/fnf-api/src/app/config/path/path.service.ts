@@ -1,9 +1,9 @@
 import {Injectable} from "@nestjs/common";
-import {Config} from "@fnf/fnf-data";
+import {Config} from "@fnf-data";
 
 
 /**
- * @class ConfigService
+ * @class PathService
  * @description A service responsible for managing and accessing application configuration settings.
  * This service provides access to container paths, incompatible paths, and other configuration data
  * through a singleton pattern using a static config instance.
@@ -25,7 +25,7 @@ import {Config} from "@fnf/fnf-data";
  * ```
  */
 @Injectable()
-export class ConfigService {
+export class PathService {
   /**
    * Static configuration instance that holds the application's configuration data.
    * This ensures a single source of truth for configuration across the application.
@@ -38,7 +38,7 @@ export class ConfigService {
    * @returns {Config} The complete configuration object containing all configuration settings
    */
   getData(): Config {
-    return ConfigService.config;
+    return PathService.config;
   }
 
   /**
@@ -47,7 +47,7 @@ export class ConfigService {
    * @returns {boolean} True if there are restricted container paths defined, false otherwise
    */
   hasRestrictedContainerPaths(): boolean {
-    return !!ConfigService.config.containerPaths.length;
+    return !!PathService.config.containerPaths.length;
   }
 
   /**
@@ -56,7 +56,7 @@ export class ConfigService {
    * @returns {string[]} An array of restricted container paths
    */
   getRestrictedContainerPaths(): string[] {
-    return ConfigService.config.containerPaths;
+    return PathService.config.containerPaths;
   }
 
   /**
@@ -65,7 +65,7 @@ export class ConfigService {
    * @returns {boolean} True if there are incompatible paths defined, false otherwise
    */
   hasIncompatiblePaths(): boolean {
-    return !!ConfigService.config.incompatiblePaths.length;
+    return !!PathService.config.incompatiblePaths.length;
   }
 
   /**
@@ -74,6 +74,6 @@ export class ConfigService {
    * @returns {string[]} An array of incompatible paths
    */
   getIncompatiblePaths(): string[] {
-    return ConfigService.config.incompatiblePaths;
+    return PathService.config.incompatiblePaths;
   }
 }
