@@ -5,9 +5,10 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatTooltip} from "@angular/material/tooltip";
+import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 
 
-type FileExtensionsType = { "label": string, "extensions": string[] };
+
 
 @Component({
   selector: "fnf-clean-template-dropdown",
@@ -24,7 +25,7 @@ type FileExtensionsType = { "label": string, "extensions": string[] };
 export class CleanTemplateDropdownComponent {
 
   // TODO Make data editable and reload it
-  fileTypes: FileExtensionsType[] = [
+  fileTypes: FiletypeExtensionsIf[] = [
     {
       label: "Video RAR Leftovers",
       extensions: [
@@ -99,7 +100,7 @@ export class CleanTemplateDropdownComponent {
   @Output() onSelected = new EventEmitter<string>();
 
 
-  onItemClicked(ft: FileExtensionsType) {
+  onItemClicked(ft: FiletypeExtensionsIf) {
     this.onSelected.emit(ft.extensions.join('|'));
   }
 

@@ -4,8 +4,8 @@ import {join} from "path";
 const getEnvironmentVariables = () => {
 
   const label = 'dev';
-  const version = '25.07.2025 15:24';
-  const commitHash = 'aaa43ce';
+  const version = '26.07.2025 18:27';
+  const commitHash = 'a8089b6';
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
@@ -18,6 +18,9 @@ const getEnvironmentVariables = () => {
 
   const filetypeDefaultsPath = join(__dirname, '..', 'src/assets/filetype/defaults')
   const filetypeCustomPath = join(__dirname, '..', 'src/assets/filetype/custom');
+
+  const searchPatternCustomPath = join(__dirname, '..', 'src/assets/search/defaults')
+  const searchPatternDefaultsPath = join(__dirname, '..', 'src/assets/search/custom');
 
   const toolDefaultsPath = join(__dirname, '..', 'src/assets/tool/defaults')
   const toolCustomPath = join(__dirname, '..', 'src/assets/tool/custom');
@@ -48,6 +51,9 @@ const getEnvironmentVariables = () => {
 
     filetypeDefaultsPath,
     filetypeCustomPath,
+
+    searchPatternDefaultsPath,
+    searchPatternCustomPath,
 
     toolDefaultsPath,
     toolCustomPath,
@@ -94,6 +100,14 @@ export const environment = {
   get filetypeCustomPath() {
     return getEnvironmentVariables().filetypeCustomPath;
   },
+
+  get searchPatternDefaultsPath() {
+    return getEnvironmentVariables().searchPatternDefaultsPath;
+  },
+  get searchPatternCustomPath() {
+    return getEnvironmentVariables().searchPatternCustomPath;
+  },
+
   get toolDefaultsPath() {
     return getEnvironmentVariables().toolDefaultsPath;
   },

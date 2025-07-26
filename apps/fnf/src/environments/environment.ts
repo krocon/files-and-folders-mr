@@ -6,8 +6,8 @@ const prefix = 'http://localhost:3333';
 
 export const environment = {
   production: false,
-  version: '25.07.2025 15:24',
-  commitHash: 'aaa43ce',
+  version: '26.07.2025 18:27',
+  commitHash: 'a8089b6',
 
   config: {
     getUrl: prefix + "/api/config"
@@ -57,7 +57,10 @@ export const environment = {
     getShortcutApiUrl: prefix + "/api/shortcuts"
   },
   filetypeExtensions: {
-    getFiletypesUrl: "assets/config/filetype/filetype-extensions.json"
+    getApiUrl: prefix + "/api/filetypes"
+  },
+  searchPatterns: {
+    getApiUrl: prefix + "/api/searchpatterns"
   },
   edit: {
     getFile: prefix + "/api/file?name=",

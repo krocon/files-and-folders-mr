@@ -7,21 +7,21 @@ import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 @Injectable({
   providedIn: "root"
 })
-export class FiletypeExtensionsService {
+export class SearchPatternsService {
 
   private static readonly config = {
-    getApiUrl: "api/filetypes"
+    getApiUrl: "api/searchpatterns"
   };
 
   constructor(private readonly httpClient: HttpClient) {
   }
 
   static forRoot(config: { [key: string]: string }) {
-    Object.assign(FiletypeExtensionsService.config, config);
+    Object.assign(SearchPatternsService.config, config);
   }
 
 
-  getFiletypes(): Observable<FiletypeExtensionsIf[]> {
-    return (this.httpClient.get<FiletypeExtensionsIf[]>(FiletypeExtensionsService.config.getApiUrl));
+  load(): Observable<FiletypeExtensionsIf[]> {
+    return (this.httpClient.get<FiletypeExtensionsIf[]>(SearchPatternsService.config.getApiUrl));
   }
 }

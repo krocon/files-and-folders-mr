@@ -26,6 +26,7 @@ import {ShortcutModule} from "./config/shortcut/shortcut.module";
 import {FiletypeModule} from "./config/filetype/filetype.module";
 import {ToolModule} from "./config/tool/tool.module";
 import {ThemeModule} from "./config/theme/theme.module";
+import {SearchPatternModule} from "./config/search/search-pattern.module";
 
 const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
@@ -70,7 +71,8 @@ const config = new Config(
     ShortcutModule,
     ThemeModule,
     FiletypeModule,
-    ToolModule
+    ToolModule,
+    SearchPatternModule
   ],
   controllers: [
     AppController

@@ -28,6 +28,7 @@ import {WalkdirService} from "./common/walkdir/walkdir.service";
 import {WalkdirSyncService} from "./common/walkdir/walkdir-sync.service";
 import {WalkSocketService} from "./common/walkdir/walk.socketio.service";
 import {ShortcutService} from "./service/shortcut.service";
+import {SearchPatternsService} from "./service/search-patterns.service";
 
 
 // Set config to services:
@@ -40,6 +41,7 @@ FileActionService.forRoot(environment.fileAction);
 GotoAnythingDialogService.forRoot(environment.gotoAnything);
 ToolService.forRoot(environment.tool);
 FiletypeExtensionsService.forRoot(environment.filetypeExtensions);
+SearchPatternsService.forRoot(environment.searchPatterns);
 AiCompletionService.forRoot(environment.multiRename);
 GlobValidatorService.forRoot(environment.checkGlob);
 CleanService.forRoot(environment.clean);

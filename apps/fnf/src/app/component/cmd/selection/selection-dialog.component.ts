@@ -16,6 +16,7 @@ import {FiletypeExtensionsService} from "../../../service/filetype-extensions.se
 import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: "fnf-selection-dialog",
@@ -81,6 +82,9 @@ export class SelectionDialogComponent implements OnInit {
   ngOnInit(): void {
     this.filetypeExtensionsService
       .getFiletypes()
+      .pipe(
+        tap(console.info) // TODO del
+      )
       .subscribe(data => this.filetypeExtensions = data);
     }
 

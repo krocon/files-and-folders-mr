@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  version: '25.07.2025 15:24',
-  commitHash: 'aaa43ce',
+  version: '26.07.2025 18:27',
+  commitHash: 'a8089b6',
 
   config: {
     getUrl: "/api/config"
@@ -50,7 +50,10 @@ export const environment = {
     getShortcutApiUrl: "/api/shortcuts"
   },
   filetypeExtensions: {
-    getFiletypesUrl: "assets/config/filetype/filetype-extensions.json"
+    getApiUrl: "/api/filetypes"
+  },
+  searchPatterns: {
+    getApiUrl: "/api/searchpatterns"
   },
   edit: {
     getFile: "api/file?name=",
