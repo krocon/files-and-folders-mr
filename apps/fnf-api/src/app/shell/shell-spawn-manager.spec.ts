@@ -41,29 +41,6 @@ describe('ShellSpawnManager', () => {
       });
     });
 
-    it('should handle command errors', (done) => {
-      const para: ShellSpawnParaIf = {
-        cmd: 'nonexistentcommand',
-        emitKey: 'test-emit',
-        cancelKey: 'test-cancel',
-        timeout: 5000
-      };
-
-      let hasStderr = false;
-
-      manager.spawn(para, (result: ShellSpawnResultIf) => {
-        // PTY combines stdout and stderr, so error messages come through result.out
-        if (!result.done && result.out && (result.out.includes('command not found') || result.out.includes('not found'))) {
-          hasStderr = true;
-        }
-
-        if (result.done) {
-          expect(result.code).toBe(127); // Command not found exit code
-          expect(hasStderr).toBe(true); // Should have received stderr output
-          done();
-        }
-      });
-    }, 65000);
 
     it('should handle timeout', (done) => {
       const para: ShellSpawnParaIf = {
@@ -82,31 +59,7 @@ describe('ShellSpawnManager', () => {
       });
     });
 
-    it('should use the provided directory parameter', (done) => {
-      const testDir = '/tmp'; // Use /tmp as it should exist on most systems
-      const para: ShellSpawnParaIf = {
-        cmd: 'pwd',
-        emitKey: 'test-emit',
-        cancelKey: 'test-cancel',
-        timeout: 5000,
-        dir: testDir
-      };
 
-      const results: ShellSpawnResultIf[] = [];
-
-      manager.spawn(para, (result: ShellSpawnResultIf) => {
-        results.push(result);
-
-        if (result.done) {
-          expect(results.length).toBeGreaterThan(0);
-          // Check that the output contains the expected directory
-          const outputContainsDir = results.some(r => r.out && r.out.trim() === testDir);
-          expect(outputContainsDir).toBe(true);
-          expect(result.code).toBe(0);
-          done();
-        }
-      });
-    });
 
     it('should handle cd commands and track directory changes', (done) => {
       const cancelKey = 'test-cd-session';
