@@ -44,14 +44,49 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   themeDefaultNames: string[] = [];
   themeCustomNames: string[] = [];
 
-  readonly buttons: ButtonEnableStatesKey[] = [
-    'OPEN_COPY_DLG',
-    'OPEN_VIEW_DLG',
-    'OPEN_EDIT_DLG',
-    'OPEN_MOVE_DLG',
-    'OPEN_MKDIR_DLG',
-    'OPEN_DELETE_DLG'
-  ];
+  readonly buttons: { [key: string]: ButtonEnableStatesKey[] } = {
+    "default": [
+      'OPEN_COPY_DLG',
+      'OPEN_VIEW_DLG',
+      'OPEN_EDIT_DLG',
+      'OPEN_MOVE_DLG',
+      'OPEN_MKDIR_DLG',
+      'OPEN_DELETE_DLG'
+    ],
+    "shift": [
+      'OPEN_COPY_DLG',
+      'OPEN_VIEW_DLG',
+      'OPEN_EDIT_DLG',
+      'OPEN_RENAME_DLG',
+      'OPEN_MKDIR_DLG',
+      'OPEN_DELETE_DLG'
+    ],
+    "ctrl": [
+      'OPEN_COPY_DLG',
+      'OPEN_VIEW_DLG',
+      'OPEN_EDIT_DLG',
+      'OPEN_MULTIRENAME_DLG',
+      'OPEN_MKDIR_DLG',
+      'OPEN_DELETE_DLG'
+    ],
+    "cmd": [
+      'OPEN_COPY_DLG',
+      'OPEN_VIEW_DLG',
+      'OPEN_EDIT_DLG',
+      'OPEN_MOVE_DLG',
+      'OPEN_MKDIR_DLG',
+      'OPEN_DELETE_DLG'
+    ],
+    "alt": [
+      'OPEN_COPY_DLG',
+      'OPEN_VIEW_DLG',
+      'OPEN_EDIT_DLG',
+      'OPEN_MOVE_DLG',
+      'OPEN_MKDIR_DLG',
+      'OPEN_DELETE_DLG'
+    ],
+
+  };
 
 
   menuItems0: ActionId[] = [

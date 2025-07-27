@@ -9,4 +9,5 @@ export class ButtonEnableStates {
   OPEN_MKDIR_DLG = false;
   OPEN_RENAME_DLG = false;
   OPEN_UNPACK_DLG = false;
+  OPEN_MULTIRENAME_DLG = false;
 }
