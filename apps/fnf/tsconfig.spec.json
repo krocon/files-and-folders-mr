@@ -9,6 +9,9 @@
       "node"
     ],
     "paths": {
+      "@fnf-data": [
+        "../../libs/fnf-data/src/index.ts"
+      ],
       "@fnf-data/*": [
         "../../libs/fnf-data/*"
       ],

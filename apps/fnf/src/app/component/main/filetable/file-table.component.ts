@@ -613,12 +613,141 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  /**
+   * Detects sequential patterns in directory names and suggests the next sequence number.
+   * Supports patterns like S01, S02, S03 or E01, E02, E03, etc.
+   * @returns The suggested next directory name or null if no pattern is detected
+   */
+  private getNextSequentialDirName(): string | null {
+    if (!this.bodyAreaModel) {
+      return null;
+    }
+
+    // Get all directories in the current directory
+    const directories = this.bodyAreaModel
+      .getFilteredRows()
+      .filter(item => item.isDir && item.base !== DOT_DOT)
+      .map(item => item.base);
+
+    if (directories.length === 0) {
+      return null;
+    }
+
+    // Try to detect sequential patterns
+    const patterns = this.detectSequentialPatterns(directories);
+
+    if (patterns.length > 0) {
+      // Use the pattern with the highest sequence number
+      const bestPattern = patterns.reduce((max, current) =>
+        current.maxNumber > max.maxNumber ? current : max
+      );
+
+      return this.generateNextSequenceName(bestPattern);
+    }
+
+    return null;
+  }
+
+  /**
+   * Detects sequential patterns in directory names.
+   * @param directories Array of directory names
+   * @returns Array of detected patterns with their details
+   */
+  private detectSequentialPatterns(directories: string[]): Array<{
+    prefix: string,
+    maxNumber: number,
+    digits: number
+  }> {
+    const patterns: Map<string, { maxNumber: number, digits: number, count: number }> = new Map();
+
+    // Regular expression to match patterns like S01, E02, etc.
+    // More restrictive: prefix should be short (1-10 chars) and numbers should be zero-padded (2+ digits) or follow sequential pattern
+    const sequenceRegex = /^([A-Za-z]{1,10})(\d{2,})$/;
+
+    for (const dir of directories) {
+      const match = dir.match(sequenceRegex);
+      if (match) {
+        const prefix = match[1];
+        const numberStr = match[2];
+        const number = parseInt(numberStr, 10);
+        const digits = numberStr.length;
+
+        // Additional validation: ensure it looks like a sequential pattern
+        // Skip if it looks like a regular word with numbers (e.g., "folder1", "file123")
+        if (this.isValidSequentialPattern(prefix, numberStr)) {
+          if (!patterns.has(prefix)) {
+            patterns.set(prefix, {maxNumber: number, digits: digits, count: 1});
+          } else {
+            const existing = patterns.get(prefix)!;
+            existing.count++;
+            if (number > existing.maxNumber) {
+              existing.maxNumber = number;
+              // Use the digit count from the highest number
+              existing.digits = digits;
+            }
+          }
+        }
+      }
+    }
+
+    // Only return patterns that have at least 2 occurrences (indicating a sequence)
+    return Array.from(patterns.entries())
+      .filter(([_, data]) => data.count >= 2)
+      .map(([prefix, data]) => ({
+        prefix,
+        maxNumber: data.maxNumber,
+        digits: data.digits
+      }));
+  }
+
+  /**
+   * Validates if a prefix and number combination looks like a valid sequential pattern.
+   * @param prefix The alphabetic prefix
+   * @param numberStr The numeric part as string
+   * @returns true if it looks like a valid sequential pattern
+   */
+  private isValidSequentialPattern(prefix: string, numberStr: string): boolean {
+    // Pattern should have:
+    // 1. Short prefix (typically 1-3 characters for S, E, Season, etc.)
+    // 2. Zero-padded numbers (starts with 0 and has 2+ digits) OR
+    // 3. Prefix is very short (1-2 chars) which are common for sequences
+
+    const isZeroPadded = numberStr.startsWith('0') && numberStr.length >= 2;
+    const isShortPrefix = prefix.length <= 3;
+    const isCommonSequencePrefix = /^[A-Za-z]{1,2}$/.test(prefix); // 1-2 character prefixes like S, E, EP, etc.
+
+    return isZeroPadded || (isShortPrefix && isCommonSequencePrefix);
+  }
+
+  /**
+   * Generates the next sequence name based on the detected pattern.
+   * @param pattern The detected pattern with prefix, max number, and digit count
+   * @returns The next sequence name
+   */
+  private generateNextSequenceName(pattern: { prefix: string, maxNumber: number, digits: number }): string {
+    const nextNumber = pattern.maxNumber + 1;
+    const paddedNumber = nextNumber.toString().padStart(pattern.digits, '0');
+    return `${pattern.prefix}${paddedNumber}`;
+  }
+
   openMakeDirDlg() {
     const panelIndex = this.panelIndex;
     const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
     const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
     const focussedData = this.getFocussedData();
-    const data = new MkdirDialogData(dir, focussedData?.base ?? '');
+
+    // Get existing subdirectories for validation
+    const existingSubdirectories = this.bodyAreaModel
+      ? this.bodyAreaModel
+        .getFilteredRows()
+        .filter(item => item.isDir && item.base !== DOT_DOT)
+        .map(item => item.base)
+      : [];
+
+    // Try to detect sequential pattern and suggest next sequence
+    const suggestedName = this.getNextSequentialDirName() || (focussedData?.base ?? '');
+    const data = new MkdirDialogData(dir, suggestedName, existingSubdirectories);
+
 
     this.mkdirDialogService
       .open(data, (result: MkdirDialogResultData | undefined) => {

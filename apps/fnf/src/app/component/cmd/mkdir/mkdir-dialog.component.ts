@@ -62,7 +62,7 @@ export class MkdirDialogComponent {
               Validators.minLength(1),
               Validators.maxLength(255),
               (control: AbstractControl): ValidationErrors | null => {
-                if (control.value === data.folderName) {
+                if (control.value && data.existingSubdirectories.includes(control.value)) {
                   return {
                     "is_same": true
                   };
