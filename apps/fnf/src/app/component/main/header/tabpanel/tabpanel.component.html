@@ -25,6 +25,7 @@
         <ng-template mat-tab-label>
           @if (tabsPanelData) {
 
+
             <button
                 matIconButton
                 style="width: 0;overflow: clip;margin: 0;padding: 0;"
@@ -32,6 +33,15 @@
                 [matMenuTriggerFor]="menu"></button>
 
             <mat-menu #menu="matMenu">
+
+              <button
+                  (click)="onTabReloadClicked(i)"
+                  mat-menu-item>
+                <mat-icon>refresh</mat-icon>
+                <span>Reload</span>
+              </button>
+              <mat-divider></mat-divider>
+
               <button
                   [disabled]="tabsPanelData.tabs.length < 2"
                   (click)="onTabCloseClicked(i)"

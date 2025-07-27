@@ -29,6 +29,7 @@ import {MatDivider} from "@angular/material/divider";
 import {FnfAutofocusDirective} from "../../../../common/directive/fnf-autofocus.directive";
 import {PanelManagementService} from "../../../../service/panel/panel-management-service";
 import {ActionExecutionService} from "../../../../service/action/action-execution.service";
+import {ActionId} from "../../../../domain/action/fnf-action.enum";
 
 @Component({
   selector: 'app-tabpanel',
@@ -227,6 +228,12 @@ export class TabpanelComponent implements OnInit, OnDestroy, AfterViewInit {
   onLongPress(i: number, evt: MouseEvent | TouchEvent, matMenuTrigger: MatMenuTrigger) {
     evt.preventDefault();
     matMenuTrigger.openMenu();
+  }
+
+  onTabReloadClicked(i: number) {
+    if (this.tabsPanelData) {
+      this.actionExecutionService.executeActionById(('RELOAD_DIR_' + this.panelIndex) as ActionId);
+    }
   }
 
   onTabCloseClicked(i: number) {
