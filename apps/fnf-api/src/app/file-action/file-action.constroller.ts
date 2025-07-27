@@ -1,7 +1,7 @@
 import {Controller, Logger, Post} from "@nestjs/common";
 import {FileService} from "./file.service";
 import {MessageBody} from "@nestjs/websockets";
-import {DirEventIf, DirPara, FilePara, OnDoResponseType} from "@fnf/fnf-data";
+import {DirEventIf, DirPara, FilePara, OnDoResponseType} from "@fnf-data";
 
 
 @Controller("do")

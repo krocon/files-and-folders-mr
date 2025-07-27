@@ -1,5 +1,5 @@
 import {Stats} from "fs";
-import {FileItem} from "@fnf/fnf-data";
+import {FileItem} from "@fnf-data";
 
 export function stats2FileItem(stats: Stats, fileItem: FileItem): FileItem {
   // see https://npmdoc.github.io/node-npmdoc-fs-extra/build/apidoc.html#apidoc.element.fs-extra.Stats

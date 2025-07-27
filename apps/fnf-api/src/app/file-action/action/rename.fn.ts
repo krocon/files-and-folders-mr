@@ -1,4 +1,4 @@
-import {DirEvent, DirEventIf, FileItemIf, FilePara, fixPath} from "@fnf/fnf-data";
+import {DirEvent, DirEventIf, FileItemIf, FilePara, fixPath} from "@fnf-data";
 import * as path from "path";
 import * as fse from "fs-extra";
 import {clone} from "./common/clone";

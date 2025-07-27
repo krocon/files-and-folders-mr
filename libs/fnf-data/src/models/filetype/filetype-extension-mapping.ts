@@ -1,3 +1,4 @@
-import {FiletypeExtensionsIf} from "@fnf/fnf-data";
+import {FiletypeExtensionsIf} from "./filetype-extensions.if";
+
 
 export type FiletypeExtensionMapping = FiletypeExtensionsIf[];

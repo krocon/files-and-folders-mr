@@ -6,7 +6,7 @@ import * as fs from "fs";
 
 import {exec} from "child_process";
 import {from, Observable} from "rxjs";
-import {Allinfo, AllinfoIf, Sysinfo, SysinfoIf} from "@fnf/fnf-data";
+import {Allinfo, AllinfoIf, Sysinfo, SysinfoIf} from "@fnf-data";
 import {SysInfoCallbackFn} from "./sysInfo-callback.fn";
 
 

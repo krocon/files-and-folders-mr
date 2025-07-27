@@ -1,4 +1,5 @@
-import { FindDialogData } from "@fnf/fnf-data";
+import {FindDialogData} from "./find-dialog.data";
+
 
 export class FindData {
 

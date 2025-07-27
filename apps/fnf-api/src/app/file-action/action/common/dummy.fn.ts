@@ -1,4 +1,4 @@
-import {DoEventIf, FilePara} from "@fnf/fnf-data";
+import {DoEventIf, FilePara} from "@fnf-data";
 
 
 export function dummy(para: FilePara): Promise<DoEventIf> {

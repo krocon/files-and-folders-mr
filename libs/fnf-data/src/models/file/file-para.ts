@@ -1,5 +1,7 @@
-import {FileCmd, FileItemIf} from "@fnf/fnf-data";
+
 import {PanelIndex} from "./panel-index";
+import {FileItemIf} from "../dir/file-item.if";
+import {FileCmd} from "./file-cmd";
 
 export class FilePara {
 

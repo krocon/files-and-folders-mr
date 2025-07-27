@@ -1,4 +1,7 @@
-import { ButtonEnableStates, EXP_ZIP_FILE_URL, FileItemIf } from "@fnf/fnf-data";
+import {FileItemIf} from "../dir/file-item.if";
+import {ButtonEnableStates} from "./button-enable-states";
+import {EXP_ZIP_FILE_URL} from "../file/zip-matcher";
+
 
 export function getButtonEnableStates(items: FileItemIf[]): ButtonEnableStates {
   const states = new ButtonEnableStates();

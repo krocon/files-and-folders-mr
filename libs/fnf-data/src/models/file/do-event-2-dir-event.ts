@@ -1,4 +1,5 @@
-import { DirEvent, DoEvent } from "@fnf/fnf-data";
+import {DoEvent} from "./do-event";
+import {DirEvent} from "../dir/dir-event";
 
 
 export const doEvent2DirEvent = (doEvent: DoEvent): DirEvent[] => {

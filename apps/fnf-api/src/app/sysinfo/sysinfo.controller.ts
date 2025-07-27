@@ -1,7 +1,7 @@
 import {Controller, Get} from "@nestjs/common";
 import {SysinfoService} from "./sysinfo.service";
 import {Observable} from "rxjs";
-import {AllinfoIf, SysinfoIf} from "@fnf/fnf-data";
+import {AllinfoIf, SysinfoIf} from "@fnf-data";
 
 
 @Controller()

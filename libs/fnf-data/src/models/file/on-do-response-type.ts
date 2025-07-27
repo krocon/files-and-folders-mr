@@ -1,3 +1,4 @@
-import {DirEventIf} from "@fnf/fnf-data";
+import {DirEventIf} from "../dir/dir-event.if";
+
 
 export type OnDoResponseType = DirEventIf[];

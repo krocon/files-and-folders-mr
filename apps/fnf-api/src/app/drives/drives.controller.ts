@@ -2,7 +2,7 @@ import {Controller, Get, Post} from "@nestjs/common";
 import {DrivesService} from "./drives.service";
 import {Observable} from "rxjs";
 import {MessageBody} from "@nestjs/websockets";
-import {DirPara} from '@fnf/fnf-data';
+import {DirPara} from '@fnf-data';
 
 /**
  * Controller responsible for handling drive-related operations in the application.

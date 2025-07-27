@@ -5,7 +5,7 @@ import * as path from "path";
 import * as fs from "fs-extra";
 import * as micromatch from "micromatch";
 import {environment} from "../../environments/environment";
-import {DirEvent, FileItem, FindData} from "@fnf/fnf-data";
+import {DirEvent, FileItem, FindData} from "@fnf-data";
 import {stats2FileItem} from "../dir/stats-to-file";
 
 @WebSocketGateway(environment.websocketPort, environment.websocketOptions)

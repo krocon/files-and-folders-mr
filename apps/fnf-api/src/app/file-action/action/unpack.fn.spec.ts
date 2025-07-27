@@ -1,5 +1,5 @@
 import {unpack} from './unpack.fn';
-import {FileItem, FilePara} from '@fnf/fnf-data';
+import {FileItem, FilePara} from '@fnf-data';
 import * as fse from 'fs-extra';
 import * as path from 'path';
 import * as StreamZip from 'node-stream-zip';

@@ -1,4 +1,5 @@
-import {SysinfoIf} from "@fnf/fnf-data";
+import {SysinfoIf} from "./sysinfo.if";
+
 
 export class Allinfo {
 

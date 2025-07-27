@@ -1,4 +1,4 @@
-import {DirEventIf, FilePara, fixPath} from "@fnf/fnf-data";
+import {DirEventIf, FilePara, fixPath} from "@fnf-data";
 import * as path from "path";
 
 import * as StreamZip from "node-stream-zip";

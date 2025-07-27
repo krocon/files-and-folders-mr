@@ -5,7 +5,7 @@ import {ShellCommandsLinux} from './shell-commands-linux';
 import {ShellCommandsMacOS} from './shell-commands-macos';
 import { DirService } from '../dir/dir-service';
 import * as path from 'path';
-import { DirPara } from '@fnf/fnf-data';
+import {DirPara} from '@fnf-data';
 
 @Controller('shell-autocomplete')
 export class ShellAutocompleteController {

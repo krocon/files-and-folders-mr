@@ -1,5 +1,5 @@
 import * as path from "path";
-import {DirEventIf, FilePara, fixPath} from "@fnf/fnf-data";
+import {DirEventIf, FilePara, fixPath} from "@fnf-data";
 import * as os from "os";
 import {Logger} from "@nestjs/common";
 import {executeCommand} from "./common/execute-command";

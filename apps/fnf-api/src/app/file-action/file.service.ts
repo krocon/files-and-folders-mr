@@ -7,7 +7,7 @@ import {rename} from "./action/rename.fn";
 import {open} from "./action/open.fn";
 import {unpack} from "./action/unpack.fn";
 import {dummy} from "./action/common/dummy.fn";
-import {FileCmd, FilePara, OnDoResponseType} from "@fnf/fnf-data";
+import {FileCmd, FilePara, OnDoResponseType} from "@fnf-data";
 import {unpacklist} from "./action/unpack-list.fn";
 
 /**

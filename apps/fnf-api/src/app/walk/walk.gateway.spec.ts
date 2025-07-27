@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {WalkGateway} from './walk.gateway';
-import {WalkParaData} from '@fnf/fnf-data';
+import {WalkParaData} from '@fnf-data';
 import {
   cleanupTestEnvironment,
   restoreTestEnvironment,

@@ -1,5 +1,5 @@
 import {Body, Controller, Post} from '@nestjs/common';
-import {CleanDialogData} from '@fnf/fnf-data';
+import {CleanDialogData} from '@fnf-data';
 import {CleanHelper} from './clean.helper';
 import {CleanResult} from "@fnf-data";
 

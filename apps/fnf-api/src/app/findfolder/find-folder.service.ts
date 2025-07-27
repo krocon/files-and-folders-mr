@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {Config, FindFolderPara} from '@fnf/fnf-data';
+import {Config, FindFolderPara} from '@fnf-data';
 import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from 'path';

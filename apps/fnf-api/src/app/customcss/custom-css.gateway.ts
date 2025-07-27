@@ -1,7 +1,7 @@
 import {MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
 import {Server} from "socket.io";
 import {environment} from "../../environments/environment";
-import {CssColors} from "@fnf/fnf-data";
+import {CssColors} from "@fnf-data";
 
 @WebSocketGateway(environment.websocketPort, environment.websocketOptions)
 export class CustomCssGateway {

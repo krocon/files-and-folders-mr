@@ -1,5 +1,5 @@
 import {Controller, Post} from "@nestjs/common";
-import {ShellCmdIf, ShellCmdResultIf} from "@fnf/fnf-data";
+import {ShellCmdIf, ShellCmdResultIf} from "@fnf-data";
 import {MessageBody} from "@nestjs/websockets";
 import {exec} from "child_process";
 import * as path from "node:path";

@@ -1,5 +1,5 @@
 import {Injectable} from "@nestjs/common";
-import {Config, DirEvent, DirEventIf, DirPara, FileItem, fixPath, getZipUrlInfo, isZipUrl} from "@fnf/fnf-data";
+import {Config, DirEvent, DirEventIf, DirPara, FileItem, fixPath, getZipUrlInfo, isZipUrl} from "@fnf-data";
 
 import * as fs from "fs-extra";
 import * as path from "path";

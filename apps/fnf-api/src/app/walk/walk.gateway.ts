@@ -1,7 +1,7 @@
 import {MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
 import {Server} from "socket.io";
 import {environment} from "../../environments/environment";
-import {WalkParaData} from "@fnf/fnf-data";
+import {WalkParaData} from "@fnf-data";
 import {FileWalker} from "./file-walker";
 
 @WebSocketGateway(environment.websocketPort, environment.websocketOptions)

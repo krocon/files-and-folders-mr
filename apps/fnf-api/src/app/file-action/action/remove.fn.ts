@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as fse from "fs-extra";
-import {DirEvent, DirEventIf, FilePara, fixPath} from "@fnf/fnf-data";
+import {DirEvent, DirEventIf, FilePara, fixPath} from "@fnf-data";
 
 /**
  * Removes a file or directory from the file system

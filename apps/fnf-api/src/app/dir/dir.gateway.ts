@@ -3,7 +3,7 @@ import {Server} from "socket.io";
 
 import * as path from "path";
 import * as fs from "fs-extra";
-import {DirEvent, DirPara, FileItem, fixPath, getZipUrlInfo, isZipUrl} from '@fnf/fnf-data';
+import {DirEvent, DirPara, FileItem, fixPath, getZipUrlInfo, isZipUrl} from '@fnf-data';
 import {environment} from "../../environments/environment";
 import {FSWatcher} from "chokidar";
 import {Observable} from "rxjs";

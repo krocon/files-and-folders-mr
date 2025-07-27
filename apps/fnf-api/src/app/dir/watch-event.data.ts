@@ -1,4 +1,4 @@
-import {DirWatcherEventType} from "@fnf/fnf-data";
+import {DirWatcherEventType} from "@fnf-data";
 
 
 export class WatchEventData {

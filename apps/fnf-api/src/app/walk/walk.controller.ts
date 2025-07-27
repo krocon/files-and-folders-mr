@@ -1,6 +1,6 @@
 import {Controller, Post} from "@nestjs/common";
 import {MessageBody} from "@nestjs/websockets";
-import {FileItem, FileItemIf, WalkData, WalkParaData} from "@fnf/fnf-data";
+import {FileItem, FileItemIf, WalkData, WalkParaData} from "@fnf-data";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as micromatch from "micromatch";

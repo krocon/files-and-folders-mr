@@ -15,7 +15,7 @@ import {DirModule} from "./dir/dir.module";
 import {CustomCssModule} from "./customcss/custom-css.module";
 import {PathModule} from "./config/path/path.module";
 import {FindModule} from "./find/find.module";
-import {Config} from "@fnf/fnf-data";
+import {Config} from "@fnf-data";
 import {FindFolderModule} from "./findfolder/find-folder.module";
 import {ShellModule} from "./shell/shell.module";
 import {VolumeModule} from "./volumes/volume.module";

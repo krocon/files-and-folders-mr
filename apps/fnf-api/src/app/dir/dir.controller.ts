@@ -1,6 +1,6 @@
 import {Controller, Post} from "@nestjs/common";
 import {MessageBody} from "@nestjs/websockets";
-import {DirEvent, DirPara} from "@fnf/fnf-data";
+import {DirEvent, DirPara} from "@fnf-data";
 import {DirService} from "./dir-service";
 
 

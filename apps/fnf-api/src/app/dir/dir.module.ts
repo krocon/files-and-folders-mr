@@ -2,7 +2,7 @@ import {DynamicModule, Module} from "@nestjs/common";
 import {DirGateway} from "./dir.gateway";
 import {DirService} from "./dir-service";
 import {DirController} from "./dir.controller";
-import {Config} from "@fnf/fnf-data";
+import {Config} from "@fnf-data";
 
 
 @Module({

@@ -1,7 +1,7 @@
 import {MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer} from "@nestjs/websockets";
 import {Server} from "socket.io";
 import {environment} from "../../environments/environment";
-import {ActionGatewayKeys as keys, FilePara} from "@fnf/fnf-data";
+import {ActionGatewayKeys as keys, FilePara} from "@fnf-data";
 import {Logger} from "@nestjs/common";
 import {FileService} from "./file.service";
 
