@@ -24,6 +24,7 @@ import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
 import {ActionExecutionService} from "../../../../service/action/action-execution.service";
 import {LookAndFeelService} from "../../../../service/look-and-feel.service";
+import {ConfigButtonsService} from "../../../../service/config-buttons.service";
 
 @Component({
   selector: 'app-button-panel',
@@ -53,41 +54,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   themeDefaultNames: string[] = [];
   themeCustomNames: string[] = [];
 
-  readonly buttons: { [key: string]: ButtonEnableStatesKey[] } = {
-    "default": [
-      'OPEN_COPY_DLG',
-      'OPEN_VIEW_DLG',
-      'OPEN_EDIT_DLG',
-      'OPEN_MOVE_DLG',
-      'OPEN_MKDIR_DLG',
-      'OPEN_DELETE_DLG'
-    ],
-    "shift": [
-      'OPEN_COPY_DLG',
-      'OPEN_VIEW_DLG',
-      'OPEN_EDIT_DLG',
-      'OPEN_RENAME_DLG',
-      'OPEN_MKDIR_DLG',
-      'OPEN_DELETE_DLG'
-    ],
-    "cmd": [
-      'OPEN_COPY_DLG',
-      'OPEN_VIEW_DLG',
-      'OPEN_EDIT_DLG',
-      'OPEN_MULTIRENAME_DLG',
-      'OPEN_MKDIR_DLG',
-      'OPEN_DELETE_DLG'
-    ],
-    "alt": [
-      'OPEN_COPY_DLG',
-      'OPEN_VIEW_DLG',
-      'OPEN_EDIT_DLG',
-      'OPEN_MULTIRENAME_DLG',
-      'OPEN_MKDIR_DLG',
-      'OPEN_DELETE_DLG'
-    ],
-
-  };
+  buttons: { [key: string]: ButtonEnableStatesKey[] } = {};
 
 
   menuItems0: ActionId[] = [
@@ -151,13 +118,14 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   private alive = true;
 
   // Current button list based on modifier keys
-  currentButtons: ButtonEnableStatesKey[] = this.buttons['default'];
+  currentButtons: ButtonEnableStatesKey[] = [];
 
   constructor(
     private readonly appService: AppService,
     private readonly matBottomSheet: MatBottomSheet,
     private readonly actionExecutionService: ActionExecutionService,
     private readonly lookAndFeelService: LookAndFeelService,
+    private readonly configButtonsService: ConfigButtonsService,
     private readonly cdr: ChangeDetectorRef,
   ) {
   }
@@ -189,6 +157,17 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
         takeWhile(() => this.alive)
       )
       .subscribe(arr => this.themeCustomNames = arr);
+
+    this.configButtonsService
+      .apiUrlButtons()
+      .pipe(
+        takeWhile(() => this.alive)
+      )
+      .subscribe(buttons => {
+        this.buttons = buttons;
+        this.currentButtons = this.buttons['default'];
+        this.cdr.markForCheck();
+      });
   }
 
   init() {

@@ -19,6 +19,9 @@ const getEnvironmentVariables = () => {
   const filetypeDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/defaults')
   const filetypeCustomPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/custom');
 
+  const buttonDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/button/defaults')
+  const buttonCustomPath = join(__dirname, '../../..', 'fnf-api/assets/button/custom');
+
   const toolDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/tool/defaults')
   const toolCustomPath = join(__dirname, '../../..', 'fnf-api/assets/tool/custom');
 
@@ -46,6 +49,9 @@ const getEnvironmentVariables = () => {
 
     filetypeDefaultsPath,
     filetypeCustomPath,
+
+    buttonDefaultsPath,
+    buttonCustomPath,
 
     toolDefaultsPath,
     toolCustomPath,
@@ -82,6 +88,34 @@ export const environment = {
   },
   get shortcutsCustomPath() {
     return getEnvironmentVariables().shortcutsCustomPath;
+  },
+
+  get colorDefaultsPath() {
+    return getEnvironmentVariables().colorDefaultsPath;
+  },
+  get colorCustomPath() {
+    return getEnvironmentVariables().colorCustomPath;
+  },
+
+  get filetypeDefaultsPath() {
+    return getEnvironmentVariables().filetypeDefaultsPath;
+  },
+  get filetypeCustomPath() {
+    return getEnvironmentVariables().filetypeCustomPath;
+  },
+
+  get buttonDefaultsPath() {
+    return getEnvironmentVariables().buttonDefaultsPath;
+  },
+  get buttonCustomPath() {
+    return getEnvironmentVariables().buttonCustomPath;
+  },
+
+  get toolDefaultsPath() {
+    return getEnvironmentVariables().toolDefaultsPath;
+  },
+  get toolCustomPath() {
+    return getEnvironmentVariables().toolCustomPath;
   },
   get llamaApiKey() {
     return getEnvironmentVariables().llamaApiKey;

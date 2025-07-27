@@ -24,6 +24,7 @@ import {CleanModule} from "./clean/clean.module";
 import {AiCompletionsModule} from "./ai/ai-completions.module";
 import {ShortcutModule} from "./config/shortcut/shortcut.module";
 import {FiletypeModule} from "./config/filetype/filetype.module";
+import {ButtonModule} from "./config/button/button.module";
 import {ToolModule} from "./config/tool/tool.module";
 import {ThemeModule} from "./config/theme/theme.module";
 import {SearchPatternModule} from "./config/search/search-pattern.module";
@@ -71,6 +72,7 @@ const config = new Config(
     ShortcutModule,
     ThemeModule,
     FiletypeModule,
+    ButtonModule,
     ToolModule,
     SearchPatternModule
   ],

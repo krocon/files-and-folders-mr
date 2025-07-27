@@ -19,6 +19,9 @@ const getEnvironmentVariables = () => {
   const filetypeDefaultsPath = join(__dirname, '..', 'src/assets/filetype/defaults')
   const filetypeCustomPath = join(__dirname, '..', 'src/assets/filetype/custom');
 
+  const buttonDefaultsPath = join(__dirname, '..', 'src/assets/button/defaults')
+  const buttonCustomPath = join(__dirname, '..', 'src/assets/button/custom');
+
   const searchPatternCustomPath = join(__dirname, '..', 'src/assets/search/defaults')
   const searchPatternDefaultsPath = join(__dirname, '..', 'src/assets/search/custom');
 
@@ -51,6 +54,9 @@ const getEnvironmentVariables = () => {
 
     filetypeDefaultsPath,
     filetypeCustomPath,
+
+    buttonDefaultsPath,
+    buttonCustomPath,
 
     searchPatternDefaultsPath,
     searchPatternCustomPath,
@@ -99,6 +105,13 @@ export const environment = {
   },
   get filetypeCustomPath() {
     return getEnvironmentVariables().filetypeCustomPath;
+  },
+
+  get buttonDefaultsPath() {
+    return getEnvironmentVariables().buttonDefaultsPath;
+  },
+  get buttonCustomPath() {
+    return getEnvironmentVariables().buttonCustomPath;
   },
 
   get searchPatternDefaultsPath() {
