@@ -37,10 +37,8 @@ export class DirController {
     // Add initial files to the processing queue
     files.push(...initialFiles);
 
-    // Initialize walkData with initial files
-    walkData.fileCount = initialFiles.filter(f => !f.isDir).length;
-    walkData.folderCount = initialFiles.filter(f => f.isDir).filter(f => this.matchesPattern(f, walkParaData.filePattern)).length;
-    walkData.sizeSum = initialFiles.map(f => f.size ?? 0).reduce((a, b) => a + b, 0);
+    // Initialize walkData with zero counts (files will be counted during processing)
+    // This prevents double counting of initial files
 
     // Process all files and directories
     while (files.length > 0) {

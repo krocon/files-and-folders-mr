@@ -80,8 +80,6 @@ export class WalkSocketService {
       });
 
     if (!this.isConnected) {
-      const pathes = data.files;
-      const filePattern = data.filePattern;
       this.pendingWalks.push({data, callback});
 
     } else {

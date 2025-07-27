@@ -29,12 +29,7 @@ export class FileWalker {
     this.files = [...initialFiles];
     this.STEPS_PER_MESSAGE = walkParaData.stepsPerMessage;
 
-    this.walkData = new WalkData(
-      initialFiles.filter(f => !f.isDir).length,
-      initialFiles.filter(f => f.isDir).filter(this.matchesPattern.bind(this)).length,
-      initialFiles.map(f => f.size ?? 0).reduce((a, b) => a + b, 0),
-      false
-    );
+    this.walkData = new WalkData(0, 0, 0, false);
     this.emitWithDelay(this.walkParaData.emmitDataKey, this.walkData, () => this.processNextFile());
   }
 
