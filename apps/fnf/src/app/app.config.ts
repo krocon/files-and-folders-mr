@@ -6,7 +6,7 @@ import {Socket, SOCKET_CONFIG_TOKEN, SocketIoConfig} from 'ngx-socket-io';
 
 
 import {routes} from './app.routes';
-import {ConfigService} from "./service/config.service";
+import {ConfigService} from "./service/config/config.service";
 import {SysinfoService} from "./service/sysinfo.service";
 import {environment} from "../environments/environment";
 import {LookAndFeelService} from "./service/look-and-feel.service";

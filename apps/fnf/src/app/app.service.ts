@@ -2,7 +2,7 @@ import {Injectable, Output} from "@angular/core";
 import {LookAndFeelService} from "./service/look-and-feel.service";
 import {ShortcutActionMapping, ShortcutService} from "./service/config/shortcut.service";
 import {SysinfoService} from "./service/sysinfo.service";
-import {ConfigService} from "./service/config.service";
+import {ConfigService} from "./service/config/config.service";
 import {FileSystemService} from "./service/file-system.service";
 import {
   AllinfoIf,
