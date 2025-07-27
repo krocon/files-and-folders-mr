@@ -1,0 +1,34 @@
+{
+  "default": [
+    "OPEN_COPY_DLG",
+    "OPEN_VIEW_DLG",
+    "OPEN_EDIT_DLG",
+    "OPEN_MOVE_DLG",
+    "OPEN_MKDIR_DLG",
+    "OPEN_DELETE_DLG"
+  ],
+  "shift": [
+    "OPEN_COPY_DLG",
+    "OPEN_VIEW_DLG",
+    "OPEN_EDIT_DLG",
+    "OPEN_RENAME_DLG",
+    "OPEN_MKDIR_DLG",
+    "OPEN_DELETE_DLG"
+  ],
+  "cmd": [
+    "OPEN_COPY_DLG",
+    "OPEN_VIEW_DLG",
+    "OPEN_EDIT_DLG",
+    "OPEN_MULTIRENAME_DLG",
+    "OPEN_MKDIR_DLG",
+    "OPEN_DELETE_DLG"
+  ],
+  "alt": [
+    "OPEN_COPY_DLG",
+    "OPEN_VIEW_DLG",
+    "OPEN_EDIT_DLG",
+    "OPEN_MULTIRENAME_DLG",
+    "OPEN_MKDIR_DLG",
+    "OPEN_DELETE_DLG"
+  ]
+}

@@ -59,6 +59,9 @@ export const environment = {
   filetypeExtensions: {
     apiUrl: prefix + "/api/filetypes"
   },
+  buttons: {
+    apiUrl: prefix + "/api/buttons"
+  },
   searchPatterns: {
     apiUrl: prefix + "/api/searchpatterns"
   },

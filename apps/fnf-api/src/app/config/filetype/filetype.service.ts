@@ -24,7 +24,7 @@ export class FiletypeService {
       return await this.loadDefaults();
 
     } catch (error) {
-      this.logger.error(`Failed to get filetype for filetype-extensions:`, error);
+      this.logger.error(`Failed to get filetype for data:`, error);
       throw error;
     }
   }
@@ -32,14 +32,14 @@ export class FiletypeService {
 
   async saveFiletype(filetype: FiletypeExtensionMapping): Promise<void> {
     try {
-      const customFilePath = join(this.customPath, `filetype-extensions.json`);
+      const customFilePath = join(this.customPath, `data.json`);
 
       // Create custom file from defaults if it doesn't exist
-      const defaultFilePath = join(this.defaultsPath, `filetype-extensions.json`);
+      const defaultFilePath = join(this.defaultsPath, `data.json`);
       try {
         const exists = existsSync(customFilePath);
         if (!exists) {
-          this.logger.warn(`Create custom file from defaults for filetype-extensions...`);
+          this.logger.warn(`Create custom file from defaults for data...`);
           await fs.copyFile(defaultFilePath, customFilePath);
         }
       } catch {
@@ -47,9 +47,9 @@ export class FiletypeService {
       }
 
       await fs.writeFile(customFilePath, JSON.stringify(filetype, null, 2));
-      this.logger.log(`Saved custom filetype for filetype-extensions`);
+      this.logger.log(`Saved custom filetype for data`);
     } catch (error) {
-      this.logger.error(`Failed to save filetype for filetype-extensions:`, error);
+      this.logger.error(`Failed to save filetype for data:`, error);
       throw error;
     }
   }
@@ -57,12 +57,12 @@ export class FiletypeService {
 
   async resetToDefaults(): Promise<FiletypeExtensionMapping> {
     try {
-      const customFilePath = join(this.customPath, `filetype-extensions.json`);
+      const customFilePath = join(this.customPath, `data.json`);
 
       // Remove custom file if it exists
       try {
         await fs.unlink(customFilePath);
-        this.logger.log(`Removed custom filetype for filetype-extensions`);
+        this.logger.log(`Removed custom filetype for data`);
       } catch (error) {
         // File might not exist, which is fine
         if (error.code !== 'ENOENT') {
@@ -73,7 +73,7 @@ export class FiletypeService {
       // Return defaults
       return await this.loadDefaults();
     } catch (error) {
-      this.logger.error(`Failed to reset filetype for filetype-extensions:`, error);
+      this.logger.error(`Failed to reset filetype for data:`, error);
       throw error;
     }
   }
@@ -85,7 +85,7 @@ export class FiletypeService {
 
   private async loadDefaults(): Promise<FiletypeExtensionMapping> {
     try {
-      const defaultFilePath = join(this.defaultsPath, `filetype-extensions.json`);
+      const defaultFilePath = join(this.defaultsPath, `data.json`);
       const content = await fs.readFile(defaultFilePath, 'utf-8');
       return JSON.parse(content);
     } catch (error) {
@@ -96,7 +96,7 @@ export class FiletypeService {
 
   private async loadCustom(): Promise<FiletypeExtensionMapping | null> {
     try {
-      const customFilePath = join(this.customPath, `filetype-extensions.json`);
+      const customFilePath = join(this.customPath, `data.json`);
       const content = await fs.readFile(customFilePath, 'utf-8');
       return JSON.parse(content);
 
