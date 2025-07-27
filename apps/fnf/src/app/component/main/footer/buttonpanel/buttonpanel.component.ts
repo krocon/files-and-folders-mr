@@ -1,4 +1,12 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Input,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -34,7 +42,8 @@ import {LookAndFeelService} from "../../../../service/look-and-feel.service";
 
   ],
   templateUrl: './buttonpanel.component.html',
-  styleUrls: ['./buttonpanel.component.css']
+  styleUrls: ['./buttonpanel.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonPanelComponent implements OnInit, OnDestroy {
 
@@ -61,7 +70,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
       'OPEN_MKDIR_DLG',
       'OPEN_DELETE_DLG'
     ],
-    "ctrl": [
+    "cmd": [
       'OPEN_COPY_DLG',
       'OPEN_VIEW_DLG',
       'OPEN_EDIT_DLG',
@@ -69,19 +78,11 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
       'OPEN_MKDIR_DLG',
       'OPEN_DELETE_DLG'
     ],
-    "cmd": [
-      'OPEN_COPY_DLG',
-      'OPEN_VIEW_DLG',
-      'OPEN_EDIT_DLG',
-      'OPEN_MOVE_DLG',
-      'OPEN_MKDIR_DLG',
-      'OPEN_DELETE_DLG'
-    ],
     "alt": [
       'OPEN_COPY_DLG',
       'OPEN_VIEW_DLG',
       'OPEN_EDIT_DLG',
-      'OPEN_MOVE_DLG',
+      'OPEN_MULTIRENAME_DLG',
       'OPEN_MKDIR_DLG',
       'OPEN_DELETE_DLG'
     ],
@@ -149,11 +150,15 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   tools: CmdIf[] = [];
   private alive = true;
 
+  // Current button list based on modifier keys
+  currentButtons: ButtonEnableStatesKey[] = this.buttons['default'];
+
   constructor(
     private readonly appService: AppService,
     private readonly matBottomSheet: MatBottomSheet,
     private readonly actionExecutionService: ActionExecutionService,
     private readonly lookAndFeelService: LookAndFeelService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -240,5 +245,39 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   getLabelByAction(action: ActionId): string {
     return FnfActionLabels.actionIdLabelMap[action] ?? action;
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    this.updateButtonList(event);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  onKeyUp(event: KeyboardEvent): void {
+    this.updateButtonList(event);
+  }
+
+  private updateButtonList(event: KeyboardEvent): void {
+    let newButtons: ButtonEnableStatesKey[];
+
+    // Check modifier keys in priority order
+    // if (event.ctrlKey) {
+    //   newButtons = this.buttons['ctrl'];
+    // } else
+    if (event.metaKey) { // Command key on Mac
+      newButtons = this.buttons['cmd'];
+    } else if (event.altKey) {
+      newButtons = this.buttons['alt'];
+    } else if (event.shiftKey) {
+      newButtons = this.buttons['shift'];
+    } else {
+      newButtons = this.buttons['default'];
+    }
+
+    // Only update and trigger change detection if the button list actually changed
+    if (this.currentButtons !== newButtons) {
+      this.currentButtons = newButtons;
+      this.cdr.markForCheck();
+    }
   }
 }

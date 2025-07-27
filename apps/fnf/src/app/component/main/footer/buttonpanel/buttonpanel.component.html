@@ -1,7 +1,7 @@
 <div class="button-panel-container">
   <div class="button-panel">
 
-    @for (id of buttons['default']; track id) {
+    @for (id of currentButtons; track id) {
       <button
           (click)="onButtonClick(id)"
           [disabled]="!buttonEnableStates[id]"
