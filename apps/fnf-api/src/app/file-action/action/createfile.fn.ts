@@ -13,16 +13,13 @@ export async function createfile(para: FilePara): Promise<DirEventIf[]> {
   /*
       "target": {
         "dir": "/Users/marckronberg/Filme.nosync",
-        "base": "mk",
+        "base": "mk.txt",
         "ext": ".txt"
     },
    */
 
-  const filename = para.target.base + para.target.ext;
+  const filename = para.target.base;
   const filePath = path.join(para.target.dir, filename);
-
-  console.log(JSON.stringify(para, null, 4))
-  console.log(filePath)
 
   // Check if file already exists
   if (await fse.pathExists(filePath)) {
@@ -33,7 +30,7 @@ export async function createfile(para: FilePara): Promise<DirEventIf[]> {
   await fse.ensureDir(para.target.dir);
   await fse.writeFile(filePath, '');
 
-  const targetItem = new FileItem(para.target.dir, para.target.base, para.target.ext, '', 0, false);
+  const targetItem = new FileItem(para.target.dir, para.target.base, para.target.ext, new Date().toISOString(), 0, false);
   const item1 = new DirEvent(para.target.dir, [targetItem], false, false, 1, "", "add");
   const item2 = new DirEvent(para.target.dir, [], false, false, 1, "", "unselectall");
   const item3 = new DirEvent(para.target.dir, [targetItem], false, false, 1, "", "focus");

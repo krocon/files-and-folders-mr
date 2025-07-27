@@ -10,7 +10,7 @@ export function filepath2FileItem(path: string): FileItemIf {
 
   // Split filename into base and extension
   const lastDotIndex = fileName.lastIndexOf('.');
-  const base = lastDotIndex === -1 ? fileName : fileName.substring(0, lastDotIndex);
+  const base = fileName;
   const ext = lastDotIndex === -1 ? '' : fileName.substring(lastDotIndex);
 
   // Create FileItem with the parsed components
