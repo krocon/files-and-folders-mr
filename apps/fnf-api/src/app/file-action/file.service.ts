@@ -9,6 +9,7 @@ import {unpack} from "./action/unpack.fn";
 import {dummy} from "./action/common/dummy.fn";
 import {FileCmd, FilePara, OnDoResponseType} from "@fnf-data";
 import {unpacklist} from "./action/unpack-list.fn";
+import {createfile} from "./action/createfile.fn";
 
 /**
  * Type definition for file operation functions
@@ -29,6 +30,7 @@ export class FileService {
   copy = copy.bind(this); // Promise<DirEventIf[]>
   move = move.bind(this); // Promise<DirEventIf[]>
   mkdir = mkdir.bind(this); // Promise<DirEventIf[]>
+  createfile = createfile.bind(this); // Promise<DirEventIf[]>
   remove = remove.bind(this); // Promise<DirEventIf[]>
   rename = rename.bind(this); // Promise<DirEventIf[]>
 
@@ -53,6 +55,7 @@ export class FileService {
     copy: this.copy,
     move: this.move,
     mkdir: this.mkdir,
+    createfile: this.createfile,
     remove: this.remove,
     rename: this.rename,
     open: this.open,

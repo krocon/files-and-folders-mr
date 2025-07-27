@@ -48,6 +48,7 @@ export const actionIds = [
   "OPEN_SHORTCUT_DLG",
   "OPEN_UNPACK_DLG",
   "OPEN_VIEW_DLG",
+  "OPEN_CREATE_FILE_DLG",
 
   "PAGEDOWN_PRESSED",
   "PAGEUP_PRESSED",

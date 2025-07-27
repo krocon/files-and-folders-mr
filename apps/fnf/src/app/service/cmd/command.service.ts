@@ -100,6 +100,22 @@ export class CommandService {
     );
   }
 
+  createQueueActionEventForCreateFile(para: {
+    dir: string;
+    base: string;
+    ext: string;
+    panelIndex: PanelIndex
+  }): QueueActionEvent {
+    return this.createActionEvent(
+      this.actionQueueService.ACTION_CREATE_FILE,
+      {} as FileItemIf,
+      {dir: para.dir, base: para.base, ext: para.ext} as FileItemIf,
+      para.panelIndex,
+      para.panelIndex,
+      false
+    );
+  }
+
   /**
    * Deletes a file or directory
    * @param para The parameters for the delete operation

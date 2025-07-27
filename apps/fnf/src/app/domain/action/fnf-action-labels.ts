@@ -1,6 +1,6 @@
 export class FnfActionLabels {
 
-  public static readonly actionIdLabelMap = {
+  public static readonly actionIdLabelMap: { [key: string]: string } = {
 
     COPY_2_CLIPBOARD_FULLNAMES: "Copy full names to clipboard",
     COPY_2_CLIPBOARD_NAMES: "Copy names to clipboard",
@@ -9,6 +9,7 @@ export class FnfActionLabels {
     OPEN_COPY_DLG: "Copy",
     OPEN_MOVE_DLG: "Move",
     OPEN_MKDIR_DLG: "Create Dir",
+    OPEN_CREATE_FILE_DLG: "Create File",
     OPEN_DELETE_DLG: "Delete",
     OPEN_EDIT_DLG: "Edit",
     OPEN_VIEW_DLG: "View",

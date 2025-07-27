@@ -233,6 +233,11 @@ export class ActionExecutionService {
     this.commandService.addActions([actionEvent]);
   }
 
+  callActionCreateFile(para: { dir: string; base: string; ext: string; panelIndex: PanelIndex }) {
+    const actionEvent = this.commandService.createQueueActionEventForCreateFile(para);
+    this.commandService.addActions([actionEvent]);
+  }
+
   /**
    * Wird auch vom appService mit parameter aufgerufen
    * @param data

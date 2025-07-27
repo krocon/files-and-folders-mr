@@ -10,7 +10,7 @@
   "shift": [
     "OPEN_COPY_DLG",
     "OPEN_VIEW_DLG",
-    "OPEN_EDIT_DLG",
+    "OPEN_CREATE_FILE_DLG",
     "OPEN_RENAME_DLG",
     "OPEN_MKDIR_DLG",
     "OPEN_DELETE_DLG"

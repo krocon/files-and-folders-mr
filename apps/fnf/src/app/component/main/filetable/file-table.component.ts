@@ -65,7 +65,6 @@ import {FnfActionLabels} from "../../../domain/action/fnf-action-labels";
 import {NotifyService} from "../../../service/cmd/notify-service";
 import {QueueNotifyEventIf} from "../../../domain/cmd/queue-notify-event.if";
 import {FocusLocalStorage} from "./focus-local-storage";
-import {MkdirDialogData} from "../../cmd/mkdir/mkdir-dialog.data";
 import {MkdirDialogResultData} from "../../cmd/mkdir/mkdir-dialog-result.data";
 import {MkdirDialogService} from "../../cmd/mkdir/mkdir-dialog.service";
 import {DirWalker} from "./dir-walker";
@@ -74,6 +73,10 @@ import {fileItemSorter} from "../../../common/fn/file-item-sorter.fn";
 import {WalkdirService} from "../../../common/walkdir/walkdir.service";
 import {ExtensionCellRendererComponent} from "./renderer/extension-cell-renderer.component";
 import {ActionExecutionService} from "../../../service/action/action-execution.service";
+import {CreateFileDialogService} from "../../cmd/createfile/create-file-dialog.service";
+import {CreateFileDialogResultData} from "../../cmd/createfile/create-file-dialog-result.data";
+import {CreateFileDialogData} from "../../cmd/createfile/create-file-dialog.data";
+import {MkdirDialogData} from "../../cmd/mkdir/mkdir-dialog.data";
 
 
 @Component({
@@ -193,6 +196,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly selectionLocalStorage: SelectionLocalStorage,
     private readonly focusLocalStorage: FocusLocalStorage,
     private readonly mkdirDialogService: MkdirDialogService,
+    private readonly createFileDialogService: CreateFileDialogService,
     private readonly walkdirService: WalkdirService,
   ) {
     this.columnDefs.forEach(def => {
@@ -571,6 +575,8 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else if (action === "OPEN_MKDIR_DLG") {
       this.openMakeDirDlg();
+    } else if (action === "OPEN_CREATE_FILE_DLG") {
+      this.openCreateFileDlg();
 
     } else if (action === 'OPEN_GOTO_ANYTHING_DLG') {
       const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
@@ -612,6 +618,91 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (action === "NAVIGATE_FORWARD") {
       this.appService.navigateForward();
     }
+  }
+
+  openCreateFileDlg() {
+    const panelIndex = this.panelIndex;
+    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
+    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
+    const focussedData = this.getFocussedData();
+
+    const existingFiles = this.bodyAreaModel
+      ? this.bodyAreaModel
+        .getAllRows()
+        .filter(item => item.isDir && item.base !== DOT_DOT)
+        .map(item => item.base)
+      : [];
+
+    const suggestedName = focussedData?.base ?? '';
+    const data = new CreateFileDialogData(dir, suggestedName, existingFiles);
+
+
+    this.createFileDialogService
+      .open(data, (result: CreateFileDialogResultData | undefined) => {
+        if (result && this.dirPara?.path) {
+          const para = {
+            dir: result.target.dir,
+            base: result.target.base,
+            ext: result.target.ext,
+            panelIndex
+          };
+          this.focusLocalStorage.persistFocusCriteria(this.panelIndex, this.dirPara.path, {
+            dir: para.dir,
+            base: para.base,
+            ext: para.ext,
+          });
+          this.actionExecutionService.callActionCreateFile(para);
+        }
+      });
+  }
+
+  openMakeDirDlg() {
+    const panelIndex = this.panelIndex;
+    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
+    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
+    const focussedData = this.getFocussedData();
+
+    // Get existing subdirectories for validation
+    const existingSubdirectories = this.bodyAreaModel
+      ? this.bodyAreaModel
+        .getFilteredRows()
+        .filter(item => item.isDir && item.base !== DOT_DOT)
+        .map(item => item.base)
+      : [];
+
+    // Try to detect sequential pattern and suggest next sequence
+    const suggestedName = this.getNextSequentialDirName() || (focussedData?.base ?? '');
+    const data = new MkdirDialogData(dir, suggestedName, existingSubdirectories);
+
+    this.mkdirDialogService
+      .open(data, (result: MkdirDialogResultData | undefined) => {
+        if (result && this.dirPara?.path) {
+          const para = {
+            dir: result.target.dir,
+            base: result.target.base,
+            panelIndex
+          };
+          this.focusLocalStorage.persistFocusCriteria(this.panelIndex, this.dirPara.path, {
+            dir: para.dir,
+            base: para.base
+          });
+          this.actionExecutionService.callActionMkDir(para);
+        }
+      });
+  }
+
+  setFocus2Index(index: number) {
+    this.bodyAreaModel.setFocusedRowIndex(index);
+    const partial = this.bodyAreaModel.getCriteriaFromFocussedRow();
+
+    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
+    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
+
+    this.focusLocalStorage.persistFocusCriteria(this.panelIndex, dir, partial);
+    this.tableApi?.repaint();
+
+    const selectedRows = this.selectionManager.getSelectionValue();
+    this.calcButtonStates(selectedRows);
   }
 
   /**
@@ -729,56 +820,6 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     const nextNumber = pattern.maxNumber + 1;
     const paddedNumber = nextNumber.toString().padStart(pattern.digits, '0');
     return `${pattern.prefix}${paddedNumber}`;
-  }
-
-  openMakeDirDlg() {
-    const panelIndex = this.panelIndex;
-    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
-    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
-    const focussedData = this.getFocussedData();
-
-    // Get existing subdirectories for validation
-    const existingSubdirectories = this.bodyAreaModel
-      ? this.bodyAreaModel
-        .getFilteredRows()
-        .filter(item => item.isDir && item.base !== DOT_DOT)
-        .map(item => item.base)
-      : [];
-
-    // Try to detect sequential pattern and suggest next sequence
-    const suggestedName = this.getNextSequentialDirName() || (focussedData?.base ?? '');
-    const data = new MkdirDialogData(dir, suggestedName, existingSubdirectories);
-
-
-    this.mkdirDialogService
-      .open(data, (result: MkdirDialogResultData | undefined) => {
-        if (result && this.dirPara?.path) {
-          const para = {
-            dir: result.target.dir,
-            base: result.target.base,
-            panelIndex
-          };
-          this.focusLocalStorage.persistFocusCriteria(this.panelIndex, this.dirPara.path, {
-            dir: para.dir,
-            base: para.base
-          });
-          this.actionExecutionService.callActionMkDir(para);
-        }
-      });
-  }
-
-  setFocus2Index(index: number) {
-    this.bodyAreaModel.setFocusedRowIndex(index);
-    const partial = this.bodyAreaModel.getCriteriaFromFocussedRow();
-
-    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
-    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
-
-    this.focusLocalStorage.persistFocusCriteria(this.panelIndex, dir, partial);
-    this.tableApi?.repaint();
-
-    const selectedRows = this.selectionManager.getSelectionValue();
-    this.calcButtonStates(selectedRows);
   }
 
   private jump2RowByBaseSearch(value: string) {

@@ -1,1 +1,11 @@
-export type FileCmd = 'copy' | 'move' | 'walk' | 'remove' | 'mkdir' | 'rename' | 'unpacklist' | 'unpack' | 'open';
+export type FileCmd =
+  'copy'
+  | 'move'
+  | 'walk'
+  | 'remove'
+  | 'mkdir'
+  | 'createfile'
+  | 'rename'
+  | 'unpacklist'
+  | 'unpack'
+  | 'open';

@@ -10,4 +10,5 @@ export class ButtonEnableStates {
   OPEN_RENAME_DLG = false;
   OPEN_UNPACK_DLG = false;
   OPEN_MULTIRENAME_DLG = false;
+  OPEN_CREATE_FILE_DLG = true;
 }

@@ -1,6 +1,7 @@
 export const queueActionEventTypes = [
   'refresh_panel',
   'mkdir',
+  'createfile',
   'copy',
   'move',
   'remove',
