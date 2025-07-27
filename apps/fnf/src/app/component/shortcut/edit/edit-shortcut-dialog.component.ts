@@ -15,7 +15,7 @@ import {FormsModule} from "@angular/forms";
 import {ActionIdLabelShortcut} from "../action-id-label-shortcut";
 import {ShortcutComponent} from "../../main/footer/buttonpanel/shortcut/shortcut.component";
 import {ShortcutService} from "../../../service/config/shortcut.service";
-import {BrowserOsType} from "@fnf/fnf-data";
+import {BrowserOsType} from "@fnf-data";
 
 export interface EditShortcutDialogData {
   actionItem: ActionIdLabelShortcut;

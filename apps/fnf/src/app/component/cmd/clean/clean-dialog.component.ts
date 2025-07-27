@@ -19,7 +19,7 @@ import {MatFormField, MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
-import {CleanDialogData, CleanResult, WalkData} from "@fnf/fnf-data";
+import {CleanDialogData, CleanResult, WalkData} from "@fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {SelectFolderDropdownComponent} from "../../common/selectfolderdropdown/select-folder-dropdown.component";

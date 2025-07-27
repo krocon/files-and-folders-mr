@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {Config} from "@fnf/fnf-data";
+import {Config} from "@fnf-data";
 import {HttpClient} from "@angular/common/http";
 
 

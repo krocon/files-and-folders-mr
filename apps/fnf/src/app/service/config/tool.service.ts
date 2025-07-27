@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {BrowserOsType, CmdIf, DirEventIf, FileItemIf} from "@fnf/fnf-data";
+import {BrowserOsType, CmdIf, DirEventIf, FileItemIf} from "@fnf-data";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {PanelManagementService} from "../panel/panel-management-service";

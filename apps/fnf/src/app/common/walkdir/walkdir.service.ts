@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {WalkParaData} from "@fnf/fnf-data";
+import {WalkParaData} from "@fnf-data";
 import {WalkCallback, WalkSocketService} from "./walk.socketio.service";
 import {WalkdirSyncService} from "./walkdir-sync.service";
 

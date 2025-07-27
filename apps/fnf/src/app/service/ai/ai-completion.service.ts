@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {ConvertPara, ConvertResponseType} from "@fnf/fnf-data";
+import {ConvertPara, ConvertResponseType} from "@fnf-data";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {QueueFileOperationParams} from "../../domain/cmd/queue-file-operation-params";

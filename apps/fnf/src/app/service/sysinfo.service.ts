@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AllinfoIf, SysinfoIf} from "@fnf/fnf-data";
+import {AllinfoIf, SysinfoIf} from "@fnf-data";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 

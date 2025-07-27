@@ -6,7 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {GotoAnythingDialogConfig} from "./goto-anything-dialog.config";
 import {GotoAnythingOptionData} from "./goto-anything-option.data";
 import {firstValueFrom, Observable} from "rxjs";
-import {FindFolderPara} from "@fnf/fnf-data";
+import {FindFolderPara} from "@fnf-data";
 import {HttpClient} from "@angular/common/http";
 
 @Injectable({

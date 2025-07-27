@@ -1,4 +1,4 @@
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 import {Options} from "./options";
 import {MultiRenameData} from "./multi-rename.data";
 import {MultiRenameOptions} from "./multi-rename-options";

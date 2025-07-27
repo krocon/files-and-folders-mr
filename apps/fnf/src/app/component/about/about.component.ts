@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from "@angular/core";
 import {takeWhile} from "rxjs/operators";
-import {AllinfoIf} from "@fnf/fnf-data";
+import {AllinfoIf} from "@fnf-data";
 import {SysinfoService} from "../../service/sysinfo.service";
 import {JsonPipe} from "@angular/common";
 import {FnfTextLogoComponent} from "../common/textlogo/fnf-text-logo.component";

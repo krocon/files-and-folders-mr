@@ -4,7 +4,7 @@ import {CopyOrMoveOrDeleteDialogComponent} from "./copy-or-move-or-delete-dialog
 import {takeWhile} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {CopyOrMoveOrDeleteDialogConfig} from "./copy-or-move-or-delete-dialog.config";
-import {FileItem, FileItemIf} from "@fnf/fnf-data";
+import {FileItem, FileItemIf} from "@fnf-data";
 
 @Injectable({
   providedIn: "root"

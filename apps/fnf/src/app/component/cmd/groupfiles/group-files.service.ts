@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {QueueFileOperationParams} from '../../../domain/cmd/queue-file-operation-params';
 import {GroupFilesData} from './data/group-files.data';
-import {FileItem, FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItem, FileItemIf, PanelIndex} from "@fnf-data";
 import {QueueActionEvent} from '../../../domain/cmd/queue-action-event';
 import {CommandService} from '../../../service/cmd/command.service';
 import {GroupFilesDialogData} from './data/group-files-dialog.data';

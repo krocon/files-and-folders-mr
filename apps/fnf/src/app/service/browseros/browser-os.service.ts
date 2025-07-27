@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BrowserOsType} from "@fnf/fnf-data";
+import {BrowserOsType} from "@fnf-data";
 
 
 @Injectable({

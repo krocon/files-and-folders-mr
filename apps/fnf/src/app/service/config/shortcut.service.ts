@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {ActionId, createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "@guiexpert/table";
 import {HttpClient} from "@angular/common/http";
-import {BrowserOsType} from "@fnf/fnf-data";
+import {BrowserOsType} from "@fnf-data";
 import {Observable, of} from "rxjs";
 import {catchError, map, tap} from "rxjs/operators";
 

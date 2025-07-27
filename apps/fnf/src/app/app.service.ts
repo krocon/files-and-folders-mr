@@ -17,7 +17,7 @@ import {
   PanelIndex,
   Sysinfo,
   SysinfoIf
-} from "@fnf/fnf-data";
+} from "@fnf-data";
 import {BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject} from "rxjs";
 import {tap} from "rxjs/operators";
 import {DockerRootDeletePipe} from "./component/main/header/tabpanel/filemenu/docker-root-delete.pipe";

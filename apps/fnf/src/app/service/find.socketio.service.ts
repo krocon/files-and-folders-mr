@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Socket} from "ngx-socket-io";
 import {Subscription} from "rxjs";
-import {DirEvent, FindData, FindDialogData} from "@fnf/fnf-data";
+import {DirEvent, FindData, FindDialogData} from "@fnf-data";
 
 export type FindCallback = (event: DirEvent) => void;
 

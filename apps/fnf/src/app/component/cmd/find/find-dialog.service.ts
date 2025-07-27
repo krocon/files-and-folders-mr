@@ -4,7 +4,7 @@ import {FindDialogComponent} from "./find-dialog.component";
 import {takeWhile} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {FindDialogConfig} from "./find-dialog.config";
-import {FindDialogData} from "@fnf/fnf-data";
+import {FindDialogData} from "@fnf-data";
 import {TypedDataService} from "../../../common/typed-data.service";
 
 @Injectable({

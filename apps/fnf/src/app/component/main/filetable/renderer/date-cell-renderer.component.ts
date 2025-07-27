@@ -1,7 +1,7 @@
 import {ComponentRendererIf} from "@guiexpert/angular-table";
 import {ChangeDetectionStrategy, Component} from "@angular/core";
 import {AreaIdent, AreaModelIf, RendererCleanupFnType} from "@guiexpert/table";
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 @Component({
   selector: 'date-cell-renderer',

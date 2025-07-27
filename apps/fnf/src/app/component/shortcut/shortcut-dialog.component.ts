@@ -19,7 +19,7 @@ import {ShortcutComponent} from "../main/footer/buttonpanel/shortcut/shortcut.co
 import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import {BrowserOsType} from "@fnf/fnf-data";
+import {BrowserOsType} from "@fnf-data";
 import {debounceTime, distinctUntilChanged, Subject, Subscription} from "rxjs";
 import {EditShortcutDialogComponent, EditShortcutDialogData} from "./edit/edit-shortcut-dialog.component";
 import {BrowserOsService} from "../../service/browseros/browser-os.service";

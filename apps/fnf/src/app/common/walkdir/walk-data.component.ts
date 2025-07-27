@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {WalkData} from '@fnf/fnf-data';
+import {WalkData} from '@fnf-data';
 import {FnfFileSizePipe} from '../fnf-file-size.pipe';
 
 @Component({

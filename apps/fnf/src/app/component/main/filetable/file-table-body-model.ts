@@ -1,5 +1,5 @@
 import {AreaModelObjectArrayWithColumndefs, ColumnDefIf} from "@guiexpert/table";
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 export class FileTableBodyModel extends AreaModelObjectArrayWithColumndefs<FileItemIf> {
 

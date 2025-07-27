@@ -5,7 +5,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {MatTooltip} from "@angular/material/tooltip";
-import {FiletypeExtensionsIf} from "@fnf/fnf-data";
+import {FiletypeExtensionsIf} from "@fnf-data";
 
 
 

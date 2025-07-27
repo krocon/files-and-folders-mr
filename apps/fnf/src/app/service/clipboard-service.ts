@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Clipboard} from '@angular/cdk/clipboard';
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 @Injectable({
   providedIn: 'root'

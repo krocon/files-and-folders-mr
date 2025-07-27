@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {FileItemIf, FindFolderPara} from "@fnf/fnf-data";
+import {FileItemIf, FindFolderPara} from "@fnf-data";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {RenderWrapperFactory, TableComponent} from "@guiexpert/angular-table";

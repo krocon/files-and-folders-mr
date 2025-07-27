@@ -42,7 +42,7 @@ import {
   isZipUrl,
   PanelIndex,
   ZipUrlInfo,
-} from "@fnf/fnf-data";
+} from "@fnf-data";
 import {fileNameComparator} from "./comparator/name-comparator";
 import {extComparator} from "./comparator/ext-comparator";
 import {sizeComparator} from "./comparator/size-comparator";

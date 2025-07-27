@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Output} from '@angular/core';
-import {FileItemIf, FindDialogData} from "@fnf/fnf-data";
+import {FileItemIf, FindDialogData} from "@fnf-data";
 import {CommonModule} from "@angular/common";
 import {path2FileItems} from "../../../../common/fn/path-to-file-items";
 import {Subject} from "rxjs";

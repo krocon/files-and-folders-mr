@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {ConvertResponseType, FileItemIf} from "@fnf/fnf-data";
+import {ConvertResponseType, FileItemIf} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
 import {MatFormField, MatLabel} from "@angular/material/input";

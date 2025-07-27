@@ -10,7 +10,7 @@ import {
   getZipUrlInfo,
   isZipUrl,
   SEARCH_SYMBOL
-} from "@fnf/fnf-data";
+} from "@fnf-data";
 import {map, mergeAll} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {fileItemSorter} from "../common/fn/file-item-sorter.fn";

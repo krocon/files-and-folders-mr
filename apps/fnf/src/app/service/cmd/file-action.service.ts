@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {ActionGatewayKeys as keys, DoEventIf, FilePara, OnDoResponseType} from "@fnf/fnf-data";
+import {ActionGatewayKeys as keys, DoEventIf, FilePara, OnDoResponseType} from "@fnf-data";
 import {Observable} from "rxjs";
 import {Socket} from "ngx-socket-io";
 

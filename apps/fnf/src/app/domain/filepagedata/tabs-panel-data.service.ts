@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {TypedDataService} from "../../common/typed-data.service";
 import {TabData} from "./data/tab.data";
 import {BehaviorSubject} from "rxjs";
-import {PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf-data";
 import {TabsPanelData} from "./data/tabs-panel.data";
 
 @Injectable({

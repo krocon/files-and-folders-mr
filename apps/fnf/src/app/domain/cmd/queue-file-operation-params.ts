@@ -1,4 +1,4 @@
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 
 /**
  * Parameters for file operations like copy, move, and rename

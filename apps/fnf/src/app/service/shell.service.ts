@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {ShellCmdIf, ShellCmdResultIf} from "@fnf/fnf-data";
+import {ShellCmdIf, ShellCmdResultIf} from "@fnf-data";
 
 
 @Injectable({

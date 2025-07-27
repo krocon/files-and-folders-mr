@@ -21,7 +21,7 @@ import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
 import {MkdirDialogResultData} from "./mkdir-dialog-result.data";
-import {FileItem} from "@fnf/fnf-data";
+import {FileItem} from "@fnf-data";
 import {FnfFilenameValidation} from "../../../common/fnf-filename-validation";
 
 @Component({

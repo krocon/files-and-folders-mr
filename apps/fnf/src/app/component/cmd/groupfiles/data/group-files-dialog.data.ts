@@ -1,4 +1,4 @@
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 
 import {GroupFilesData} from "./group-files.data";
 import {GroupFilesOptions} from "./group-files-options";

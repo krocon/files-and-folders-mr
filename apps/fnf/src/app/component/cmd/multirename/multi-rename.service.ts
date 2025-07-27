@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {QueueFileOperationParams} from '../../../domain/cmd/queue-file-operation-params';
 import {MultiRenameData} from './data/multi-rename.data';
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 import {QueueActionEvent} from '../../../domain/cmd/queue-action-event';
 import {CommandService} from '../../../service/cmd/command.service';
 import {ReplacementItem} from './data/replacement.item';

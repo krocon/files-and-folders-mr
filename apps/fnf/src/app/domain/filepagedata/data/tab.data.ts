@@ -1,4 +1,4 @@
-import {FindData} from "@fnf/fnf-data";
+import {FindData} from "@fnf-data";
 
 export class TabData {
 

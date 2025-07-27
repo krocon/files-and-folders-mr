@@ -11,7 +11,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {PanelIndex, Sysinfo, SysinfoIf} from "@fnf/fnf-data";
+import {PanelIndex, Sysinfo, SysinfoIf} from "@fnf-data";
 import {TabsPanelData} from "../../../../domain/filepagedata/data/tabs-panel.data";
 import {TabComponent} from "./tab/tab.component";
 import {MatMenuModule, MatMenuTrigger} from "@angular/material/menu";

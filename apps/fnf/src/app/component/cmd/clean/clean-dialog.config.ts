@@ -1,5 +1,5 @@
 import {MatDialogConfig} from "@angular/material/dialog";
-import {CleanDialogData} from "@fnf/fnf-data";
+import {CleanDialogData} from "@fnf-data";
 
 
 export class CleanDialogConfig extends MatDialogConfig {

@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {ButtonEnableStatesKey} from "@fnf/fnf-data";
+import {ButtonEnableStatesKey} from "@fnf-data";
 
 export type ButtonMapping = { [key: string]: ButtonEnableStatesKey[] };
 

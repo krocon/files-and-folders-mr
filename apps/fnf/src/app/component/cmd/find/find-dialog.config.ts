@@ -1,5 +1,5 @@
 import {MatDialogConfig} from "@angular/material/dialog";
-import {FindDialogData} from "@fnf/fnf-data";
+import {FindDialogData} from "@fnf-data";
 
 
 export class FindDialogConfig extends MatDialogConfig {

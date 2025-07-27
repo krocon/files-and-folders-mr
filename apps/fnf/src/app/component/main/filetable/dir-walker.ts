@@ -1,5 +1,5 @@
 import {TableApi} from "@guiexpert/table";
-import {FileItemIf, WalkData} from "@fnf/fnf-data";
+import {FileItemIf, WalkData} from "@fnf-data";
 import {equalFileItem} from "../../../common/fn/equal-file-item.fn";
 
 

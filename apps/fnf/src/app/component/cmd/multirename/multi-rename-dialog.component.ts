@@ -27,7 +27,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
 import {MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";

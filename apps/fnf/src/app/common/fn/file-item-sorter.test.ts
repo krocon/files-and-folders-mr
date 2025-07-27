@@ -1,5 +1,5 @@
 import {fileItemSorter} from './file-item-sorter.fn';
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 describe('fileItemSorter', () => {
   // Define DOT_DOT constant to match the one imported in the function

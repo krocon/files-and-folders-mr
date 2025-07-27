@@ -11,7 +11,7 @@ import {MkdirDialogService} from '../../cmd/mkdir/mkdir-dialog.service';
 import {WalkdirService} from '../../../common/walkdir/walkdir.service';
 import {ActionExecutionService} from '../../../service/action/action-execution.service';
 import {RenderWrapperFactory} from '@guiexpert/angular-table';
-import {FileItemIf, DOT_DOT} from '@fnf/fnf-data';
+import {FileItemIf, DOT_DOT} from '@fnf-data';
 
 describe('FileTableComponent - Pattern Detection', () => {
   let component: FileTableComponent;

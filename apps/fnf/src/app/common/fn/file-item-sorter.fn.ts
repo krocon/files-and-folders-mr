@@ -1,4 +1,4 @@
-import {DOT_DOT, FileItemIf} from "@fnf/fnf-data";
+import {DOT_DOT, FileItemIf} from "@fnf-data";
 
 
 export function fileItemSorter(row1: FileItemIf, row2: FileItemIf, f: number = 1) {

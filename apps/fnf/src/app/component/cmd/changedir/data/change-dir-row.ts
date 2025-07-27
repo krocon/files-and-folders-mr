@@ -1,4 +1,4 @@
-import {FileItem, FileItemIf} from '@fnf/fnf-data';
+import {FileItem, FileItemIf} from '@fnf-data';
 
 export class ChangeDirRow {
   constructor(

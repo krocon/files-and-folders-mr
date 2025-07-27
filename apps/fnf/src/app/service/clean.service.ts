@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {CleanDialogData, CleanResult} from "@fnf/fnf-data";
+import {CleanDialogData, CleanResult} from "@fnf-data";
 
 
 @Injectable({

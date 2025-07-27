@@ -11,7 +11,7 @@ import {MatFormField, MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
-import {FindDialogData} from "@fnf/fnf-data";
+import {FindDialogData} from "@fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {SearchTemplateDropdownComponent} from "../../common/searchtemplatedropdown/search-template-dropdown.component";

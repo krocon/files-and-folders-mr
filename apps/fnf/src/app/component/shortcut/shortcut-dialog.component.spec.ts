@@ -6,7 +6,7 @@ import {ShortcutDialogComponent} from './shortcut-dialog.component';
 import {ShortcutService} from '../../service/config/shortcut.service';
 import {ActionIdLabelShortcut} from './action-id-label-shortcut';
 import {EditShortcutDialogComponent} from './edit/edit-shortcut-dialog.component';
-import {BrowserOsType} from '@fnf/fnf-data';
+import {BrowserOsType} from '@fnf-data';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Component } from '@angular/core';
 

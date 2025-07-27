@@ -5,7 +5,7 @@ import {of, throwError} from 'rxjs';
 import {EditShortcutDialogComponent, EditShortcutDialogData} from './edit-shortcut-dialog.component';
 import {ShortcutService} from '../../../service/config/shortcut.service';
 import {ActionIdLabelShortcut} from '../action-id-label-shortcut';
-import {BrowserOsType} from '@fnf/fnf-data';
+import {BrowserOsType} from '@fnf-data';
 
 describe('EditShortcutDialogComponent', () => {
   let component: EditShortcutDialogComponent;

@@ -1,7 +1,7 @@
 import {ComponentRendererIf} from "@guiexpert/angular-table";
 import {ChangeDetectionStrategy, Component} from "@angular/core";
 import {AreaIdent, AreaModelIf, RendererCleanupFnType} from "@guiexpert/table";
-import {DOT_DOT, FileItemIf} from "@fnf/fnf-data";
+import {DOT_DOT, FileItemIf} from "@fnf-data";
 import {formatFileSize} from "../../../../common/fn/format-file-size";
 
 @Component({

@@ -4,7 +4,7 @@ import {CleanDialogComponent} from "./clean-dialog.component";
 import {takeWhile} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {CleanDialogConfig} from "./clean-dialog.config";
-import {CleanDialogData} from "@fnf/fnf-data";
+import {CleanDialogData} from "@fnf-data";
 import {TypedDataService} from "../../../common/typed-data.service";
 
 @Injectable({

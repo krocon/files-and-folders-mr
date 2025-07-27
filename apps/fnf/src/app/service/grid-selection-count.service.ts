@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {SelectionLabelData} from "../domain/filepagedata/data/selection-label.data";
-import {DOT_DOT, FileItemIf} from "@fnf/fnf-data";
+import {DOT_DOT, FileItemIf} from "@fnf-data";
 import {formatFileSize} from "../common/fn/format-file-size";
 import {SelectionEvent} from "../domain/filepagedata/data/selection-event";
 

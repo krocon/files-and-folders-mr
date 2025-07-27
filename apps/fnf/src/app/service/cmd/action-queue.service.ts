@@ -7,7 +7,7 @@ import {QueueProgress} from "../../domain/cmd/queue-progress";
 import {QueueIf} from "../../domain/cmd/queue.if";
 import {Queue} from "../../domain/cmd/queue";
 import {FileActionService} from "./file-action.service";
-import {DirEvent, OnDoResponseType} from "@fnf/fnf-data";
+import {DirEvent, OnDoResponseType} from "@fnf-data";
 import {NotifyService} from "./notify-service";
 import {QueueNotifyEvent} from "../../domain/cmd/queue-notify-event";
 

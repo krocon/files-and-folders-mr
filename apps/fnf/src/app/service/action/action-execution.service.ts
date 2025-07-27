@@ -3,7 +3,7 @@ import {ActionId} from "../../domain/action/fnf-action.enum";
 import {PanelManagementService} from "../panel/panel-management-service";
 import {ChangeDirDialogService} from "../../component/cmd/changedir/change-dir-dialog.service";
 import {ShellLocalStorage} from "../../component/main/footer/shellpanel/shell-local-storage";
-import {CleanDialogData, CmdIf, DOT_DOT, FileItemIf, FindData, FindDialogData, PanelIndex} from "@fnf/fnf-data";
+import {CleanDialogData, CmdIf, DOT_DOT, FileItemIf, FindData, FindDialogData, PanelIndex} from "@fnf-data";
 import {FileTableBodyModel} from "../../component/main/filetable/file-table-body-model";
 import {SelectionManagerForObjectModels} from "../../component/main/filetable/selection-manager";
 import {ClipboardService} from "../clipboard-service";

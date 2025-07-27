@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {TypedDataService} from "../../../common/typed-data.service";
-import {PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf-data";
 import {BehaviorSubject} from "rxjs";
 
 

@@ -1,4 +1,4 @@
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 
 export const equalFileItem = (a: FileItemIf, b: FileItemIf) => a.base === b.base && a.dir === b.dir;

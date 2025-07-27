@@ -1,4 +1,4 @@
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 import {fileItemSorter} from "../../../../common/fn/file-item-sorter.fn";
 
 

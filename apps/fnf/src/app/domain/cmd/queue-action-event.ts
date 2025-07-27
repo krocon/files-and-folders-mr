@@ -1,4 +1,4 @@
-import {FileItemIf, FilePara, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, FilePara, PanelIndex} from "@fnf-data";
 import {QueueStatus} from "./queue-status";
 import {QueueActionEventType} from "./queue-action-event.type";
 

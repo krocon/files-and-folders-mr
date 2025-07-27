@@ -30,7 +30,7 @@ import {
   TableOptions,
   TableOptionsIf
 } from "@guiexpert/table";
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 
 @Component({
   selector: "fnf-multi-mkdir-dialog",

@@ -1,4 +1,4 @@
-import {DOT_DOT, FileItemIf} from "@fnf/fnf-data";
+import {DOT_DOT, FileItemIf} from "@fnf-data";
 
 
 export function extComparator(value1: string, value2: string, row1?: FileItemIf, row2?: FileItemIf, f?: number): number {

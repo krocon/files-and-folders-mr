@@ -1,4 +1,4 @@
-import {PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf-data";
 
 export class ChangeDirEvent {
 

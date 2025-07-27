@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {FileItem, WalkData} from "@fnf/fnf-data";
+import {FileItem, WalkData} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
 import {FileOperation} from "./file-operation";

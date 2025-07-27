@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {WalkData, WalkParaData} from "@fnf/fnf-data";
+import {WalkData, WalkParaData} from "@fnf-data";
 import {WalkCallback} from "./walk.socketio.service";
 
 

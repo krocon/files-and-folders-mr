@@ -13,7 +13,7 @@ import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
 import {FiletypeExtensionsService} from "../../../service/config/filetype-extensions.service";
-import {FiletypeExtensionsIf} from "@fnf/fnf-data";
+import {FiletypeExtensionsIf} from "@fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {tap} from "rxjs/operators";

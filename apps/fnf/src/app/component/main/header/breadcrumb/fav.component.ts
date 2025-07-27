@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input} from '@angular/core';
-import {FileItemIf} from "@fnf/fnf-data";
+import {FileItemIf} from "@fnf-data";
 import {CommonModule} from "@angular/common";
 import {FavDataService} from "../../../../domain/filepagedata/service/fav-data.service";
 

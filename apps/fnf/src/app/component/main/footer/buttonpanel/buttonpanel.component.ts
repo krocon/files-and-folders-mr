@@ -17,7 +17,7 @@ import {AppService} from "../../../../app.service";
 import {ActionId} from "../../../../domain/action/fnf-action.enum";
 import {MatBottomSheet, MatBottomSheetConfig} from "@angular/material/bottom-sheet";
 import {TaskList} from "../../../task/task-list/task-list";
-import {ButtonEnableStates, ButtonEnableStatesKey, CmdIf} from "@fnf/fnf-data";
+import {ButtonEnableStates, ButtonEnableStatesKey, CmdIf} from "@fnf-data";
 import {MatList} from "@angular/material/list";
 import {TaskButtonComponent} from "../../../task/task-list/task-button.component";
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";

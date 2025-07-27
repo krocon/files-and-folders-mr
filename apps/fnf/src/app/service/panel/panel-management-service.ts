@@ -3,7 +3,7 @@ import {TabsPanelDataService} from "../../domain/filepagedata/tabs-panel-data.se
 import {PanelSelectionService} from "../../domain/filepagedata/service/panel-selection.service";
 import {combineLatest, Observable} from "rxjs";
 import {map} from "rxjs/operators";
-import {PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf-data";
 import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {TabData} from "../../domain/filepagedata/data/tab.data";
 

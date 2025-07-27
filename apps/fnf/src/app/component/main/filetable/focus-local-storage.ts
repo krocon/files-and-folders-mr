@@ -1,4 +1,4 @@
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 import {TypedDataService} from "../../../common/typed-data.service";
 import {Injectable} from "@angular/core";
 import {FileTableBodyModel} from "./file-table-body-model";

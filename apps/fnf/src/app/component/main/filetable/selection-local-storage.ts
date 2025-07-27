@@ -1,6 +1,6 @@
 import {SelectionManagerForObjectModels} from "./selection-manager";
 
-import {PanelIndex} from "@fnf/fnf-data";
+import {PanelIndex} from "@fnf-data";
 import {TypedDataService} from "../../../common/typed-data.service";
 import {Injectable} from "@angular/core";
 

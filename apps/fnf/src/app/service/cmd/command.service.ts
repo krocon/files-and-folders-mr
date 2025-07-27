@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {QueueActionEvent} from "../../domain/cmd/queue-action-event";
 import {QueueActionEventType} from "../../domain/cmd/queue-action-event.type";
-import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex} from "@fnf/fnf-data";
+import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex} from "@fnf-data";
 import {QueueStatus} from "../../domain/cmd/queue-status";
 import {ActionQueueService} from "./action-queue.service";
 import {QueueFileOperationParams} from "../../domain/cmd/queue-file-operation-params";

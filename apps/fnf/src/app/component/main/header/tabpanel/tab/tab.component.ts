@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FileItemIf, PanelIndex} from "@fnf/fnf-data";
+import {FileItemIf, PanelIndex} from "@fnf-data";
 import {TabData} from "../../../../../domain/filepagedata/data/tab.data";
 import {CommonModule} from "@angular/common";
 import {path2FileItems} from "../../../../../common/fn/path-to-file-items";

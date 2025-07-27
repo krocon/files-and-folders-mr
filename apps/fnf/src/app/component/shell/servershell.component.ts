@@ -12,7 +12,7 @@ import {Terminal} from '@xterm/xterm';
 import { CanvasAddon } from '@xterm/addon-canvas';
 import { FitAddon } from '@xterm/addon-fit';
 import { ServershellService } from "./service/servershell.service";
-import { ShellSpawnResultIf } from "@fnf/fnf-data";
+import {ShellSpawnResultIf} from "@fnf-data";
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
