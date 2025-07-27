@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  version: '27.07.2025 15:29',
-  commitHash: 'f8e7f6b',
+  version: '27.07.2025 18:05',
+  commitHash: 'cd74250',
 
   config: {
     apiUrl: "/api/config"
@@ -43,7 +43,7 @@ export const environment = {
   shellAutocomplete: {
     autocompleteUrl: "/api/shell-autocomplete"
   },
-  lookAndFeel: {
+  configThemes: {
     apiUrl: "/api/themes"
   },
   shortcut: {

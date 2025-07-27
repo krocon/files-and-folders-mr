@@ -5,7 +5,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
 import {MatDividerModule} from "@angular/material/divider";
 import {FiletypeExtensionsIf} from "@fnf/fnf-data";
-import {SearchPatternsService} from "../../../service/search-patterns.service";
+import {SearchPatternsService} from "../../../service/config/search-patterns.service";
 
 
 @Component({

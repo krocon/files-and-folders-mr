@@ -12,7 +12,7 @@ import {MatError, MatFormField, MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
-import {FiletypeExtensionsService} from "../../../service/filetype-extensions.service";
+import {FiletypeExtensionsService} from "../../../service/config/filetype-extensions.service";
 import {FiletypeExtensionsIf} from "@fnf/fnf-data";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";

@@ -1,6 +1,6 @@
 import {Injectable, Output} from "@angular/core";
 import {LookAndFeelService} from "./service/look-and-feel.service";
-import {ShortcutActionMapping, ShortcutService} from "./service/shortcut.service";
+import {ShortcutActionMapping, ShortcutService} from "./service/config/shortcut.service";
 import {SysinfoService} from "./service/sysinfo.service";
 import {ConfigService} from "./service/config.service";
 import {FileSystemService} from "./service/file-system.service";
@@ -29,7 +29,7 @@ import {ActionId} from "./domain/action/fnf-action.enum";
 import {TabData} from "./domain/filepagedata/data/tab.data";
 import {FileTableBodyModel} from "./component/main/filetable/file-table-body-model";
 import {SelectionManagerForObjectModels} from "./component/main/filetable/selection-manager";
-import {ToolService} from "./service/tools/tool.service";
+import {ToolService} from "./service/config/tool.service";
 import {ActionShortcutPipe} from "./common/action-shortcut.pipe";
 import {FindSocketService} from "./service/find.socketio.service";
 import {TabsPanelData} from "./domain/filepagedata/data/tabs-panel.data";
@@ -372,10 +372,6 @@ export class AppService {
     this.shortcutService.debug();
   }
 
-
-  setTheme(theme: string) {
-    this.lookAndFeelService.loadAndApplyLookAndFeel(theme);
-  }
 
   getActionByKeyEvent(keyboardEvent: KeyboardEvent): ActionId {
     return this.shortcutService.getActionByKeyEvent(keyboardEvent) as ActionId;

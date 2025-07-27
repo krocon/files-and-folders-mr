@@ -11,7 +11,7 @@ import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatSelectModule} from "@angular/material/select";
 import {MatOptionModule} from "@angular/material/core";
-import {ShortcutService} from "../../service/shortcut.service";
+import {ShortcutService} from "../../service/config/shortcut.service";
 import {actionIds, PSEUDO_ACTIONS} from "../../domain/action/fnf-action.enum";
 import {ActionIdLabelShortcut} from "./action-id-label-shortcut";
 import {FnfActionLabels} from "../../domain/action/fnf-action-labels";

@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core";
-import {ShortcutActionMapping, ShortcutService} from "../service/shortcut.service";
+import {ShortcutActionMapping, ShortcutService} from "../service/config/shortcut.service";
 
 
 @Pipe({name: "fnfShortcut", pure: false})

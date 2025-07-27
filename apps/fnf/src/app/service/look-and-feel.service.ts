@@ -1,12 +1,9 @@
 import {Inject, Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
-import {HttpClient} from "@angular/common/http";
-import {LookAndFeelData} from "../domain/look-and-feel.data";
 import {DOCUMENT} from "@angular/common";
 import {TypedDataService} from "../common/typed-data.service";
 import {Socket} from "ngx-socket-io";
-import {CssColors} from "@fnf-data";
-
+import {ColorDataIf, CssColors} from "@fnf-data";
+import {ConfigThemesService} from "./config/config-themes.service";
 
 
 @Injectable({
@@ -19,21 +16,14 @@ export class LookAndFeelService {
   private static readonly innerService =
     new TypedDataService<string>("theme", LookAndFeelService.defaultTheme);
 
-  private static readonly config = {
-    apiUrl: "/api/themes"
-  };
-
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
-    private readonly httpClient: HttpClient,
+    private readonly configThemesService: ConfigThemesService,
     private readonly socket: Socket
   ) {
   }
 
-  static forRoot(config: { [key: string]: string }) {
-    Object.assign(LookAndFeelService.config, config);
-  }
 
   async init() {
     const themeName = this.getTheme();
@@ -59,7 +49,7 @@ export class LookAndFeelService {
     this.document.body.className = ""; // clear all
     this.document.body.classList.add(theme); // add one
 
-    const subscription = this.loadTheme(theme)
+    const subscription = this.configThemesService.loadTheme(theme)
       .subscribe(laf => {
         // this.lookAndFeelData = laf;
         this.applyLookAndFeel(laf);
@@ -68,20 +58,6 @@ export class LookAndFeelService {
       });
   }
 
-  loadTheme(theme: string): Observable<LookAndFeelData> {
-    const url = `${LookAndFeelService.config.apiUrl}/${theme}`;
-    return this.httpClient.get<LookAndFeelData>(url);
-  }
-
-  loadDefaultNames(): Observable<string[]> {
-    const url = `${LookAndFeelService.config.apiUrl}/getdefaultnames`;
-    return this.httpClient.get<string[]>(url);
-  }
-
-  loadCustomNames(): Observable<string[]> {
-    const url = `${LookAndFeelService.config.apiUrl}/customnames`;
-    return this.httpClient.get<string[]>(url);
-  }
 
   emitColors(colors: CssColors) {
     this.socket.emit("updateCss", colors);
@@ -96,7 +72,7 @@ export class LookAndFeelService {
     }
   }
 
-  private applyLookAndFeel(laf: LookAndFeelData) {
+  private applyLookAndFeel(laf: ColorDataIf) {
     if (laf?.colors) {
       this.applyColors(laf?.colors);
       this.socket.emit("updateCss", laf?.colors);
@@ -104,7 +80,7 @@ export class LookAndFeelService {
     }
   }
 
-  private applyToMetaTag(laf: LookAndFeelData) {
+  private applyToMetaTag(laf: ColorDataIf) {
     // we set the color theme meta tag:
     [
       "theme-color",

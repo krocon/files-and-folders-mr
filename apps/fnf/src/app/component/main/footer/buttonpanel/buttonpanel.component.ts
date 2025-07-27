@@ -24,7 +24,8 @@ import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
 import {ActionExecutionService} from "../../../../service/action/action-execution.service";
 import {LookAndFeelService} from "../../../../service/look-and-feel.service";
-import {ConfigButtonsService} from "../../../../service/config-buttons.service";
+import {ConfigButtonsService} from "../../../../service/config/config-buttons.service";
+import {ConfigThemesService} from "../../../../service/config/config-themes.service";
 
 @Component({
   selector: 'app-button-panel',
@@ -125,6 +126,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     private readonly matBottomSheet: MatBottomSheet,
     private readonly actionExecutionService: ActionExecutionService,
     private readonly lookAndFeelService: LookAndFeelService,
+    private readonly configThemesService: ConfigThemesService,
     private readonly configButtonsService: ConfigButtonsService,
     private readonly cdr: ChangeDetectorRef,
   ) {
@@ -144,14 +146,14 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => this.init());
 
-    this.lookAndFeelService
+    this.configThemesService
       .loadDefaultNames()
       .pipe(
         takeWhile(() => this.alive)
       )
       .subscribe(arr => this.themeDefaultNames = arr);
 
-    this.lookAndFeelService
+    this.configThemesService
       .loadCustomNames()
       .pipe(
         takeWhile(() => this.alive)
@@ -201,7 +203,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   }
 
   setTheme(theme: string) {
-    this.appService.setTheme(theme);
+    this.lookAndFeelService.loadAndApplyLookAndFeel(theme);
   }
 
 

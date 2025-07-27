@@ -26,7 +26,7 @@ import {TabData} from "../../domain/filepagedata/data/tab.data";
 import {CleanDialogService} from "../../component/cmd/clean/clean-dialog.service";
 import {FindDialogService} from "../../component/cmd/find/find-dialog.service";
 import {ShortcutDialogService} from "../../component/shortcut/shortcut-dialog.service";
-import {ToolService} from "../tools/tool.service";
+import {ToolService} from "../config/tool.service";
 import {FindSocketService} from "../find.socketio.service";
 import {CopyOrMoveOrDeleteDialogData} from "../../component/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.data";
 import {

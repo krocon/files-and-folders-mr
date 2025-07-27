@@ -6,8 +6,8 @@ const prefix = 'http://localhost:3333';
 
 export const environment = {
   production: false,
-  version: '27.07.2025 15:29',
-  commitHash: 'f8e7f6b',
+  version: '27.07.2025 18:05',
+  commitHash: 'cd74250',
 
   config: {
     apiUrl: prefix + "/api/config"
@@ -49,7 +49,7 @@ export const environment = {
     autocompleteUrl: prefix + "/api/shell-autocomplete"
   },
 
-  lookAndFeel: {
+  configThemes: {
     apiUrl: prefix + "/api/themes"
   },
 

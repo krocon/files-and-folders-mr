@@ -14,9 +14,9 @@ import {LookAndFeelService} from "./service/look-and-feel.service";
 import {FileSystemService} from "./service/file-system.service";
 import {FileActionService} from "./service/cmd/file-action.service";
 import {GotoAnythingDialogService} from "./component/cmd/gotoanything/goto-anything-dialog.service";
-import {ToolService} from "./service/tools/tool.service";
-import {FiletypeExtensionsService} from "./service/filetype-extensions.service";
-import {ConfigButtonsService} from "./service/config-buttons.service";
+import {ToolService} from "./service/config/tool.service";
+import {FiletypeExtensionsService} from "./service/config/filetype-extensions.service";
+import {ConfigButtonsService} from "./service/config/config-buttons.service";
 import {AiCompletionService} from "./service/ai/ai-completion.service";
 import {GlobValidatorService} from "./service/glob-validator.service";
 import {CleanService} from "./service/clean.service";
@@ -28,37 +28,42 @@ import {EditService} from "./service/edit.service";
 import {WalkdirService} from "./common/walkdir/walkdir.service";
 import {WalkdirSyncService} from "./common/walkdir/walkdir-sync.service";
 import {WalkSocketService} from "./common/walkdir/walk.socketio.service";
-import {ShortcutService} from "./service/shortcut.service";
-import {SearchPatternsService} from "./service/search-patterns.service";
+import {ShortcutService} from "./service/config/shortcut.service";
+import {SearchPatternsService} from "./service/config/search-patterns.service";
+import {ConfigThemesService} from "./service/config/config-themes.service";
 
 
+function init() {
 // Set config to services:
-ConfigService.forRoot(environment.config);
-SysinfoService.forRoot(environment.sysinfo);
-LookAndFeelService.forRoot(environment.lookAndFeel);
-ShortcutService.forRoot(environment.shortcut);
-FileSystemService.forRoot(environment.fileSystem);
-FileActionService.forRoot(environment.fileAction);
-GotoAnythingDialogService.forRoot(environment.gotoAnything);
-ToolService.forRoot(environment.tool);
-FiletypeExtensionsService.forRoot(environment.filetypeExtensions);
-ConfigButtonsService.forRoot(environment.buttons);
-SearchPatternsService.forRoot(environment.searchPatterns);
-AiCompletionService.forRoot(environment.multiRename);
-GlobValidatorService.forRoot(environment.checkGlob);
-CleanService.forRoot(environment.clean);
-ShellService.forRoot(environment.shell);
-ShellAutocompleteService.forRoot(environment.shellAutocomplete);
-ServershellService.forRoot(environment.shell);
-ServershellAutocompleteService.forRoot(environment.shellAutocomplete);
-EditService.forRoot(environment.edit);
+  ConfigService.forRoot(environment.config);
+  SysinfoService.forRoot(environment.sysinfo);
+  ConfigThemesService.forRoot(environment.configThemes);
+  ShortcutService.forRoot(environment.shortcut);
+  FileSystemService.forRoot(environment.fileSystem);
+  FileActionService.forRoot(environment.fileAction);
+  GotoAnythingDialogService.forRoot(environment.gotoAnything);
+  ToolService.forRoot(environment.tool);
+  FiletypeExtensionsService.forRoot(environment.filetypeExtensions);
+  ConfigButtonsService.forRoot(environment.buttons);
+  SearchPatternsService.forRoot(environment.searchPatterns);
+  AiCompletionService.forRoot(environment.multiRename);
+  GlobValidatorService.forRoot(environment.checkGlob);
+  CleanService.forRoot(environment.clean);
+  ShellService.forRoot(environment.shell);
+  ShellAutocompleteService.forRoot(environment.shellAutocomplete);
+  ServershellService.forRoot(environment.shell);
+  ServershellAutocompleteService.forRoot(environment.shellAutocomplete);
+  EditService.forRoot(environment.edit);
 
-WalkdirService.forRoot(environment.walkdir);
-WalkdirSyncService.forRoot(environment.walkdir);
-WalkSocketService.forRoot(environment.walkdir);
+  WalkdirService.forRoot(environment.walkdir);
+  WalkdirSyncService.forRoot(environment.walkdir);
+  WalkSocketService.forRoot(environment.walkdir);
 
-console.info('Files and Folders');
-console.info('        > Services configured');
+  console.info('Files and Folders');
+  console.info('        > Services configured');
+}
+
+init();
 
 const config: SocketIoConfig = {
   url: "http://localhost:3334",
