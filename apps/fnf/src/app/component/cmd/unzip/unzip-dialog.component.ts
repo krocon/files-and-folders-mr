@@ -9,7 +9,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatError, MatFormField} from "@angular/material/input";
+import {MatError, MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -30,6 +30,8 @@ import {UnzipDialogResultData} from "./unzip-dialog-result.data";
     MatButton,
     MatDialogActions,
     MatFormField,
+    MatInput,
+    MatLabel,
     FnfAutofocusDirective
   ],
   styleUrls: ["./unzip-dialog.component.css"]
@@ -51,18 +53,22 @@ export class UnzipDialogComponent {
 
     this.formGroup = this.formBuilder.group(
       {
-        target: new FormControl(data.targetDir)
+        target: new FormControl(data.targetDir),
+        password: new FormControl('')
       }
     );
   }
 
 
   onOkClicked() {
-    let target = this.formGroup.getRawValue().target;
+    let formValue = this.formGroup.getRawValue();
+    let target = formValue.target;
+    let password = formValue.password;
     this.dialogRef
       .close(new UnzipDialogResultData(
         this.data.source,
-        target
+        target,
+        password
       ));
   }
 

@@ -1,5 +1,5 @@
 import {unpack} from './unpack.fn';
-import {FileItem, FilePara} from '@fnf-data';
+import {FileItem, FilePara, UnpackParaData} from '@fnf-data';
 import * as fse from 'fs-extra';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -107,11 +107,10 @@ describe('unpack', () => {
   it('should unpack a zip file to the target directory', async () => {
     // Arrange
     const source = new FileItem(sourceDir, zipFile, 'zip');
-    const target = new FileItem(targetDir, '', '');
-    const filePara = new FilePara(source, target, 0, 0, 'unpack');
+    const unpackPara = new UnpackParaData(source, targetDir, '');
 
     // Act
-    const result = await unpack(filePara);
+    const result = await unpack(unpackPara);
 
     // Assert
     expect(result).toBeDefined();
@@ -121,7 +120,7 @@ describe('unpack', () => {
     // Check if extractFull was called with the correct parameters
     expect(require('node-7z').extractFull).toHaveBeenCalledWith(
       path.join(sourceDir, zipFile),
-      path.join(targetDir, ''),
+      targetDir,
       {$bin: '/mock/path/to/7za'}
     );
 
@@ -137,11 +136,11 @@ describe('unpack', () => {
     // Arrange
     const subdir = 'extracted';
     const source = new FileItem(sourceDir, zipFile, 'zip');
-    const target = new FileItem(targetDir, subdir, '');
-    const filePara = new FilePara(source, target, 0, 0, 'unpack');
+    const targetPath = path.join(targetDir, subdir);
+    const unpackPara = new UnpackParaData(source, targetPath, '');
 
     // Act
-    const result = await unpack(filePara);
+    const result = await unpack(unpackPara);
 
     // Assert
     expect(result).toBeDefined();
@@ -149,7 +148,7 @@ describe('unpack', () => {
     // Check if extractFull was called with the correct target directory
     expect(require('node-7z').extractFull).toHaveBeenCalledWith(
       path.join(sourceDir, zipFile),
-      path.join(targetDir, subdir),
+      targetPath,
       {$bin: '/mock/path/to/7za'}
     );
   });

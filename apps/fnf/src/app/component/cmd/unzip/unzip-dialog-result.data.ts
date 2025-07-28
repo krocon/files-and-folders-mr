@@ -5,6 +5,7 @@ export class UnzipDialogResultData {
   constructor(
     public source: FileItemIf,
     public target: string,
+    public password: string,
   ) {
   }
 }

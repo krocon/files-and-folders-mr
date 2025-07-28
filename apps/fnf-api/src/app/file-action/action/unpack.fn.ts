@@ -1,4 +1,4 @@
-import {DirEvent, DirEventIf, FilePara, fixPath} from "@fnf-data";
+import {DirEvent, DirEventIf, FilePara, fixPath, UnpackParaData} from "@fnf-data";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -38,28 +38,28 @@ async function ensure7zipExecutable(binaryPath: string): Promise<void> {
  * Extracts the contents of an archive file to a target directory
  *
  * This function extracts all files and directories from an archive based on the source and target
- * information in the FilePara object. It uses the node-7z library with 7zip-bin to handle the extraction.
+ * information in the UnpackParaData object. It uses the node-7z library with 7zip-bin to handle the extraction.
  *
- * The source parameter specifies the archive file to extract, and the target parameter specifies 
- * the directory where the contents should be extracted to.
+ * The source parameter specifies the archive file to extract, the target parameter specifies
+ * the directory where the contents should be extracted to, and the password parameter provides
+ * the password for encrypted archives.
  *
- * @param para - The FilePara object containing source (archive file) and target (extraction directory) information
+ * @param para - The UnpackParaData object containing source (archive file), target (extraction directory), and password information
  * @returns A Promise resolving to an empty array of DirEventIf objects
  * @throws Error if the source or target is invalid, or if the extraction fails
  */
-export async function unpack(para: FilePara): Promise<DirEventIf[]> {
+export async function unpack(para: UnpackParaData): Promise<DirEventIf[]> {
   if (!para || !para.source || !para.target) {
     throw new Error("Invalid argument exception!");
   }
-  const ptarget = para.target;
   const psource = para.source;
+  const targetPath = para.target;
+  const password = para.password;
 
   const sourceUrl = fixPath(
     path.join(psource.dir, "/", psource.base ? psource.base : "")
   );
-  const targetUrl = fixPath(
-    path.join(ptarget.dir, ptarget.base ? ptarget.base : "")
-  );
+  const targetUrl = fixPath(targetPath);
 
   fse.ensureDirSync(targetUrl);
 
@@ -73,6 +73,11 @@ export async function unpack(para: FilePara): Promise<DirEventIf[]> {
       let options: ExtractFullOptions = {
         $bin: pathTo7zip
       };
+
+      // Add password if provided
+      if (password && password.trim() !== '') {
+        options.password = password;
+      }
       const stream = extractFull(sourceUrl, targetUrl, options);
 
       stream.on('end', () => {

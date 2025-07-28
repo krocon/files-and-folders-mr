@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {QueueActionEvent} from "../../domain/cmd/queue-action-event";
 import {QueueActionEventType} from "../../domain/cmd/queue-action-event.type";
-import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex} from "@fnf-data";
+import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex, UnpackParaData} from "@fnf-data";
 import {QueueStatus} from "../../domain/cmd/queue-status";
 import {ActionQueueService} from "./action-queue.service";
 import {QueueFileOperationParams} from "../../domain/cmd/queue-file-operation-params";
@@ -102,13 +102,18 @@ export class CommandService {
   }
 
   createQueueActionEventForUnzip(para: UnzipDialogResultData): QueueActionEvent {
-    return this.createActionEvent(
-      this.actionQueueService.ACTION_UNPACK,
+    const unpackPara = new UnpackParaData(
       para.source,
-      {dir: para.target, base: '', isDir: true} as FileItemIf,
-      0,
-      1,
-      false
+      para.target,
+      para.password
+    );
+
+    return new QueueActionEvent(
+      1, // targetPanelIndex
+      unpackPara as any, // Use UnpackParaData instead of FilePara
+      this.ACTION_STATUS_NEW,
+      false,
+      this.actionId++
     );
   }
 
