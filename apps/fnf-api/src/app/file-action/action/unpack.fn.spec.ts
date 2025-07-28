@@ -2,12 +2,20 @@ import {unpack} from './unpack.fn';
 import {FileItem, FilePara} from '@fnf-data';
 import * as fse from 'fs-extra';
 import * as path from 'path';
-import * as StreamZip from 'node-stream-zip';
+import {extractFull} from 'node-7z';
 import {cleanupTestEnvironment, restoreTestEnvironment, setupTestEnvironment} from './common/test-setup-helper';
+
+// Mock 7zip-bin
+jest.mock('7zip-bin', () => ({
+  default: {
+    path7za: '/mock/path/to/7za'
+  },
+  path7za: '/mock/path/to/7za'
+}));
 
 /**
  * Test suite for the unpack function
- * This function extracts the contents of a zip file to a target directory
+ * This function extracts the contents of an archive file to a target directory using node-7z
  */
 describe('unpack', () => {
   // Define test paths
@@ -16,9 +24,8 @@ describe('unpack', () => {
   const targetDir = path.join(testDir, 'target');
   const zipFile = 'test-archive.zip';
 
-  // Mock StreamZip
-  let mockExtract: jest.Mock;
-  let mockClose: jest.Mock;
+  // Mock node-7z stream
+  let mockStream: any;
 
   // Setup and teardown for all tests
   beforeAll(async () => {
@@ -40,27 +47,22 @@ describe('unpack', () => {
     const zipFilePath = path.join(sourceDir, zipFile);
     await fse.writeFile(zipFilePath, 'Mock zip file content');
 
-    // Mock StreamZip.async
-    mockExtract = jest.fn().mockResolvedValue(undefined);
-    mockClose = jest.fn().mockResolvedValue(undefined);
+    // Mock node-7z extractFull
+    mockStream = {
+      on: jest.fn((event: string, callback: Function) => {
+        if (event === 'end') {
+          // Simulate successful extraction by calling the callback immediately
+          setTimeout(() => callback(), 0);
+        }
+        return mockStream;
+      })
+    };
 
-    jest.spyOn(StreamZip, 'async').mockImplementation(() => {
-      return {
-        extract: mockExtract,
-        close: mockClose,
-        entries: jest.fn().mockResolvedValue({}),
-        entriesCount: 0,
-        comment: '',
-        entry: jest.fn(),
-        entryData: jest.fn(),
-        stream: jest.fn(),
-        on: jest.fn()
-      } as any;
-    });
+    jest.spyOn(require('node-7z'), 'extractFull').mockReturnValue(mockStream);
   });
 
   afterEach(async () => {
-    // Restore the original StreamZip.async
+    // Restore all mocks
     jest.restoreAllMocks();
   });
 
@@ -81,14 +83,16 @@ describe('unpack', () => {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(0); // unpack returns an empty array
 
-    // Check if StreamZip.async was called with the correct file
-    expect(StreamZip.async).toHaveBeenCalledWith({file: path.join(sourceDir, zipFile)});
+    // Check if extractFull was called with the correct parameters
+    expect(require('node-7z').extractFull).toHaveBeenCalledWith(
+      path.join(sourceDir, zipFile),
+      path.join(targetDir, ''),
+      {$bin: '/mock/path/to/7za'}
+    );
 
-    // Check if extract was called with the correct target directory
-    expect(mockExtract).toHaveBeenCalledWith(null, path.join(targetDir, ''));
-
-    // Check if close was called
-    expect(mockClose).toHaveBeenCalled();
+    // Check if the stream's on method was called for 'end' and 'error' events
+    expect(mockStream.on).toHaveBeenCalledWith('end', expect.any(Function));
+    expect(mockStream.on).toHaveBeenCalledWith('error', expect.any(Function));
   });
 
   /**
@@ -107,40 +111,54 @@ describe('unpack', () => {
     // Assert
     expect(result).toBeDefined();
 
-    // Check if extract was called with the correct target directory
-    expect(mockExtract).toHaveBeenCalledWith(null, path.join(targetDir, subdir));
+    // Check if extractFull was called with the correct target directory
+    expect(require('node-7z').extractFull).toHaveBeenCalledWith(
+      path.join(sourceDir, zipFile),
+      path.join(targetDir, subdir),
+      {$bin: '/mock/path/to/7za'}
+    );
   });
 
   /**
-   * Test error handling when the zip file doesn't exist
+   * Test error handling when the archive file doesn't exist
    */
-  it('should throw an error when the zip file does not exist', async () => {
+  it('should throw an error when the archive file does not exist', async () => {
     // Arrange
     const nonExistentZip = 'non-existent.zip';
     const source = new FileItem(sourceDir, nonExistentZip, 'zip');
     const target = new FileItem(targetDir, '', '');
     const filePara = new FilePara(source, target, 0, 0, 'unpack');
 
-    // Mock StreamZip.async to throw an error
-    jest.spyOn(StreamZip, 'async').mockImplementation(() => {
+    // Mock extractFull to throw an error
+    jest.spyOn(require('node-7z'), 'extractFull').mockImplementation(() => {
       throw new Error('File not found');
     });
 
     // Act & Assert
-    await expect(unpack(filePara)).rejects.toThrow();
+    await expect(unpack(filePara)).rejects.toThrow('File not found');
   });
 
   /**
-   * Test error handling when extract fails
+   * Test error handling when extraction fails
    */
-  it('should throw an error when extract fails', async () => {
+  it('should throw an error when extraction fails', async () => {
     // Arrange
     const source = new FileItem(sourceDir, zipFile, 'zip');
     const target = new FileItem(targetDir, '', '');
     const filePara = new FilePara(source, target, 0, 0, 'unpack');
 
-    // Mock extract to throw an error
-    mockExtract.mockRejectedValue(new Error('Extract failed'));
+    // Mock stream to emit error event
+    const errorStream = {
+      on: jest.fn((event: string, callback: Function) => {
+        if (event === 'error') {
+          // Simulate extraction error by calling the error callback
+          setTimeout(() => callback(new Error('Extract failed')), 0);
+        }
+        return errorStream;
+      })
+    };
+
+    jest.spyOn(require('node-7z'), 'extractFull').mockReturnValue(errorStream);
 
     // Act & Assert
     await expect(unpack(filePara)).rejects.toThrow('Extract failed');

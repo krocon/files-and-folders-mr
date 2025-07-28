@@ -30,8 +30,7 @@ import {UnzipDialogResultData} from "./unzip-dialog-result.data";
     MatButton,
     MatDialogActions,
     MatFormField,
-    FnfAutofocusDirective,
-    MatError
+    FnfAutofocusDirective
   ],
   styleUrls: ["./unzip-dialog.component.css"]
 })
