@@ -63,6 +63,15 @@ export class PackDialogComponent implements OnInit, OnDestroy {
     { value: 'gzip', label: 'GZIP (.tar.gz)' }
   ];
 
+  levels = [
+    {value: 0, label: 'Store (0)'},
+    {value: 1, label: 'Fast (1)'},
+    {value: 3, label: 'Fast (3)'},
+    {value: 5, label: 'Normal (5)'},
+    {value: 7, label: 'Maximum (7)'},
+    {value: 9, label: 'Ultra (9)'}
+  ];
+
   formGroup: FormGroup;
   error = "";
   errorMesasage = "";
@@ -83,6 +92,7 @@ export class PackDialogComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly appService: AppService,
   ) {
+    console.log(data);
     if (data.source.length > 1) {
       this.source = data.source.length + " items";
     } else {
