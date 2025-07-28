@@ -1,4 +1,4 @@
-import {DirEventIf, FilePara, fixPath} from "@fnf-data";
+import {DirEvent, DirEventIf, FilePara, fixPath} from "@fnf-data";
 import * as path from "path";
 import * as fs from "fs";
 
@@ -76,7 +76,10 @@ export async function unpack(para: FilePara): Promise<DirEventIf[]> {
       const stream = extractFull(sourceUrl, targetUrl, options);
 
       stream.on('end', () => {
-        resolve([]);
+        resolve([
+          new DirEvent("", [], true, true, 0, "", "reload", 0),
+          new DirEvent("", [], true, true, 0, "", "reload", 1)
+        ]);
       });
 
       stream.on('error', (err) => {

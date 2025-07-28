@@ -15,4 +15,5 @@ export type DirWatcherEventType =
   | "select"
   | "focus"
   | "unselect"
-  | "unselectall";
+  | "unselectall"
+  | "reload";

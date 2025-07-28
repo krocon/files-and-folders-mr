@@ -360,6 +360,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeWhile(() => this.alive))
       .subscribe(
         (evt: QueueNotifyEventIf) => {
+          console.info('filetable> notifyService: ', evt);
           if (Array.isArray(evt.data)) {
             const arr = evt.data as Array<DirEventIf>;
             this.handleDirEvent(arr);
@@ -455,6 +456,11 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.tableApi && dirEvents && this.dirPara) {
       for (let i = 0; i < dirEvents.length; i++) {
         const dirEvent = dirEvents[i];
+        if (dirEvent.action === 'reload' && this.panelIndex === dirEvent.panelIndex) {
+          this.reload();
+          continue;
+        }
+
         const zi: ZipUrlInfo = getZipUrlInfo(this.dirPara.path);
 
         if (this.dirPara.path.startsWith('tabfind')
@@ -657,7 +663,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openUnpackDlg() {
-    const panelIndex = this.panelIndex;
+    // const panelIndex = this.panelIndex;
     const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
     const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
     const focussedData = this.getFocussedData();
@@ -938,8 +944,11 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private handleRelevantDirEvent(dirEvent: DirEventIf, zi: ZipUrlInfo) {
     if (!this.tableApi || !dirEvent || !this.dirPara) return;
+    console.info('handleRelevantDirEvent', dirEvent);
+    if (dirEvent.action === "reload") {
+      this.reload();
 
-    if (dirEvent.action === "list") {
+    } else if (dirEvent.action === "list") {
       this.handleDirEventList(dirEvent, zi, this.dirPara.path);
 
     } else if (dirEvent.action === "add" || dirEvent.action === "addDir") {

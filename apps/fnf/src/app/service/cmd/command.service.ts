@@ -278,4 +278,7 @@ export class CommandService {
     );
   }
 
+  createRefreshesActionEvents(indicees: PanelIndex[]): QueueActionEvent[] {
+    return indicees.map(index => this.createQueueActionEventForRefreshPanel(index));
+  }
 }

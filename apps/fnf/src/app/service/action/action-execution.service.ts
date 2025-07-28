@@ -292,7 +292,11 @@ export class ActionExecutionService {
 
   callActionUnzip(para: UnzipDialogResultData) {
     const actionEvent = this.commandService.createQueueActionEventForUnzip(para);
-    this.commandService.addActions([actionEvent]);
+    //const refreshes:QueueActionEvent[] = this.commandService.createRefreshesActionEvents([0,1]);
+    this.commandService.addActions([
+      actionEvent,
+      // ...refreshes
+    ]);
   }
 
   private openCopyDlg() {
