@@ -81,6 +81,7 @@ import {UnzipDialogService} from "../../cmd/unzip/unzip-dialog.service";
 import {UnzipDialogData} from "../../cmd/unzip/unzip-dialog.data";
 import {UnzipDialogResultData} from "../../cmd/unzip/unzip-dialog-result.data";
 import {getButtonEnableStates} from "@fnf-data";
+import {PanelManagementService} from "../../../service/panel/panel-management-service";
 
 
 @Component({
@@ -195,7 +196,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly actionExecutionService: ActionExecutionService,
     private readonly appService: AppService,
     private readonly gridSelectionCountService: GridSelectionCountService,
-    public readonly gotoAnythingDialogService: GotoAnythingDialogService,
+    private readonly gotoAnythingDialogService: GotoAnythingDialogService,
     private readonly notifyService: NotifyService,
     private readonly selectionLocalStorage: SelectionLocalStorage,
     private readonly focusLocalStorage: FocusLocalStorage,
@@ -203,6 +204,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly unzipDialogService: UnzipDialogService,
     private readonly createFileDialogService: CreateFileDialogService,
     private readonly walkdirService: WalkdirService,
+    private readonly panelManagementService: PanelManagementService,
   ) {
     this.columnDefs.forEach(def => {
       def.sortable = () => true;
@@ -659,32 +661,15 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
     const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
     const focussedData = this.getFocussedData();
+    if (!focussedData) {
+      return; // skip
+    }
 
-    // Get existing subdirectories for validation
-    const existingSubdirectories = this.bodyAreaModel
-      ? this.bodyAreaModel
-        .getFilteredRows()
-        .filter(item => item.isDir && item.base !== DOT_DOT)
-        .map(item => item.base)
-      : [];
-
-    // Try to detect sequential pattern and suggest next sequence
-    const suggestedName = this.getNextSequentialDirName() || (focussedData?.base ?? '');
-    const data = new UnzipDialogData(dir, suggestedName, existingSubdirectories);
-
+    const data = new UnzipDialogData(focussedData, dir, this.panelManagementService.getDirsFromAllTabs());
     this.unzipDialogService
       .open(data, (result: UnzipDialogResultData | undefined) => {
-        if (result && this.dirPara?.path) {
-          const para = {
-            dir: result.target.dir,
-            base: result.target.base,
-            panelIndex
-          };
-          this.focusLocalStorage.persistFocusCriteria(this.panelIndex, this.dirPara.path, {
-            dir: para.dir,
-            base: para.base
-          });
-          this.actionExecutionService.callActionUnzip(para);
+        if (result) {
+          this.actionExecutionService.callActionUnzip(result);
         }
       });
   }

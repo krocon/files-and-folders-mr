@@ -36,6 +36,7 @@ import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {SelectionDialogData} from "../../component/cmd/selection/selection-dialog.data";
 import {SelectionDialogService} from "../../component/cmd/selection/selection-dialog.service";
 import {Subject} from "rxjs";
+import {UnzipDialogResultData} from "../../component/cmd/unzip/unzip-dialog-result.data";
 
 @Injectable({
   providedIn: 'root'
@@ -289,7 +290,7 @@ export class ActionExecutionService {
       (data) => cb(data, enhance));
   }
 
-  callActionUnzip(para: { dir: string; base: string; panelIndex: PanelIndex }) {
+  callActionUnzip(para: UnzipDialogResultData) {
     const actionEvent = this.commandService.createQueueActionEventForUnzip(para);
     this.commandService.addActions([actionEvent]);
   }

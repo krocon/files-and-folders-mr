@@ -8,6 +8,7 @@ import {QueueFileOperationParams} from "../../domain/cmd/queue-file-operation-pa
 import {NotifyService} from "./notify-service";
 import {QueueNotifyEventIf} from "../../domain/cmd/queue-notify-event.if";
 import {QueueNotifyEvent} from "../../domain/cmd/queue-notify-event";
+import {UnzipDialogResultData} from "../../component/cmd/unzip/unzip-dialog-result.data";
 
 @Injectable({
   providedIn: 'root'
@@ -100,13 +101,13 @@ export class CommandService {
     );
   }
 
-  createQueueActionEventForUnzip(para: { dir: string; base: string; panelIndex: PanelIndex }): QueueActionEvent {
+  createQueueActionEventForUnzip(para: UnzipDialogResultData): QueueActionEvent {
     return this.createActionEvent(
       this.actionQueueService.ACTION_UNZIP,
-      {} as FileItemIf,
-      {dir: para.dir, base: para.base} as FileItemIf,
-      para.panelIndex,
-      para.panelIndex,
+      para.source,
+      {dir: para.target, base: '', isDir: true} as FileItemIf,
+      0,
+      1,
       false
     );
   }

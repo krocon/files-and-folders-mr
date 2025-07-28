@@ -5,29 +5,27 @@
 <mat-dialog-content>
   <div class="dlg-content-div">
 
-
-    <label>Current dir:</label>
-    <div>{{ data.source }}</div>
+    <div>
+      {{ source }}
+    </div>
 
     <form
         [formGroup]="formGroup"
         autocomplete="off">
-
       <mat-form-field>
-        <input
+        <mat-select
             (keydown.enter)="onOkClicked()"
             [fnfAutofocus]="true"
             formControlName="target"
-            matInput
-            placeholder="Extract to folder name"/>
+            placeholder="Extract to folder name">
+          @for (directory of directories; track directory) {
+            <mat-option [value]="directory">
+              {{ directory }}
+            </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
-
-      <div>
-        <mat-error>{{ errorMessage }}&nbsp;</mat-error>
-      </div>
     </form>
-
-
   </div>
 </mat-dialog-content>
 
