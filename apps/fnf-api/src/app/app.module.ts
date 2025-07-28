@@ -30,7 +30,7 @@ import {ToolModule} from "./config/tool/tool.module";
 import {ThemeModule} from "./config/theme/theme.module";
 import {SearchPatternModule} from "./config/search/search-pattern.module";
 
-const config = new Config(
+export const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
   process.env.FNF_CONTAINER_PATHS ? process.env.FNF_CONTAINER_PATHS.split(",") : [],
   process.env.FNF_START_PATH ? process.env.FNF_START_PATH :

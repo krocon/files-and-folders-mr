@@ -39,6 +39,7 @@ export class FnfActionLabels {
     OPEN_FIND_DLG: "Find...",
     RELOAD_DIR: "Reload...",
 
+    OPEN_ATTRIBUTE_DLG: "File Attributes...",
     OPEN_SELECT_DLG: "Enhance Selection...",
 
     NAVIGATE_FORWARD: "Forward",

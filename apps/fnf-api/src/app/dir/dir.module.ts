@@ -1,7 +1,8 @@
-import {DynamicModule, Module} from "@nestjs/common";
+import {Module} from "@nestjs/common";
 import {DirGateway} from "./dir.gateway";
 import {DirService} from "./dir-service";
 import {DirController} from "./dir.controller";
+import {FileAttributeService} from "./file-attribute.service";
 import {Config} from "@fnf-data";
 
 
@@ -12,17 +13,23 @@ import {Config} from "@fnf-data";
   ],
   exports: [
     DirGateway
-  ]
+  ],
+  // providers: [
+  //   DirGateway,
+  //   DirService
+  // ]
 })
 export class DirModule {
 
-  public static forRoot(config: Config): DynamicModule {
+
+  static forRoot(config: Config) {
     DirService.config = config;
     return {
       module: DirModule,
       providers: [
         DirGateway,
-        DirService
+        DirService,
+        FileAttributeService
       ]
     };
   }

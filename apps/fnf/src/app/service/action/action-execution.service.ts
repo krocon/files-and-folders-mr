@@ -37,6 +37,9 @@ import {SelectionDialogData} from "../../component/cmd/selection/selection-dialo
 import {SelectionDialogService} from "../../component/cmd/selection/selection-dialog.service";
 import {Subject} from "rxjs";
 import {UnzipDialogResultData} from "../../component/cmd/unzip/unzip-dialog-result.data";
+import {AttributeDialogService} from "../../component/cmd/attribute/attribute-dialog.service";
+import {AttributeDialogData} from "../../component/cmd/attribute/attribute-dialog.data";
+import {AttributeDialogResultData} from "../../component/cmd/attribute/attribute-dialog-result.data";
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +71,7 @@ export class ActionExecutionService {
     private readonly copyOrMoveDialogService: CopyOrMoveOrDeleteDialogService,
     private readonly deleteDialogService: CopyOrMoveOrDeleteDialogService,
     private readonly selectionDialogService: SelectionDialogService,
+    private readonly attributeDialogService: AttributeDialogService,
     private readonly router: Router,
   ) {
 
@@ -138,6 +142,9 @@ export class ActionExecutionService {
 
     } else if (id === "OPEN_RENAME_DLG") {
       this.rename();
+
+    } else if (id === "OPEN_ATTRIBUTE_DLG") {
+      this.openFileAttributeDialog();
 
     } else if (id === "OPEN_MULTIRENAME_DLG") {
       this.multiRename();
@@ -430,6 +437,27 @@ export class ActionExecutionService {
 
   private addNewTab() {
     this.pms.addNewTab();
+  }
+
+  private openFileAttributeDialog() {
+    const srcPanelIndex = this.pms.getActivePanelIndex();
+    const rows = this.getSelectedOrFocussedData(srcPanelIndex);
+
+    if (rows?.length === 1) {
+      const source = rows[0];
+      if (source.base === DOT_DOT) return // skip it
+      const data = new AttributeDialogData(source);
+      this.attributeDialogService
+        .open(data, (result: AttributeDialogResultData | undefined) => {
+          if (result) {
+            // TODO
+            // const actionEvent = this.commandService.createQueueActionEventForRename(
+            //   new QueueFileOperationParams(result.source, srcPanelIndex, result.target, srcPanelIndex)
+            // );
+            // this.commandService.addActions([actionEvent]);
+          }
+        });
+    }
   }
 
   private rename() {

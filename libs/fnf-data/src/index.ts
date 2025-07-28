@@ -81,6 +81,7 @@ export * from './models/pack/unpack-para.data';
 export * from './models/pack/download-dialog.data';
 export * from './models/pack/download-dialog-result.data';
 export * from './models/pack/download-para.data';
+export * from './models/pack/set-file-attributes.data';
 
 export { getParent } from "./models/file/get-parent";
 export { isSameDir } from "./models/file/is-same-dir";

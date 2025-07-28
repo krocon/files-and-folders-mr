@@ -25,6 +25,7 @@ export const actionIds = [
   "NEXT_TAB",
 
   "OPEN_ABOUT_DLG",
+  "OPEN_ATTRIBUTE_DLG",
   "OPEN_CHDIR_DLG",
   "OPEN_COLORCONFIG_DLG",
   "OPEN_COPY_DLG",

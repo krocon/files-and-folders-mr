@@ -1,0 +1,112 @@
+<h2 mat-dialog-title>Change Attributes</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="formGroup">
+
+    <!-- Two-column layout header -->
+    <div class="column-header">
+      <div class="column-section">
+        <span>Load from file under cursor</span>
+        <button
+            type="button"
+            mat-raised-button
+            (click)="onLoadFromLeftClicked()">LEFT (2)
+        </button>
+        <button
+            type="button"
+            mat-raised-button
+            (click)="onLoadFromRightClicked()">RIGHT (1)
+        </button>
+      </div>
+    </div>
+
+    <!-- File Attributes Section -->
+    <div class="attributes-section">
+      <h3>File Attributes</h3>
+      <div class="attributes-grid">
+        <mat-checkbox formControlName="archive">Archive</mat-checkbox>
+        <mat-checkbox formControlName="readonly">Read only</mat-checkbox>
+        <mat-checkbox formControlName="hidden">Hidden</mat-checkbox>
+        <mat-checkbox formControlName="system">System</mat-checkbox>
+      </div>
+    </div>
+
+    <!-- Date/Time Change Section -->
+    <div class="datetime-section">
+      <mat-checkbox formControlName="changeDateTime">Change date/time</mat-checkbox>
+
+      @if (formGroup.get('changeDateTime')?.value) {
+        <div class="datetime-inputs">
+          <mat-form-field>
+            <mat-label>Date</mat-label>
+            <input
+                matInput
+                type="date"
+                formControlName="newDate">
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>Time</mat-label>
+            <input
+                matInput
+                type="time"
+                formControlName="newTime">
+          </mat-form-field>
+        </div>
+      }
+    </div>
+
+    <!-- Plugin Attributes Section -->
+    <div class="plugin-section">
+      <h3>Plugin Attributes</h3>
+
+      <div class="plugin-controls">
+        <mat-form-field>
+          <mat-label>Action</mat-label>
+          <mat-select formControlName="pluginAction">
+            @for (action of pluginActions; track action) {
+              <mat-option [value]="action">{{ action }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Value</mat-label>
+          <input
+              matInput
+              formControlName="pluginValue">
+        </mat-form-field>
+      </div>
+
+      <button
+          type="button"
+          mat-raised-button
+          (click)="onMoreAttributesClicked()">
+        More attributes
+      </button>
+    </div>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      type="button"
+      mat-raised-button
+      (click)="onOkClicked()"
+      [disabled]="formGroup.invalid">
+    OK
+  </button>
+  <button
+      type="button"
+      mat-button
+      (click)="onCancelClicked()">
+    Cancel
+  </button>
+  <button
+      type="button"
+      mat-button
+      (click)="onHelpClicked()">
+    Help
+  </button>
+</mat-dialog-actions>

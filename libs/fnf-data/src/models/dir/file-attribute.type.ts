@@ -1,6 +1,6 @@
 export type FileAttributeType = {
   hidden: boolean;
-  executable: boolean;
+  archive: boolean;
   readonly: boolean;
   system: boolean;
 };

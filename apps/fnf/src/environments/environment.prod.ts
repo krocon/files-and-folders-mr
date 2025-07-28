@@ -16,6 +16,8 @@ export const environment = {
     checkPathUrl: "/api/checkpath",
     filterExistsUrl: "/api/filterexists",
     readDirUrl: "/api/readdir",
+    getfileattributesUrl: "/api/getfileattributes",
+    setfileattributesUrl: "/api/setfileattributes",
     defaultRoot: "/",
     fileWatcher: false
   },

@@ -25,6 +25,8 @@ export class FileSystemService {
     checkPathUrl: "/api/checkpath",
     readDirUrl: "/api/readdir",
     filterExistsUrl: "/api/filterexists",
+    getfileattributesUrl: "/api/getfileattributes",
+    setfileattributesUrl: "/api/setfileattributes",
     defaultRoot: "/",
     fileWatcher: false
   };
@@ -239,6 +241,20 @@ export class FileSystemService {
     return this.httpClient
       .post<string[]>(
         FileSystemService.config.filterExistsUrl,
+        files);
+  }
+
+  getFileAttributes(files: string): Observable<string[]> {
+    return this.httpClient
+      .post<string[]>(
+        FileSystemService.config.setfileattributesUrl,
+        files);
+  }
+
+  setFileAttributes(files: string): Observable<string[]> {
+    return this.httpClient
+      .post<string[]>(
+        FileSystemService.config.getfileattributesUrl,
         files);
   }
 

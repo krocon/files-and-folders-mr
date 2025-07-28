@@ -1,4 +1,5 @@
 import {FileItemMetaIf} from "./file-item-meta.if";
+import {FileAttributeType} from "./file-attribute.type";
 
 /**
  *
@@ -19,4 +20,5 @@ export interface FileItemIf {
   abs: boolean;
 
   meta?: FileItemMetaIf;
+  attributes?: FileAttributeType;
 }
