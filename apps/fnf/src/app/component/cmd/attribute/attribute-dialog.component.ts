@@ -1,10 +1,5 @@
 import {Component, Inject} from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule
-} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {AttributeDialogData} from "./attribute-dialog.data";
 import {
   MAT_DIALOG_DATA,
@@ -18,7 +13,6 @@ import {AttributeDialogResultData} from "./attribute-dialog-result.data";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {MatOption, MatSelect} from "@angular/material/select";
 import {FileAttributeType} from "@fnf-data";
 
 @Component({
@@ -33,21 +27,14 @@ import {FileAttributeType} from "@fnf-data";
     MatCheckbox,
     MatFormField,
     MatLabel,
-    MatInput,
-    MatSelect,
-    MatOption
+    MatInput
   ],
   styleUrls: ["./attribute-dialog.component.css"]
 })
 export class AttributeDialogComponent {
 
   formGroup: FormGroup;
-  pluginActions = [
-    'Comment Done',
-    'Comment Favorites',
-    'Comment Next',
-    'Comment Remove'
-  ];
+
 
   constructor(
     public dialogRef: MatDialogRef<AttributeDialogComponent>,
@@ -79,10 +66,6 @@ export class AttributeDialogComponent {
       changeDateTime: new FormControl(false),
       newDate: new FormControl(dateStr),
       newTime: new FormControl(timeStr),
-
-      // Plugin attributes
-      pluginAction: new FormControl(''),
-      pluginValue: new FormControl('')
     });
   }
 
@@ -102,8 +85,6 @@ export class AttributeDialogComponent {
       formValue.changeDateTime,
       formValue.changeDateTime ? formValue.newDate : undefined,
       formValue.changeDateTime ? formValue.newTime : undefined,
-      formValue.pluginAction || undefined,
-      formValue.pluginValue || undefined
     );
 
     this.dialogRef.close(result);
@@ -113,23 +94,4 @@ export class AttributeDialogComponent {
     this.dialogRef.close(undefined);
   }
 
-  onHelpClicked() {
-    // Help functionality - placeholder for now
-    console.log('Help clicked');
-  }
-
-  onLoadFromLeftClicked() {
-    // Load from left functionality - placeholder for now
-    console.log('Load from LEFT (2) clicked');
-  }
-
-  onLoadFromRightClicked() {
-    // Load from right functionality - placeholder for now
-    console.log('Load from RIGHT (1) clicked');
-  }
-
-  onMoreAttributesClicked() {
-    // More attributes functionality - placeholder for now
-    console.log('More attributes clicked');
-  }
 }

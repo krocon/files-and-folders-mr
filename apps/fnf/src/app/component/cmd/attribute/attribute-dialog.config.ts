@@ -5,7 +5,7 @@ export class AttributeDialogConfig extends MatDialogConfig {
 
   constructor(public override data: AttributeDialogData) {
     super();
-    this.minHeight = 400;
-    this.minWidth = "800px";
+    this.minHeight = 350;
+    this.minWidth = "500px";
   }
 }
