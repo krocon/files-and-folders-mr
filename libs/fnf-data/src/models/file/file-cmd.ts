@@ -9,4 +9,5 @@ export type FileCmd =
   | 'unpacklist'
   | 'unpack'
   | 'pack'
+  | 'download'
   | 'open';

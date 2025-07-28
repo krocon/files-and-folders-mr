@@ -16,6 +16,7 @@ export function getButtonEnableStates(items: FileItemIf[], path: string = ''): B
   states.OPEN_RENAME_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
   states.OPEN_UNPACK_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL) && !!items[0].base?.match(PACKED_FILE_EXTENSIONS);
   states.OPEN_PACK_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
+  states.OPEN_DOWNLOAD_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
   states.OPEN_MULTIRENAME_DLG = items?.length > 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
   states.OPEN_CREATE_FILE_DLG = true;
   return states;

@@ -7,6 +7,7 @@ import {rename} from "./action/rename.fn";
 import {open} from "./action/open.fn";
 import {unpack} from "./action/unpack.fn";
 import {pack} from "./action/pack.fn";
+import {download} from "./action/download.fn";
 import {dummy} from "./action/common/dummy.fn";
 import {FileCmd, FilePara, OnDoResponseType} from "@fnf-data";
 import {unpacklist} from "./action/unpack-list.fn";
@@ -47,6 +48,9 @@ export class FileService {
   /** Creates compressed archives */
   pack = pack.bind(this); // Promise<DirEventIf[]>
 
+  /** Downloads files or creates archives for download */
+  download = download.bind(this); // Promise<void>
+
   /** Fallback function for unsupported commands */
   dummy = dummy.bind(this);
 
@@ -66,6 +70,7 @@ export class FileService {
     unpack: this.unpack,
     unpacklist: this.unpacklist,
     pack: this.pack,
+    download: this.download,
     walk: this.dummy // Default for 'walk' command
   };
 

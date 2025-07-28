@@ -25,6 +25,7 @@ import {ShellAutocompleteService} from "./service/shell-autocomplete.service";
 import {ServershellService} from "./component/shell/service/servershell.service";
 import {ServershellAutocompleteService} from "./component/shell/service/servershell-autocomplete.service";
 import {EditService} from "./service/edit.service";
+import {DownloadService} from "./service/download.service";
 import {WalkdirService} from "./common/walkdir/walkdir.service";
 import {WalkdirSyncService} from "./common/walkdir/walkdir-sync.service";
 import {WalkSocketService} from "./common/walkdir/walk.socketio.service";
@@ -54,6 +55,7 @@ function init() {
   ServershellService.forRoot(environment.shell);
   ServershellAutocompleteService.forRoot(environment.shellAutocomplete);
   EditService.forRoot(environment.edit);
+  DownloadService.forRoot(environment.download);
 
   WalkdirService.forRoot(environment.walkdir);
   WalkdirSyncService.forRoot(environment.walkdir);

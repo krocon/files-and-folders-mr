@@ -77,6 +77,9 @@ export * from './models/shell/shell-cancel-spawn-para.if';
 export * from './models/pack/pack-dialog.data';
 export * from './models/pack/pack-dialog-result.data';
 export * from './models/pack/pack-para.data';
+export * from './models/pack/download-dialog.data';
+export * from './models/pack/download-dialog-result.data';
+export * from './models/pack/download-para.data';
 
 export { getParent } from "./models/file/get-parent";
 export { isSameDir } from "./models/file/is-same-dir";
