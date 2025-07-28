@@ -83,6 +83,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     "OPEN_RENAME_DLG",
     "OPEN_UNPACK_DLG",
     "OPEN_PACK_DLG",
+    "OPEN_DOWNLOAD_DLG",
     "-",
     "OPEN_MULTIRENAME_DLG",
     "OPEN_MULTIMKDIR_DLG",

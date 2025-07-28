@@ -43,6 +43,7 @@ export class FnfActionLabels {
 
     NAVIGATE_FORWARD: "Forward",
     OPEN_SHORTCUT_DLG: "Shortcuts...",
+    OPEN_DOWNLOAD_DLG: "Download...",
     OPEN_UNPACK_DLG: "Unpack...",
     OPEN_PACK_DLG: "Pack...",
     PRINT_DEBUG: "Debug",
