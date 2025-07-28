@@ -2,7 +2,7 @@ import {DirEventIf, FilePara, fixPath} from "@fnf-data";
 import * as path from "path";
 import * as fs from "fs";
 
-import {extractFull} from "node-7z";
+import {extractFull, ExtractFullOptions} from "node-7z";
 import * as sevenBin from "7zip-bin";
 import * as fse from "fs-extra";
 
@@ -70,9 +70,10 @@ export async function unpack(para: FilePara): Promise<DirEventIf[]> {
       // Ensure the 7zip binary has execute permissions
       await ensure7zipExecutable(pathTo7zip);
 
-      const stream = extractFull(sourceUrl, targetUrl, {
+      let options: ExtractFullOptions = {
         $bin: pathTo7zip
-      });
+      };
+      const stream = extractFull(sourceUrl, targetUrl, options);
 
       stream.on('end', () => {
         resolve([]);
