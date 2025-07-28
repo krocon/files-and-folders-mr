@@ -103,7 +103,7 @@ export class CommandService {
 
   createQueueActionEventForUnzip(para: UnzipDialogResultData): QueueActionEvent {
     return this.createActionEvent(
-      this.actionQueueService.ACTION_UNZIP,
+      this.actionQueueService.ACTION_UNPACK,
       para.source,
       {dir: para.target, base: '', isDir: true} as FileItemIf,
       0,

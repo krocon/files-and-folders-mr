@@ -33,8 +33,15 @@ export async function unpack(para: FilePara): Promise<DirEventIf[]> {
 
   fse.ensureDirSync(targetUrl);
 
-  const zip = new StreamZip.async({file: sourceUrl});
-  await zip.extract(null, targetUrl);
-  await zip.close();
+  try {
+    const zip = new StreamZip.async({file: sourceUrl});
+    await zip.extract(null, targetUrl);
+    await zip.close();
+
+  } catch (e) {
+    console.info('sourceUrl', sourceUrl);
+    console.info('targetUrl', targetUrl);
+    console.error(e.message, e);
+  }
   return [];
 }

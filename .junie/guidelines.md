@@ -9,7 +9,7 @@
 - **IMPORTANT NOTICE**: When you are working on apps/fnf/src/edit.html: Please refer to the comprehensive guide at
   `.junie/instructions_plain_html-edit.md` for detailed implementation instructions.
 - **IMPORTANT NOTICE**: When you create notes or a TODO list for your analysis, you should write them down in MD syntax
-  as file into the folder `.junie/temp/`. Don not delete your files here.
+  as file into the folder `.junie/temp/`. Don't delete your files here.
 
 
 - After receiving tool results, carefully reflect on their quality and determine optimal next steps before proceeding.

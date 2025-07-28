@@ -12,7 +12,7 @@ export const queueActionEventTypes = [
   'update',
   'created',
   'open',
-  'unzip'
+  'unpack'
 ] as const;
 
 export type QueueActionEventType = typeof queueActionEventTypes[number];
