@@ -9,6 +9,7 @@
   </div>
 
   <mat-divider></mat-divider>
+  <br>
 
   @if (!isSingleFile) {
     <form [formGroup]="formGroup">
@@ -16,16 +17,20 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Target Filename</mat-label>
           <input matInput formControlName="targetFilename" fnfAutofocus>
-          <mat-error *ngIf="formGroup.get('targetFilename')?.hasError('required')">
-            Target filename is required
-          </mat-error>
-          <mat-error *ngIf="formGroup.get('targetFilename')?.hasError('pattern')">
-            Invalid filename
-          </mat-error>
+          @if (formGroup.get('targetFilename')?.hasError('required')) {
+            <mat-error>
+              Target filename is required
+            </mat-error>
+          }
+          @if (formGroup.get('targetFilename')?.hasError('pattern')) {
+            <mat-error>
+              Invalid filename
+            </mat-error>
+          }
         </mat-form-field>
       </div>
 
-      <div class="form-row">
+      <!--div class="form-row">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Target Directory</mat-label>
           <input matInput formControlName="targetDirectory">
@@ -41,7 +46,7 @@
             </button>
           </mat-menu>
         </mat-form-field>
-      </div>
+      </div-->
 
       <div class="form-row">
         <mat-form-field appearance="outline" class="full-width">
@@ -50,37 +55,40 @@
         </mat-form-field>
       </div>
 
-      <div class="form-row">
+      <div class="form-row two-cols">
         <mat-form-field appearance="outline" class="format-select">
           <mat-label>Format</mat-label>
           <mat-select formControlName="format" (selectionChange)="onFormatChange()">
-            <mat-option *ngFor="let format of availableFormats" [value]="format.value">
-              {{format.label}}
-            </mat-option>
+            @for (format of availableFormats; track format.value) {
+              <mat-option [value]="format.value">
+                {{ format.label }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="compression-select">
           <mat-label>Compression Level</mat-label>
           <mat-select formControlName="compressionLevel">
-            <mat-option value="0">Store (0)</mat-option>
-            <mat-option value="1">Fast (1)</mat-option>
-            <mat-option value="3">Fast (3)</mat-option>
-            <mat-option value="5">Normal (5)</mat-option>
-            <mat-option value="7">Maximum (7)</mat-option>
-            <mat-option value="9">Ultra (9)</mat-option>
+            @for (level of levels; track level.value) {
+              <mat-option [value]="level.value">
+                {{ level.label }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
       </div>
     </form>
   } @else {
     <div class="single-file-info">
-      <p>Single file selected. The file will be downloaded with its original name.</p>
+      <p>Single file selected.</p>
+      <p>The file will be downloaded with its original name.</p>
     </div>
   }
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
+<mat-dialog-actions>
+  <div></div>
   <button mat-button (click)="onCancelClicked()">Cancel</button>
   <button mat-raised-button color="primary" (click)="onOkClicked()" [disabled]="!isSingleFile && formGroup.invalid">
     Download

@@ -757,9 +757,11 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     this.downloadDialogService.open(data, (result: DownloadDialogResultData | undefined) => {
       if (result) {
         // Import DownloadService dynamically to avoid circular dependencies
-        import("../../../service/download.service").then(module => {
+        import("../../cmd/download/download.service").then(module => {
           const downloadService = this.injector.get(module.DownloadService);
-          downloadService.download(result).subscribe(
+          downloadService
+            .download(result)
+            .subscribe(
             (blob: Blob) => {
               // Create download link and trigger download
               const url = window.URL.createObjectURL(blob);

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {DownloadDialogData, DownloadDialogResultData} from "@fnf-data";
+import {DownloadDialogData, DownloadDialogResultData, WalkData} from "@fnf-data";
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -8,15 +8,13 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {WalkData} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
-import {MatError, MatFormField, MatInput, MatSuffix, MatLabel} from "@angular/material/input";
-import {MatButton, MatIconButton} from "@angular/material/button";
+import {MatError, MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
 import {MatDivider} from "@angular/material/divider";
-import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {AppService} from "../../../app.service";
 import {getAllParents} from "../../../common/fn/get-all-parents.fn";
 import {WalkDataComponent} from "../../../common/walkdir/walk-data.component";
@@ -41,11 +39,6 @@ import {CommonModule} from "@angular/common";
     FnfAutofocusDirective,
     MatError,
     MatDivider,
-    MatIconButton,
-    MatMenu,
-    MatMenuItem,
-    MatSuffix,
-    MatMenuTrigger,
     WalkDataComponent,
     MatSelect,
     MatOption
@@ -57,10 +50,19 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   suggestions: string[] = [];
   availableFormats = [
-    { value: '7z', label: '7-Zip (.7z)' },
-    { value: 'zip', label: 'ZIP (.zip)' },
-    { value: 'tar', label: 'TAR (.tar)' },
-    { value: 'gzip', label: 'GZIP (.tar.gz)' }
+    {value: '7z', label: '7-Zip (.7z)'},
+    {value: 'zip', label: 'ZIP (.zip)'},
+    {value: 'tar', label: 'TAR (.tar)'},
+    {value: 'gzip', label: 'GZIP (.tar.gz)'}
+  ];
+
+  levels = [
+    {value: 0, label: 'Store (0)'},
+    {value: 1, label: 'Fast (1)'},
+    {value: 3, label: 'Fast (3)'},
+    {value: 5, label: 'Normal (5)'},
+    {value: 7, label: 'Maximum (7)'},
+    {value: 9, label: 'Ultra (9)'}
   ];
 
   formGroup: FormGroup;
@@ -85,7 +87,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
     private readonly appService: AppService,
   ) {
     this.isSingleFile = data.source.length === 1;
-    
+
     if (data.source.length > 1) {
       this.source = data.source.length + " items";
     } else {
@@ -106,7 +108,7 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
               Validators.minLength(1),
               Validators.pattern(/^(?!tabfind).*$/)
             ]),
-          targetDirectory: new FormControl(data.targetDirectory, [Validators.required]),
+          // targetDirectory: new FormControl(data.targetDirectory, [Validators.required]),
           password: new FormControl(data.password, []),
           format: new FormControl(data.format || '7z', [Validators.required]),
           compressionLevel: new FormControl(data.compressionLevel || 5, [Validators.required])
@@ -191,10 +193,10 @@ export class DownloadDialogComponent implements OnInit, OnDestroy {
 
   onFormatChange() {
     if (this.isSingleFile) return;
-    
+
     const format = this.formGroup.get('format')?.value;
     const targetFilename = this.formGroup.get('targetFilename')?.value;
-    
+
     if (targetFilename && !targetFilename.endsWith(this.getExtensionForFormat(format))) {
       const baseName = targetFilename.replace(/\.[^/.]+$/, '');
       const newFilename = baseName + this.getExtensionForFormat(format);

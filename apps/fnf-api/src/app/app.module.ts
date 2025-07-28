@@ -9,6 +9,7 @@ import {AppService} from "./app.service";
 import {SysinfoModule} from "./sysinfo/sysinfo.module";
 import {DrivesModule} from "./drives/drives.module";
 import {FileModule} from "./file-content/file.module";
+import {DownloadModule} from "./download/download.module";
 import {FileActionModule} from "./file-action/file-action.module";
 import {WalkModule} from "./walk/walk.module";
 import {DirModule} from "./dir/dir.module";
@@ -51,6 +52,7 @@ const config = new Config(
       config
     ),
     FileModule,
+    DownloadModule,
     FileActionModule,
     WalkModule,
     VolumeModule,
@@ -74,7 +76,8 @@ const config = new Config(
     FiletypeModule,
     ButtonModule,
     ToolModule,
-    SearchPatternModule
+    SearchPatternModule,
+    DownloadModule
   ],
   controllers: [
     AppController

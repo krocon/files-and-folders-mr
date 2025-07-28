@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  version: '28.07.2025 17:44',
-  commitHash: 'f2c9106',
+  version: '28.07.2025 18:22',
+  commitHash: '57ff0ae',
 
   config: {
     apiUrl: "/api/config"
@@ -74,6 +74,6 @@ export const environment = {
     shellUrl: "api/shell"
   },
   download: {
-    downloadUrl: "/api/download"
+    downloadUrl: "api/download"
   }
 };
