@@ -1,4 +1,4 @@
-import {FileCmd, FileItemIf} from "@fnf/fnf-data";
+import {FileCmd, FileItemIf} from "@fnf-data";
 
 
 export class MultiFilePara {
