@@ -112,6 +112,17 @@ export class CommandService {
     );
   }
 
+  createQueueActionEventForPack(para: any): QueueActionEvent {
+    return this.createActionEvent(
+      this.actionQueueService.ACTION_PACK,
+      para.source,
+      para.target,
+      0,
+      1,
+      false
+    );
+  }
+
   createQueueActionEventForCreateFile(para: {
     dir: string;
     base: string;

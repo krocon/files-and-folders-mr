@@ -299,6 +299,13 @@ export class ActionExecutionService {
     ]);
   }
 
+  callActionPack(para: any) {
+    const actionEvent = this.commandService.createQueueActionEventForPack(para);
+    this.commandService.addActions([
+      actionEvent,
+    ]);
+  }
+
   private openCopyDlg() {
     const selectedData: FileItemIf[] = this.getSelectedOrFocussedDataForActivePanel();
     const sources: string[] = this.getSourcePaths(selectedData);

@@ -44,6 +44,7 @@ export class FnfActionLabels {
     NAVIGATE_FORWARD: "Forward",
     OPEN_SHORTCUT_DLG: "Shortcuts...",
     OPEN_UNPACK_DLG: "Unpack...",
+    OPEN_PACK_DLG: "Pack...",
     PRINT_DEBUG: "Debug",
     RELOAD_DIR_0: "Reload Left",
     RELOAD_DIR_1: "Reload Right",

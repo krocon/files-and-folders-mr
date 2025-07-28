@@ -35,6 +35,7 @@ export class ActionQueueService {
   readonly ACTION_REFRESH_PANEL: QueueActionEventType = 'refresh_panel';
   readonly ACTION_MKDIR: QueueActionEventType = 'mkdir';
   readonly ACTION_UNPACK: QueueActionEventType = 'unpack';
+  readonly ACTION_PACK: QueueActionEventType = 'pack';
   readonly ACTION_CREATE_FILE: QueueActionEventType = 'createfile';
   readonly ACTION_OPEN: QueueActionEventType = 'open';
   readonly ACTION_COPY: QueueActionEventType = 'copy';

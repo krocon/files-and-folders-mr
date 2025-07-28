@@ -8,4 +8,5 @@ export type FileCmd =
   | 'rename'
   | 'unpacklist'
   | 'unpack'
+  | 'pack'
   | 'open';

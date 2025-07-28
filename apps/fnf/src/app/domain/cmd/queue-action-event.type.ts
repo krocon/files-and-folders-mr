@@ -13,6 +13,7 @@ export const queueActionEventTypes = [
   'created',
   'open',
   'unpack',
+  'pack',
   'reload'
 ] as const;
 

@@ -6,6 +6,7 @@ import {remove} from "./action/remove.fn";
 import {rename} from "./action/rename.fn";
 import {open} from "./action/open.fn";
 import {unpack} from "./action/unpack.fn";
+import {pack} from "./action/pack.fn";
 import {dummy} from "./action/common/dummy.fn";
 import {FileCmd, FilePara, OnDoResponseType} from "@fnf-data";
 import {unpacklist} from "./action/unpack-list.fn";
@@ -43,6 +44,9 @@ export class FileService {
   /** Lists contents of compressed archives */
   unpacklist = unpacklist.bind(this); // Promise<DirEventIf[]>
 
+  /** Creates compressed archives */
+  pack = pack.bind(this); // Promise<DirEventIf[]>
+
   /** Fallback function for unsupported commands */
   dummy = dummy.bind(this);
 
@@ -61,6 +65,7 @@ export class FileService {
     open: this.open,
     unpack: this.unpack,
     unpacklist: this.unpacklist,
+    pack: this.pack,
     walk: this.dummy // Default for 'walk' command
   };
 
