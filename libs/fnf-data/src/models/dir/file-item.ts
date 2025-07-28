@@ -2,6 +2,15 @@ import {FileItemIf} from './file-item.if';
 import {FileItemMetaIf} from "./file-item-meta.if";
 import {FileItemMeta} from "./file-item-meta";
 
+/**
+ *
+ * Example:
+ * {
+ *       "dir": "/Users/abc/Filme",
+ *       "base": "mk.txt" (base includes extension),
+ *       "ext": ".txt" (extension with '.')
+ *   }
+ */
 export class FileItem implements FileItemIf {
 
 

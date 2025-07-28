@@ -3,6 +3,7 @@ import * as path from "path";
 import * as fse from "fs-extra";
 
 
+
 export async function createfile(para: FilePara): Promise<DirEventIf[]> {
 
   if (!para || !para.target) {
@@ -11,13 +12,12 @@ export async function createfile(para: FilePara): Promise<DirEventIf[]> {
 
 
   /*
-      "target": {
-        "dir": "/Users/marckronberg/Filme.nosync",
-        "base": "mk.txt",
-        "ext": ".txt"
-    },
+  {
+      "dir": "/Users/abc/Filme",
+      "base": "mk.txt" (base includes extension),
+      "ext": ".txt" (extension with '.')
+  }
    */
-
   const filename = para.target.base;
   const filePath = path.join(para.target.dir, filename);
 

@@ -1,5 +1,14 @@
 import {FileItemMetaIf} from "./file-item-meta.if";
 
+/**
+ *
+ * Example:
+ * {
+ *       "dir": "/Users/abc/Filme",
+ *       "base": "mk.txt" (base includes extension),
+ *       "ext": ".txt" (extension with '.')
+ *   }
+ */
 export interface FileItemIf {
   dir: string;
   base: string;
