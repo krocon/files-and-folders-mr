@@ -124,19 +124,16 @@ module.exports = defineConfig({
         },
 
         cleanupTestEnvironment() {
-          // Check if directory exists before attempting to empty it
-          return fs.pathExists(appTestDir)
-            .then(exists => {
-              if (exists) {
-                return fs.emptyDir(appTestDir);
-              }
-              return Promise.resolve();
-            })
-            .then(() => true)
-            .catch(err => {
-              console.error('Error cleaning up test environment:', err);
-              return false;
-            });
+          return fs
+            .delete(appTestDir)
+            .then(() => fs
+              .mkdir(appTestDir)
+              .then(() => true)
+              .catch(err => {
+                console.error("Error cleaning up test environment:", err);
+                return false;
+              })
+            );
         },
 
         restoreTestEnvironment() {
