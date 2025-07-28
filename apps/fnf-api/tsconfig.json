@@ -20,8 +20,7 @@
     "paths": {
       "@fnf-data": [
         "../../libs/fnf-data/src/index.ts"
-      ],
-      "@fnf/fnf-data": ["../../libs/fnf-data/src/index.ts"]
+      ]
     }
   }
 }

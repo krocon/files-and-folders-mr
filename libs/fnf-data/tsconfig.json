@@ -18,7 +18,9 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@fnf/fnf-data": ["./src/index.ts"]
+      "@fnf-data": [
+        "./src/index.ts"
+      ]
     }
   },
   "include": ["src/**/*"],

@@ -11,7 +11,8 @@ export const queueActionEventTypes = [
   'open_job_queue_table',
   'update',
   'created',
-  'open'
+  'open',
+  'unzip'
 ] as const;
 
 export type QueueActionEventType = typeof queueActionEventTypes[number];

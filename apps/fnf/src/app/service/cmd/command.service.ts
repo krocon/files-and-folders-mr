@@ -100,6 +100,17 @@ export class CommandService {
     );
   }
 
+  createQueueActionEventForUnzip(para: { dir: string; base: string; panelIndex: PanelIndex }): QueueActionEvent {
+    return this.createActionEvent(
+      this.actionQueueService.ACTION_UNZIP,
+      {} as FileItemIf,
+      {dir: para.dir, base: para.base} as FileItemIf,
+      para.panelIndex,
+      para.panelIndex,
+      false
+    );
+  }
+
   createQueueActionEventForCreateFile(para: {
     dir: string;
     base: string;

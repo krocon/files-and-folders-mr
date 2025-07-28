@@ -25,8 +25,7 @@
     "paths": {
       "@fnf-data": [
         "../../libs/fnf-data/src"
-      ],
-      "@fnf/fnf-data": ["../../libs/fnf-data/src/index.ts"]
+      ]
     }
   },
   "angularCompilerOptions": {

@@ -14,9 +14,6 @@
       ],
       "@fnf-data/*": [
         "../../libs/fnf-data/*"
-      ],
-      "@fnf/fnf-data": [
-        "../../libs/fnf-data/src/index.ts"
       ]
     }
   },

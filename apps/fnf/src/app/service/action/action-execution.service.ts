@@ -289,6 +289,11 @@ export class ActionExecutionService {
       (data) => cb(data, enhance));
   }
 
+  callActionUnzip(para: { dir: string; base: string; panelIndex: PanelIndex }) {
+    const actionEvent = this.commandService.createQueueActionEventForUnzip(para);
+    this.commandService.addActions([actionEvent]);
+  }
+
   private openCopyDlg() {
     const selectedData: FileItemIf[] = this.getSelectedOrFocussedDataForActivePanel();
     const sources: string[] = this.getSourcePaths(selectedData);
@@ -476,7 +481,6 @@ export class ActionExecutionService {
       );
   }
 
-
   private groupFiles() {
     const srcPanelIndex = this.pms.getActivePanelIndex();
     const targetPanelIndex = this.pms.getInactivePanelIndex();
@@ -540,7 +544,6 @@ export class ActionExecutionService {
     const activeTab = panelData.tabs[panelData.selectedTabIndex];
     return [activeTab.path];
   }
-
 
   private createFileOperationParams(target: FileItemIf): QueueFileOperationParams[] {
     const selectedData = this.getSelectedOrFocussedDataForActivePanel();

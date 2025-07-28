@@ -77,6 +77,10 @@ import {CreateFileDialogService} from "../../cmd/createfile/create-file-dialog.s
 import {CreateFileDialogResultData} from "../../cmd/createfile/create-file-dialog-result.data";
 import {CreateFileDialogData} from "../../cmd/createfile/create-file-dialog.data";
 import {MkdirDialogData} from "../../cmd/mkdir/mkdir-dialog.data";
+import {UnzipDialogService} from "../../cmd/unzip/unzip-dialog.service";
+import {UnzipDialogData} from "../../cmd/unzip/unzip-dialog.data";
+import {UnzipDialogResultData} from "../../cmd/unzip/unzip-dialog-result.data";
+import {getButtonEnableStates} from "@fnf-data";
 
 
 @Component({
@@ -196,6 +200,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly selectionLocalStorage: SelectionLocalStorage,
     private readonly focusLocalStorage: FocusLocalStorage,
     private readonly mkdirDialogService: MkdirDialogService,
+    private readonly unzipDialogService: UnzipDialogService,
     private readonly createFileDialogService: CreateFileDialogService,
     private readonly walkdirService: WalkdirService,
   ) {
@@ -381,18 +386,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getButtonEnableStates(items: FileItemIf[]): ButtonEnableStates {
-    const states = new ButtonEnableStates();
-
-    states.OPEN_COPY_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    states.OPEN_EDIT_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL) && !items[0].isDir;
-    states.OPEN_VIEW_DLG = states.OPEN_EDIT_DLG;
-    states.OPEN_MOVE_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    states.OPEN_DELETE_DLG = !!items?.length && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    states.OPEN_MKDIR_DLG = !this.dirPara?.path.startsWith('tabfind');
-    states.OPEN_RENAME_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    states.OPEN_UNPACK_DLG = items?.length === 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    states.OPEN_MULTIRENAME_DLG = items?.length > 1 && !items[0].dir?.match(EXP_ZIP_FILE_URL);
-    return states;
+    return getButtonEnableStates(items, this.dirPara?.path ?? '');
   }
 
 
@@ -575,6 +569,10 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else if (action === "OPEN_MKDIR_DLG") {
       this.openMakeDirDlg();
+
+    } else if (action === "OPEN_UNPACK_DLG") {
+      this.openUnpackDlg();
+      
     } else if (action === "OPEN_CREATE_FILE_DLG") {
       this.openCreateFileDlg();
 
@@ -655,6 +653,42 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
   }
+
+  openUnpackDlg() {
+    const panelIndex = this.panelIndex;
+    const activeTabOnActivePanel = this.appService.getActiveTabOnActivePanel();
+    const dir = this.dirPara?.path ?? activeTabOnActivePanel.path;
+    const focussedData = this.getFocussedData();
+
+    // Get existing subdirectories for validation
+    const existingSubdirectories = this.bodyAreaModel
+      ? this.bodyAreaModel
+        .getFilteredRows()
+        .filter(item => item.isDir && item.base !== DOT_DOT)
+        .map(item => item.base)
+      : [];
+
+    // Try to detect sequential pattern and suggest next sequence
+    const suggestedName = this.getNextSequentialDirName() || (focussedData?.base ?? '');
+    const data = new UnzipDialogData(dir, suggestedName, existingSubdirectories);
+
+    this.unzipDialogService
+      .open(data, (result: UnzipDialogResultData | undefined) => {
+        if (result && this.dirPara?.path) {
+          const para = {
+            dir: result.target.dir,
+            base: result.target.base,
+            panelIndex
+          };
+          this.focusLocalStorage.persistFocusCriteria(this.panelIndex, this.dirPara.path, {
+            dir: para.dir,
+            base: para.base
+          });
+          this.actionExecutionService.callActionUnzip(para);
+        }
+      });
+  }
+
 
   openMakeDirDlg() {
     const panelIndex = this.panelIndex;
