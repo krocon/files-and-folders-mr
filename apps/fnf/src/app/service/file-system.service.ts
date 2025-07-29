@@ -4,12 +4,12 @@ import {BehaviorSubject, Observable, of, tap} from "rxjs";
 import {
   ActionGatewayKeys as keys,
   DirEventIf,
-  DirPara,
+  DirPara, FileItemIf,
   FilePara,
   fixPath,
   getZipUrlInfo,
   isZipUrl,
-  SEARCH_SYMBOL
+  SEARCH_SYMBOL, SetFileAttributesData
 } from "@fnf-data";
 import {map, mergeAll} from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
@@ -244,18 +244,18 @@ export class FileSystemService {
         files);
   }
 
-  getFileAttributes(files: string): Observable<string[]> {
+  getFileAttributes(fileItem: FileItemIf): Observable<FileItemIf> {
     return this.httpClient
-      .post<string[]>(
-        FileSystemService.config.setfileattributesUrl,
-        files);
+      .post<FileItemIf>(
+        FileSystemService.config.getfileattributesUrl,
+        fileItem);
   }
 
-  setFileAttributes(files: string): Observable<string[]> {
+  setFileAttributes(para: SetFileAttributesData): Observable<void> {
     return this.httpClient
-      .post<string[]>(
-        FileSystemService.config.getfileattributesUrl,
-        files);
+      .post<void>(
+        FileSystemService.config.setfileattributesUrl,
+        para);
   }
 
   private unwatch(para: DirPara) {

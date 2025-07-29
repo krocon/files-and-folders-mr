@@ -26,7 +26,7 @@ export class DirController {
 
   @Post("getfileattributes")
   getFileAttributes(@MessageBody() para: FileItemIf): Promise<FileItemIf> {
-    return this.fileAttributeService.apiUrlAttribute(para);
+    return this.fileAttributeService.getFileAttributes(para);
   }
 
   @Post("setfileattributes")

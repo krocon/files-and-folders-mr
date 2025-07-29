@@ -376,7 +376,7 @@ export class ActionExecutionService {
     this.cleanDialogService.open(
       data,
       (result: CleanDialogData | undefined) => {
-        // TODO xxxx marc this.actionEvents$.next('RELOAD_DIR');
+        this.actionEvents$.next('RELOAD_DIR');
       });
   }
 
@@ -431,13 +431,6 @@ export class ActionExecutionService {
     return this.selectionManagers[panelIndex]?.getSelectedRows() ?? [];
   }
 
-  private removeTab() {
-    this.pms.removeTab();
-  }
-
-  private addNewTab() {
-    this.pms.addNewTab();
-  }
 
   private openFileAttributeDialog() {
     const srcPanelIndex = this.pms.getActivePanelIndex();
@@ -449,6 +442,7 @@ export class ActionExecutionService {
       const data = new AttributeDialogData(source);
       this.attributeDialogService
         .open(data, (result: AttributeDialogResultData | undefined) => {
+          console.info('openFileAttributeDialog', result);
           if (result) {
             // TODO
             // const actionEvent = this.commandService.createQueueActionEventForRename(

@@ -1,4 +1,4 @@
-import {Component, Inject} from "@angular/core";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {AttributeDialogData} from "./attribute-dialog.data";
 import {
@@ -9,11 +9,11 @@ import {
   MatDialogTitle
 } from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
-import {AttributeDialogResultData} from "./attribute-dialog-result.data";
 import {MatCheckbox} from "@angular/material/checkbox";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
-import {FileAttributeType} from "@fnf-data";
+import {FileAttributeType, SetFileAttributesData} from "@fnf-data";
+import {FileSystemService} from "../../../service/file-system.service";
 
 @Component({
   selector: "fnf-attribute-dialog",
@@ -29,9 +29,10 @@ import {FileAttributeType} from "@fnf-data";
     MatLabel,
     MatInput
   ],
-  styleUrls: ["./attribute-dialog.component.css"]
+  styleUrls: ["./attribute-dialog.component.css"],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AttributeDialogComponent {
+export class AttributeDialogComponent implements OnInit {
 
   formGroup: FormGroup;
 
@@ -40,6 +41,8 @@ export class AttributeDialogComponent {
     public dialogRef: MatDialogRef<AttributeDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: AttributeDialogData,
     private readonly formBuilder: FormBuilder,
+    private readonly fileSystemService: FileSystemService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
 
     // Initialize current attributes or defaults
@@ -69,6 +72,18 @@ export class AttributeDialogComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.fileSystemService
+      .getFileAttributes(this.data.selectedFile)
+      .subscribe(fileItem => {
+        if (fileItem.attributes) {
+          this.formGroup.patchValue(fileItem.attributes, {emitEvent: true});
+          this.cdr.detectChanges();
+        }
+      });
+  }
+
+
   onOkClicked() {
     const formValue = this.formGroup.getRawValue();
 
@@ -78,16 +93,24 @@ export class AttributeDialogComponent {
       readonly: formValue.readonly,
       system: formValue.system
     };
+    this.data.selectedFile.attributes = attributes;
 
-    const result = new AttributeDialogResultData(
+    const para = new SetFileAttributesData(
       this.data.selectedFile,
       attributes,
       formValue.changeDateTime,
       formValue.changeDateTime ? formValue.newDate : undefined,
       formValue.changeDateTime ? formValue.newTime : undefined,
-    );
+    )
 
-    this.dialogRef.close(result);
+    this.fileSystemService
+      .setFileAttributes(para)
+      .subscribe(_ => {
+        console.log('para', JSON.stringify(para, null, 2));
+        this.dialogRef.close(para);
+      });
+
+
   }
 
   onCancelClicked() {
