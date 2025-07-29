@@ -106,6 +106,8 @@ describe('EditShortcutDialogComponent', () => {
   });
 
   it('should capture keyboard shortcut when in capturing mode', () => {
+    jest.useFakeTimers();
+    
     component.isCapturingShortcut = true;
     component.captureIndex = 0;
 
@@ -123,9 +125,22 @@ describe('EditShortcutDialogComponent', () => {
     expect(mockKeyboardEvent.preventDefault).toHaveBeenCalled();
     expect(mockKeyboardEvent.stopPropagation).toHaveBeenCalled();
     expect(mockShortcutService.createHarmonizedShortcutByKeyboardEvent).toHaveBeenCalledWith(mockKeyboardEvent);
+
+    // Initially, the shortcut should not be finalized yet
+    expect(component.isCapturingShortcut).toBe(true);
+    expect(component.captureIndex).toBe(0);
+    expect(component.currentShortcutInput).toBe('cmd shift t');
+
+    // Fast-forward time to trigger the timeout
+    jest.advanceTimersByTime(1000);
+
+    // Now the shortcut should be finalized
     expect(component.shortcuts[0]).toBe('cmd shift t');
     expect(component.isCapturingShortcut).toBe(false);
     expect(component.captureIndex).toBe(-1);
+    expect(component.currentShortcutInput).toBe('');
+
+    jest.useRealTimers();
   });
 
   it('should not capture keyboard shortcut when not in capturing mode', () => {

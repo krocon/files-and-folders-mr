@@ -100,13 +100,9 @@
 }
 
 .capture-instructions {
-    padding: 16px;
-    /*background-color: #e3f2fd;*/
-    /*border: 1px solid #bbdefb;*/
-    border-radius: 4px;
-    /*margin-top: 16px;*/
     display: grid;
     grid-template-columns:  1fr auto;
+    font-weight: bold;
 }
 
 .capture-instructions p {

@@ -47,6 +47,9 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   currentShortcutInput = '';
   isCapturingShortcut = false;
   captureIndex = -1;
+  private captureTimeout: any = null;
+  private capturedKeystrokes: string[] = [];
+  private readonly CAPTURE_DELAY_MS = 500; // millis delay after last keystroke
 
   constructor(
     public readonly dialogRef: MatDialogRef<EditShortcutDialogComponent>,
@@ -77,6 +80,13 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     this.isCapturingShortcut = true;
     this.captureIndex = index;
     this.currentShortcutInput = '';
+    this.capturedKeystrokes = [];
+
+    // Clear any existing timeout
+    if (this.captureTimeout) {
+      clearTimeout(this.captureTimeout);
+      this.captureTimeout = null;
+    }
   }
 
   @HostListener('document:keyup', ['$event'])
@@ -90,10 +100,49 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
 
     const harmonizedShortcut = this.shortcutService.createHarmonizedShortcutByKeyboardEvent(event);
     if (harmonizedShortcut && this.captureIndex >= 0) {
-      this.shortcuts[this.captureIndex] = harmonizedShortcut;
-      this.isCapturingShortcut = false;
-      this.captureIndex = -1;
-      this.currentShortcutInput = '';
+      // Check if the keystroke already exists in the captured keystrokes to avoid all duplicates
+      const arr = harmonizedShortcut.split(' ');
+      for (let i = 0; i < arr.length; i++) {
+        const ks = arr[i];
+        if (!this.capturedKeystrokes.includes(ks)) {
+          // Add the keystroke to our accumulated list only if it's not a duplicate
+          this.capturedKeystrokes.push(ks);
+        }
+      }
+
+      // Update the current input display with accumulated keystrokes
+      this.currentShortcutInput = this.capturedKeystrokes.join(' ');
+
+      // Clear any existing timeout
+      if (this.captureTimeout) {
+        clearTimeout(this.captureTimeout);
+      }
+
+      // Set a new timeout to finalize the shortcut after delay
+      this.captureTimeout = setTimeout(() => {
+        this.finalizeShortcutCapture();
+      }, this.CAPTURE_DELAY_MS);
+    }
+  }
+
+  private finalizeShortcutCapture(): void {
+    if (this.captureIndex >= 0 && this.capturedKeystrokes.length > 0) {
+      // Join all captured keystrokes into a single shortcut string
+      const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
+
+      console.log('Captured keystrokes:', JSON.stringify(uniqueKeystrokes, null, 4));
+      this.shortcuts[this.captureIndex] = uniqueKeystrokes.join(' ');
+    }
+
+    // Reset capture state
+    this.isCapturingShortcut = false;
+    this.captureIndex = -1;
+    this.currentShortcutInput = '';
+    this.capturedKeystrokes = [];
+
+    if (this.captureTimeout) {
+      clearTimeout(this.captureTimeout);
+      this.captureTimeout = null;
     }
   }
 
@@ -101,12 +150,31 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     // Clean up any ongoing capture state
     this.isCapturingShortcut = false;
     this.captureIndex = -1;
+    this.capturedKeystrokes = [];
+
+    // Clear timeout to prevent memory leaks
+    if (this.captureTimeout) {
+      clearTimeout(this.captureTimeout);
+      this.captureTimeout = null;
+    }
   }
 
   onStopCapturing(): void {
-    this.isCapturingShortcut = false;
-    this.captureIndex = -1;
-    this.currentShortcutInput = '';
+    // If we have captured keystrokes, finalize them before stopping
+    if (this.capturedKeystrokes.length > 0) {
+      this.finalizeShortcutCapture();
+    } else {
+      // Otherwise, just clean up the state
+      this.isCapturingShortcut = false;
+      this.captureIndex = -1;
+      this.currentShortcutInput = '';
+      this.capturedKeystrokes = [];
+
+      if (this.captureTimeout) {
+        clearTimeout(this.captureTimeout);
+        this.captureTimeout = null;
+      }
+    }
   }
 
   onReset(): void {
