@@ -24,19 +24,28 @@
           <td>Status</td>
           <td></td>
           <td>File</td>
+          <td>Actions</td>
         </tr>
         </thead>
         @for (action of queue.actions; track action) {
           <tr class="row">
             <td>{{ action.id }}</td>
             <td>{{ action.filePara.cmd.toLowerCase() }}</td>
-            <td>{{ getBeeStatus(action.status) }}</td>
+            <td>{{ action.status }}</td>
             <td>
               <app-busy-bee
                   [matTooltip]="action.status"
                   [status]="getBeeStatus(action.status)"></app-busy-bee>
             </td>
             <td>{{ apiUrlName(action) }}</td>
+            <td>
+              <button mat-icon-button
+                      [disabled]="!canDeleteItem(action)"
+                      (click)="onDeleteItemClicked(action)"
+                      matTooltip="Delete task">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
           </tr>
         }
       </table>

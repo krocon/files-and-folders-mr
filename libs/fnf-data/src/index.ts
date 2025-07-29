@@ -16,6 +16,8 @@ export * from './models/system-meta-data';
 
 export * from './models/cmd/button-enable-states';
 export * from './models/cmd/get-button-enable-states.fn';
+export * from './models/cmd/queue-status';
+export * from './models/cmd/queue-item-status';
 
 
 export * from './models/dir/file-attribute.type';
@@ -82,6 +84,8 @@ export * from './models/pack/download-dialog.data';
 export * from './models/pack/download-dialog-result.data';
 export * from './models/pack/download-para.data';
 export * from './models/pack/set-file-attributes.data';
+
+export * from './models/dialog/confirmation-dialog.data';
 
 export { getParent } from "./models/file/get-parent";
 export { isSameDir } from "./models/file/is-same-dir";

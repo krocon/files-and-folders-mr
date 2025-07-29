@@ -64,3 +64,10 @@ fnf-root {
 
 
 }
+.fnf-top-sheet {
+    .mat-bottom-sheet-container{
+        overflow: clip;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+}

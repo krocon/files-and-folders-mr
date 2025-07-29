@@ -221,6 +221,22 @@ export class ActionQueueService {
     this.triggerProgress();
   }
 
+  removeAction(actionId: number) {
+    const queue = this.getQueue(0);
+    const actionIndex = queue.actions.findIndex(a => a.id === actionId);
+    
+    if (actionIndex !== -1) {
+      const action = queue.actions[actionIndex];
+      if (action.status === 'PROCESSING') {
+        return; // Can't remove running actions
+      }
+      
+      queue.actions.splice(actionIndex, 1);
+      this.eventService.next(new QueueNotifyEvent('remove', []));
+      this.triggerProgress();
+    }
+  }
+
   /**
    * Adds a new queue to the list of queues
    * @private

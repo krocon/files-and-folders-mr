@@ -7,27 +7,30 @@ import {StatusIconType} from "../../common/status-icon.type";
 import {QueueProgress} from "../../../domain/cmd/queue-progress";
 import {BusyBeeComponent} from "../../common/busy-bee.component";
 import {QueueIf} from "../../../domain/cmd/queue.if";
-import {QueueStatus} from "../../../domain/cmd/queue-status";
+import {QueueStatus, canQueueResume, isQueueRunning, isQueuePaused} from "@fnf-data";
+import {QueueItemStatus, isQueueItemFinished, isQueueItemRunning, isQueueItemPending} from "@fnf-data";
 import {QueueActionEvent} from "../../../domain/cmd/queue-action-event";
-import {MatTooltip} from "@angular/material/tooltip";
-import {MatButton} from "@angular/material/button";
-import {MatIcon} from "@angular/material/icon";
-
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {MatButtonModule} from "@angular/material/button";
+import {MatIconModule} from "@angular/material/icon";
+import {FnfConfirmationDialogService} from "../../../common/confirmationdialog/fnf-confirmation-dialog.service";
+import {CommonModule} from "@angular/common";
 
 @Component({
   selector: 'app-task-list',
+  standalone: true,
   imports: [
+    CommonModule,
     BusyBeeComponent,
-    MatTooltip,
-    MatIcon,
-    MatButton,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './task-list.html',
   styleUrl: './task-list.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskList implements OnInit {
-
   queue: QueueIf;
   queueProgress: QueueProgress;
   status: StatusIconType = 'idle';
@@ -36,10 +39,10 @@ export class TaskList implements OnInit {
   private _bottomSheetRef =
     inject<MatBottomSheetRef<TaskList>>(MatBottomSheetRef);
 
-
   constructor(
     private readonly actionQueueService: ActionQueueService,
     private readonly notifyService: NotifyService,
+    private readonly confirmationService: FnfConfirmationDialogService,
     private readonly cdr: ChangeDetectorRef,
   ) {
     this.queueProgress = actionQueueService.getQueueProgress(0);
@@ -61,9 +64,9 @@ export class TaskList implements OnInit {
     event.preventDefault();
   }
 
-  getBeeStatus(status: QueueStatus): StatusIconType {
-    if (status === 'NEW' || status === 'IDLE' || status === 'PENDING') return 'idle';
-    if (status === 'RUNNING' || status === 'PROCESSING') return 'busy';
+  getBeeStatus(status: string): StatusIconType {
+    if (isQueueItemPending(status as QueueItemStatus)) return 'idle';
+    if (isQueueItemRunning(status as QueueItemStatus)) return 'busy';
     if (status === 'SUCCESS') return 'success';
     if (status === 'ERROR' || status === 'WARNING') return 'error';
     return 'idle';
@@ -84,7 +87,11 @@ export class TaskList implements OnInit {
   }
 
   onDeleteAllClicked() {
-    this.actionQueueService.doStop();
+    this.confirmationService.simpleConfirm(
+      'Stop All Tasks',
+      'Are you sure you want to stop and remove all tasks?',
+      () => this.actionQueueService.doStop()
+    );
   }
 
   onPauseNextClicked() {
@@ -95,14 +102,32 @@ export class TaskList implements OnInit {
     this.actionQueueService.doResume();
   }
 
+  async onDeleteItemClicked(action: QueueActionEvent) {
+    const confirmed = await this.confirmationService.simpleConfirm(
+      'Delete Task',
+      `Are you sure you want to delete the ${action.filePara.cmd.toLowerCase()} task for "${this.apiUrlName(action)}"?`,
+      () => this.actionQueueService.removeAction(action.id)
+    );
+  }
+
+  canDeleteItem(action: QueueActionEvent): boolean {
+    return !isQueueItemRunning(action.status as QueueItemStatus);
+  }
+
   private updateUi() {
     this.queueProgress = this.actionQueueService.getQueueProgress(0);
     this.infoText = this.queueProgress.finished + ' / ' + (this.queueProgress.finished + this.queueProgress.unfinished);
 
+    // Update status based on queue state and progress
     let status: StatusIconType = 'idle';
-    if (this.queueProgress.unfinished) {
+    if (isQueueRunning(this.queue.status as QueueStatus)) {
       status = this.queueProgress.errors ? 'error' : 'busy';
+    } else if (isQueuePaused(this.queue.status as QueueStatus)) {
+      status = 'idle';
+    } else if (this.queue.status === 'ERROR') {
+      status = 'error';
     }
+    
     this.status = status;
     this.cdr.detectChanges();
   }

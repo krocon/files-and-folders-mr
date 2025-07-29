@@ -8,43 +8,38 @@ import {
   Output
 } from "@angular/core";
 import {CommonModule} from "@angular/common";
-
-import {MatButton} from "@angular/material/button";
+import {MatButtonModule} from "@angular/material/button";
 import {ActionQueueService} from "../../../service/cmd/action-queue.service";
 import {takeWhile} from "rxjs/operators";
 import {QueueProgress} from "../../../domain/cmd/queue-progress";
-import {MatTooltip} from "@angular/material/tooltip";
+import {MatTooltipModule} from "@angular/material/tooltip";
 import {BusyBeeComponent} from "../../common/busy-bee.component";
-import {MatIcon} from "@angular/material/icon";
+import {MatIconModule} from "@angular/material/icon";
 import {StatusIconType} from "../../common/status-icon.type";
 import {calcStatusIcon} from "./calc-status-icon.fn";
 
-
 @Component({
   selector: "fnf-task-button",
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatButtonModule,
+    MatTooltipModule,
+    BusyBeeComponent,
+    MatIconModule,
+  ],
   template: `
-
-
     <button
         (click)="onClicked()"
         class="panel-button row-reverse"
         [matTooltip]="infoText"
         mat-stroked-button>
-
       Tasks
       <mat-icon>
         <app-busy-bee [status]="status"></app-busy-bee>
       </mat-icon>
-
     </button>
   `,
-  imports: [
-    CommonModule,
-    MatButton,
-    MatTooltip,
-    BusyBeeComponent,
-    MatIcon,
-  ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskButtonComponent implements OnInit, OnDestroy {

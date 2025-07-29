@@ -1,47 +1,53 @@
-import {Component, Inject} from "@angular/core";
-import {MAT_DIALOG_DATA, MatDialogContent, MatDialogRef, MatDialogTitle} from "@angular/material/dialog";
-import {ConfirmationData} from "./data/confirmation.data";
-import {ButtonData} from "./data/button.data";
-import {MatButton, MatIconButton} from "@angular/material/button";
-import {CommonModule} from "@angular/common";
-import {MatFormField, MatInput} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
-import {MatCheckbox} from "@angular/material/checkbox";
-import {MatIcon} from "@angular/material/icon";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions} from '@angular/material/dialog';
+import {MatButton} from '@angular/material/button';
+import {ConfirmationDialogData} from './data/confirmation-dialog.data';
+import {CommonModule} from '@angular/common';
 
 @Component({
-  selector: "confirmationdialog",
-  templateUrl: "./fnf-confirmation-dialog.component.html",
+  selector: 'fnf-confirmation-dialog',
+  standalone: true,
   imports: [
     CommonModule,
     MatDialogTitle,
-    MatIconButton,
-    MatFormField,
-    MatInput,
-    MatButton,
     MatDialogContent,
-    MatFormField,
-    FormsModule,
-    MatCheckbox,
-    MatIcon
+    MatDialogActions,
+    MatButton
   ],
-  styleUrls: ["./fnf-confirmation-dialog.component.css"]
+  template: `
+    <h2 mat-dialog-title>{{data.title}}</h2>
+    <mat-dialog-content>
+      <p style="white-space: pre-line">{{data.message}}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onNoClick()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="onYesClick()">Confirm</button>
+    </mat-dialog-actions>
+  `,
+  styles: [`
+    :host {
+      display: block;
+      padding: 16px;
+    }
+    mat-dialog-content {
+      min-width: 300px;
+    }
+    mat-dialog-actions {
+      margin-bottom: 0;
+    }
+  `]
 })
 export class FnfConfirmationDialogComponent {
-  public vertical = false;
-
   constructor(
     public dialogRef: MatDialogRef<FnfConfirmationDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ConfirmationData
-  ) {
-    this.vertical = data.vertical;
+    @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close(false);
   }
 
-  onButtonClicked(btn: ButtonData) {
-    this.dialogRef.close(btn.key);
-  }
-
-  onCloseClicked() {
-    this.dialogRef.close("CANCEL");
+  onYesClick(): void {
+    this.dialogRef.close(true);
   }
 }
