@@ -20,13 +20,11 @@ export class CommandService {
 
   private actionId = 0;
 
-  // private eventService = new TypedEventService<any>();
 
   constructor(
     private actionQueueService: ActionQueueService,
     private readonly eventService: NotifyService
   ) {
-    // console.info('        > CommandService initialized');
   }
 
 
@@ -35,8 +33,7 @@ export class CommandService {
     source: FileItemIf,
     target: FileItemIf,
     sourcePanelIndex: PanelIndex,
-    targetPanelIndex: PanelIndex,
-    bulk: boolean = false
+    targetPanelIndex: PanelIndex
   ): QueueActionEvent {
     const filePara = new FilePara(
       source,
@@ -50,7 +47,6 @@ export class CommandService {
       targetPanelIndex,
       filePara,
       this.ACTION_STATUS_NEW,
-      bulk,
       this.actionId++
     );
   }
@@ -66,7 +62,6 @@ export class CommandService {
       targetPanelIndex,
       filePara,
       this.ACTION_STATUS_NEW,
-      bulk,
       this.actionId++
     );
   }
@@ -82,7 +77,6 @@ export class CommandService {
       {} as FileItemIf,
       panelIndex,
       panelIndex,
-      false
     );
   }
 
@@ -97,7 +91,6 @@ export class CommandService {
       {dir: para.dir, base: para.base} as FileItemIf,
       para.panelIndex,
       para.panelIndex,
-      false
     );
   }
 
@@ -112,7 +105,6 @@ export class CommandService {
       1, // targetPanelIndex
       unpackPara as any, // Use UnpackParaData instead of FilePara
       this.ACTION_STATUS_NEW,
-      false,
       this.actionId++
     );
   }
@@ -124,7 +116,6 @@ export class CommandService {
       para.target,
       0,
       1,
-      false
     );
   }
 
@@ -140,7 +131,6 @@ export class CommandService {
       {dir: para.dir, base: para.base, ext: para.ext} as FileItemIf,
       para.panelIndex,
       para.panelIndex,
-      false
     );
   }
 
@@ -148,7 +138,11 @@ export class CommandService {
    * Deletes a file or directory
    * @param para The parameters for the delete operation
    */
-  createQueueActionEventForDel(para: { source: FileItemIf; srcPanelIndex: PanelIndex; bulk?: boolean }): QueueActionEvent {
+  createQueueActionEventForDel(para: {
+    source: FileItemIf;
+    srcPanelIndex: PanelIndex;
+    bulk?: boolean
+  }): QueueActionEvent {
     const source = para.source;
     const srcPanelIndex = para.srcPanelIndex;
     const bulk = para.bulk || false;
@@ -170,7 +164,6 @@ export class CommandService {
       null as unknown as FileItemIf,
       srcPanelIndex,
       srcPanelIndex,
-      bulk
     );
   }
 
@@ -185,7 +178,6 @@ export class CommandService {
       null as unknown as FileItemIf,
       para.srcPanelIndex,
       para.srcPanelIndex,
-      false
     );
   }
 
@@ -206,7 +198,6 @@ export class CommandService {
       target,
       srcPanelIndex,
       targetPanelIndex,
-      bulk
     );
   }
 
@@ -226,7 +217,6 @@ export class CommandService {
       target,
       srcPanelIndex,
       para.targetPanelIndex,
-      bulk
     );
   }
 
@@ -260,7 +250,6 @@ export class CommandService {
       target,
       srcPanelIndex,
       para.targetPanelIndex,
-      bulk
     );
   }
 
@@ -270,9 +259,9 @@ export class CommandService {
    * @param queueIndex The queue index
    * @param openJobTable Opens the Task Manager (Job table UI)
    */
-  addActions(actions: QueueActionEvent[], queueIndex: number = 0, openJobTable:boolean = true): void {
+  addActions(actions: QueueActionEvent[], queueIndex: number = 0, openJobTable: boolean = true): void {
     this.actionQueueService.addActions(actions, queueIndex);
-    if (openJobTable){
+    if (openJobTable) {
       this.actionQueueService.openJobTable();
     }
   }
@@ -290,7 +279,6 @@ export class CommandService {
       target,
       srcPanelIndex,
       para.targetPanelIndex,
-      bulk
     );
   }
 

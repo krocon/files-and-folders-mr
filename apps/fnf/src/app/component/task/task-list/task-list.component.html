@@ -1,9 +1,12 @@
 <div class="task-list-div">
 
   <div class="header">
-    Overall: {{queue.status}}
+    <span>Overall: {{ queue.status }}</span>
     <app-busy-bee [status]="status" [matTooltip]="queue.status"></app-busy-bee>
-    {{ infoText }}
+    <span>{{ infoText }}</span>
+    <span
+        #remainingTime
+        class="remaining-time"></span>
   </div>
 
   <div class="body">

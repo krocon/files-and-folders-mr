@@ -1,4 +1,12 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  inject, OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {MatBottomSheetRef} from "@angular/material/bottom-sheet";
 import {ActionQueueService} from "../../../service/cmd/action-queue.service";
 import {NotifyService} from "../../../service/cmd/notify-service";
@@ -15,6 +23,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfConfirmationDialogService} from "../../../common/confirmationdialog/fnf-confirmation-dialog.service";
 import {CommonModule} from "@angular/common";
+import {TaskListCalculationService} from "./task-list-calculation.service";
 
 @Component({
   selector: 'app-task-list',
@@ -30,7 +39,7 @@ import {CommonModule} from "@angular/common";
   styleUrl: './task-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
   /*
 
    Die beiden Queue cmds 'move' und 'copy' brauchen oft viel Zeit.
@@ -48,6 +57,8 @@ export class TaskListComponent implements OnInit {
   status: StatusIconType = 'idle';
   infoText: string = '';
 
+  @ViewChild('remainingTime', {static: true}) remainingTimeElement!: ElementRef<HTMLElement>;
+
   private _bottomSheetRef =
     inject<MatBottomSheetRef<TaskListComponent>>(MatBottomSheetRef);
 
@@ -55,10 +66,15 @@ export class TaskListComponent implements OnInit {
     private readonly actionQueueService: ActionQueueService,
     private readonly notifyService: NotifyService,
     private readonly confirmationService: FnfConfirmationDialogService,
+    private readonly calculationService: TaskListCalculationService,
     private readonly cdr: ChangeDetectorRef,
   ) {
     this.queueProgress = actionQueueService.getQueueProgress(0);
     this.queue = actionQueueService.getQueue(0);
+  }
+
+  ngOnDestroy(): void {
+    this.calculationService.stopTracking();
   }
 
   ngOnInit(): void {
@@ -68,7 +84,9 @@ export class TaskListComponent implements OnInit {
         (evt: QueueNotifyEventIf) => {
           this.updateUi();
         }
-      )
+      );
+    // Start tracking remaining time
+    this.calculationService.startTracking(this.remainingTimeElement.nativeElement);
   }
 
   openLink(event: MouseEvent): void {
@@ -129,6 +147,9 @@ export class TaskListComponent implements OnInit {
   private updateUi() {
     this.queueProgress = this.actionQueueService.getQueueProgress(0);
     this.infoText = this.queueProgress.finished + ' / ' + (this.queueProgress.finished + this.queueProgress.unfinished);
+
+    // Update remaining time calculation
+    this.calculationService.updateQueue(this.queue.actions, this.queue.status as QueueStatus);
 
     // Update status based on queue state and progress
     let status: StatusIconType = 'idle';

@@ -9,8 +9,8 @@ export class QueueActionEvent {
     public panelIndex: PanelIndex,
     public filePara: FilePara,
     public status: QueueStatus,
-    public bulk: boolean = false,
     public id: number = 0,
+    public size: number = 0,
   ) {
   }
 
