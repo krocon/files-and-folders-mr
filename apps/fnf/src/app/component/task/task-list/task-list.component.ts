@@ -26,18 +26,19 @@ import {CommonModule} from "@angular/common";
     MatIconModule,
     MatButtonModule,
   ],
-  templateUrl: './task-list.html',
-  styleUrl: './task-list.css',
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TaskList implements OnInit {
+export class TaskListComponent implements OnInit {
+
   queue: QueueIf;
   queueProgress: QueueProgress;
   status: StatusIconType = 'idle';
   infoText: string = '';
 
   private _bottomSheetRef =
-    inject<MatBottomSheetRef<TaskList>>(MatBottomSheetRef);
+    inject<MatBottomSheetRef<TaskListComponent>>(MatBottomSheetRef);
 
   constructor(
     private readonly actionQueueService: ActionQueueService,

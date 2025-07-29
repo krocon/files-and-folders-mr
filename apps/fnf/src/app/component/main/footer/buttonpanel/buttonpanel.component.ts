@@ -16,7 +16,7 @@ import {MatDivider} from '@angular/material/divider';
 import {AppService} from "../../../../app.service";
 import {ActionId} from "../../../../domain/action/fnf-action.enum";
 import {MatBottomSheet, MatBottomSheetConfig} from "@angular/material/bottom-sheet";
-import {TaskList} from "../../../task/task-list/task-list";
+import {TaskListComponent} from "../../../task/task-list/task-list.component";
 import {ButtonEnableStates, ButtonEnableStatesKey, CmdIf} from "@fnf-data";
 import {MatList} from "@angular/material/list";
 import {TaskButtonComponent} from "../../../task/task-list/task-button.component";
@@ -184,7 +184,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   openButtonSheet() {
     const config = new MatBottomSheetConfig();
     config.panelClass = 'fnf-top-sheet';
-    this.matBottomSheet.open(TaskList, config);
+    this.matBottomSheet.open(TaskListComponent, config);
   }
 
 

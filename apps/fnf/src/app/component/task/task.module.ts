@@ -1,14 +1,14 @@
 import {NgModule} from '@angular/core';
-import {TaskList} from './task-list/task-list';
+import {TaskListComponent} from './task-list/task-list.component';
 import {TaskButtonComponent} from './task-list/task-button.component';
 
 @NgModule({
   imports: [
-    TaskList,
+    TaskListComponent,
     TaskButtonComponent
   ],
   exports: [
-    TaskList,
+    TaskListComponent,
     TaskButtonComponent
   ]
 })
