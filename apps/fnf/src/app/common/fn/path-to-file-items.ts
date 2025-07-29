@@ -1,6 +1,47 @@
 import {FileItem, FileItemIf} from "@fnf-data";
 
 
+/**
+ * Converts a file path string into an array of FileItemIf objects representing each directory segment of the path.
+ * This function breaks down a path into its component parts and creates a FileItem for each segment,
+ * preserving the hierarchical structure of the path.
+ *
+ * @param {string} path - The file path to convert. Can be absolute (starting with '/') or relative.
+ * @returns {FileItemIf[]} An array of FileItemIf objects representing each segment of the path.
+ *   Each FileItem contains:
+ *     - dir: The full path up to and including the current segment
+ *     - base: The segment name
+ *     - ext: Empty string (as segments are treated as directories)
+ *     - date: Empty string
+ *     - size: 0
+ *     - isDir: true (all segments are treated as directories)
+ *     - abs: true if the original path is absolute, false if relative
+ *
+ * @example
+ * // Absolute path example
+ * const items = path2FileItems('/Users/john/Documents');
+ * // Returns:
+ * // [
+ * //   { dir: '/Users', base: 'Users', ext: '', date: '', size: 0, isDir: true, abs: true },
+ * //   { dir: '/Users/john', base: 'john', ext: '', date: '', size: 0, isDir: true, abs: true },
+ * //   { dir: '/Users/john/Documents', base: 'Documents', ext: '', date: '', size: 0, isDir: true, abs: true }
+ * // ]
+ *
+ * @example
+ * // Relative path example
+ * const items = path2FileItems('projects/myapp/src');
+ * // Returns:
+ * // [
+ * //   { dir: 'projects', base: 'projects', ext: '', date: '', size: 0, isDir: true, abs: false },
+ * //   { dir: 'projects/myapp', base: 'myapp', ext: '', date: '', size: 0, isDir: true, abs: false },
+ * //   { dir: 'projects/myapp/src', base: 'src', ext: '', date: '', size: 0, isDir: true, abs: false }
+ * // ]
+ *
+ * @example
+ * // Empty path example
+ * const items = path2FileItems('');
+ * // Returns: []
+ */
 export function path2FileItems(path: string): FileItemIf[] {
   let ret: FileItemIf[] = [];
 

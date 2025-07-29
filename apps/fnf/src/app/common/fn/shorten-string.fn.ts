@@ -1,5 +1,32 @@
-
-
+/**
+ * Shortens a string to a specified maximum length while maintaining readability.
+ * The function attempts to intelligently truncate the string by:
+ * 1. Preserving both the beginning and end of the string
+ * 2. Inserting an ellipsis (...) in the middle
+ * 3. Trying to cut at word boundaries to avoid breaking words
+ *
+ * @param {string} str - The input string to be shortened
+ * @param {number} [maxLength=33] - The maximum allowed length of the resulting string
+ * @returns {string} The shortened string with ellipsis if needed, or the original string if already shorter than maxLength
+ *
+ * @example
+ * // Returns the original string when it's shorter than maxLength
+ * shortenString("Short text", 20); // "Short text"
+ *
+ * @example
+ * // Returns a shortened string with ellipsis
+ * shortenString("This is a very long string that needs to be shortened", 25);
+ * // "This is a...be shortened"
+ *
+ * @example
+ * // When maxLength is too small, returns just the beginning of the string
+ * shortenString("Too long", 3); // "Too"
+ *
+ * @example
+ * // The function tries to avoid breaking words when possible
+ * shortenString("Breaking at word boundaries is better", 15);
+ * // "Breaking...better" (cuts at spaces instead of mid-word)
+ */
 export function shortenString(str: string, maxLength: number = 33):string {
   // If string is shorter than maxLength, return it as is
   if (str.length <= maxLength) {

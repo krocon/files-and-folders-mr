@@ -1,5 +1,33 @@
-
-
+/**
+ * Returns an array of all parent paths for a given file system path.
+ *
+ * This function navigates from the provided path up to the root directory,
+ * collecting each parent directory along the way. It handles special cases
+ * like root paths, trailing slashes, and empty inputs.
+ *
+ * @param {string} path - The file system path to get parents for
+ * @returns {string[]} An array of parent paths, ordered from root to the deepest parent
+ *
+ * @example
+ * // Returns ['/Users', '/Users/marckronberg', '/Users/marckronberg/Filme.nosync', '/Users/marckronberg/Filme.nosync/_Filme']
+ * getAllParents('/Users/marckronberg/Filme.nosync/_Filme');
+ *
+ * @example
+ * // Returns ['/Users', '/Users/marckronberg']
+ * getAllParents('/Users/marckronberg/');
+ *
+ * @example
+ * // Returns ['/Users']
+ * getAllParents('/Users');
+ *
+ * @example
+ * // Returns ['/']
+ * getAllParents('/');
+ *
+ * @example
+ * // Returns ['/']
+ * getAllParents('');
+ */
 export function getAllParents(path:string):string[] {
   // If path is empty or just a slash, return an array with just the root
   if (!path || path === '/') {

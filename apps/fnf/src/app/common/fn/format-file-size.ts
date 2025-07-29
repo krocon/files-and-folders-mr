@@ -1,7 +1,9 @@
 /**
  * Formats a file size in bytes to a human-readable string with appropriate units.
  * Displays with the specified number of decimal places (default: 2).
+ *
  * Examples: "1.23 MB", "0.41 TB", "321.00 GB"
+ *
  * @param bytes The file size in bytes
  * @param decimalPlaces Number of decimal places to use for file size formatting (default: 2)
  * @returns A formatted string with appropriate units

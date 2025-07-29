@@ -1,11 +1,35 @@
 
 
 /**
- * Cleans a file name by removing technical tokens, file extensions, and fixing formatting issues.
- * Example: 'Endstation.13.Sahara.1963.German.1080p.BluRay.x264-LIM.mkv' -> 'Endstation.13.Sahara.1963'
- * 
- * @param name The original file name to clean
- * @returns A cleaned, more readable file name
+ * Cleans a filename by removing technical information while preserving the meaningful title and year.
+ *
+ * This function is designed to extract the core title from media filenames by:
+ * 1. Removing file extensions
+ * 2. Detecting and keeping the release year (if present)
+ * 3. Removing technical information like resolution, codecs, release groups, languages, etc.
+ * 4. Normalizing spacing and punctuation
+ *
+ * The function is particularly useful for media files (movies, TV shows) that often include
+ * technical metadata in their filenames.
+ *
+ * @param {string} name - The filename to clean
+ * @returns {string} The cleaned filename with only essential information preserved
+ *
+ * @example
+ * // Returns "The.Matrix.1999"
+ * cleanFileName("The.Matrix.1999.4K.HDR.DTS-HD.MA.5.1.x265-YIFY.mkv");
+ *
+ * @example
+ * // Returns "Breaking.Bad.S01E01"
+ * cleanFileName("Breaking.Bad.S01E01.720p.HDTV.x264-LOL.mp4");
+ *
+ * @example
+ * // Returns "Documentary.2020"
+ * cleanFileName("Documentary.2020.EXTENDED.1080p.WEB-DL.H264.AC3-EVO.mp4");
+ *
+ * @example
+ * // Returns empty string for empty input
+ * cleanFileName(""); // returns ""
  */
 export function cleanFileName(name: string): string {
   if (!name) return '';

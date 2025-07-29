@@ -1,7 +1,58 @@
 /**
- * Converts an array of directory paths into an ASCII tree representation
- * @param rows Array of strings containing directory paths
- * @returns Array of objects with path and label properties
+ * Converts a list of file/directory paths into an ASCII tree representation with path references.
+ *
+ * This function takes an array of path strings and creates a visual tree structure
+ * that represents the hierarchy of directories and files, similar to what you might
+ * see with command-line tools like `tree`. Each node in the returned array includes
+ * both the visual representation (label) and the corresponding path.
+ *
+ * The function:
+ * 1. Builds a tree data structure from the input paths
+ * 2. Identifies and marks leaf nodes
+ * 3. Renders the tree as ASCII art with proper branch characters
+ * 4. Returns an array of objects containing path and formatted label pairs
+ *
+ * @param {string[]} rows - Array of path strings (e.g., ['/folder/subfolder', '/folder/file.txt'])
+ *
+ * @returns {{ path: string, label: string }[]} Array of objects where:
+ *   - `path` is the full path to the node
+ *   - `label` is the formatted ASCII tree representation with proper indentation and branch characters
+ *
+ * @example
+ * // Input paths
+ * const paths = [
+ *   '/home/user/documents',
+ *   '/home/user/pictures',
+ *   '/home/user/pictures/vacation',
+ *   '/home/user/music'
+ * ];
+ *
+ * // Call the function
+ * const asciiTree = createAsciiTree(paths);
+ *
+ * // Result will be:
+ * // [
+ * //   { path: '/home', label: 'home' },
+ * //   { path: '/home/user', label: '└── user' },
+ * //   { path: '/home/user/documents', label: '    ├── documents' },
+ * //   { path: '/home/user/music', label: '    ├── music' },
+ * //   { path: '/home/user/pictures', label: '    └── pictures' },
+ * //   { path: '/home/user/pictures/vacation', label: '        └── vacation' }
+ * // ]
+ *
+ * // To print the ASCII tree:
+ * asciiTree.forEach(item => console.log(item.label));
+ * // Output:
+ * // home
+ * // └── user
+ * //     ├── documents
+ * //     ├── music
+ * //     └── pictures
+ * //         └── vacation
+ *
+ * @see {@link TreeNode} - The internal tree node structure used to build the hierarchy
+ * @see {@link markLeafNodes} - Helper function that identifies leaf nodes in the tree
+ * @see {@link renderTree} - Helper function that converts the tree to ASCII representation
  */
 export function createAsciiTree(rows: string[]): {path: string, label: string}[] {
   if (!rows || rows.length === 0) {
