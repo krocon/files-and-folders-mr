@@ -129,8 +129,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     if (this.captureIndex >= 0 && this.capturedKeystrokes.length > 0) {
       // Join all captured keystrokes into a single shortcut string
       const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
-
-      console.log('Captured keystrokes:', JSON.stringify(uniqueKeystrokes, null, 4));
       this.shortcuts[this.captureIndex] = uniqueKeystrokes.join(' ');
     }
 
