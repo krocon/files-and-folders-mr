@@ -69,8 +69,8 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     'TOGGLE_SHELL',
     "-",
     "COPY_2_CLIPBOARD_NAMES",
-    "COPY_2_CLIPBOARD_NAMES_AS_JSON",
     "COPY_2_CLIPBOARD_FULLNAMES",
+    "COPY_2_CLIPBOARD_NAMES_AS_JSON",
     "COPY_2_CLIPBOARD_FULLNAMES_AS_JSON",
   ];
 
