@@ -12,9 +12,9 @@ export class FiletypeController {
 
 
   @Get()
-  async apiUrltypes(): Promise<FiletypeExtensionMapping> {
+  async getData(): Promise<FiletypeExtensionMapping> {
     this.logger.log(`Getting filetypes`);
-    return await this.filetypeService.apiUrltype();
+    return await this.filetypeService.getData();
   }
 
 

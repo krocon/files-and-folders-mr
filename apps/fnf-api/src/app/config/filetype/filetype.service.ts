@@ -13,7 +13,7 @@ export class FiletypeService {
   private readonly customPath = environment.filetypeCustomPath;
 
 
-  async apiUrltype(): Promise<FiletypeExtensionMapping> {
+  async getData(): Promise<FiletypeExtensionMapping> {
     try {
 
       const custom = await this.loadCustom();

@@ -12,16 +12,16 @@ export class SearchPatternController {
 
 
   @Get()
-  async load(): Promise<FiletypeExtensionMapping> {
+  async getData(): Promise<FiletypeExtensionMapping> {
     this.logger.log(`Getting Search Patterns`);
-    return await this.searchService.load();
+    return await this.searchService.getData();
   }
 
 
   @Get('defaults')
   async getDefaults(): Promise<FiletypeExtensionMapping> {
     this.logger.log(`Getting default Search Patterns`);
-    return await this.searchService.loadDefaults();
+    return await this.searchService.getDefaults();
   }
 
 

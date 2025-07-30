@@ -14,9 +14,8 @@ export class ButtonService {
   private readonly customPath = environment.buttonCustomPath;
 
 
-  async apiUrlButtons(): Promise<ButtonMapping> {
+  async getData(): Promise<ButtonMapping> {
     try {
-
       const custom = await this.loadCustom();
       if (custom) {
         return custom;

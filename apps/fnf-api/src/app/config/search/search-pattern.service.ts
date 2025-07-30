@@ -13,7 +13,7 @@ export class SearchPatternService {
   private readonly customPath = environment.searchPatternCustomPath;
 
 
-  async load(): Promise<FiletypeExtensionMapping> {
+  async getData(): Promise<FiletypeExtensionMapping> {
     try {
 
       const custom = await this.loadCustom();
@@ -21,7 +21,7 @@ export class SearchPatternService {
         return custom.sort();
       }
       // no custom, load defaults:
-      return await this.loadDefaults();
+      return await this.getDefaults();
 
     } catch (error) {
       this.logger.error(`Failed to get filetype for seach-patterns:`, error);
@@ -71,7 +71,7 @@ export class SearchPatternService {
       }
 
       // Return defaults
-      return await this.loadDefaults();
+      return await this.getDefaults();
     } catch (error) {
       this.logger.error(`Failed to reset filetype for seach-patterns:`, error);
       throw error;
@@ -79,7 +79,7 @@ export class SearchPatternService {
   }
 
 
-  async loadDefaults(): Promise<FiletypeExtensionMapping> {
+  async getDefaults(): Promise<FiletypeExtensionMapping> {
     try {
       const defaultFilePath = join(this.defaultsPath, `data.json`);
       const content = await fs.readFile(defaultFilePath, 'utf-8');

@@ -11,9 +11,9 @@ export class ButtonController {
 
 
   @Get()
-  async apiUrlButtons(): Promise<ButtonMapping> {
+  async getData(): Promise<ButtonMapping> {
     this.logger.log(`Getting buttons`);
-    return await this.buttonService.apiUrlButtons();
+    return await this.buttonService.getData();
   }
 
 

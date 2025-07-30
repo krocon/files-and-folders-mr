@@ -4,26 +4,31 @@ import {join} from "path";
 const getEnvironmentVariables = () => {
 
   const label = 'prod';
-  const version = '30.07.2025 10:34';
-  const commitHash = '94c5b75';
+  const version = '30.07.2025 19:46';
+  const commitHash = '175f13f';
+
+  const assetsPrefix = join(__dirname, '../../..', 'fnf-api/assets');
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
 
-  const shortcutsDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/defaults');
-  const shortcutsCustomPath = join(__dirname, '../../..', 'fnf-api/assets/shortcut/custom');
+  const shortcutsDefaultsPath = assetsPrefix + '/shortcut/defaults';
+  const shortcutsCustomPath = assetsPrefix + '/shortcut/custom';
 
-  const colorDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/color/defaults')
-  const colorCustomPath = join(__dirname, '../../..', 'fnf-api/assets/color/custom');
+  const colorDefaultsPath = assetsPrefix + '/color/defaults'
+  const colorCustomPath = assetsPrefix + '/color/custom';
 
-  const filetypeDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/defaults')
-  const filetypeCustomPath = join(__dirname, '../../..', 'fnf-api/assets/filetype/custom');
+  const filetypeDefaultsPath = assetsPrefix + '/filetype/defaults'
+  const filetypeCustomPath = assetsPrefix + '/filetype/custom';
 
-  const buttonDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/button/defaults')
-  const buttonCustomPath = join(__dirname, '../../..', 'fnf-api/assets/button/custom');
+  const buttonDefaultsPath = assetsPrefix + '/button/defaults'
+  const buttonCustomPath = assetsPrefix + '/button/custom';
 
-  const toolDefaultsPath = join(__dirname, '../../..', 'fnf-api/assets/tool/defaults')
-  const toolCustomPath = join(__dirname, '../../..', 'fnf-api/assets/tool/custom');
+  const searchPatternCustomPath = assetsPrefix + '/search/defaults'
+  const searchPatternDefaultsPath = assetsPrefix + '/search/custom';
+
+  const toolDefaultsPath = assetsPrefix + '/tool/defaults'
+  const toolCustomPath = assetsPrefix + '/tool/custom';
 
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
@@ -32,6 +37,7 @@ const getEnvironmentVariables = () => {
   const llamaApiKey = process.env.FNF_LLAMA_API_KEY || '';
   const llamaApiUrl = process.env.FNF_LLAMA_API_URL || 'http://localhost:11434/api/generate';
   const llamaModel = process.env.FNF_LLAMA_MODEL || 'llama3';
+
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
@@ -52,6 +58,9 @@ const getEnvironmentVariables = () => {
 
     buttonDefaultsPath,
     buttonCustomPath,
+
+    searchPatternDefaultsPath,
+    searchPatternCustomPath,
 
     toolDefaultsPath,
     toolCustomPath,
@@ -109,6 +118,13 @@ export const environment = {
   },
   get buttonCustomPath() {
     return getEnvironmentVariables().buttonCustomPath;
+  },
+
+  get searchPatternDefaultsPath() {
+    return getEnvironmentVariables().searchPatternDefaultsPath;
+  },
+  get searchPatternCustomPath() {
+    return getEnvironmentVariables().searchPatternCustomPath;
   },
 
   get toolDefaultsPath() {

@@ -1,81 +1,84 @@
+const prefix = '';
+const apiPrefix = prefix + "/api";
+
 export const environment = {
   production: true,
-  version: '30.07.2025 10:34',
-  commitHash: '94c5b75',
+  version: '30.07.2025 19:46',
+  commitHash: '175f13f',
 
   config: {
-    apiUrl: "/api/config"
+    apiUrl: apiPrefix + "/config"
   },
   sysinfo: {
-    getDrivesUrl: "/api/drives",
-    getSysinfoUrl: "/api/sysinfo",
-    getAllinfoUrl: "/api/allinfo",
-    getFirstStartFolderUrl: "/api/firststartfolder"
+    getDrivesUrl: apiPrefix + "/drives",
+    getSysinfoUrl: apiPrefix + "/sysinfo",
+    getAllinfoUrl: apiPrefix + "/allinfo",
+    getFirstStartFolderUrl: apiPrefix + "/firststartfolder"
   },
   fileSystem: {
-    checkPathUrl: "/api/checkpath",
-    filterExistsUrl: "/api/filterexists",
-    readDirUrl: "/api/readdir",
-    getfileattributesUrl: "/api/getfileattributes",
-    setfileattributesUrl: "/api/setfileattributes",
+    checkPathUrl: apiPrefix + "/checkpath",
+    filterExistsUrl: apiPrefix + "/filterexists",
+    readDirUrl: apiPrefix + "/readdir",
+    getfileattributesUrl: apiPrefix + "/getfileattributes",
+    setfileattributesUrl: apiPrefix + "/setfileattributes",
     defaultRoot: "/",
     fileWatcher: false
   },
   multiRename: {
-    convertnamesUrl: "/api/ai/convertnames",
-    groupfilesUrl: "/api/ai/groupfiles",
-    hasOpenAiApiKeyUrl: "/api/ai/hasopenaiapikey"
+    convertnamesUrl: apiPrefix + "/ai/convertnames",
+    groupfilesUrl: apiPrefix + "/ai/groupfiles",
+    hasOpenAiApiKeyUrl: apiPrefix + "/ai/hasopenaiapikey"
   },
   checkGlob: {
-    apiUrl: "/api/checkglob"
+    apiUrl: apiPrefix + "/checkglob"
   },
   clean: {
-    apiUrl: "/api/clean"
+    apiUrl: apiPrefix + "/clean"
   },
   shell: {
-    shellUrl: "/api/shell",
-    spawnUrl: "/api/spawn",
-    cancelSpawnUrl: "/api/cancelspawn",
+    shellUrl: apiPrefix + "/shell",
+    spawnUrl: apiPrefix + "/spawn",
+    cancelSpawnUrl: apiPrefix + "/cancelspawn",
   },
   walkdir: {
-    apiUrl: "/api/walkdirsync",
+    apiUrl: apiPrefix + "/walkdirsync",
     syncMode: true
   },
 
   shellAutocomplete: {
-    autocompleteUrl: "/api/shell-autocomplete"
+    autocompleteUrl: apiPrefix + "/shell-autocomplete"
   },
   configThemes: {
-    apiUrl: "/api/themes"
+    apiUrl: apiPrefix + "/themes"
   },
   shortcut: {
-    apiUrl: "/api/shortcuts"
+    apiUrl: apiPrefix + "/shortcuts"
   },
   filetypeExtensions: {
-    apiUrl: "/api/filetypes"
+    apiUrl: apiPrefix + "/filetypes"
   },
   buttons: {
-    apiUrl: "/api/buttons"
+    apiUrl: apiPrefix + "/buttons"
   },
   searchPatterns: {
-    apiUrl: "/api/searchpatterns"
+    apiUrl: apiPrefix + "/searchpatterns"
   },
   edit: {
-    apiUrl: "api/file?name=",
-    saveFile: "api/file?name="
+    apiUrl: apiPrefix + "/file?name=",
+    saveFile: apiPrefix + "/file?name="
   },
   fileAction: {
-    url: "api/do",
-    multiUrl: "api/do/multi",
+    url: apiPrefix + "/do",
+    multiUrl: apiPrefix + "/do/multi",
   },
   gotoAnything: {
-    apiUrl: "api/findfolders"
+    apiUrl: apiPrefix + "/findfolders"
   },
   tool: {
-    loadUrl: "api/tools",
-    shellUrl: "api/shell"
+    loadUrl: apiPrefix + "/tools",
+    shellUrl: apiPrefix + "/shell"
   },
   download: {
-    downloadUrl: "api/download"
+    downloadUrl: apiPrefix + "/download"
   }
 };

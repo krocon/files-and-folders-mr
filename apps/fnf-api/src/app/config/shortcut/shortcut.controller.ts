@@ -13,9 +13,9 @@ export class ShortcutController {
    * Get shortcuts for a specific OS (merged defaults + custom)
    */
   @Get(':os')
-  async getShortcuts(@Param('os') os: BrowserOsType): Promise<ShortcutActionMapping> {
+  async getData(@Param('os') os: BrowserOsType): Promise<ShortcutActionMapping> {
     this.logger.log(`Getting shortcuts for ${os}`);
-    return await this.shortcutService.getShortcuts(os);
+    return await this.shortcutService.getData(os);
   }
 
   /**

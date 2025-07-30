@@ -15,7 +15,7 @@ export class ShortcutService {
   /**
    * Get shortcuts for a specific OS, merging defaults with custom shortcuts
    */
-  async getShortcuts(os: BrowserOsType): Promise<ShortcutActionMapping> {
+  async getData(os: BrowserOsType): Promise<ShortcutActionMapping> {
     try {
 
       const custom = await this.loadCustom(os);

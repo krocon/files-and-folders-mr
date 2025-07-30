@@ -4,29 +4,31 @@ import {join} from "path";
 const getEnvironmentVariables = () => {
 
   const label = 'dev';
-  const version = '30.07.2025 10:34';
-  const commitHash = '94c5b75';
+  const version = '30.07.2025 19:46';
+  const commitHash = '175f13f';
+
+  const assetsPrefix = join(__dirname, '..', 'src/assets');
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
 
-  const shortcutsDefaultsPath = join(__dirname, '..', 'src/assets/shortcut/defaults');
-  const shortcutsCustomPath = join(__dirname, '..', 'src/assets/shortcut/custom');
+  const shortcutsDefaultsPath = assetsPrefix + '/shortcut/defaults';
+  const shortcutsCustomPath = assetsPrefix + '/shortcut/custom';
 
-  const colorDefaultsPath = join(__dirname, '..', 'src/assets/color/defaults')
-  const colorCustomPath = join(__dirname, '..', 'src/assets/color/custom');
+  const colorDefaultsPath = assetsPrefix + '/color/defaults'
+  const colorCustomPath = assetsPrefix + '/color/custom';
 
-  const filetypeDefaultsPath = join(__dirname, '..', 'src/assets/filetype/defaults')
-  const filetypeCustomPath = join(__dirname, '..', 'src/assets/filetype/custom');
+  const filetypeDefaultsPath = assetsPrefix + '/filetype/defaults'
+  const filetypeCustomPath = assetsPrefix + '/filetype/custom';
 
-  const buttonDefaultsPath = join(__dirname, '..', 'src/assets/button/defaults')
-  const buttonCustomPath = join(__dirname, '..', 'src/assets/button/custom');
+  const buttonDefaultsPath = assetsPrefix + '/button/defaults'
+  const buttonCustomPath = assetsPrefix + '/button/custom';
 
-  const searchPatternCustomPath = join(__dirname, '..', 'src/assets/search/defaults')
-  const searchPatternDefaultsPath = join(__dirname, '..', 'src/assets/search/custom');
+  const searchPatternCustomPath = assetsPrefix + '/search/defaults'
+  const searchPatternDefaultsPath = assetsPrefix + '/search/custom';
 
-  const toolDefaultsPath = join(__dirname, '..', 'src/assets/tool/defaults')
-  const toolCustomPath = join(__dirname, '..', 'src/assets/tool/custom');
+  const toolDefaultsPath = assetsPrefix + '/tool/defaults'
+  const toolCustomPath = assetsPrefix + '/tool/custom';
 
 
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';

@@ -29,6 +29,7 @@ import {ButtonModule} from "./config/button/button.module";
 import {ToolModule} from "./config/tool/tool.module";
 import {ThemeModule} from "./config/theme/theme.module";
 import {SearchPatternModule} from "./config/search/search-pattern.module";
+import {environment} from "../environments/environment";
 
 export const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
@@ -87,4 +88,30 @@ export const config = new Config(
   ]
 })
 export class AppModule {
+
+  constructor() {
+    console.log('>  config      :', config);
+    console.log('>  process.env :');
+    Object
+      .keys(process.env)
+      .filter(k => k.startsWith('FNF_') && !k.includes('API_KEY'))
+      .forEach(key => console.log('    > ' + key, process.env[key]));
+
+    console.log('>  environment :', {
+      production: environment.production,
+      label: environment.label,
+      version: environment.version,
+      commitHash: environment.commitHash,
+      frontendPort: environment.frontendPort,
+      websocketPort: environment.websocketPort,
+      // not this! openaiApiKey: environment.openaiApiKey,
+      openaiApiUrl: environment.openaiApiUrl,
+      openaiModel: environment.openaiModel,
+      llamaApiKey: environment.llamaApiKey,
+      llamaApiUrl: environment.llamaApiUrl,
+      llamaModel: environment.llamaModel,
+      aiCompletionService: environment.aiCompletionService
+    });
+  }
+  
 }
