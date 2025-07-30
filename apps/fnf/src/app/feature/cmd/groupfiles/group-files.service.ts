@@ -8,6 +8,9 @@ import {GroupFilesDialogData} from './data/group-files-dialog.data';
 import {GroupFilesResult} from './data/group-files-result';
 import {GroupFilesRow} from './data/group-files-row';
 import {fixPath, path2DirBase} from "../../../common/fn/path-2-dir-base.fn";
+import {filepath2FileItem} from "../../../common/fn/filepath-to-file-items";
+import {fileItem2Path} from "../../../common/fn/file-item-to-path";
+import {EbookGroupingService} from "./ebook-grouping.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +18,8 @@ import {fixPath, path2DirBase} from "../../../common/fn/path-2-dir-base.fn";
 export class GroupFilesService {
 
   constructor(
-    private readonly commandService: CommandService
+    private readonly commandService: CommandService,
+    private readonly ebookGroupingService: EbookGroupingService,
   ) {
   }
 
@@ -25,11 +29,11 @@ export class GroupFilesService {
 
     for (const row of rows) {
       if (row.source && row.target && this.isFileRelevant(row.source, row.target)) {
-        let fop:QueueFileOperationParams = {
+        let fop: QueueFileOperationParams = {
           bulk: rows.length > CommandService.BULK_LOWER_LIMIT,
           source: row.source,
           srcPanelIndex: row.srcPanelIndex,
-          targetPanelIndex: groupFilesDialogData.data.useSourceDir ? row.srcPanelIndex: row.targetPanelIndex,
+          targetPanelIndex: groupFilesDialogData.data.useSourceDir ? row.srcPanelIndex : row.targetPanelIndex,
           target: row.target
         };
         actions.push(
@@ -98,16 +102,46 @@ export class GroupFilesService {
     return actions;
   }
 
-  private isFileRelevant(source: FileItemIf, target: FileItemIf): boolean {
-    return source.base === target.base
-      && source.dir !== target.dir
-      && !!target.dir;
-  }
 
   /**
    * Updates the table model based on the first letter of the file names
    * @returns The group files result
    */
+  updateTableModelEbookMode(dialogData: GroupFilesDialogData): GroupFilesResult {
+    const para: GroupFilesData = dialogData.data;
+    const fileUrls: string[] = dialogData.rows.map(r => fileItem2Path(r));
+    const groupedFileUrls = this.ebookGroupingService.groupFiles(fileUrls);
+
+    const groupFilesRows: GroupFilesRow[] = [];
+    const targetDir = para.useSourceDir ? dialogData.sourceDir : dialogData.targetDir;
+
+    let i = 0;
+    for (const [groupKey, files] of Object.entries(groupedFileUrls)) {
+      if (Array.isArray(files)) {
+        files.forEach(file => {
+          const sourceFileItem = filepath2FileItem(file);
+          groupFilesRows.push(new GroupFilesRow(
+            i++,
+            sourceFileItem.base,
+            sourceFileItem,
+            targetDir + '/' + groupKey,
+            new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
+          ));
+        });
+      } else {
+        const sourceFileItem = filepath2FileItem(files);
+        groupFilesRows.push(new GroupFilesRow(
+          i++,
+          sourceFileItem.base,
+          sourceFileItem,
+          targetDir + '/' + groupKey,
+          new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
+        ));
+      }
+    }
+    return new GroupFilesResult(groupFilesRows.length, groupFilesRows);
+  }
+
   updateTableModelFirstLetter(dialogData: GroupFilesDialogData): GroupFilesResult {
 
     const para: GroupFilesData = dialogData.data;
@@ -398,6 +432,9 @@ export class GroupFilesService {
     if (mode.indexOf('letter') > -1) {
       return this.updateTableModelFirstLetter(dialogData);
     }
+    if (mode.indexOf('ebook_mode') > -1) {
+      return this.updateTableModelEbookMode(dialogData);
+    }
 
     console.warn('updateTableModel. Unknown mode:', dialogData.data.modus);
     return new GroupFilesResult(0, []);
@@ -411,5 +448,11 @@ export class GroupFilesService {
     return rows.map(r => new QueueFileOperationParams(
       r.src, srcPanelIndex, r.target, targetPanelIndex, rows.length > CommandService.BULK_LOWER_LIMIT
     ));
+  }
+
+  private isFileRelevant(source: FileItemIf, target: FileItemIf): boolean {
+    return source.base === target.base
+      && source.dir !== target.dir
+      && !!target.dir;
   }
 }

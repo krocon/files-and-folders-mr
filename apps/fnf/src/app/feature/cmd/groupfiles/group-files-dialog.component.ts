@@ -49,6 +49,7 @@ import {EbookGroupingService} from "./ebook-grouping.service";
 import {fileItem2Path} from "../../../common/fn/file-item-to-path";
 import {GroupFilesRow} from "./data/group-files-row";
 import {filepath2FileItem} from "../../../common/fn/filepath-to-file-items";
+import {GroupFileDialogResponse} from "./data/group-file-dialog-response";
 
 @Component({
   selector: "fnf-group-files-dialog",
@@ -115,6 +116,7 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
   private alive = true;
   private convertResponse: ConvertResponseType | undefined;
 
+
   constructor(
     public dialogRef: MatDialogRef<GroupFilesDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public groupFilesDialogData: GroupFilesDialogData,
@@ -125,7 +127,6 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
     private readonly zone: NgZone,
     private readonly confirmationDialogService: FnfConfirmationDialogService,
     private readonly aiCompletionService: AiCompletionService,
-    private readonly ebookGroupingService: EbookGroupingService,
   ) {
     this.data = groupFilesDialogData.data;
     this.options = groupFilesDialogData.options;
@@ -281,16 +282,15 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
         this.rows,
         this.groupFilesDialogData,
       );
-      this.dialogRef.close(actionEvents);
+      this.dialogRef.close(new GroupFileDialogResponse(actionEvents, formRawValue));
 
     } else {
       const actionEvents = this.groupFilesService.createActionEvents(
         this.rows,
         this.groupFilesDialogData,
       );
-      this.dialogRef.close(actionEvents);
+      this.dialogRef.close(new GroupFileDialogResponse(actionEvents, formRawValue));
     }
-
   }
 
   onCancelClicked() {
@@ -333,45 +333,6 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
     if (rawValue.strategy === 'AI') {
       this.handleConvertResponse();
 
-    } else if (rawValue.modus === 'ebook_mode') {
-      const fileUrls: string[] = this.groupFilesDialogData.rows.map(r => fileItem2Path(r));
-      const groupedFileUrls = this.ebookGroupingService.groupFiles(fileUrls);
-
-      const groupFilesRows: GroupFilesRow[] = [];
-      const targetDir = rawValue.useSourceDir ? this.groupFilesDialogData.sourceDir : this.groupFilesDialogData.targetDir;
-
-      let i = 0;
-      for (const [groupKey, files] of Object.entries(groupedFileUrls)) {
-        if (Array.isArray(files)) {
-          files.forEach(file => {
-            const sourceFileItem = filepath2FileItem(file);
-            groupFilesRows.push(new GroupFilesRow(
-              i++,
-              sourceFileItem.base,
-              sourceFileItem,
-              targetDir + '/' + groupKey,
-              new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
-            ));
-          });
-        } else {
-          const sourceFileItem = filepath2FileItem(files);
-          groupFilesRows.push(new GroupFilesRow(
-            i++,
-            sourceFileItem.base,
-            sourceFileItem,
-            targetDir + '/' + groupKey,
-            new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
-          ));
-        }
-      }
-      const updateModel: GroupFilesResult = new GroupFilesResult(groupFilesRows.length, groupFilesRows);
-      this.rows = this.groupFilesService.apiUrlOperationParams(
-        updateModel.rows,
-        this.groupFilesDialogData.sourcePanelIndex,
-        this.groupFilesDialogData.targetPanelIndex
-      );
-      this.groupCount = updateModel.groupCount;
-      
     } else {
 
       const dialogData = this.clone<GroupFilesDialogData>(this.groupFilesDialogData);

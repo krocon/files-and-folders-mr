@@ -40,6 +40,7 @@ import {UnzipDialogResultData} from "../feature/cmd/unzip/unzip-dialog-result.da
 import {AttributeDialogService} from "../feature/cmd/attribute/attribute-dialog.service";
 import {AttributeDialogData} from "../feature/cmd/attribute/attribute-dialog.data";
 import {AttributeDialogResultData} from "../feature/cmd/attribute/attribute-dialog-result.data";
+import {GroupFileDialogResponse} from "../feature/cmd/groupfiles/data/group-file-dialog-response";
 
 @Injectable({
   providedIn: 'root'
@@ -533,9 +534,9 @@ export class ActionExecutionService {
         targetPanelIndex
       );
       this.groupFilesDialogService
-        .open(data, (arr: QueueActionEvent[] | undefined) => {
-          if (arr) {
-            this.commandService.addActions(arr);
+        .open(data, (res: GroupFileDialogResponse | undefined) => {
+          if (res && res.queueActionEvents) {
+            this.commandService.addActions(res.queueActionEvents);
           }
         });
     }
