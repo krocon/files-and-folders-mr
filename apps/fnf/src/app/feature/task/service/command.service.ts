@@ -1,14 +1,24 @@
 import {Injectable} from '@angular/core';
 import {QueueActionEvent} from "../domain/queue-action-event";
 import {QueueActionEventType} from "../domain/queue-action-event.type";
-import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex, UnpackParaData} from "@fnf-data";
-import {QueueStatus} from "../domain/queue-status";
+import {
+  DirEvent,
+  FileItemIf,
+  FileItemMeta,
+  FilePara,
+  OnDoResponseType,
+  PanelIndex,
+  UnpackParaData,
+  WalkData
+} from "@fnf-data";
 import {ActionQueueService} from "./action-queue.service";
 import {QueueFileOperationParams} from "../domain/queue-file-operation-params";
 import {NotifyService} from "./notify-service";
 import {QueueNotifyEventIf} from "../domain/queue-notify-event.if";
 import {QueueNotifyEvent} from "../domain/queue-notify-event";
 import {UnzipDialogResultData} from "../../cmd/unzip/unzip-dialog-result.data";
+import {WalkdirService} from "../../../common/walkdir/walkdir.service";
+import {fileItem2Path} from "../../../common/fn/file-item-to-path";
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +28,14 @@ export class CommandService {
   // Constants
   public static readonly BULK_LOWER_LIMIT = 30;
   private actionId = 0;
-
+  private walkCancelKeys: string[] = [];
 
   constructor(
-    private actionQueueService: ActionQueueService,
-    private readonly eventService: NotifyService
+    private readonly actionQueueService: ActionQueueService,
+    private readonly eventService: NotifyService,
+    private readonly walkdirService: WalkdirService,
   ) {
   }
-
 
   createActionEvent(
     key: QueueActionEventType,
@@ -219,7 +229,6 @@ export class CommandService {
     );
   }
 
-
   /**
    * Renames a file or directory
    * @param para The parameters for the rename operation
@@ -252,13 +261,25 @@ export class CommandService {
     );
   }
 
-  /**
-   * Adds actions to the queue
-   * @param actions The actions to add
-   * @param queueIndex The queue index
-   * @param openJobTable Opens the Task Manager (Job table UI)
-   */
+
   addActions(actions: QueueActionEvent[], queueIndex: number = 0, openJobTable: boolean = true): void {
+    actions
+      .forEach(action => {
+        if (['move', 'copy'].includes(action.action) && action.filePara.source?.isDir) {
+          const cancelKey = this.walkdirService
+            .walkDir(
+              [fileItem2Path(action.filePara.source)],
+              '**/*',
+              (walkData: WalkData) => {
+                if (action.filePara.source) {
+                  action.filePara.source.size = walkData.sizeSum;
+                  action.size = walkData.sizeSum;
+                }
+              });
+          this.walkCancelKeys.push(cancelKey);
+        }
+      });
+
     this.actionQueueService.addActions(actions, queueIndex);
     if (openJobTable) {
       this.actionQueueService.openJobTable();
