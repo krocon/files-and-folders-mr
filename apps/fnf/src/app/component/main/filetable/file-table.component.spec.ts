@@ -4,12 +4,12 @@ import {FileTableComponent} from './file-table.component';
 import {AppService} from '../../../app.service';
 import {GridSelectionCountService} from '../../../service/grid-selection-count.service';
 import {GotoAnythingDialogService} from '../../cmd/gotoanything/goto-anything-dialog.service';
-import {NotifyService} from '../../../service/cmd/notify-service';
+import {NotifyService} from '../../task/service/notify-service';
 import {SelectionLocalStorage} from './selection-local-storage';
 import {FocusLocalStorage} from './focus-local-storage';
 import {MkdirDialogService} from '../../cmd/mkdir/mkdir-dialog.service';
 import {WalkdirService} from '../../../common/walkdir/walkdir.service';
-import {ActionExecutionService} from '../../../service/action/action-execution.service';
+import {ActionExecutionService} from '../../../service/action-execution.service';
 import {RenderWrapperFactory} from '@guiexpert/angular-table';
 import {FileItemIf, DOT_DOT} from '@fnf-data';
 

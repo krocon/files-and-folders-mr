@@ -1,23 +1,22 @@
 import {Injectable} from '@angular/core';
-import {QueueActionEvent} from "../../domain/cmd/queue-action-event";
-import {QueueActionEventType} from "../../domain/cmd/queue-action-event.type";
+import {QueueActionEvent} from "../domain/queue-action-event";
+import {QueueActionEventType} from "../domain/queue-action-event.type";
 import {DirEvent, FileItemIf, FileItemMeta, FilePara, OnDoResponseType, PanelIndex, UnpackParaData} from "@fnf-data";
-import {QueueStatus} from "../../domain/cmd/queue-status";
+import {QueueStatus} from "../domain/queue-status";
 import {ActionQueueService} from "./action-queue.service";
-import {QueueFileOperationParams} from "../../domain/cmd/queue-file-operation-params";
+import {QueueFileOperationParams} from "../domain/queue-file-operation-params";
 import {NotifyService} from "./notify-service";
-import {QueueNotifyEventIf} from "../../domain/cmd/queue-notify-event.if";
-import {QueueNotifyEvent} from "../../domain/cmd/queue-notify-event";
-import {UnzipDialogResultData} from "../../component/cmd/unzip/unzip-dialog-result.data";
+import {QueueNotifyEventIf} from "../domain/queue-notify-event.if";
+import {QueueNotifyEvent} from "../domain/queue-notify-event";
+import {UnzipDialogResultData} from "../../cmd/unzip/unzip-dialog-result.data";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommandService {
+
   // Constants
   public static readonly BULK_LOWER_LIMIT = 30;
-  readonly ACTION_STATUS_NEW: QueueStatus = 'NEW';
-
   private actionId = 0;
 
 
@@ -46,7 +45,7 @@ export class CommandService {
     return new QueueActionEvent(
       targetPanelIndex,
       filePara,
-      this.ACTION_STATUS_NEW,
+      "PENDING",
       this.actionId++
     );
   }
@@ -61,7 +60,7 @@ export class CommandService {
     return new QueueActionEvent(
       targetPanelIndex,
       filePara,
-      this.ACTION_STATUS_NEW,
+      "PENDING",
       this.actionId++
     );
   }
@@ -104,7 +103,7 @@ export class CommandService {
     return new QueueActionEvent(
       1, // targetPanelIndex
       unpackPara as any, // Use UnpackParaData instead of FilePara
-      this.ACTION_STATUS_NEW,
+      "PENDING",
       this.actionId++
     );
   }

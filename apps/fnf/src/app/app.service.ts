@@ -36,7 +36,7 @@ import {TabsPanelData} from "./domain/filepagedata/data/tabs-panel.data";
 import {ShellLocalStorage} from "./component/main/footer/shellpanel/shell-local-storage";
 import {BrowserOsService} from "./service/browseros/browser-os.service";
 import {PanelManagementService} from "./service/panel/panel-management-service";
-import {ActionExecutionService} from "./service/action/action-execution.service";
+import {ActionExecutionService} from "./service/action-execution.service";
 
 
 @Injectable({

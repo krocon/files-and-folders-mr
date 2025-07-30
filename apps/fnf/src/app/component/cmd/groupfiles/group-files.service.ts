@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {QueueFileOperationParams} from '../../../domain/cmd/queue-file-operation-params';
+import {QueueFileOperationParams} from '../../task/domain/queue-file-operation-params';
 import {GroupFilesData} from './data/group-files.data';
 import {FileItem, FileItemIf, PanelIndex} from "@fnf-data";
-import {QueueActionEvent} from '../../../domain/cmd/queue-action-event';
-import {CommandService} from '../../../service/cmd/command.service';
+import {QueueActionEvent} from '../../task/domain/queue-action-event';
+import {CommandService} from '../../task/service/command.service';
 import {GroupFilesDialogData} from './data/group-files-dialog.data';
 import {GroupFilesResult} from './data/group-files-result';
 import {GroupFilesRow} from './data/group-files-row';

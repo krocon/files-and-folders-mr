@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {QueueActionEvent} from '../../domain/cmd/queue-action-event';
-import {QueueActionEventType} from '../../domain/cmd/queue-action-event.type';
-import {QueueStatus} from '../../domain/cmd/queue-status';
+import {QueueActionEvent} from '../domain/queue-action-event';
+import {QueueActionEventType} from '../domain/queue-action-event.type';
 import {Observable} from 'rxjs';
-import {QueueProgress} from "../../domain/cmd/queue-progress";
-import {QueueIf} from "../../domain/cmd/queue.if";
-import {Queue} from "../../domain/cmd/queue";
+import {QueueProgress} from "../domain/queue-progress";
+import {QueueIf} from "../domain/queue.if";
+import {Queue} from "../domain/queue";
 import {FileActionService} from "./file-action.service";
 import {DirEvent, DirEventIf, OnDoResponseType} from "@fnf-data";
 import {NotifyService} from "./notify-service";
-import {QueueNotifyEvent} from "../../domain/cmd/queue-notify-event";
+import {QueueNotifyEvent} from "../domain/queue-notify-event";
 
 @Injectable({
   providedIn: 'root'
@@ -19,22 +18,11 @@ export class ActionQueueService {
   // Events
   public static readonly REFRESH_JOB_QUEUE_TABLE: QueueActionEventType = 'refresh_job_queue_table';
   public static readonly OPEN_JOB_QUEUE_TABLE: QueueActionEventType = 'open_job_queue_table';
-  // QueueIf Status constants
-  readonly QUEUE_STATUS_IDLE: QueueStatus = 'IDLE';
-  readonly QUEUE_STATUS_RUNNING: QueueStatus = 'RUNNING';
-  readonly QUEUE_STATUS_ERROR: QueueStatus = 'ERROR';
-  // Action Status constants
-  readonly ACTION_STATUS_NEW: QueueStatus = 'NEW';
-  readonly ACTION_STATUS_PENDING: QueueStatus = 'PENDING';
-  readonly ACTION_STATUS_PROCESSING: QueueStatus = 'PROCESSING';
-  readonly ACTION_STATUS_ERROR: QueueStatus = 'ERROR';
-  readonly ACTION_STATUS_WARNING: QueueStatus = 'WARNING';
-  readonly ACTION_STATUS_SUCCESS: QueueStatus = 'SUCCESS';
-  readonly ACTION_STATUS_ABORT: QueueStatus = 'ABORT';
+
+
   // Action Event Keys
   readonly ACTION_REFRESH_PANEL: QueueActionEventType = 'refresh_panel';
   readonly ACTION_MKDIR: QueueActionEventType = 'mkdir';
-  readonly ACTION_UNPACK: QueueActionEventType = 'unpack';
   readonly ACTION_PACK: QueueActionEventType = 'pack';
   readonly ACTION_CREATE_FILE: QueueActionEventType = 'createfile';
   readonly ACTION_OPEN: QueueActionEventType = 'open';
@@ -43,6 +31,7 @@ export class ActionQueueService {
   readonly ACTION_REMOVE: QueueActionEventType = 'remove';
   readonly ACTION_DELEMPTY: QueueActionEventType = 'delempty';
   readonly ACTION_RENAME: QueueActionEventType = 'rename';
+
   private queues: QueueIf[] = [];
   private jobId = 0;
   private refreshQueueTableTimer: any;
@@ -70,14 +59,6 @@ export class ActionQueueService {
   }
 
 
-  getQueueStatus(queueIndex: number = 0): QueueStatus {
-    return this.getQueue(queueIndex).status;
-  }
-
-  getQueues() {
-    return this.queues;
-  }
-
 
   getQueueProgress(queueIndex: number = 0): QueueProgress {
     return this.getQueue(queueIndex).progress;
@@ -86,18 +67,22 @@ export class ActionQueueService {
 
   /**
    * Adds multiple actions to a queue
-   * @param actions The actions to add
+   * @param actionEvents The actions to add
    * @param queueIndex The index of the queue to add the actions to
    */
-  addActions(actions: QueueActionEvent[], queueIndex: number = 0): void {
+  addActions(actionEvents: QueueActionEvent[], queueIndex: number = 0): void {
     this.jobId++;
     const queue = this.getQueue(queueIndex);
     queue.jobId = this.jobId;
-    for (let i = 0; i < actions.length; i++) {
-      const action = actions[i];
-      action.status = this.ACTION_STATUS_NEW;
-      action.id = this.jobId;
-      queue.actions.push(action);
+    for (let i = 0; i < actionEvents.length; i++) {
+      const actionEvt = actionEvents[i];
+      actionEvt.status = "PENDING";
+      actionEvt.id = this.jobId;
+      actionEvt.size = 0;
+      if (actionEvt.action === this.ACTION_MOVE || actionEvt.action === this.ACTION_COPY) {
+        actionEvt.size = actionEvt.filePara?.source?.size ?? 0;
+      }
+      queue.actions.push(actionEvt);
     }
     this.triggerJobQueueTableUpdate();
     this.triggerProgress();
@@ -111,31 +96,31 @@ export class ActionQueueService {
     if (queue.status==='PAUSED') return;
 
     for (let i = 0; i < queue.actions.length; i++) {
-      const action: QueueActionEvent = queue.actions[i];
-      if (action.status === this.ACTION_STATUS_NEW) {
-        queue.status = this.QUEUE_STATUS_RUNNING;
-        action.status = this.ACTION_STATUS_PROCESSING;
+      const actionEvent: QueueActionEvent = queue.actions[i];
+      if (actionEvent.status === "PENDING") {
+        queue.status = 'RUNNING';
+        actionEvent.status = "PROCESSING";
 
-        if (action.action === this.ACTION_REFRESH_PANEL) {
-          action.status = this.ACTION_STATUS_SUCCESS;
+        if (actionEvent.action === this.ACTION_REFRESH_PANEL) {
+          actionEvent.status = "SUCCESS";
 
           this.eventService.next(
             new QueueNotifyEvent(
               this.ACTION_REFRESH_PANEL,
               [
-                {...new DirEvent('', []), panelIndex: action.panelIndex}
+                {...new DirEvent('', []), panelIndex: actionEvent.panelIndex}
               ]));
           this.triggerJobQueueTableUpdate();
 
         } else {
           // In the original code, this would use executorFactory to create an executor
           // Since we don't have a direct replacement, we'll simulate the behavior
-          this.executeAction(action)
+          this.executeAction(actionEvent)
             .subscribe({
               next: (res: OnDoResponseType) => {
                 console.log(' executeAction next res:', res);
-                queue.status = this.QUEUE_STATUS_IDLE;
-                action.status = this.ACTION_STATUS_SUCCESS;
+                queue.status = "IDLE"
+                actionEvent.status = "SUCCESS";
 
                 const dea: DirEventIf[] = res;
                 for (let j = 0; j < dea.length; j++) {
@@ -151,15 +136,15 @@ export class ActionQueueService {
                 }
 
                 this.eventService.next({
-                  type: action.action,
+                  type: actionEvent.action,
                   data: res
                 });
                 this.next(queue);
                 this.triggerJobQueueTableUpdate();
               },
               error: (err) => {
-                queue.status = this.QUEUE_STATUS_ERROR;
-                action.status = this.ACTION_STATUS_ERROR;
+                queue.status = 'ERROR';
+                actionEvent.status = "ERROR";
                 this.triggerJobQueueTableUpdate();
               }
             });
@@ -167,7 +152,7 @@ export class ActionQueueService {
         }
       }
     }
-    queue.status = this.QUEUE_STATUS_IDLE;
+    queue.status = "IDLE"
     this.triggerJobQueueTableUpdate();
   }
 
@@ -198,12 +183,12 @@ export class ActionQueueService {
 
   removeSuccessed(queueIndex: number = 0) {
     const queue = this.getQueue(queueIndex);
-    queue.actions = queue.actions.filter(action => action.status != this.ACTION_STATUS_SUCCESS);
+    queue.actions = queue.actions.filter(action => action.status !== "SUCCESS");
   }
 
   doStop(queueIndex: number = 0) {
     const queue = this.getQueue(queueIndex);
-    queue.actions = queue.actions.filter(action => action.status != this.ACTION_STATUS_PROCESSING);
+    queue.actions = queue.actions.filter(action => action.status !== "PROCESSING");
   }
 
   doPause(queueIndex: number = 0) {
@@ -243,7 +228,7 @@ export class ActionQueueService {
    */
   private addNewQueue(): void {
     this.queues.push(new Queue({
-      status: this.QUEUE_STATUS_IDLE
+      status: "IDLE"
     }));
   }
 
@@ -260,19 +245,17 @@ export class ActionQueueService {
       progress.errors = 0;
 
       const jid = queue.jobId;
-      const actions = queue.actions;
+      const actionEvents = queue.actions;
 
-      for (let i = 0; i < actions.length; i++) {
-        const action = actions[i];
-        if (action.id >= jid) {
-          if (action.status === this.ACTION_STATUS_NEW ||
-            action.status === this.ACTION_STATUS_PENDING ||
-            action.status === this.ACTION_STATUS_PROCESSING) {
+      for (let i = 0; i < actionEvents.length; i++) {
+        const actionEvent = actionEvents[i];
+        if (actionEvent.id >= jid) {
+          if (actionEvent.status === "PENDING" || actionEvent.status === "PROCESSING") {
             progress.unfinished++;
           } else {
             progress.finished++;
           }
-          if (action.status === this.ACTION_STATUS_ERROR) {
+          if (actionEvent.status === "ERROR") {
             progress.errors++;
           }
         }
@@ -291,7 +274,7 @@ export class ActionQueueService {
       queue.buttonStates.clean = progress.finished >0;
       queue.buttonStates.pause = progress.unfinished>0;
       queue.buttonStates.resume = progress.unfinished>0 && queue.status==='PAUSED';
-      queue.buttonStates.stop = queue.status==='RUNNING' ||  queue.status==='PROCESSING';
+      queue.buttonStates.stop = queue.status === 'RUNNING';
     }
   }
 
@@ -311,7 +294,7 @@ export class ActionQueueService {
     this.calcQueueProgress();
     for (let i = 0; i < this.queues.length; i++) {
       const queue = this.queues[i];
-      if (queue.status === this.QUEUE_STATUS_IDLE) {
+      if (queue.status === "IDLE") {
         this.next(queue);
       }
     }

@@ -4,7 +4,7 @@ import {GroupFilesDialogComponent} from "./group-files-dialog.component";
 import {takeWhile} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {GroupFilesDialogConfig} from "./group-files-dialog.config";
-import {QueueActionEvent} from "../../../domain/cmd/queue-action-event";
+import {QueueActionEvent} from "../../task/domain/queue-action-event";
 
 @Injectable({
   providedIn: "root"

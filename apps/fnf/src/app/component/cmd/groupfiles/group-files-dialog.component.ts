@@ -31,8 +31,8 @@ import {
   TableOptionsIf
 } from "@guiexpert/table";
 
-import {QueueFileOperationParams} from "../../../domain/cmd/queue-file-operation-params";
-import {CommandService} from "../../../service/cmd/command.service";
+import {QueueFileOperationParams} from "../../task/domain/queue-file-operation-params";
+import {CommandService} from "../../task/service/command.service";
 import {GroupFilesNameCellRendererComponent} from "./renderer/group-files-name-cell-renderer.component";
 import {GroupFilesService} from "./group-files.service";
 import {debounceTime} from "rxjs";

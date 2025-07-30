@@ -9,9 +9,9 @@ import {
 } from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {ActionQueueService} from "../../../service/cmd/action-queue.service";
+import {ActionQueueService} from "../service/action-queue.service";
 import {takeWhile} from "rxjs/operators";
-import {QueueProgress} from "../../../domain/cmd/queue-progress";
+import {QueueProgress} from "../domain/queue-progress";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {BusyBeeComponent} from "../../common/busy-bee.component";
 import {MatIconModule} from "@angular/material/icon";

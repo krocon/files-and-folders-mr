@@ -28,7 +28,7 @@ import {takeWhile} from "rxjs/operators";
 import {MatDivider} from "@angular/material/divider";
 import {FnfAutofocusDirective} from "../../../../common/directive/fnf-autofocus.directive";
 import {PanelManagementService} from "../../../../service/panel/panel-management-service";
-import {ActionExecutionService} from "../../../../service/action/action-execution.service";
+import {ActionExecutionService} from "../../../../service/action-execution.service";
 import {ActionId} from "../../../../domain/action/fnf-action.enum";
 
 @Component({

@@ -4,11 +4,10 @@ export type QueueItemStatus =
   | 'PENDING'
   | 'PROCESSING'
   | 'SUCCESS'
-  | 'ERROR'
-  | 'WARNING';
+  | 'ERROR';
 
 export function isQueueItemFinished(status: QueueItemStatus): boolean {
-  return status === 'SUCCESS' || status === 'ERROR' || status === 'WARNING';
+  return status === 'SUCCESS' || status === 'ERROR';
 }
 
 export function isQueueItemRunning(status: QueueItemStatus): boolean {

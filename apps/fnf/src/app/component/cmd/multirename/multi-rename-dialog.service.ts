@@ -4,7 +4,7 @@ import {MultiRenameDialogComponent} from "./multi-rename-dialog.component";
 import {takeWhile} from "rxjs/operators";
 import {MatDialog} from "@angular/material/dialog";
 import {MultiRenameDialogConfig} from "./multi-rename-dialog.config";
-import {QueueActionEvent} from "../../../domain/cmd/queue-action-event";
+import {QueueActionEvent} from "../../task/domain/queue-action-event";
 
 @Injectable({
   providedIn: "root"

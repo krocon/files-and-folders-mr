@@ -8,22 +8,22 @@ import {
   ViewChild
 } from '@angular/core';
 import {MatBottomSheetRef} from "@angular/material/bottom-sheet";
-import {ActionQueueService} from "../../../service/cmd/action-queue.service";
-import {NotifyService} from "../../../service/cmd/notify-service";
-import {QueueNotifyEventIf} from "../../../domain/cmd/queue-notify-event.if";
+import {ActionQueueService} from "../service/action-queue.service";
+import {NotifyService} from "../service/notify-service";
+import {QueueNotifyEventIf} from "../domain/queue-notify-event.if";
 import {StatusIconType} from "../../common/status-icon.type";
-import {QueueProgress} from "../../../domain/cmd/queue-progress";
+import {QueueProgress} from "../domain/queue-progress";
 import {BusyBeeComponent} from "../../common/busy-bee.component";
-import {QueueIf} from "../../../domain/cmd/queue.if";
+import {QueueIf} from "../domain/queue.if";
 import {QueueStatus, canQueueResume, isQueueRunning, isQueuePaused} from "@fnf-data";
 import {QueueItemStatus, isQueueItemFinished, isQueueItemRunning, isQueueItemPending} from "@fnf-data";
-import {QueueActionEvent} from "../../../domain/cmd/queue-action-event";
+import {QueueActionEvent} from "../domain/queue-action-event";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfConfirmationDialogService} from "../../../common/confirmationdialog/fnf-confirmation-dialog.service";
 import {CommonModule} from "@angular/common";
-import {TaskListCalculationService} from "./task-list-calculation.service";
+import {TaskListCalculationService} from "../service/task-list-calculation.service";
 
 @Component({
   selector: 'app-task-list',
@@ -41,7 +41,10 @@ import {TaskListCalculationService} from "./task-list-calculation.service";
 })
 export class TaskListComponent implements OnInit, OnDestroy {
   /*
+  Schritt 1:
+  Wenn ein QueueActionEvent der Queue übergeben wird mit 'move' oder 'copy', so muss die Dateigröße (im Falle eines Folders die Summe der Größen) in QueueActionEvent.size gespeichert werden.
 
+Schritt 2:
    Die beiden Queue cmds 'move' und 'copy' brauchen oft viel Zeit.
    Bitte implementiere eine Restzeit-Schätzung, die als Countdown im div.header (rechts oben) dargestellt wird (mm:ss).
    Achte auf die Performance und runOutsideAngular.
@@ -98,7 +101,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
     if (isQueueItemPending(status as QueueItemStatus)) return 'idle';
     if (isQueueItemRunning(status as QueueItemStatus)) return 'busy';
     if (status === 'SUCCESS') return 'success';
-    if (status === 'ERROR' || status === 'WARNING') return 'error';
+    if (status === 'ERROR') return 'error';
     return 'idle';
   }
 

@@ -7,7 +7,7 @@ import {TabsPanelData} from "../../../../domain/filepagedata/data/tabs-panel.dat
 import {TabData} from "../../../../domain/filepagedata/data/tab.data";
 import {MatTooltip} from "@angular/material/tooltip";
 import {FavToggleComponent} from "./fav.component";
-import {ActionExecutionService} from "../../../../service/action/action-execution.service";
+import {ActionExecutionService} from "../../../../service/action-execution.service";
 
 @Component({
   selector: 'app-breadcrumb',

@@ -1,6 +1,6 @@
 import {Injectable, NgZone} from '@angular/core';
 import {isQueuePaused, isQueueRunning, QueueStatus} from "@fnf-data";
-import {QueueActionEvent} from "../../../domain/cmd/queue-action-event";
+import {QueueActionEvent} from "../domain/queue-action-event";
 
 interface TimeEstimate {
   totalBytes: number;
@@ -65,29 +65,29 @@ export class TaskListCalculationService {
     const now = Date.now();
 
     // Process each action
-    actions.forEach(action => {
-      if (action.filePara.cmd !== 'copy' && action.filePara.cmd !== 'move') return;
+    actions.forEach(actionEvent => {
+      if (actionEvent.filePara.cmd !== 'copy' && actionEvent.filePara.cmd !== 'move') return;
 
-      const key = `${action.id}`;
+      const key = `${actionEvent.id}`;
       const existing = this.estimates.get(key);
 
-      if (!existing && action.status === 'PROCESSING') {
+      if (!existing && actionEvent.status === 'PROCESSING') {
         // New processing action
         this.estimates.set(key, {
-          totalBytes: action.filePara.source?.size || 0,
+          totalBytes: actionEvent.filePara.source?.size || 0,
           processedBytes: 0,
           startTime: now,
           bytesPerSecond: 0,
           lastUpdateTime: now
         });
       } else if (existing) {
-        if (action.status === 'SUCCESS' || action.status === 'ERROR') {
+        if (actionEvent.status === 'SUCCESS' || actionEvent.status === 'ERROR') {
           this.estimates.delete(key);
 
-        } else if (action.filePara?.source?.size) {
+        } else if (actionEvent.filePara?.source?.size) {
 
-          let size = action.filePara?.source?.size;
-          let processedBytes = ['ERROR', 'WARNING', 'SUCCESS', 'ABORT'].includes(action.status) ? size : 0;
+          let size = actionEvent.filePara?.source?.size;
+          let processedBytes = ['ERROR', 'SUCCESS'].includes(actionEvent.status) ? size : 0;
           // Update processed bytes and calculate speed
           const timeDiff = (now - existing.lastUpdateTime) / 1000; // seconds
           const bytesDiff = processedBytes - existing.processedBytes;
