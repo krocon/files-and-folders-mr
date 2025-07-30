@@ -187,5 +187,21 @@ describe('EbookGroupingService', () => {
       expect(result['Bleierne Hitze'].length).toBe(1);
       expect(result['Bleierne Hitze'][0]).toBe(input[0]);
     });
+
+    it('should group Vergessene Welt series correctly', () => {
+      const input = [
+        "/Users/marckronberg/Comics.nosync/Vergessene Welt 01 Teil 01 (Splitter 2014 12) (FIST DAS).cbr",
+        "/Users/marckronberg/Comics.nosync/Vergessene Welt 02 (c2c) (Splitter) (2015) (GCA Empire FT).cbr",
+        "/Users/marckronberg/Comics.nosync/Vergessene Welt 03 (c2c) (Splitter) (2017) (GCA Empire FT).cbr"
+      ];
+      const result = service.groupFiles(input);
+
+      // Expected: should group all under "Vergessene Welt"
+      expect(result['Vergessene Welt']).toBeDefined();
+      expect(result['Vergessene Welt'].length).toBe(3);
+      expect(result['Vergessene Welt']).toContain(input[0]);
+      expect(result['Vergessene Welt']).toContain(input[1]);
+      expect(result['Vergessene Welt']).toContain(input[2]);
+    });
   });
 });

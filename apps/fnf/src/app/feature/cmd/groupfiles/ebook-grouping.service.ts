@@ -106,15 +106,30 @@ export class EbookGroupingService {
 
   /**
    * Matches series with year patterns like "Mickyvision II Serie 1967 01"
+   * Only matches when the year is part of the series structure, not publication metadata in parentheses
    */
   private matchYearSeries(fileName: string): string | null {
     // Pattern for series with years like "Mickyvision II Serie 1967 01"
+    // But exclude cases where the year appears inside parentheses (publication metadata)
     const yearPattern = /^(.+?)\s+(\d{4})\s+\d+/;
     const match = fileName.match(yearPattern);
 
     if (match) {
+      const fullMatch = match[0];
       const seriesName = match[1].trim();
       const year = match[2];
+
+      // Don't match if the year appears to be inside parentheses (publication metadata)
+      // Check if there's an opening parenthesis before the year without a closing one
+      const beforeYear = fileName.substring(0, fileName.indexOf(year));
+      const openParens = (beforeYear.match(/\(/g) || []).length;
+      const closeParens = (beforeYear.match(/\)/g) || []).length;
+
+      if (openParens > closeParens) {
+        // Year is inside parentheses, likely publication metadata
+        return null;
+      }
+      
       return `${seriesName}/${year}`;
     }
 
