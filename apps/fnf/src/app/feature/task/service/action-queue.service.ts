@@ -114,15 +114,17 @@ export class ActionQueueService {
               ]));
           this.triggerJobQueueTableUpdate();
 
+
         } else {
-          // In the original code, this would use executorFactory to create an executor
-          // Since we don't have a direct replacement, we'll simulate the behavior
+
+          actionEvent.startTime = Date.now();
           this.executeAction(actionEvent)
             .subscribe({
               next: (res: OnDoResponseType) => {
                 console.log(' executeAction next res:', res);
                 queue.status = "IDLE"
                 actionEvent.status = "SUCCESS";
+                actionEvent.duration = Date.now() - actionEvent.startTime;
 
                 const dea: DirEventIf[] = res;
                 for (let j = 0; j < dea.length; j++) {
@@ -188,9 +190,9 @@ export class ActionQueueService {
     queue.actions = queue.actions.filter(action => action.status !== "SUCCESS");
   }
 
-  doStop(queueIndex: number = 0) {
+  removePendingActionEvents(queueIndex: number = 0) {
     const queue = this.getQueue(queueIndex);
-    queue.actions = queue.actions.filter(action => action.status !== "PROCESSING");
+    queue.actions = queue.actions.filter(action => action.status !== "PENDING");
   }
 
   doPause(queueIndex: number = 0) {
@@ -198,9 +200,9 @@ export class ActionQueueService {
     queue.status = 'PAUSED';
   }
 
-  isPause(queueIndex: number = 0) {
-    return this.getQueue(queueIndex).status==='PAUSED';
-  }
+  // isPause(queueIndex: number = 0) {
+  //   return this.getQueue(queueIndex).status==='PAUSED';
+  // }
 
   doResume(queueIndex: number = 0) {
     const queue = this.getQueue(queueIndex);
@@ -276,7 +278,7 @@ export class ActionQueueService {
       queue.buttonStates.clean = progress.finished >0;
       queue.buttonStates.pause = progress.unfinished>0;
       queue.buttonStates.resume = progress.unfinished>0 && queue.status==='PAUSED';
-      queue.buttonStates.stop = queue.status === 'RUNNING';
+      queue.buttonStates.stop = queue.actions.filter(a => a.status === 'PENDING').length > 0;
     }
   }
 

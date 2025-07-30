@@ -12,6 +12,7 @@ export class QueueActionEvent {
     public id: number = 0,
     public size: number = 0, // size of source file/folder in bytes
     public duration: number = 0, // duration in millis
+    public startTime: number = Date.now(),
   ) {
   }
 

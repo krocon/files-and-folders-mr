@@ -64,7 +64,7 @@ export class TaskListCalculationService {
 
     const now = Date.now();
 
-    // Process each action
+    // Process each 'move' and 'copy' action:
     actions.forEach(actionEvent => {
       if (actionEvent.filePara.cmd !== 'copy' && actionEvent.filePara.cmd !== 'move') return;
 
@@ -76,11 +76,13 @@ export class TaskListCalculationService {
         this.estimates.set(key, {
           totalBytes: actionEvent.filePara.source?.size || 0,
           processedBytes: 0,
-          startTime: now,
+          startTime: actionEvent.startTime,
           bytesPerSecond: 0,
           lastUpdateTime: now
         });
+
       } else if (existing) {
+
         if (actionEvent.status === 'SUCCESS' || actionEvent.status === 'ERROR') {
           this.estimates.delete(key);
 

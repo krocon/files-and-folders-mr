@@ -41,7 +41,7 @@
                   [matTooltip]="action.status"
                   [status]="getBeeStatus(action.status)"></app-busy-bee>
             </td>
-            <td>{{ action.duration }}</td>
+            <td>{{ action.duration | durationFormat }}</td>
             <td [title]="action.size">{{ apiUrlName(action) }}</td>
             <td>
               <button mat-icon-button

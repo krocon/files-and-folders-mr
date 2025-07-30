@@ -3,7 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  inject, OnDestroy,
+  inject,
+  OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
@@ -15,8 +16,14 @@ import {StatusIconType} from "../../common/status-icon.type";
 import {QueueProgress} from "../domain/queue-progress";
 import {BusyBeeComponent} from "../../common/busy-bee.component";
 import {QueueIf} from "../domain/queue.if";
-import {QueueStatus, canQueueResume, isQueueRunning, isQueuePaused} from "@fnf-data";
-import {QueueItemStatus, isQueueItemFinished, isQueueItemRunning, isQueueItemPending} from "@fnf-data";
+import {
+  isQueueItemPending,
+  isQueueItemRunning,
+  isQueuePaused,
+  isQueueRunning,
+  QueueItemStatus,
+  QueueStatus
+} from "@fnf-data";
 import {QueueActionEvent} from "../domain/queue-action-event";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MatButtonModule} from "@angular/material/button";
@@ -24,6 +31,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {FnfConfirmationDialogService} from "../../../common/confirmationdialog/fnf-confirmation-dialog.service";
 import {CommonModule} from "@angular/common";
 import {TaskListCalculationService} from "../service/task-list-calculation.service";
+import {DurationFormatPipe} from "./duration-format.pipe";
 
 @Component({
   selector: 'app-task-list',
@@ -34,6 +42,7 @@ import {TaskListCalculationService} from "../service/task-list-calculation.servi
     MatTooltipModule,
     MatIconModule,
     MatButtonModule,
+    DurationFormatPipe,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
@@ -92,10 +101,6 @@ Schritt 2:
     this.calculationService.startTracking(this.remainingTimeElement.nativeElement);
   }
 
-  openLink(event: MouseEvent): void {
-    this._bottomSheetRef.dismiss();
-    event.preventDefault();
-  }
 
   getBeeStatus(status: string): StatusIconType {
     if (isQueueItemPending(status as QueueItemStatus)) return 'idle';
@@ -121,25 +126,33 @@ Schritt 2:
 
   onDeleteAllClicked() {
     this.confirmationService.simpleConfirm(
-      'Stop All Tasks',
-      'Are you sure you want to stop and remove all tasks?',
-      () => this.actionQueueService.doStop()
+      'Stop all pending tasks',
+      'Are you sure you want to remove all pending tasks?',
+      () => {
+        this.actionQueueService.removePendingActionEvents();
+        this.cdr.detectChanges();
+      }
     );
   }
 
   onPauseNextClicked() {
     this.actionQueueService.doPause();
+    this.cdr.detectChanges();
   }
 
   onResumeClicked() {
     this.actionQueueService.doResume();
+    this.cdr.detectChanges();
   }
 
   async onDeleteItemClicked(action: QueueActionEvent) {
     const confirmed = await this.confirmationService.simpleConfirm(
       'Delete Task',
       `Are you sure you want to delete the ${action.filePara.cmd.toLowerCase()} task for "${this.apiUrlName(action)}"?`,
-      () => this.actionQueueService.removeAction(action.id)
+      () => {
+        this.actionQueueService.removeAction(action.id);
+        this.cdr.detectChanges();
+      }
     );
   }
 
@@ -163,7 +176,7 @@ Schritt 2:
     } else if (this.queue.status === 'ERROR') {
       status = 'error';
     }
-    
+
     this.status = status;
     this.cdr.detectChanges();
   }
