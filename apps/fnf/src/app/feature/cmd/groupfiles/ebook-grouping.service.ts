@@ -55,25 +55,31 @@ export class EbookGroupingService {
       return yearSeriesMatch;
     }
 
-    // 2. Check for numbered series (e.g., "Deep State 01", "The Fable 01")
+    // 2. Check for titles with parenthetical information (e.g., "Bleierne Hitze (Edition 52 2013)(KeiPsf)")
+    const parentheticalMatch = this.matchParentheticalTitles(fileName);
+    if (parentheticalMatch) {
+      return parentheticalMatch;
+    }
+
+    // 3. Check for numbered series (e.g., "Deep State 01", "The Fable 01")
     const numberedSeriesMatch = this.matchNumberedSeries(fileName);
     if (numberedSeriesMatch) {
       return numberedSeriesMatch;
     }
 
-    // 3. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1")
+    // 4. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1")
     const collectionMatch = this.matchCollectionSeries(fileName);
     if (collectionMatch) {
       return collectionMatch;
     }
 
-    // 4. Check for directory-based grouping (files in same subdirectory)
+    // 5. Check for directory-based grouping (files in same subdirectory)
     const directoryMatch = this.matchDirectoryGroup(filePath);
     if (directoryMatch) {
       return directoryMatch;
     }
 
-    // 5. Check for similar title patterns (e.g., "Staehlerne Herzen 01", "Staehlerne Herzen 02")
+    // 6. Check for similar title patterns (e.g., "Staehlerne Herzen 01", "Staehlerne Herzen 02")
     const titleMatch = this.matchSimilarTitles(fileName);
     if (titleMatch) {
       return titleMatch;
@@ -173,6 +179,32 @@ export class EbookGroupingService {
       // Skip generic directory names
       if (!this.isGenericDirectoryName(directoryName)) {
         return directoryName;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Matches titles with parenthetical information like "Bleierne Hitze (Edition 52 2013)(KeiPsf)"
+   * Only matches when there's no numbered series pattern anywhere in the title
+   */
+  private matchParentheticalTitles(fileName: string): string | null {
+    // Don't match if this contains any numbers before the parenthesis (likely a numbered series)
+    const hasNumbersPattern = /^[^(]*\d+[^(]*\(/;
+    if (hasNumbersPattern.test(fileName)) {
+      return null;
+    }
+
+    // Pattern for titles followed by parenthetical information (no numbers before parenthesis)
+    const parentheticalPattern = /^(.+?)\s*\(/;
+    const match = fileName.match(parentheticalPattern);
+
+    if (match) {
+      const title = match[1].trim();
+      // Only return if title is meaningful (not too short, not generic)
+      if (title.length > 3 && !this.isGenericName(title)) {
+        return title;
       }
     }
 

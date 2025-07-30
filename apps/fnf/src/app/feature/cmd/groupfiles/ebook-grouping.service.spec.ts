@@ -50,10 +50,10 @@ describe('EbookGroupingService', () => {
       ];
 
       const result = service.groupFiles(input);
+
       // Verify all input files are in output
       const allOutputFiles = Object.values(result).flat();
       const missingFiles = input.filter(file => !allOutputFiles.includes(file));
-
 
       // Assertions
       expect(result).toBeDefined();
@@ -89,9 +89,25 @@ describe('EbookGroupingService', () => {
       expect(result['Star Fantasy']).toBeDefined();
       expect(result['Star Fantasy'].length).toBe(3);
 
-      // Check that _various exists and has the expected single files
+      // Check new groups created by improved parenthetical matching
+      expect(result['Adolf']).toBeDefined();
+      expect(result['Adolf'].length).toBe(1);
+
+      expect(result['Alunys Expedition durch Troy']).toBeDefined();
+      expect(result['Alunys Expedition durch Troy'].length).toBe(1);
+
+      expect(result['Bella Ciao']).toBeDefined();
+      expect(result['Bella Ciao'].length).toBe(1);
+
+      expect(result['Diese Banker']).toBeDefined();
+      expect(result['Diese Banker'].length).toBe(1);
+
+      expect(result['Disney Ducktionary']).toBeDefined();
+      expect(result['Disney Ducktionary'].length).toBe(1);
+
+      // Check that _various now has fewer files due to improved grouping
       expect(result['_various']).toBeDefined();
-      expect(result['_various'].length).toBe(5);
+      expect(result['_various'].length).toBe(1);
     });
 
     it('should handle empty input', () => {
@@ -160,6 +176,16 @@ describe('EbookGroupingService', () => {
       // All files should be accounted for
       const allOutputFiles = Object.values(result).flat();
       expect(allOutputFiles.length).toBe(input.length);
+    });
+
+    it('should group Bleierne Hitze correctly', () => {
+      const input = ["/Users/marckronberg/Comics.nosync/Bleierne Hitze (Edition 52 2013)(KeiPsf).cbr"];
+      const result = service.groupFiles(input);
+
+      // Expected: should group under "Bleierne Hitze"
+      expect(result['Bleierne Hitze']).toBeDefined();
+      expect(result['Bleierne Hitze'].length).toBe(1);
+      expect(result['Bleierne Hitze'][0]).toBe(input[0]);
     });
   });
 });
