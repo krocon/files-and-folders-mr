@@ -14,6 +14,7 @@ export class GroupFilesOptions {
 
   modes: OptionItem<string>[] = [
     {value: 'runnig_number', label: 'Running number'},
+    {value: 'ebook_mode', label: 'Ebook mode'},
     {value: 'new_folder', label: 'New folder (manually)'},
     {value: 'minus_separator', label: 'Minus separator'},
     {value: 'first_word', label: 'First word'},
