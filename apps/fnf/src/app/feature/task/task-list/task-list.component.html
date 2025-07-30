@@ -41,7 +41,15 @@
                   [matTooltip]="action.status"
                   [status]="getBeeStatus(action.status)"></app-busy-bee>
             </td>
-            <td>{{ action.duration | durationFormat }}</td>
+
+            @if (action.status === 'PROCESSING') {
+              <td>
+                <app-countup [startTimeInMillis]="action.startTime"></app-countup>
+              </td>
+            } @else {
+              <td>{{ action.duration | durationFormat }}</td>
+            }
+
             <td [title]="action.size">{{ apiUrlName(action) }}</td>
             <td>
               <button mat-icon-button
