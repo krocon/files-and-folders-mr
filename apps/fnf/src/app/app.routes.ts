@@ -6,17 +6,17 @@ export const routes: Routes = [
   {
     path: "files",
     loadComponent: () =>
-      import("./component/main/file.component").then(m => m.FileComponent)
+      import("./feature/main/file.component").then(m => m.FileComponent)
   },
   {
     path: "about",
     loadComponent: () =>
-      import("./component/about/about.component").then(m => m.AboutComponent)
+      import("./feature/about/about.component").then(m => m.AboutComponent)
   },
   {
     path: "shell",
     loadComponent: () =>
-      import("./component/shell/servershell.component").then(m => m.ServershellComponent)
+      import("./feature/shell/servershell.component").then(m => m.ServershellComponent)
   },
   {
     path: "**",

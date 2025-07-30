@@ -3,7 +3,7 @@ import {Observable} from "rxjs";
 import {ConvertPara, ConvertResponseType} from "@fnf-data";
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {QueueFileOperationParams} from "../../component/task/domain/queue-file-operation-params";
+import {QueueFileOperationParams} from "../../feature/task/domain/queue-file-operation-params";
 
 
 @Injectable({

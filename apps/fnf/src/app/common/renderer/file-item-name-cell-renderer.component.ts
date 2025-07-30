@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component} from "@angular/core";
 import {AreaIdent, AreaModelIf, RendererCleanupFnType} from "@guiexpert/table";
 import {DOT_DOT, FileItemIf} from "@fnf-data";
 import {MatTooltip} from "@angular/material/tooltip";
-import {QueueFileOperationParams} from "../../component/task/domain/queue-file-operation-params";
+import {QueueFileOperationParams} from "../../feature/task/domain/queue-file-operation-params";
 
 @Component({
   selector: 'multi-rename-name-cell-renderer',

@@ -1,7 +1,7 @@
 import {ComponentRendererIf} from "@guiexpert/angular-table";
 import {ChangeDetectionStrategy, Component} from "@angular/core";
 import {AreaIdent, AreaModelIf, RendererCleanupFnType} from "@guiexpert/table";
-import {QueueFileOperationParams} from "../../component/task/domain/queue-file-operation-params";
+import {QueueFileOperationParams} from "../../feature/task/domain/queue-file-operation-params";
 
 @Component({
   selector: 'change-cell-renderer',
