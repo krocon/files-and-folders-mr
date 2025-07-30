@@ -76,23 +76,6 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
 
   menuItems1: ActionId[] = [
-    "OPEN_COPY_DLG",
-    "OPEN_MOVE_DLG",
-    "OPEN_DELETE_DLG",
-    "OPEN_MKDIR_DLG",
-    "OPEN_RENAME_DLG",
-    "OPEN_ATTRIBUTE_DLG",
-    "OPEN_UNPACK_DLG",
-    "OPEN_PACK_DLG",
-    "OPEN_DOWNLOAD_DLG",
-    "-",
-    "OPEN_MULTIRENAME_DLG",
-    "OPEN_MULTIMKDIR_DLG",
-    "OPEN_GROUPFILES_DLG",
-    "OPEN_DELETE_EMPTY_FOLDERS_DLG",
-  ];
-
-  menuItems2: ActionId[] = [
     "ENHANCE_SELECTION",
     "REDUCE_SELECTION",
     "TOGGLE_SELECTION",
@@ -109,6 +92,24 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     "-",
     'ADD_NEW_TAB',
     'REMOVE_TAB'
+  ];
+
+
+  menuItems2: ActionId[] = [
+    "OPEN_COPY_DLG",
+    "OPEN_MOVE_DLG",
+    "OPEN_DELETE_DLG",
+    "OPEN_MKDIR_DLG",
+    "OPEN_RENAME_DLG",
+    "OPEN_ATTRIBUTE_DLG",
+    "OPEN_UNPACK_DLG",
+    "OPEN_PACK_DLG",
+    "OPEN_DOWNLOAD_DLG",
+    "-",
+    "OPEN_MULTIRENAME_DLG",
+    "OPEN_MULTIMKDIR_DLG",
+    "OPEN_GROUPFILES_DLG",
+    "OPEN_DELETE_EMPTY_FOLDERS_DLG",
   ];
 
 
