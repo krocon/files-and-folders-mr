@@ -148,6 +148,8 @@ export class EbookGroupingService {
       /^(.+?)\s+(\d{1,3})\s*\(/,
       // Pattern like "Star Fantasy 1 [13]"
       /^(.+?)\s+(\d{1,3})\s*\[/,
+      // Pattern like "Himmel in Truemmern 01.cbr" or "Series 05.jpg"
+      /^(.+?)\s+(\d{1,3})\./,
       // Pattern like "LTB Crime 01"
       /^(.+?)\s+(\d{1,3})(?:\s|$)/
     ];
@@ -256,7 +258,7 @@ export class EbookGroupingService {
    * Checks if a directory name is too generic for grouping
    */
   private isGenericDirectoryName(dirName: string): boolean {
-    const genericDirs = ['comics', 'books', 'ebooks', 'files'];
+    const genericDirs = ['comics', 'books', 'ebooks', 'files', '__out', 'out', 'output'];
     return genericDirs.some(generic => dirName.toLowerCase().includes(generic.toLowerCase()));
   }
 }

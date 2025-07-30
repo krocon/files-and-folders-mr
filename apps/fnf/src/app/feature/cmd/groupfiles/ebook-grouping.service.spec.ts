@@ -74,11 +74,9 @@ describe('EbookGroupingService', () => {
       expect(result['Mickyvision II Serie/1969']).toBeDefined();
       expect(result['Mickyvision II Serie/1969'].length).toBe(2);
 
-      // Lady S files are split due to different naming patterns - this is correct behavior
-      expect(result['Lady S']).toBeDefined();
-      expect(result['Lady S'].length).toBe(1);
+      // Lady S files are now all grouped together under "Lady S Gesamtausgabe" - improved behavior
       expect(result['Lady S Gesamtausgabe']).toBeDefined();
-      expect(result['Lady S Gesamtausgabe'].length).toBe(2);
+      expect(result['Lady S Gesamtausgabe'].length).toBe(3);
 
       expect(result['The Fable']).toBeDefined();
       expect(result['The Fable'].length).toBe(3);
@@ -202,6 +200,29 @@ describe('EbookGroupingService', () => {
       expect(result['Vergessene Welt']).toContain(input[0]);
       expect(result['Vergessene Welt']).toContain(input[1]);
       expect(result['Vergessene Welt']).toContain(input[2]);
+    });
+
+    it('should group Himmel in Truemmern files correctly', () => {
+      const input = [
+        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 01.cbr",
+        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 01.jpg",
+        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 05.cbr",
+        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 05.jpg"
+      ];
+
+      const result = service.groupFiles(input);
+
+      // Expected: should group all under "Himmel in Truemmern"
+      expect(result['Himmel in Truemmern']).toBeDefined();
+      expect(result['Himmel in Truemmern'].length).toBe(4);
+      expect(result['Himmel in Truemmern']).toContain(input[0]);
+      expect(result['Himmel in Truemmern']).toContain(input[1]);
+      expect(result['Himmel in Truemmern']).toContain(input[2]);
+      expect(result['Himmel in Truemmern']).toContain(input[3]);
+
+      // Verify all input files are accounted for
+      const allOutputFiles = Object.values(result).flat();
+      expect(allOutputFiles.length).toBe(input.length);
     });
   });
 });
