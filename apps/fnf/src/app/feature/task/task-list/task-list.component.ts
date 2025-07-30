@@ -33,6 +33,7 @@ import {CommonModule} from "@angular/common";
 import {TaskListCalculationService} from "../service/task-list-calculation.service";
 import {DurationFormatPipe} from "./duration-format.pipe";
 import {FnfCountupComponent} from "../../../common/countdown/fnf-countup.component";
+import {FnfCountdownComponent} from "../../../common/countdown/fnf-countdown.component";
 
 @Component({
   selector: 'app-task-list',
@@ -45,6 +46,7 @@ import {FnfCountupComponent} from "../../../common/countdown/fnf-countup.compone
     MatButtonModule,
     DurationFormatPipe,
     FnfCountupComponent,
+    FnfCountdownComponent,
   ],
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.css',
