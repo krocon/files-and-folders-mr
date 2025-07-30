@@ -26,6 +26,7 @@
           <td>Cmd</td>
           <td>Status</td>
           <td></td>
+          <td>Duration</td>
           <td>File</td>
           <td>Actions</td>
         </tr>
@@ -40,7 +41,8 @@
                   [matTooltip]="action.status"
                   [status]="getBeeStatus(action.status)"></app-busy-bee>
             </td>
-            <td>{{ apiUrlName(action) }}</td>
+            <td>{{ action.duration }}</td>
+            <td [title]="action.size">{{ apiUrlName(action) }}</td>
             <td>
               <button mat-icon-button
                       [disabled]="!canDeleteItem(action)"

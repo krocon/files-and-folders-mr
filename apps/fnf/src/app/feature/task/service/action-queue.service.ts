@@ -79,6 +79,8 @@ export class ActionQueueService {
       actionEvt.status = "PENDING";
       actionEvt.id = this.jobId;
       actionEvt.size = 0;
+
+      // for long-running actions 'move' and 'copy' we store the size of the source file/folder in the action event:
       if (actionEvt.action === this.ACTION_MOVE || actionEvt.action === this.ACTION_COPY) {
         actionEvt.size = actionEvt.filePara?.source?.size ?? 0;
       }

@@ -11,6 +11,7 @@ export class QueueActionEvent {
     public status: ActionEventStatus,
     public id: number = 0,
     public size: number = 0, // size of source file/folder in bytes
+    public duration: number = 0, // duration in millis
   ) {
   }
 
