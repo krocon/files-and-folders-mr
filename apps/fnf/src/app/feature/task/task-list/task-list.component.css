@@ -28,6 +28,10 @@
         padding: 0 8px;
         vertical-align: middle;
 
+        &.col-0 {
+          padding-left: 0;
+        }
+
         .mat-mdc-icon-button.mat-mdc-button-base {
               --mdc-icon-button-state-layer-size: 28px;
               --mat-icon-button-state-layer-size: 28px;
