@@ -262,6 +262,53 @@ export class CommandService {
   }
 
 
+  /**
+   * @method addActions
+   * @description Adds one or more action events to the action queue for processing
+   *
+   * @param {QueueActionEvent[]} actions - Array of action events to be added to the queue
+   * @param {number} [queueIndex] - Optional index specifying where in the queue to add the actions
+   * @param {boolean} [openJobTable=false] - Optional flag to determine if the job table should be opened after adding actions
+   *
+   * @returns {void}
+   *
+   * @remarks
+   * This method is responsible for adding file operation actions to the system's action queue for processing.
+   * It handles both single actions and bulk operations, with special processing for large bulk operations.
+   *
+   * The method will:
+   * 1. Process each action in the provided array
+   * 2. Add them to the action queue service at the specified index (or at the end if no index provided)
+   * 3. Optionally open the job table to show progress
+   *
+   * For bulk operations exceeding the BULK_LOWER_LIMIT threshold, additional optimizations may be applied.
+   *
+   * @example
+   * // Example 1: Add a single copy action to the queue
+   * const copyAction = this.createQueueActionEventForCopy({
+   *   source: sourceFile,
+   *   target: targetFile,
+   *   srcPanelIndex: 0,
+   *   targetPanelIndex: 1
+   * });
+   * this.addActions([copyAction]);
+   *
+   * @example
+   * // Example 2: Add multiple delete actions with job table display
+   * const deleteActions = selectedFiles.map(file =>
+   *   this.createQueueActionEventForDel({
+   *     source: file,
+   *     srcPanelIndex: 0,
+   *     bulk: true
+   *   })
+   * );
+   * this.addActions(deleteActions, undefined, true);
+   *
+   * @example
+   * // Example 3: Add refresh actions at the beginning of the queue
+   * const refreshActions = this.createRefreshesActionEvents([0, 1]);
+   * this.addActions(refreshActions, 0);
+   */
   addActions(actions: QueueActionEvent[], queueIndex: number = 0, openJobTable: boolean = true): void {
     actions
       .forEach(action => {
