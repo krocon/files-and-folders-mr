@@ -3,6 +3,7 @@ import {HttpService} from '@nestjs/axios';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {ConvertPara, ConvertResponseType} from '@fnf-data';
+import {PromptService} from '../../config/prompt/prompt.service';
 
 @Injectable()
 export class Llama3_7bService {
@@ -10,7 +11,10 @@ export class Llama3_7bService {
   private readonly apiUrl = environment.llamaApiUrl;
   private readonly model = environment.llamaModel;
 
-  constructor(private readonly httpService: HttpService) {
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly promptService: PromptService
+  ) {
   }
 
   async hasApiKey(): Promise<boolean> {
@@ -20,62 +24,15 @@ export class Llama3_7bService {
   }
 
   async convertFilenames(para: ConvertPara): Promise<ConvertResponseType> {
-    const prompt = `I have a list of filenames. 
-Please create a new filename for each file.
-The files are well-known movies, books, music, ...
-
-Try to use these patterns:
-Movie: TITLE (yyyy).ext
-Music: ARTIST - TITLE. ext or Album ARTIST - ALBUM (yyyy) /TRACK - TITLE.ext
-Book: AUTHOR - TITLE (yyyy).ext
-TV Show: SHOWNAME - SxxEyy - TITLE.ext
-Podcast: PODCASTNAME - Ep### - TITLE.ext
-Audiobook: AUTHOR - TITLE (yyyy).ext
-Game: ROM TITLE [REGION] (yyyy).ext
-Comics: TITLE ## (PUBLISHER) (YEAR).ext
-
-Your answer should be a valid (parsable) JSON in the form: {[key:string]: string}.
-(key is the input file, value is the new filename (BASE.EXT, without path).
-
-Input:
-
-`;
+    const promptData = await this.promptService.getPrompt('convert_filenames');
+    const prompt = promptData.prompt;
 
     return this.processLlamaRequest(para.files, prompt);
   }
 
   async groupfiles(para: ConvertPara): Promise<ConvertResponseType> {
-    const prompt = `I have a list of filenames (television series). 
-Please create a new filename for each file.
-
-Try to use this pattern:
-new name (path):  "/{TITLE}/{Snn}/{Snn}{Enn} - {EPISODE}.{EXT}"
-If you don't have the episode title, use this pattern: new name (path):  "/{TITLE}/{Snn}/{Snn}{Enn} - {TITLE}.{EXT}"
-
-Placeholder:
-{EPISODE}: title of episode (if not available use {TITLE} placeholder)
-{TITLE}: title of television series
-{Snn}: Series Number uppercase (for example S01)
-{Enn}: Episode Number uppercase (for example E01)
-{EXT}: file extension
-
-Example:
- -Input:  ["/Users/Abc/movies/Jim Knopf/Jim.Knopf.S03E03.GERMAN.1080p.WEB.H264-SunDry/jim.knopf.s03e02.1080p.web.h264-sundry.mkv"]
- -Output: {"/Users/Abc/movies/Jim Knopf/Jim.Knopf.S03E03.GERMAN.1080p.WEB.H264-SunDry/jim.knopf.s03e02.1080p.web.h264-sundry.mkv": "/Jim Knopf/S03/S03E02 - Jim Knopf.mkv"}
-
-Rule:
-Make sure that the last part of the filename (behind last '/') containes {Snn} and {Enn} placeholders. 
-Do not write "TheEpisodeTitle" or "EpisodeNotAvailable". 
-Do not change the name of sample files. 
-Sample files are in a (sub) folder "/Sample/" or they have ".sample." in the name. 
-Do not include sample files in the output.
-Output must be parsable JSON.
-
-Your answer should be a valid (parsable) JSON in the form: {[key:string]: string} (key is the input file, value is the new name).
-Just return the parsable JSON in the field "response", no explanations.
-Input:
-
-`;
+    const promptData = await this.promptService.getPrompt('group_filenames');
+    const prompt = promptData.prompt;
 
     return this.processLlamaRequest(para.files, prompt);
   }

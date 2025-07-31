@@ -3,10 +3,14 @@ import {HttpService} from '@nestjs/axios';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {ConvertPara, ConvertResponseType} from '@fnf-data';
+import {PromptService} from '../../config/prompt/prompt.service';
 
 @Injectable()
 export class OpenAiCompletionService {
-  constructor(private readonly httpService: HttpService) {
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly promptService: PromptService
+  ) {
   }
 
   async hasApiKey(): Promise<boolean> {
@@ -14,49 +18,15 @@ export class OpenAiCompletionService {
   }
 
   async convertFilenames(para: ConvertPara): Promise<ConvertResponseType> {
-    const prompt = `I have a list of filenames. 
-Please create a new filename for each file.
-The files are well-known movies, books, music, ...
-
-Try to use these patterns:
-Movie: TITLE (yyyy).ext
-Music: ARTIST - TITLE. ext or Album ARTIST - ALBUM (yyyy) /TRACK - TITLE.ext
-Book: AUTHOR - TITLE (yyyy).ext
-TV Show: SHOWNAME - SxxEyy - TITLE.ext
-Podcast: PODCASTNAME - Ep### - TITLE.ext
-Audiobook: AUTHOR - TITLE (yyyy).ext
-Game: ROM TITLE [REGION] (yyyy).ext
-Comics: TITLE ## (PUBLISHER) (YEAR).ext
-
-Your answer should be a valid (parsable) JSON in the form: {[key:string]: string}.
-(key is the input file, value is the new filename (BASE.EXT, without path).
-
-Input:
-
-`;
+    const promptData = await this.promptService.getPrompt('convert_filenames');
+    const prompt = promptData.prompt;
 
     return this.processOpenAiRequest(para.files, prompt);
   }
 
   async groupfiles(para: ConvertPara): Promise<ConvertResponseType> {
-    const prompt = `I have a list of filenames (television series). 
-Please create a new filename for each file.
-
-Try to use this pattern:
-new name (path):  "/TITLE/Snn/SnnEnn - EPISODE.EXT"
-TITLE: title of television series
-Snn: Series Number (for example S01)
-Enn: Episode Number (for example E01)
-EPISODE: title of episode (if not available use TITLE)
-EXT: file extension
-
-Do not change the name of sample files. Sample files are in a (sub) folder "/Sample/" or they have "*.sample.*" in the name.
-
-Your answer should be a valid (parsable) JSON in the form: {[key:string]: string} (key is the input file, value is the new name).
-
-Input:
-
-`;
+    const promptData = await this.promptService.getPrompt('group_filenames');
+    const prompt = promptData.prompt;
 
     return this.processOpenAiRequest(para.files, prompt);
   }
