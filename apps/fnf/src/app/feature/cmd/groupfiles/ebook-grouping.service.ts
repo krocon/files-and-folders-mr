@@ -55,22 +55,22 @@ export class EbookGroupingService {
       return yearSeriesMatch;
     }
 
-    // 2. Check for titles with parenthetical information (e.g., "Bleierne Hitze (Edition 52 2013)(KeiPsf)")
+    // 2. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1", "Jeff Jordan Gesamtausgabe - 1")
+    const collectionMatch = this.matchCollectionSeries(fileName);
+    if (collectionMatch) {
+      return collectionMatch;
+    }
+
+    // 3. Check for titles with parenthetical information (e.g., "Bleierne Hitze (Edition 52 2013)(KeiPsf)")
     const parentheticalMatch = this.matchParentheticalTitles(fileName);
     if (parentheticalMatch) {
       return parentheticalMatch;
     }
 
-    // 3. Check for numbered series (e.g., "Deep State 01", "The Fable 01")
+    // 4. Check for numbered series (e.g., "Deep State 01", "The Fable 01")
     const numberedSeriesMatch = this.matchNumberedSeries(fileName);
     if (numberedSeriesMatch) {
       return numberedSeriesMatch;
-    }
-
-    // 4. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1")
-    const collectionMatch = this.matchCollectionSeries(fileName);
-    if (collectionMatch) {
-      return collectionMatch;
     }
 
     // 5. Check for directory-based grouping (files in same subdirectory)
@@ -170,14 +170,24 @@ export class EbookGroupingService {
 
   /**
    * Matches collection series like "Lady S Gesamtausgabe 1" or "Lady S Gesamtausgabe 03"
+   * Also handles patterns with dash separators like "Jeff Jordan Gesamtausgabe - 1 - ..."
    */
   private matchCollectionSeries(fileName: string): string | null {
     // Pattern for collection series with numbers (including leading zeros)
-    const collectionPattern = /^(.+?)\s+(Gesamtausgabe|Collection|Anthology)\s+\d+/i;
-    const match = fileName.match(collectionPattern);
+    // Handles both "Series Gesamtausgabe 1" and "Series Gesamtausgabe - 1 - ..." formats
+    const collectionPatterns = [
+      // Pattern like "Jeff Jordan Gesamtausgabe - 1 - ..."
+      /^(.+?)\s+(Gesamtausgabe|Collection|Anthology)\s*-\s*\d+/i,
+      // Pattern like "Lady S Gesamtausgabe 1"
+      /^(.+?)\s+(Gesamtausgabe|Collection|Anthology)\s+\d+/i
+    ];
 
-    if (match) {
-      return match[1].trim();
+    for (const pattern of collectionPatterns) {
+      const match = fileName.match(pattern);
+      if (match) {
+        // Return the full series name including the collection type (e.g., "Jeff Jordan Gesamtausgabe")
+        return `${match[1].trim()} ${match[2]}`;
+      }
     }
 
     return null;

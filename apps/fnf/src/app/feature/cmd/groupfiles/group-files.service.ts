@@ -117,7 +117,7 @@ export class GroupFilesService {
 
     let i = 0;
     for (const [groupKey, files] of Object.entries(groupedFileUrls)) {
-      if (Array.isArray(files)) {
+      // if (Array.isArray(files)) {
         files.forEach(file => {
           const sourceFileItem = filepath2FileItem(file);
           groupFilesRows.push(new GroupFilesRow(
@@ -128,16 +128,16 @@ export class GroupFilesService {
             new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
           ));
         });
-      } else {
-        const sourceFileItem = filepath2FileItem(files);
-        groupFilesRows.push(new GroupFilesRow(
-          i++,
-          sourceFileItem.base,
-          sourceFileItem,
-          targetDir + '/' + groupKey,
-          new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
-        ));
-      }
+      // } else {
+      //   const sourceFileItem = filepath2FileItem(files);
+      //   groupFilesRows.push(new GroupFilesRow(
+      //     i++,
+      //     sourceFileItem.base,
+      //     sourceFileItem,
+      //     targetDir + '/' + groupKey,
+      //     new FileItem(targetDir + '/' + groupKey, sourceFileItem.base, sourceFileItem.ext, '', 0, false)
+      //   ));
+      // }
     }
     return new GroupFilesResult(groupFilesRows.length, groupFilesRows);
   }

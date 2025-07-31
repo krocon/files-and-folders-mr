@@ -16,37 +16,37 @@ describe('EbookGroupingService', () => {
   describe('groupFiles', () => {
     it('should group files correctly with sample data', () => {
       const input = [
-        "/Users/marckronberg/Comics.nosync/Adolf 01 (GER)(Carlsen)(JackyMono)(FG Manga).cbz",
-        "/Users/marckronberg/Comics.nosync/Alunys Expedition durch Troy (c2c) (Splitter) (2013) (GCA KC).cbr",
-        "/Users/marckronberg/Comics.nosync/Bella Ciao (Jacoby & Stuart) (2017) (Bellafabius).cbr",
-        "/Users/marckronberg/Comics.nosync/Deep State 01 Die dunklere Seite des Mondes (2016) (Popcom) (digital) (Lynx Empire).cbr",
-        "/Users/marckronberg/Comics.nosync/Deep State 02 Kontrollsysteme (2016) (Popcom) (digital) (Lynx Empire).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 01 Die Gefaehrten des Adlers (Scanlation #1329) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 02 Die Rueckkehr der Harith (Scanlation #1330) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 03 Das Geheimnis der Sibylle (Scanlation #1331) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 04 Das Reich des Boesen (Scanlation #1332) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/Das/Das Reich der Mitte.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 01.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 02.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 03.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1968 07.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1968 08.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1969 13.cbr",
-        "/Users/marckronberg/Comics.nosync/Mickyvision/Mickyvision II Serie 1969 14.cbr",
-        "/Users/marckronberg/Comics.nosync/Lady S Gesamtausgabe 03.cbr",
-        "/Users/marckronberg/Comics.nosync/Lady S Gesamtausgabe 1 (All 2019 ).cbr",
-        "/Users/marckronberg/Comics.nosync/Lady S Gesamtausgabe 2 (All 2020 ).cbr",
-        "/Users/marckronberg/Comics.nosync/The Fable 01 (Egmont) GER Minami Katsuhisa.cbz",
-        "/Users/marckronberg/Comics.nosync/The Fable 02 (Egmont) GER Minami Katsuhisa.cbz",
-        "/Users/marckronberg/Comics.nosync/The Fable 03 (Egmont) GER Minami Katsuhisa.cbz",
-        "/Users/marckronberg/Comics.nosync/Staehlerne Herzen 01 (X fuer U, 1990) (Flattermann).cbr",
-        "/Users/marckronberg/Comics.nosync/Staehlerne Herzen 02 (X fuer U, 1990)(Flattermann).cbr",
-        "/Users/marckronberg/Comics.nosync/Star Fantasy 1 [13] (c2c) (Interman) (1978) (GCA P).cbr",
-        "/Users/marckronberg/Comics.nosync/Star Fantasy 10 (c2c) (Interman) (1978) (GCA P).cbr",
-        "/Users/marckronberg/Comics.nosync/Star Fantasy 11 (c2c) (Intermann) (1978) (GCA P).cbr",
-        "/Users/marckronberg/Comics.nosync/Diese Banker (c2c) (BSE Verlag).cbr",
-        "/Users/marckronberg/Comics.nosync/Disney Ducktionary (Ehapa).cbr",
-        "/Users/marckronberg/Comics.nosync/Ein letztes Wort zum Kino.cbr"
+        "/Users/userabc/Comics.nosync/Adolf 01 (GER)(Carlsen)(JackyMono)(FG Manga).cbz",
+        "/Users/userabc/Comics.nosync/Alunys Expedition durch Troy (c2c) (Splitter) (2013) (GCA KC).cbr",
+        "/Users/userabc/Comics.nosync/Bella Ciao (Jacoby & Stuart) (2017) (Bellafabius).cbr",
+        "/Users/userabc/Comics.nosync/Deep State 01 Die dunklere Seite des Mondes (2016) (Popcom) (digital) (Lynx Empire).cbr",
+        "/Users/userabc/Comics.nosync/Deep State 02 Kontrollsysteme (2016) (Popcom) (digital) (Lynx Empire).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 01 Die Gefaehrten des Adlers (Scanlation #1329) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 02 Die Rueckkehr der Harith (Scanlation #1330) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 03 Das Geheimnis der Sibylle (Scanlation #1331) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 04 Das Reich des Boesen (Scanlation #1332) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/Das/Das Reich der Mitte.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 01.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 02.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 03.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1968 07.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1968 08.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1969 13.cbr",
+        "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1969 14.cbr",
+        "/Users/userabc/Comics.nosync/Lady S Gesamtausgabe 03.cbr",
+        "/Users/userabc/Comics.nosync/Lady S Gesamtausgabe 1 (All 2019 ).cbr",
+        "/Users/userabc/Comics.nosync/Lady S Gesamtausgabe 2 (All 2020 ).cbr",
+        "/Users/userabc/Comics.nosync/The Fable 01 (Egmont) GER Minami Katsuhisa.cbz",
+        "/Users/userabc/Comics.nosync/The Fable 02 (Egmont) GER Minami Katsuhisa.cbz",
+        "/Users/userabc/Comics.nosync/The Fable 03 (Egmont) GER Minami Katsuhisa.cbz",
+        "/Users/userabc/Comics.nosync/Staehlerne Herzen 01 (X fuer U, 1990) (Flattermann).cbr",
+        "/Users/userabc/Comics.nosync/Staehlerne Herzen 02 (X fuer U, 1990)(Flattermann).cbr",
+        "/Users/userabc/Comics.nosync/Star Fantasy 1 [13] (c2c) (Interman) (1978) (GCA P).cbr",
+        "/Users/userabc/Comics.nosync/Star Fantasy 10 (c2c) (Interman) (1978) (GCA P).cbr",
+        "/Users/userabc/Comics.nosync/Star Fantasy 11 (c2c) (Intermann) (1978) (GCA P).cbr",
+        "/Users/userabc/Comics.nosync/Diese Banker (c2c) (BSE Verlag).cbr",
+        "/Users/userabc/Comics.nosync/Disney Ducktionary (Ehapa).cbr",
+        "/Users/userabc/Comics.nosync/Ein letztes Wort zum Kino.cbr"
       ];
 
       const result = service.groupFiles(input);
@@ -114,7 +114,7 @@ describe('EbookGroupingService', () => {
     });
 
     it('should handle single file', () => {
-      const input = ["/Users/marckronberg/Comics.nosync/Single File.cbr"];
+      const input = ["/Users/userabc/Comics.nosync/Single File.cbr"];
       const result = service.groupFiles(input);
 
       expect(result['_various']).toBeDefined();
@@ -124,10 +124,10 @@ describe('EbookGroupingService', () => {
 
     it('should group Das Hoellenpack series correctly', () => {
       const input = [
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 01 Die Gefaehrten des Adlers (Scanlation #1329) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 02 Die Rueckkehr der Harith (Scanlation #1330) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 03 Das Geheimnis der Sibylle (Scanlation #1331) (2022) (GCA Savages).cbr",
-        "/Users/marckronberg/Comics.nosync/GER/[GER] Das Hoellenpack 04 Das Reich des Boesen (Scanlation #1332) (2022) (GCA Savages).cbr"
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 01 Die Gefaehrten des Adlers (Scanlation #1329) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 02 Die Rueckkehr der Harith (Scanlation #1330) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 03 Das Geheimnis der Sibylle (Scanlation #1331) (2022) (GCA Savages).cbr",
+        "/Users/userabc/Comics.nosync/GER/[GER] Das Hoellenpack 04 Das Reich des Boesen (Scanlation #1332) (2022) (GCA Savages).cbr"
       ];
 
       const result = service.groupFiles(input);
@@ -149,11 +149,11 @@ describe('EbookGroupingService', () => {
 
     it('should strip [*] prefix patterns from filenames', () => {
       const input = [
-        "/Users/marckronberg/Comics.nosync/[ENG] Test Series 01 First Issue.cbr",
-        "/Users/marckronberg/Comics.nosync/[ENG] Test Series 02 Second Issue.cbr",
-        "/Users/marckronberg/Comics.nosync/[FR] Another Series 01 Premier.cbr",
-        "/Users/marckronberg/Comics.nosync/[GERMAN] Third Series 01 Erste.cbr",
-        "/Users/marckronberg/Comics.nosync/Normal Series 01 Regular.cbr"
+        "/Users/userabc/Comics.nosync/[ENG] Test Series 01 First Issue.cbr",
+        "/Users/userabc/Comics.nosync/[ENG] Test Series 02 Second Issue.cbr",
+        "/Users/userabc/Comics.nosync/[FR] Another Series 01 Premier.cbr",
+        "/Users/userabc/Comics.nosync/[GERMAN] Third Series 01 Erste.cbr",
+        "/Users/userabc/Comics.nosync/Normal Series 01 Regular.cbr"
       ];
 
       const result = service.groupFiles(input);
@@ -177,7 +177,7 @@ describe('EbookGroupingService', () => {
     });
 
     it('should group Bleierne Hitze correctly', () => {
-      const input = ["/Users/marckronberg/Comics.nosync/Bleierne Hitze (Edition 52 2013)(KeiPsf).cbr"];
+      const input = ["/Users/userabc/Comics.nosync/Bleierne Hitze (Edition 52 2013)(KeiPsf).cbr"];
       const result = service.groupFiles(input);
 
       // Expected: should group under "Bleierne Hitze"
@@ -188,9 +188,9 @@ describe('EbookGroupingService', () => {
 
     it('should group Vergessene Welt series correctly', () => {
       const input = [
-        "/Users/marckronberg/Comics.nosync/Vergessene Welt 01 Teil 01 (Splitter 2014 12) (FIST DAS).cbr",
-        "/Users/marckronberg/Comics.nosync/Vergessene Welt 02 (c2c) (Splitter) (2015) (GCA Empire FT).cbr",
-        "/Users/marckronberg/Comics.nosync/Vergessene Welt 03 (c2c) (Splitter) (2017) (GCA Empire FT).cbr"
+        "/Users/userabc/Comics.nosync/Vergessene Welt 01 Teil 01 (Splitter 2014 12) (FIST DAS).cbr",
+        "/Users/userabc/Comics.nosync/Vergessene Welt 02 (c2c) (Splitter) (2015) (GCA Empire FT).cbr",
+        "/Users/userabc/Comics.nosync/Vergessene Welt 03 (c2c) (Splitter) (2017) (GCA Empire FT).cbr"
       ];
       const result = service.groupFiles(input);
 
@@ -204,10 +204,10 @@ describe('EbookGroupingService', () => {
 
     it('should group Himmel in Truemmern files correctly', () => {
       const input = [
-        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 01.cbr",
-        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 01.jpg",
-        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 05.cbr",
-        "/Users/marckronberg/Comics.nosync/__out/Himmel in Truemmern 05.jpg"
+        "/Users/userabc/Comics.nosync/__out/Himmel in Truemmern 01.cbr",
+        "/Users/userabc/Comics.nosync/__out/Himmel in Truemmern 01.jpg",
+        "/Users/userabc/Comics.nosync/__out/Himmel in Truemmern 05.cbr",
+        "/Users/userabc/Comics.nosync/__out/Himmel in Truemmern 05.jpg"
       ];
 
       const result = service.groupFiles(input);
@@ -223,6 +223,32 @@ describe('EbookGroupingService', () => {
       // Verify all input files are accounted for
       const allOutputFiles = Object.values(result).flat();
       expect(allOutputFiles.length).toBe(input.length);
+    });
+
+    it('should group Jeff Jordan Gesamtausgabe series correctly', () => {
+      const input = [
+        "/Users/userabc/Comics.nosync/Jeff Jordan Gesamtausgabe - 1 - 1956-1960(c2c)(Ehapa)(2009)(Outsiders)(peroch).jpg",
+        "/Users/userabc/Comics.nosync/Jeff Jordan Gesamtausgabe - 2 - 1960-1963(c2c)(Ehapa)(2009)(peroch).jpg",
+        "/Users/userabc/Comics.nosync/Jeff Jordan Gesamtausgabe - 3 - 1964-1970(c2c)(Ehapa)(2010)(peroch).jpg",
+        "/Users/userabc/Comics.nosync/Jeff Jordan Gesamtausgabe - 4 - 1970-1979(v2)(c2c)(Ehapa)(2010)(peroch).jpg"
+      ];
+
+      const result = service.groupFiles(input);
+
+      // Expected: should group all under "Jeff Jordan Gesamtausgabe"
+      expect(result['Jeff Jordan Gesamtausgabe']).toBeDefined();
+      expect(result['Jeff Jordan Gesamtausgabe'].length).toBe(4);
+      expect(result['Jeff Jordan Gesamtausgabe']).toContain(input[0]);
+      expect(result['Jeff Jordan Gesamtausgabe']).toContain(input[1]);
+      expect(result['Jeff Jordan Gesamtausgabe']).toContain(input[2]);
+      expect(result['Jeff Jordan Gesamtausgabe']).toContain(input[3]);
+
+      // Verify all input files are accounted for
+      const allOutputFiles = Object.values(result).flat();
+      expect(allOutputFiles.length).toBe(input.length);
+
+      // Verify no files end up in _various
+      expect(result['_various']).toBeUndefined();
     });
   });
 });
