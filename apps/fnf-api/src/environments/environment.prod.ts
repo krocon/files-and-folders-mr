@@ -1,13 +1,14 @@
 // Define a function to get environment variables at runtime
 import {join} from "path";
+import * as fs from "node:fs";
 
 const getEnvironmentVariables = () => {
 
-  const label = 'prod';
-  const version = '30.07.2025 19:46';
-  const commitHash = '175f13f';
+  const version = '31.07.2025 09:12';
+  const commitHash = 'fca8bbe';
 
-  const assetsPrefix = join(__dirname, '../../..', 'fnf-api/assets');
+  const dockerAssetPrefix = join(__dirname, '../../..', 'fnf-api/assets');
+  const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
@@ -30,6 +31,7 @@ const getEnvironmentVariables = () => {
   const toolDefaultsPath = assetsPrefix + '/tool/defaults'
   const toolCustomPath = assetsPrefix + '/tool/custom';
 
+
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
   const openaiModel = process.env.FNF_OPENAI_MODEL || 'gpt-4';
@@ -41,7 +43,6 @@ const getEnvironmentVariables = () => {
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
-    label,
     version,
     commitHash,
     frontendPort,
@@ -77,21 +78,14 @@ const getEnvironmentVariables = () => {
 
 // Create a dynamic environment object that gets values at runtime
 export const environment = {
-  production: true,
+  production: false,
 
-  get label() {
-    return getEnvironmentVariables().label;
-  },
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
   },
   get websocketPort() {
     return getEnvironmentVariables().websocketPort;
   },
-  get openaiApiKey() {
-    return getEnvironmentVariables().openaiApiKey;
-  },
-
   get shortcutsDefaultsPath() {
     return getEnvironmentVariables().shortcutsDefaultsPath;
   },
@@ -105,7 +99,6 @@ export const environment = {
   get colorCustomPath() {
     return getEnvironmentVariables().colorCustomPath;
   },
-
   get filetypeDefaultsPath() {
     return getEnvironmentVariables().filetypeDefaultsPath;
   },
@@ -132,6 +125,10 @@ export const environment = {
   },
   get toolCustomPath() {
     return getEnvironmentVariables().toolCustomPath;
+  },
+
+  get openaiApiKey() {
+    return getEnvironmentVariables().openaiApiKey;
   },
   get llamaApiKey() {
     return getEnvironmentVariables().llamaApiKey;

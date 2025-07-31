@@ -1,4 +1,4 @@
-import {Module} from "@nestjs/common";
+import {Logger, Module} from "@nestjs/common";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {ConfigModule as NestConfigModule} from "@nestjs/config";
 
@@ -90,28 +90,35 @@ export const config = new Config(
 export class AppModule {
 
   constructor() {
-    console.log('>  config      :', config);
-    console.log('>  process.env :');
+    const envBuf = [];
     Object
       .keys(process.env)
       .filter(k => k.startsWith('FNF_') && !k.includes('API_KEY'))
-      .forEach(key => console.log('    > ' + key, process.env[key]));
+      .forEach(key => envBuf.push('       └── ' + key + ': ' + process.env[key]));
 
-    console.log('>  environment :', {
-      production: environment.production,
-      label: environment.label,
-      version: environment.version,
-      commitHash: environment.commitHash,
-      frontendPort: environment.frontendPort,
-      websocketPort: environment.websocketPort,
-      // not this! openaiApiKey: environment.openaiApiKey,
-      openaiApiUrl: environment.openaiApiUrl,
-      openaiModel: environment.openaiModel,
-      llamaApiKey: environment.llamaApiKey,
-      llamaApiUrl: environment.llamaApiUrl,
-      llamaModel: environment.llamaModel,
-      aiCompletionService: environment.aiCompletionService
-    });
+    Logger.log(`
+    >  config      
+       └──  incompatiblePaths: ${config.incompatiblePaths}
+       └──  containerPaths: ${config.containerPaths}
+       └──  startPath: ${config.startPath}
+       └──  dockerRoot: ${config.dockerRoot}
+       
+    >  process.env    
+${envBuf.join('\n')} 
+
+    >  environment   
+       └──  production: ${environment.production}
+       └──  version: ${environment.version}
+       └──  commitHash: ${environment.commitHash}
+       └──  frontendPort: ${environment.frontendPort}
+       └──  websocketPort: ${environment.websocketPort}
+       └──  openaiApiUrl: ${environment.openaiApiUrl}
+       └──  openaiModel: ${environment.openaiModel}
+       └──  llamaApiKey: ${environment.llamaApiKey}
+       └──  llamaApiUrl: ${environment.llamaApiUrl}
+       └──  llamaModel: ${environment.llamaModel}
+       └──  aiCompletionService: ${environment.aiCompletionService}   
+    `);
   }
   
 }

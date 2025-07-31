@@ -1,13 +1,14 @@
 // Define a function to get environment variables at runtime
 import {join} from "path";
+import * as fs from "node:fs";
 
 const getEnvironmentVariables = () => {
 
-  const label = 'dev';
-  const version = '30.07.2025 19:46';
-  const commitHash = '175f13f';
+  const version = '31.07.2025 09:12';
+  const commitHash = 'fca8bbe';
 
-  const assetsPrefix = join(__dirname, '..', 'src/assets');
+  const dockerAssetPrefix = join(__dirname, '../../..', 'fnf-api/assets');
+  const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
   const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
@@ -42,7 +43,6 @@ const getEnvironmentVariables = () => {
   const aiCompletionService = process.env.FNF_AI_COMPLETION_SERVICE || 'openai';
 
   return {
-    label,
     version,
     commitHash,
     frontendPort,
@@ -80,9 +80,6 @@ const getEnvironmentVariables = () => {
 export const environment = {
   production: false,
 
-  get label() {
-    return getEnvironmentVariables().label;
-  },
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
   },

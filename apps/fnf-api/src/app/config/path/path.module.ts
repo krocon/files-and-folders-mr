@@ -12,7 +12,6 @@ export class PathModule {
   public static forRoot(config: Config): DynamicModule {
     if (config) {
       PathService.config = config;
-      Logger.log("ConfigModule config -> " + JSON.stringify(config, null, 2));
     }
     return {
       module: PathModule,
