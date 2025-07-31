@@ -1,4 +1,11 @@
-const apiPort1 = 3333;
+// Read the API port from the global window object
+declare global {
+  interface Window {
+    apiPort?: string;
+  }
+}
+
+const apiPort1 = parseInt(window.apiPort || '3333', 10);
 const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
 const apiPrefix1 = prefix1 + "/api";
 

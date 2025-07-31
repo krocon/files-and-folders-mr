@@ -35,8 +35,14 @@ import {PromptService} from "./service/config/prompt.service";
 import {ConfigThemesService} from "./service/config/config-themes.service";
 
 
-function init() {
-// Set config to services:
+async function init() {
+
+  // const response = await fetch('/apiPort');
+  // const config = await response.json();
+  // window['apiPort'] = config.apiPort;
+  window['apiPort'] = 3333 + '';
+
+  // Set config to services:
   ConfigService.forRoot(environment.config);
   SysinfoService.forRoot(environment.sysinfo);
   ConfigThemesService.forRoot(environment.configThemes);

@@ -1,10 +1,12 @@
-// This file-content can be replaced during build by using the `fileReplacements` array.
-// `ng build` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file-content replacements can be found in `angular.json`.
+// Read the API port from the global window object
+declare global {
+  interface Window {
+    apiPort?: string;
+  }
+}
 
-const apiPort1 = 3333;
+const apiPort1 = parseInt(window.apiPort || '3333', 10);
 const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
-
 const apiPrefix1 = prefix1 + "/api";
 
 export const environment = {
