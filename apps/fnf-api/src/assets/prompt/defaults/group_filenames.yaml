@@ -1,0 +1,34 @@
+description: A prompt that organizes television series files into a standardized folder structure with the pattern "/{TITLE}/{Snn}/{Snn}{Enn} - {EPISODE}.{EXT}" to improve media library organization
+prompt: >-
+  `I have a list of filenames (television series). 
+  Please create a new filename for each file.
+
+Try to use this pattern:
+new name (path): "/{TITLE}/{Snn}/{Snn}{Enn} - {EPISODE}.{EXT}"
+If you don't have the episode title, use this pattern:
+  new name (path): "/{TITLE}/{Snn}/{Snn}{Enn} - {TITLE}.{EXT}"
+
+Placeholder:
+  { EPISODE }: title of episode (if not available use {TITLE} placeholder)
+    { TITLE }: title of television series
+    { Snn }: Series Number uppercase (for example S01)
+    { Enn }: Episode Number uppercase (for example E01)
+    { EXT }: file extension
+
+Example:
+  -Input: [ "/Users/Abc/movies/Jim Knopf/Jim.Knopf.S03E03.GERMAN.1080p.WEB.H264-SunDry/jim.knopf.s03e02.1080p.web.h264-sundry.mkv" ]
+  -Output: { "/Users/Abc/movies/Jim Knopf/Jim.Knopf.S03E03.GERMAN.1080p.WEB.H264-SunDry/jim.knopf.s03e02.1080p.web.h264-sundry.mkv": "/Jim Knopf/S03/S03E02 - Jim Knopf.mkv" }
+
+Rule:
+  Make sure that the last part of the filename (behind last '/') containes {Snn} and {Enn} placeholders.
+  Do not write "TheEpisodeTitle" or "EpisodeNotAvailable".
+  Do not change the name of sample files.
+  Sample files are in a (sub) folder "/Sample/" or they have ".sample." in the name.
+  Do not include sample files in the output.
+  Output must be parsable JSON.
+
+Your answer should be a valid (parsable) JSON in the form: { [ key:string ]: string } (key is the input file, value is the new name).
+                                                             Just return the parsable JSON in the field "response", no explanations.
+Input:
+
+  `

@@ -1,0 +1,22 @@
+description: analyze a list of filenames (movies, books, music, etc.) and convert them into standardized formats based on media type, returning the results as a JSON object
+prompt: >-
+  `I have a list of filenames. 
+  Please create a new filename for each file.
+  The files are well-known movies, books, music, ...
+
+  Try to use these patterns:
+  Movie: TITLE (yyyy).ext
+  Music: ARTIST - TITLE. ext or Album ARTIST - ALBUM (yyyy) /TRACK - TITLE.ext
+  Book: AUTHOR - TITLE (yyyy).ext
+  TV Show: SHOWNAME - SxxEyy - TITLE.ext
+  Podcast: PODCASTNAME - Ep### - TITLE.ext
+  Audiobook: AUTHOR - TITLE (yyyy).ext
+  Game: ROM TITLE [REGION] (yyyy).ext
+  Comics: TITLE ## (PUBLISHER) (YEAR).ext
+
+  Your answer should be a valid (parsable) JSON in the form: {[key:string]: string}.
+  (key is the input file, value is the new filename (BASE.EXT, without path).
+
+  Input:
+
+  `

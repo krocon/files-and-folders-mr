@@ -85,6 +85,8 @@ export * from './models/pack/download-dialog-result.data';
 export * from './models/pack/download-para.data';
 export * from './models/pack/set-file-attributes.data';
 
+export * from './models/prompt/prompt-data-if';
+
 export * from './models/dialog/confirmation-dialog.data';
 
 export { getParent } from "./models/file/get-parent";
