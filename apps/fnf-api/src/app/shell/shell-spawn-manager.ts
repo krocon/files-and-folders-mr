@@ -6,6 +6,7 @@ import {ShellSpawnParaIf, ShellSpawnResultIf} from '@fnf-data';
 export class ShellSpawnManager {
   private processes: Map<string, ChildProcessWithoutNullStreams> = new Map();
   private timeouts: Map<string, NodeJS.Timeout> = new Map();
+  private killTimeouts: Map<string, NodeJS.Timeout> = new Map();
   private currentDirectories: Map<string, string> = new Map();
 
   /**
@@ -154,14 +155,16 @@ export class ShellSpawnManager {
     if (child) {
       try {
         child.kill('SIGTERM');
-        setTimeout(() => {
+        const killTimeoutId = setTimeout(() => {
           try {
             child.kill('SIGKILL');
           } catch (error) {
             // Process might already be dead
             console.warn('Failed to force kill process:', error.message);
           }
+          this.killTimeouts.delete(cancelKey);
         }, 5000);
+        this.killTimeouts.set(cancelKey, killTimeoutId);
         return true;
       } catch (error) {
         console.error('Error killing process:', error);
@@ -183,8 +186,12 @@ export class ShellSpawnManager {
    * Kills all active processes
    */
   killAllProcesses(): void {
-    for (const [cancelKey] of this.processes) {
+    // Create a copy of the keys to avoid modification during iteration
+    const cancelKeys = Array.from(this.processes.keys());
+    for (const cancelKey of cancelKeys) {
       this.killProcess(cancelKey);
+      // Ensure immediate cleanup of timeouts
+      this.cleanup(cancelKey);
     }
   }
 
@@ -273,6 +280,12 @@ export class ShellSpawnManager {
     if (timeoutId) {
       clearTimeout(timeoutId);
       this.timeouts.delete(cancelKey);
+    }
+
+    const killTimeoutId = this.killTimeouts.get(cancelKey);
+    if (killTimeoutId) {
+      clearTimeout(killTimeoutId);
+      this.killTimeouts.delete(cancelKey);
     }
   }
 }

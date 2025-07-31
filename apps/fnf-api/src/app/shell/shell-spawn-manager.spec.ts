@@ -3,19 +3,25 @@ import {ShellSpawnParaIf, ShellSpawnResultIf} from '@fnf-data';
 
 describe('ShellSpawnManager', () => {
   let manager: ShellSpawnManager;
+  let activeTimeouts: NodeJS.Timeout[] = [];
 
   beforeEach(() => {
     manager = new ShellSpawnManager();
+    activeTimeouts = [];
   });
 
   afterEach((done) => {
     // Clean up all processes after each test
     manager.killAllProcesses();
 
-    // Wait for processes to be cleaned up
+    // Clear any active timeouts
+    activeTimeouts.forEach(timeout => clearTimeout(timeout));
+    activeTimeouts = [];
+
+    // Wait longer for processes to be cleaned up
     setTimeout(() => {
       done();
-    }, 200);
+    }, 500);
   });
 
   describe('spawn', () => {
@@ -179,21 +185,26 @@ describe('ShellSpawnManager', () => {
       };
 
       let processKilled = false;
+      let timeoutId: NodeJS.Timeout;
 
       // Start the process
       manager.spawn(para, (result: ShellSpawnResultIf) => {
         if (result.done) {
           // Process finished - check if it was killed
           expect(processKilled).toBe(true);
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
           done();
         }
       });
 
       // Kill the process after a short delay
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         processKilled = manager.killProcess(para.cancelKey);
         expect(processKilled).toBe(true);
       }, 500);
+      activeTimeouts.push(timeoutId);
     }, 5000);
 
     it('should return false for non-existent process', () => {
@@ -245,10 +256,11 @@ describe('ShellSpawnManager', () => {
       manager.killAllProcesses();
 
       // Give some time for cleanup
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         expect(manager.getActiveProcessCount()).toBe(0);
         done();
       }, 300);
+      activeTimeouts.push(timeoutId);
     });
   });
 });
