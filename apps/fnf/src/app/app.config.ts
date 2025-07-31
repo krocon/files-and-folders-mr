@@ -39,7 +39,7 @@ import {ConfigThemesService} from "./service/config/config-themes.service";
 async function init() {
 
   // Try to detect the correct API port by testing common ports
-  const possiblePorts = [3333, 3335, 3337];
+  const possiblePorts = [3333, 3335, 3337, 3339];
 
 
   async function checkApiPort(port: number) {
@@ -60,29 +60,29 @@ async function init() {
         return data.apiPort ? data.apiPort.toString() : null;
       }
       return null;
+
     } catch (error: Error | any) {
       clearTimeout(timeoutId);
-      console.debug(`Port ${port} check failed: ${error.message}`);
       return null;
     }
   }
 
   async function checkSomeApiPortaAsync() {
-    // Try each port
+    const availablePorts: number[] = [];
+    // Try each port:
     for (const port of possiblePorts) {
       const detectedPort = await checkApiPort(port);
       if (detectedPort) {
-        window['apiPort'] = '' + detectedPort;
-        break;
+        availablePorts.push(detectedPort);
       }
     }
+    window['apiPorts'] = '' + availablePorts.join(',');
   }
 
 
   console.info('        > Waiting for API server...');
   await checkSomeApiPortaAsync();
-
-  console.info('        > API Port found: ', window['apiPort']);
+  console.info('        > API Ports found  : ', window['apiPorts']);
 
   // Set config to services:
   ConfigService.forRoot(environment.config);

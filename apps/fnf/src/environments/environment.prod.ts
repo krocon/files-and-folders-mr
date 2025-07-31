@@ -1,11 +1,12 @@
 // Read the API port from the global window object
 declare global {
   interface Window {
-    apiPort?: string;
+    apiPorts?: string;
   }
 }
 
-const apiPort1 = parseInt(window.apiPort || '3333', 10);
+const availableApiPorts: number[] = window.apiPorts?.split(',').map(p => parseInt(p, 10)) || [3333];
+const apiPort1 = availableApiPorts[0];
 const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
 const apiPrefix1 = prefix1 + "/api";
 
@@ -13,6 +14,8 @@ export const environment = {
   production: true,
   version: '31.07.2025 09:56',
   commitHash: '70b27de',
+
+  availableApiPorts,
 
   config: {
     apiUrl: apiPrefix1 + "/config"
