@@ -31,6 +31,9 @@ const getEnvironmentVariables = () => {
   const toolDefaultsPath = assetsPrefix + '/tool/defaults'
   const toolCustomPath = assetsPrefix + '/tool/custom';
 
+  const promptDefaultsPath = assetsPrefix + '/prompt/defaults'
+  const promptCustomPath = assetsPrefix + '/prompt/custom';
+
 
   const openaiApiKey = process.env.FNF_OPENAI_API_KEY || '';
   const openaiApiUrl = process.env.FNF_OPENAI_API_URL || 'https://api.openai.com/v1/chat/completions';
@@ -65,6 +68,9 @@ const getEnvironmentVariables = () => {
 
     toolDefaultsPath,
     toolCustomPath,
+
+    promptDefaultsPath,
+    promptCustomPath,
 
     openaiApiKey,
     openaiApiUrl,
@@ -125,6 +131,13 @@ export const environment = {
   },
   get toolCustomPath() {
     return getEnvironmentVariables().toolCustomPath;
+  },
+
+  get promptDefaultsPath() {
+    return getEnvironmentVariables().promptDefaultsPath;
+  },
+  get promptCustomPath() {
+    return getEnvironmentVariables().promptCustomPath;
   },
 
   get openaiApiKey() {

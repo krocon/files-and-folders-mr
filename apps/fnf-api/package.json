@@ -12,7 +12,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --detectOpenHandles",
     "test-fn": "jest --testPathPattern=\".*fn\\.spec\\.ts$\" --runInBand",
     "test-gateway": "jest --testPathPattern=\".*gateway\\.spec\\.ts$\" --runInBand",
     "test-controller": "jest --testPathPattern=\".*controller\\.spec\\.ts$\" --runInBand",
@@ -22,6 +22,7 @@
     "prepush": "node ../../update-version.js"
   },
   "dependencies": {
+    "7zip-bin": "^5.2.0",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^4.0.2",
@@ -30,19 +31,20 @@
     "@nestjs/platform-socket.io": "^10.0.0",
     "@nestjs/serve-static": "^5.0.3",
     "@nestjs/websockets": "^10.0.0",
+    "@types/js-yaml": "^4.0.9",
     "axios": "^1.11.0",
     "chokidar": "^4.0.3",
     "fs-extra": "^11.3.0",
+    "js-yaml": "^4.1.0",
     "micromatch": "^4.0.8",
     "ngx-socket-io": "^4.8.5",
+    "node-7z": "^3.0.0",
     "node-stream-zip": "^1.15.0",
     "raw-body": "^3.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "socket.io": "^4.8.1",
-    "xterm": "5.3.0",
-    "7zip-bin": "^5.2.0",
-    "node-7z": "^3.0.0"
+    "xterm": "5.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
