@@ -35,12 +35,54 @@ import {PromptService} from "./service/config/prompt.service";
 import {ConfigThemesService} from "./service/config/config-themes.service";
 
 
+
 async function init() {
 
-  // const response = await fetch('/apiPort');
-  // const config = await response.json();
-  // window['apiPort'] = config.apiPort;
-  window['apiPort'] = 3333 + '';
+  // Try to detect the correct API port by testing common ports
+  const possiblePorts = [3333, 3335, 3337];
+
+
+  async function checkApiPort(port: number) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 1000);
+
+    try {
+      const url = `${location.protocol}//${location.hostname}:${port}/api/apiPort?t=${Date.now()}`;
+      const response = await fetch(url, {
+        method: 'GET',
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.apiPort ? data.apiPort.toString() : null;
+      }
+      return null;
+    } catch (error: Error | any) {
+      clearTimeout(timeoutId);
+      console.debug(`Port ${port} check failed: ${error.message}`);
+      return null;
+    }
+  }
+
+  async function checkSomeApiPortaAsync() {
+    // Try each port
+    for (const port of possiblePorts) {
+      const detectedPort = await checkApiPort(port);
+      if (detectedPort) {
+        window['apiPort'] = '' + detectedPort;
+        break;
+      }
+    }
+  }
+
+
+  console.info('        > Waiting for API server...');
+  await checkSomeApiPortaAsync();
+
+  console.info('        > API Port found: ', window['apiPort']);
 
   // Set config to services:
   ConfigService.forRoot(environment.config);
@@ -69,11 +111,9 @@ async function init() {
   WalkdirSyncService.forRoot(environment.walkdir);
   WalkSocketService.forRoot(environment.walkdir);
 
-  console.info('Files and Folders');
   console.info('        > Services configured');
 }
 
-init();
 
 const config: SocketIoConfig = {
   url: "http://localhost:3334",
@@ -92,13 +132,19 @@ export function socketFactory(config: SocketIoConfig, appRef: ApplicationRef): S
   return new Socket(config, appRef);
 }
 
-export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({eventCoalescing: true}),
-    provideRouter(routes/*, withDebugTracing()*/),
-    provideAnimations(),
-    provideHttpClient(),
-    {provide: SOCKET_CONFIG_TOKEN, useValue: config},
-    {provide: Socket, useFactory: socketFactory, deps: [SOCKET_CONFIG_TOKEN, ApplicationRef]},
-  ]
-};
+
+export async function getAppConfig(): Promise<ApplicationConfig> {
+  console.info('Files and Folders');
+  await init();
+
+  return {
+    providers: [
+      provideZoneChangeDetection({eventCoalescing: true}),
+      provideRouter(routes/*, withDebugTracing()*/),
+      provideAnimations(),
+      provideHttpClient(),
+      {provide: SOCKET_CONFIG_TOKEN, useValue: config},
+      {provide: Socket, useFactory: socketFactory, deps: [SOCKET_CONFIG_TOKEN, ApplicationRef]},
+    ]
+  }
+}
