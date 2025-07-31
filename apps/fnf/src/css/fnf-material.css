@@ -64,10 +64,24 @@ fnf-root {
 
 
 }
+
+
+.mat-mdc-dialog-surface {
+    --mat-dialog-container-shape: 12px;
+    border-radius: 12px;
+}
+
 .fnf-top-sheet {
     .mat-bottom-sheet-container{
         overflow: clip;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
+    }
+
+    .mat-bottom-sheet-container-xlarge,
+    .mat-bottom-sheet-container-large,
+    .mat-bottom-sheet-container-medium {
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
     }
 }
