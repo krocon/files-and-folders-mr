@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {ShellCmdIf, ShellCmdResultIf} from "@fnf-data";
+import {getChangedPort} from "../../../app.config";
 
 
 @Injectable({
@@ -17,8 +18,14 @@ export class ShellService {
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  static forRoot(config: { [key: string]: string }) {
+  static forRoot(
+    config: { [key: string]: string },
+    ports: number[]
+  ) {
     Object.assign(ShellService.config, config);
+
+    ShellService.config.shellUrl = getChangedPort(ShellService.config.shellUrl, ports, 2);
+    console.log('shellUrl', ShellService.config.shellUrl);
   }
 
 

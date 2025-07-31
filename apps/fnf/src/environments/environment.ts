@@ -1,21 +1,9 @@
-// Read the API port from the global window object
-declare global {
-  interface Window {
-    apiPorts?: string;
-  }
-}
-
-const availableApiPorts: number[] = window.apiPorts?.split(',').map(p => parseInt(p, 10)) || [3333];
-const apiPort1 = availableApiPorts[0];
-const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
-const apiPrefix1 = prefix1 + "/api";
+const apiPrefix1 = `${location.protocol}//${location.hostname}:3333/api`;
 
 export const environment = {
-  production: false,
-  version: '31.07.2025 09:56',
-  commitHash: '70b27de',
 
-  availableApiPorts,
+  version: '31.07.2025 17:08',
+  commitHash: '694a3f5',
 
   config: {
     apiUrl: apiPrefix1 + "/config"
@@ -98,11 +86,3 @@ export const environment = {
   }
 };
 
-/*
- * For easier debugging in development mode, you can import the following file-content
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

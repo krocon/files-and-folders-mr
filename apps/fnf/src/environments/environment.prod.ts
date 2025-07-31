@@ -9,11 +9,13 @@ const availableApiPorts: number[] = window.apiPorts?.split(',').map(p => parseIn
 const apiPort1 = availableApiPorts[0];
 const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
 const apiPrefix1 = prefix1 + "/api";
+const apiPrefix2 = availableApiPorts.length > 1 ? (apiPrefix1.replaceAll(/:\d\d\d\d/g, `:${availableApiPorts[1]}`)) : apiPrefix1;
+const apiPrefix3 = availableApiPorts.length > 2 ? (apiPrefix1.replaceAll(/:\d\d\d\d/g, `:${availableApiPorts[2]}`)) : apiPrefix1;
 
 export const environment = {
-  production: true,
-  version: '31.07.2025 09:56',
-  commitHash: '70b27de',
+
+  version: '31.07.2025 17:08',
+  commitHash: '694a3f5',
 
   availableApiPorts,
 
@@ -47,21 +49,22 @@ export const environment = {
     apiUrl: apiPrefix1 + "/clean"
   },
   shell: {
-    shellUrl: apiPrefix1 + "/shell",
-    spawnUrl: apiPrefix1 + "/spawn",
-    cancelSpawnUrl: apiPrefix1 + "/cancelspawn",
+    shellUrl: apiPrefix3 + "/shell",
+    spawnUrl: apiPrefix3 + "/spawn",
+    cancelSpawnUrl: apiPrefix3 + "/cancelspawn",
   },
   walkdir: {
     apiUrl: apiPrefix1 + "/walkdirsync",
     syncMode: true
   },
-
   shellAutocomplete: {
     autocompleteUrl: apiPrefix1 + "/shell-autocomplete"
   },
+
   configThemes: {
     apiUrl: apiPrefix1 + "/themes"
   },
+
   shortcut: {
     apiUrl: apiPrefix1 + "/shortcuts"
   },
@@ -82,8 +85,8 @@ export const environment = {
     saveFile: apiPrefix1 + "/file?name="
   },
   fileAction: {
-    url: apiPrefix1 + "/do",
-    multiUrl: apiPrefix1 + "/do/multi",
+    url: apiPrefix2 + "/do",
+    multiUrl: apiPrefix2 + "/do/multi",
   },
   gotoAnything: {
     apiUrl: apiPrefix1 + "/findfolders"
@@ -96,3 +99,4 @@ export const environment = {
     downloadUrl: apiPrefix1 + "/download"
   }
 };
+

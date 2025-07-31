@@ -9,10 +9,10 @@ export class AppController {
     return AppService.availableRoutes;
   }
 
-  @Get('apiPort')
+  @Get('apiPortTest')
   getConfig() {
     return {
-      apiPort: process.env.FNF_API_PORT || 3333
+      ok: true
     };
   }
 

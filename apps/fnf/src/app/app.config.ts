@@ -9,7 +9,6 @@ import {routes} from './app.routes';
 import {ConfigService} from "./service/config/config.service";
 import {SysinfoService} from "./service/sysinfo.service";
 import {environment} from "../environments/environment";
-import {LookAndFeelService} from "./service/look-and-feel.service";
 
 import {FileSystemService} from "./service/file-system.service";
 import {FileActionService} from "./feature/task/service/file-action.service";
@@ -35,19 +34,25 @@ import {PromptService} from "./service/config/prompt.service";
 import {ConfigThemesService} from "./service/config/config-themes.service";
 
 
+export function getChangedPort(url: string, ports: number[], index: number = 0) {
+  const port = ports.length > index ? ports[index] : ports[0];
+  return url.replace(/:\d\d\d\d/g, `:${port}`);
+}
 
-async function init() {
+
+export async function initPorts() {
+
+  const availableApiPorts: number[] = [];
 
   // Try to detect the correct API port by testing common ports
   const possiblePorts = [3333, 3335, 3337, 3339];
-
 
   async function checkApiPort(port: number) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 1000);
 
     try {
-      const url = `${location.protocol}//${location.hostname}:${port}/api/apiPort?t=${Date.now()}`;
+      const url = `${location.protocol}//${location.hostname}:${port}/api/apiPortTest?t=${Date.now()}`;
       const response = await fetch(url, {
         method: 'GET',
         signal: controller.signal
@@ -56,8 +61,7 @@ async function init() {
       clearTimeout(timeoutId);
 
       if (response.ok) {
-        const data = await response.json();
-        return data.apiPort ? data.apiPort.toString() : null;
+        return port;
       }
       return null;
 
@@ -68,21 +72,25 @@ async function init() {
   }
 
   async function checkSomeApiPortaAsync() {
-    const availablePorts: number[] = [];
     // Try each port:
     for (const port of possiblePorts) {
       const detectedPort = await checkApiPort(port);
       if (detectedPort) {
-        availablePorts.push(detectedPort);
+        availableApiPorts.push(detectedPort);
       }
     }
-    window['apiPorts'] = '' + availablePorts.join(',');
   }
-
 
   console.info('        > Waiting for API server...');
   await checkSomeApiPortaAsync();
   console.info('        > API Ports found  : ', window['apiPorts']);
+
+  return availableApiPorts;
+}
+
+async function init() {
+
+  const ports: number[] = await initPorts();
 
   // Set config to services:
   ConfigService.forRoot(environment.config);
@@ -100,7 +108,7 @@ async function init() {
   AiCompletionService.forRoot(environment.multiRename);
   GlobValidatorService.forRoot(environment.checkGlob);
   CleanService.forRoot(environment.clean);
-  ShellService.forRoot(environment.shell);
+  ShellService.forRoot(environment.shell, ports);
   ShellAutocompleteService.forRoot(environment.shellAutocomplete);
   ServershellService.forRoot(environment.shell);
   ServershellAutocompleteService.forRoot(environment.shellAutocomplete);
