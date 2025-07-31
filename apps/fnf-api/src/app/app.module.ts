@@ -111,11 +111,13 @@ ${envBuf.join('\n')}
        ├──  commitHash: ${environment.commitHash}
        ├──  frontendPort: ${environment.frontendPort}
        ├──  websocketPort: ${environment.websocketPort}
+       │ 
        ├──  openaiApiUrl: ${environment.openaiApiUrl}
        ├──  openaiModel: ${environment.openaiModel}
-       ├──  llamaApiKey: ${environment.llamaApiKey}
+       │ 
        ├──  llamaApiUrl: ${environment.llamaApiUrl}
        ├──  llamaModel: ${environment.llamaModel}
+       │ 
        └──  aiCompletionService: ${environment.aiCompletionService}   
     `);
   }
