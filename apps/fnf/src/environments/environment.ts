@@ -68,6 +68,9 @@ export const environment = {
   searchPatterns: {
     apiUrl: apiPrefix + "/searchpatterns"
   },
+  prompt: {
+    apiUrl: apiPrefix + "/prompts"
+  },
   edit: {
     apiUrl: apiPrefix + "/file?name=",
     saveFile: apiPrefix + "/file?name="

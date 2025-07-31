@@ -31,6 +31,7 @@ import {WalkdirSyncService} from "./common/walkdir/walkdir-sync.service";
 import {WalkSocketService} from "./common/walkdir/walk.socketio.service";
 import {ShortcutService} from "./service/config/shortcut.service";
 import {SearchPatternsService} from "./service/config/search-patterns.service";
+import {PromptService} from "./service/config/prompt.service";
 import {ConfigThemesService} from "./service/config/config-themes.service";
 
 
@@ -47,6 +48,7 @@ function init() {
   FiletypeExtensionsService.forRoot(environment.filetypeExtensions);
   ConfigButtonsService.forRoot(environment.buttons);
   SearchPatternsService.forRoot(environment.searchPatterns);
+  PromptService.forRoot(environment.prompt);
   AiCompletionService.forRoot(environment.multiRename);
   GlobValidatorService.forRoot(environment.checkGlob);
   CleanService.forRoot(environment.clean);
