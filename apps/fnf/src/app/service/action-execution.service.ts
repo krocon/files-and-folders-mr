@@ -47,6 +47,8 @@ import {GroupFileDialogResponse} from "../feature/cmd/groupfiles/data/group-file
 })
 export class ActionExecutionService {
 
+
+  public static QUICK_ACTION_QUEUE_INDEX = 1;
   public static defaultTools: CmdIf[] = [];
   public readonly actionEvents$ = new Subject<ActionId>();
   private bodyAreaModels: [FileTableBodyModel | undefined, FileTableBodyModel | undefined] = [undefined, undefined];
@@ -239,12 +241,12 @@ export class ActionExecutionService {
 
   callActionMkDir(para: { dir: string; base: string; panelIndex: PanelIndex }) {
     const actionEvent = this.commandService.createQueueActionEventForMkdir(para);
-    this.commandService.addActions([actionEvent]);
+    this.commandService.addActions([actionEvent], ActionExecutionService.QUICK_ACTION_QUEUE_INDEX);
   }
 
   callActionCreateFile(para: { dir: string; base: string; ext: string; panelIndex: PanelIndex }) {
     const actionEvent = this.commandService.createQueueActionEventForCreateFile(para);
-    this.commandService.addActions([actionEvent]);
+    this.commandService.addActions([actionEvent], ActionExecutionService.QUICK_ACTION_QUEUE_INDEX);
   }
 
   /**

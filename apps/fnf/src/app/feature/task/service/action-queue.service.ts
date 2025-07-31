@@ -68,7 +68,7 @@ export class ActionQueueService {
   /**
    * Adds multiple actions to a queue
    * @param actionEvents The actions to add
-   * @param queueIndex The index of the queue to add the actions to
+   * @param queueIndex The index of the queue to add the actions to. 0 is normal queue, 1 is queue for small (fast) actions like 'ACTION_MKDIR' or 'ACTION_CREATE_FILE'
    */
   addActions(actionEvents: QueueActionEvent[], queueIndex: number = 0): void {
     this.jobId++;

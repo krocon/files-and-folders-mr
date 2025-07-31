@@ -328,7 +328,7 @@ export class CommandService {
       });
 
     this.actionQueueService.addActions(actions, queueIndex);
-    if (openJobTable) {
+    if (queueIndex === 0 && openJobTable) {
       this.actionQueueService.openJobTable();
     }
   }
