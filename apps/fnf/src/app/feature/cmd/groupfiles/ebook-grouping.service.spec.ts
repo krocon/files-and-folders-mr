@@ -250,5 +250,31 @@ describe('EbookGroupingService', () => {
       // Verify no files end up in _various
       expect(result['_various']).toBeUndefined();
     });
+
+    it('should group Krypto Geheimnisvolle Meereswesen series correctly', () => {
+      const input = [
+        "/Users/userabc/Comics.nosync/Krypto Geheimnisvolle Meereswesen 01 Eine sensationelle Entdeckung (Graphix Loewe).cbr",
+        "/Users/userabc/Comics.nosync/Krypto Geheimnisvolle Meereswesen 02 Im Auge des Orkans (Graphix Loewe).cbr",
+        "/Users/userabc/Comics.nosync/Krypto Geheimnisvolle Meereswesen 03 Schiffbruch mit Seeungeheuer (Graphix Loewe).cbr",
+        "/Users/userabc/Comics.nosync/Krypto Geheimnisvolle Meereswesen 04 Gefangen im Eisnebel (Graphix Loewe).cbr"
+      ];
+
+      const result = service.groupFiles(input);
+
+      // Expected: should group all under "Krypto Geheimnisvolle Meereswesen"
+      expect(result['Krypto Geheimnisvolle Meereswesen']).toBeDefined();
+      expect(result['Krypto Geheimnisvolle Meereswesen'].length).toBe(4);
+      expect(result['Krypto Geheimnisvolle Meereswesen']).toContain(input[0]);
+      expect(result['Krypto Geheimnisvolle Meereswesen']).toContain(input[1]);
+      expect(result['Krypto Geheimnisvolle Meereswesen']).toContain(input[2]);
+      expect(result['Krypto Geheimnisvolle Meereswesen']).toContain(input[3]);
+
+      // Verify all input files are accounted for
+      const allOutputFiles = Object.values(result).flat();
+      expect(allOutputFiles.length).toBe(input.length);
+
+      // Verify no files end up in _various
+      expect(result['_various']).toBeUndefined();
+    });
   });
 });

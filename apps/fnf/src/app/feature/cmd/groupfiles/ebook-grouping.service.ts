@@ -261,7 +261,11 @@ export class EbookGroupingService {
    */
   private isGenericName(name: string): boolean {
     const genericNames = ['Band', 'Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'];
-    return genericNames.some(generic => name.toLowerCase().includes(generic.toLowerCase()));
+    return genericNames.some(generic => {
+      // Use word boundary regex to match only complete words, not substrings
+      const regex = new RegExp(`\\b${generic}\\b`, 'i');
+      return regex.test(name);
+    });
   }
 
   /**
