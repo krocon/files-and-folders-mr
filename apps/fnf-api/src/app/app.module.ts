@@ -90,35 +90,34 @@ export const config = new Config(
 export class AppModule {
 
   constructor() {
-    const envBuf = [];
-    Object
+    const envBuf = Object
       .keys(process.env)
       .filter(k => k.startsWith('FNF_') && !k.includes('API_KEY'))
-      .forEach(key => envBuf.push('       └── ' + key + ': ' + process.env[key]));
+      .map((v, i, arr) => '    │  ' + (i < arr.length - 1 ? '├' : '└') + '── ' + v + ': ' + process.env[v]);
 
     Logger.log(`
-    >  config      
-       └──  incompatiblePaths: ${config.incompatiblePaths}
-       └──  containerPaths: ${config.containerPaths}
-       └──  startPath: ${config.startPath}
-       └──  dockerRoot: ${config.dockerRoot}
-       
-    >  process.env    
+    ├─ config      
+    │  ├──  incompatiblePaths: ${config.incompatiblePaths}
+    │  ├──  containerPaths: ${config.containerPaths}
+    │  ├──  startPath: ${config.startPath}
+    │  └──  dockerRoot: ${config.dockerRoot}
+    │  
+    ├─ process.env    
 ${envBuf.join('\n')} 
-
-    >  environment   
-       └──  production: ${environment.production}
-       └──  version: ${environment.version}
-       └──  commitHash: ${environment.commitHash}
-       └──  frontendPort: ${environment.frontendPort}
-       └──  websocketPort: ${environment.websocketPort}
-       └──  openaiApiUrl: ${environment.openaiApiUrl}
-       └──  openaiModel: ${environment.openaiModel}
-       └──  llamaApiKey: ${environment.llamaApiKey}
-       └──  llamaApiUrl: ${environment.llamaApiUrl}
-       └──  llamaModel: ${environment.llamaModel}
+    │
+    └─ environment   
+       ├──  production: ${environment.production}
+       ├──  version: ${environment.version}
+       ├──  commitHash: ${environment.commitHash}
+       ├──  frontendPort: ${environment.frontendPort}
+       ├──  websocketPort: ${environment.websocketPort}
+       ├──  openaiApiUrl: ${environment.openaiApiUrl}
+       ├──  openaiModel: ${environment.openaiModel}
+       ├──  llamaApiKey: ${environment.llamaApiKey}
+       ├──  llamaApiUrl: ${environment.llamaApiUrl}
+       ├──  llamaModel: ${environment.llamaModel}
        └──  aiCompletionService: ${environment.aiCompletionService}   
     `);
   }
-  
+
 }

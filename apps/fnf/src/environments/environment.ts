@@ -7,8 +7,8 @@ const apiPrefix = prefix + "/api";
 
 export const environment = {
   production: false,
-  version: '31.07.2025 09:12',
-  commitHash: 'fca8bbe',
+  version: '31.07.2025 09:34',
+  commitHash: '7a2ca46',
 
   config: {
     apiUrl: apiPrefix + "/config"
