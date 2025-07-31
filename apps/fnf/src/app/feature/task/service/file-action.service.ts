@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {ActionGatewayKeys as keys, DoEventIf, FilePara, OnDoResponseType, UnpackParaData} from "@fnf-data";
 import {Observable} from "rxjs";
 import {Socket} from "ngx-socket-io";
+import {getChangedPort} from "../../../app.config";
 
 
 @Injectable({
@@ -21,8 +22,14 @@ export class FileActionService {
   ) {
   }
 
-  static forRoot(config: { [key: string]: string }) {
+  static forRoot(
+    config: { [key: string]: string },
+    ports: number[]
+  ) {
     Object.assign(FileActionService.config, config);
+
+    FileActionService.config.url = getChangedPort(FileActionService.config.url, ports, 1);
+    FileActionService.config.multiUrl = getChangedPort(FileActionService.config.multiUrl, ports, 1);
   }
 
   do(filePara: FilePara | UnpackParaData): Observable<OnDoResponseType> {

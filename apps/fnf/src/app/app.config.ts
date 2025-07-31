@@ -98,7 +98,7 @@ async function init() {
   ConfigThemesService.forRoot(environment.configThemes);
   ShortcutService.forRoot(environment.shortcut);
   FileSystemService.forRoot(environment.fileSystem);
-  FileActionService.forRoot(environment.fileAction);
+  FileActionService.forRoot(environment.fileAction, ports);
   GotoAnythingDialogService.forRoot(environment.gotoAnything);
   ToolService.forRoot(environment.tool);
   FiletypeExtensionsService.forRoot(environment.filetypeExtensions);

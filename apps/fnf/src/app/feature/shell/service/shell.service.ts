@@ -25,7 +25,6 @@ export class ShellService {
     Object.assign(ShellService.config, config);
 
     ShellService.config.shellUrl = getChangedPort(ShellService.config.shellUrl, ports, 2);
-    console.log('shellUrl', ShellService.config.shellUrl);
   }
 
 
