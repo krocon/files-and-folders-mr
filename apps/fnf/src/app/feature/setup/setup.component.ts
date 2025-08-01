@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -24,7 +24,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatIconModule
   ],
   templateUrl: './setup.component.html',
-  styleUrls: ['./setup.component.css']
+  styleUrls: ['./setup.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SetupComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -34,11 +35,12 @@ export class SetupComponent implements OnInit, OnDestroy {
   isSaving = false;
 
   constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    private setupDataService: SetupDataService,
-    private setupPersistentService: SetupPersistentService,
-    private confirmationDialogService: FnfConfirmationDialogService
+    private readonly router: Router,
+    private readonly formBuilder: FormBuilder,
+    private readonly setupDataService: SetupDataService,
+    private readonly setupPersistentService: SetupPersistentService,
+    private readonly confirmationDialogService: FnfConfirmationDialogService,
+    private readonly cdr: ChangeDetectorRef,
   ) {
     this.setupForm = this.createForm();
   }
@@ -71,18 +73,21 @@ export class SetupComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (setupData: SetupData) => {
           this.setupForm.patchValue({
-            openAboutInNewWindow: setupData.openAboutInNewWindow,
-            openSetupInNewWindow: setupData.openSetupInNewWindow,
-            openServerShellInNewWindow: setupData.openServerShellInNewWindow,
-            openManageShortcutsInNewWindow: setupData.openManageShortcutsInNewWindow,
-            loadFolderSizeAfterSelection: setupData.loadFolderSizeAfterSelection,
-            condensedPresentationStyle: setupData.condensedPresentationStyle
+            ...setupData
+            // openAboutInNewWindow: setupData.openAboutInNewWindow,
+            // openSetupInNewWindow: setupData.openSetupInNewWindow,
+            // openServerShellInNewWindow: setupData.openServerShellInNewWindow,
+            // openManageShortcutsInNewWindow: setupData.openManageShortcutsInNewWindow,
+            // loadFolderSizeAfterSelection: setupData.loadFolderSizeAfterSelection,
+            // condensedPresentationStyle: setupData.condensedPresentationStyle
           });
           this.isLoading = false;
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error loading setup data:', error);
           this.isLoading = false;
+          this.cdr.detectChanges();
         }
       });
   }
@@ -92,14 +97,7 @@ export class SetupComponent implements OnInit, OnDestroy {
       this.isSaving = true;
 
       const formValue = this.setupForm.value;
-      const setupData = new SetupData(
-        formValue.openAboutInNewWindow,
-        formValue.openSetupInNewWindow,
-        formValue.openServerShellInNewWindow,
-        formValue.openManageShortcutsInNewWindow,
-        formValue.loadFolderSizeAfterSelection,
-        formValue.condensedPresentationStyle
-      );
+      const setupData = {...new SetupData(), ...this.setupForm.getRawValue()};
 
       this.setupPersistentService.saveSetupData(setupData)
         .pipe(takeUntil(this.destroy$))
@@ -111,11 +109,13 @@ export class SetupComponent implements OnInit, OnDestroy {
             } else {
               console.error('Failed to save setup data:', response.message);
               this.isSaving = false;
+              this.cdr.detectChanges();
             }
           },
           error: (error) => {
             console.error('Error saving setup data:', error);
             this.isSaving = false;
+            this.cdr.detectChanges();
           }
         });
     }

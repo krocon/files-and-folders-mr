@@ -45,33 +45,33 @@ describe('SetupPersistentService', () => {
       service.getSetupData().subscribe();
       const req = httpMock.expectOne('/custom/api/setup');
       expect(req.request.method).toBe('GET');
-      req.flush(mockSetupData.toJSON());
+      req.flush(JSON.stringify(mockSetupData));
     });
   });
 
   describe('getSetupData', () => {
     it('should return setup data', () => {
       service.getSetupData().subscribe(setupData => {
-        expect(setupData).toEqual(mockSetupData.toJSON());
+        expect(setupData).toEqual(JSON.stringify(mockSetupData));
       });
 
       const req = httpMock.expectOne('/api/setup');
       expect(req.request.method).toBe('GET');
-      req.flush(mockSetupData.toJSON());
+      req.flush(JSON.stringify(mockSetupData));
     });
   });
 
   describe('getDefaultSetupData', () => {
     it('should return default setup data', () => {
-      const defaultData = SetupData.getDefaults();
+      const defaultData = new SetupData();
 
       service.getDefaultSetupData().subscribe(setupData => {
-        expect(setupData).toEqual(defaultData.toJSON());
+        expect(setupData).toEqual(JSON.stringify(defaultData));
       });
 
       const req = httpMock.expectOne('/api/setup/defaults');
       expect(req.request.method).toBe('GET');
-      req.flush(defaultData.toJSON());
+      req.flush(JSON.stringify(defaultData));
     });
   });
 
@@ -104,16 +104,16 @@ describe('SetupPersistentService', () => {
 
   describe('resetToDefaults', () => {
     it('should reset setup data to defaults', () => {
-      const defaultData = SetupData.getDefaults();
+      const defaultData = new SetupData();
 
       service.resetToDefaults().subscribe(setupData => {
-        expect(setupData).toEqual(defaultData.toJSON());
+        expect(setupData).toEqual(JSON.stringify(defaultData));
       });
 
       const req = httpMock.expectOne('/api/setup/reset');
       expect(req.request.method).toBe('POST');
       expect(req.request.body).toEqual({});
-      req.flush(defaultData.toJSON());
+      req.flush(JSON.stringify(defaultData));
     });
   });
 });

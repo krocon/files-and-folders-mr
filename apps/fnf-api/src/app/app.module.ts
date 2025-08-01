@@ -80,7 +80,7 @@ export const config = new Config(
     ToolModule,
     SearchPatternModule,
     SetupModule,
-    DownloadModule
+    DownloadModule,
   ],
   controllers: [
     AppController

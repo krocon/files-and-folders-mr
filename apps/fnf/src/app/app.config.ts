@@ -94,6 +94,7 @@ async function init() {
   const ports: number[] = await initPorts();
 
   // Set config to services:
+  SetupPersistentService.forRoot(environment.setup);
   ConfigService.forRoot(environment.config);
   SysinfoService.forRoot(environment.sysinfo);
   ConfigThemesService.forRoot(environment.configThemes);
@@ -120,7 +121,6 @@ async function init() {
   WalkdirSyncService.forRoot(environment.walkdir);
   WalkSocketService.forRoot(environment.walkdir);
 
-  SetupPersistentService.forRoot(environment.setup);
 
   console.info('        > Services configured');
 }

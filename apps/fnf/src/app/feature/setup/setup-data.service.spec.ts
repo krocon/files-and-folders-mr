@@ -17,7 +17,7 @@ describe('SetupDataService', () => {
     false  // condensedPresentationStyle
   );
 
-  const defaultSetupData = SetupData.getDefaults();
+  const defaultSetupData = new SetupData();
 
   beforeEach(() => {
     mockPersistentService = {
@@ -54,7 +54,7 @@ describe('SetupDataService', () => {
     });
 
     it('should handle plain object response from persistent service', (done) => {
-      const plainObject = mockSetupData.toJSON();
+      const plainObject = JSON.stringify(mockSetupData);
       mockPersistentService.getSetupData.mockReturnValue(of(plainObject as any));
 
       service.init().subscribe(setupData => {
@@ -141,7 +141,7 @@ describe('SetupDataService', () => {
 
   describe('resetToDefaults', () => {
     it('should reset to defaults via persistent service', (done) => {
-      const defaultData = SetupData.getDefaults();
+      const defaultData = new SetupData();
       mockPersistentService.resetToDefaults.mockReturnValue(of(defaultData));
 
       service.resetToDefaults().subscribe(setupData => {
@@ -154,8 +154,8 @@ describe('SetupDataService', () => {
     });
 
     it('should handle plain object response from reset', (done) => {
-      const defaultData = SetupData.getDefaults();
-      const plainObject = defaultData.toJSON();
+      const defaultData = new SetupData();
+      const plainObject = JSON.stringify(defaultData);
       mockPersistentService.resetToDefaults.mockReturnValue(of(plainObject as any));
 
       service.resetToDefaults().subscribe(setupData => {

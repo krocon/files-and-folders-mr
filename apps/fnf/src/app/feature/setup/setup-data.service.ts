@@ -7,7 +7,7 @@ import {SetupPersistentService} from './setup-persistent.service';
   providedIn: 'root'
 })
 export class SetupDataService {
-  private setupData$ = new BehaviorSubject<SetupData>(SetupData.getDefaults());
+  private setupData$ = new BehaviorSubject<SetupData>(new SetupData());
   private initialized = false;
 
   constructor(private setupPersistentService: SetupPersistentService) {
@@ -22,17 +22,14 @@ export class SetupDataService {
       return this.setupData$.asObservable();
     }
 
-    return this.setupPersistentService.getSetupData().pipe(
-      tap((setupData: SetupData) => {
-        // Convert plain object to SetupData instance if needed
-        const setupDataInstance = setupData instanceof SetupData
-          ? setupData
-          : SetupData.fromJSON(setupData);
-
-        this.setupData$.next(setupDataInstance);
-        this.initialized = true;
-      })
-    );
+    return this.setupPersistentService
+      .getSetupData()
+      .pipe(
+        tap((setupData: SetupData) => {
+          this.setupData$.next(setupData);
+          this.initialized = true;
+        })
+      );
   }
 
   /**
@@ -66,7 +63,7 @@ export class SetupDataService {
         // Convert plain object to SetupData instance if needed
         const setupDataInstance = setupData instanceof SetupData
           ? setupData
-          : SetupData.fromJSON(setupData);
+          : JSON.parse(setupData);
 
         this.setupData$.next(setupDataInstance);
       })
@@ -82,7 +79,7 @@ export class SetupDataService {
         // Convert plain object to SetupData instance if needed
         const setupDataInstance = setupData instanceof SetupData
           ? setupData
-          : SetupData.fromJSON(setupData);
+          : JSON.parse(setupData);
 
         this.setupData$.next(setupDataInstance);
       })

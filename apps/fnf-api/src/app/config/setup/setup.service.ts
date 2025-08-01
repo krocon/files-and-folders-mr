@@ -16,17 +16,17 @@ export class SetupService {
 
       if (existsSync(setupFilePath)) {
         const content = await fs.readFile(setupFilePath, 'utf-8');
-        const jsonData = JSON.parse(content);
-        return SetupData.fromJSON(jsonData);
+        const setupData = JSON.parse(content);
+        return {...new SetupData(), ...setupData};
       }
 
       // Return defaults if file doesn't exist
-      return SetupData.getDefaults();
+      return new SetupData();
 
     } catch (error) {
       this.logger.error(`Failed to get setup data:`, error);
       // Return defaults on error
-      return SetupData.getDefaults();
+      return new SetupData();
     }
   }
 
@@ -36,9 +36,9 @@ export class SetupService {
 
       // Ensure directory exists
       await fs.mkdir(this.setupPath, {recursive: true});
-
-      await fs.writeFile(setupFilePath, JSON.stringify(setupData.toJSON(), null, 2));
+      await fs.writeFile(setupFilePath, JSON.stringify({...new SetupData(), ...setupData}, null, 2));
       this.logger.log(`Saved setup data`);
+
     } catch (error) {
       this.logger.error(`Failed to save setup data:`, error);
       throw error;
@@ -61,7 +61,7 @@ export class SetupService {
       }
 
       // Return defaults
-      return SetupData.getDefaults();
+      return new SetupData();
     } catch (error) {
       this.logger.error(`Failed to reset setup data:`, error);
       throw error;
@@ -69,6 +69,6 @@ export class SetupService {
   }
 
   async getDefaults(): Promise<SetupData> {
-    return SetupData.getDefaults();
+    return new SetupData();
   }
 }

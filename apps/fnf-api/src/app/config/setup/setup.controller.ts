@@ -28,13 +28,9 @@ export class SetupController {
   ): Promise<{ success: boolean; message: string }> {
     this.logger.log(`Saving setup data`);
     try {
-      // Convert plain object to SetupData instance if needed
-      const setupDataInstance = setupData instanceof SetupData
-        ? setupData
-        : SetupData.fromJSON(setupData);
-
-      await this.setupService.saveData(setupDataInstance);
+      await this.setupService.saveData(setupData);
       return {success: true, message: `Setup data saved`};
+
     } catch (error) {
       this.logger.error(`Failed to save setup data:`, error);
       return {success: false, message: `Failed to save setup data: ${error.message}`};
