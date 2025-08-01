@@ -25,14 +25,6 @@ export class SetupDataService {
     return this.setupPersistentService
       .getSetupData()
       .pipe(
-        map((setupData: SetupData) => {
-          // Convert plain object to SetupData instance if needed
-          const setupDataInstance = setupData instanceof SetupData
-            ? setupData
-            : this.createSetupDataInstance(JSON.parse(setupData));
-
-          return setupDataInstance;
-        }),
         tap((setupDataInstance: SetupData) => {
           this.setupData$.next(setupDataInstance);
           this.initialized = true;
