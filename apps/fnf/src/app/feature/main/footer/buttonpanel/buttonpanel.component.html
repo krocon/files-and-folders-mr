@@ -5,13 +5,13 @@
       <button
           (click)="onButtonClick(id)"
           [disabled]="!buttonEnableStates[id]"
-          [title]="getShortcutsByAction(id)"
+          [matTooltip]="getShortcutsByAction(id).join(' ')"
           class="panel-button"
           color="primary"
           mat-stroked-button>
 
         @if (getLabelByAction(id)) {
-          <span>&nbsp;{{ getLabelByAction(id) }}</span>
+          <span>&nbsp;{{ getShortLabelByAction(id) }}</span>
         }
         @if (getSimplestShortcutsByAction(id)) {
           <fnf-shortcut

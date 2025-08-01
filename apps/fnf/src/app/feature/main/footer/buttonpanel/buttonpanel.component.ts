@@ -26,6 +26,7 @@ import {ActionExecutionService} from "../../../../service/action-execution.servi
 import {LookAndFeelService} from "../../../../service/look-and-feel.service";
 import {ConfigButtonsService} from "../../../../service/config/config-buttons.service";
 import {ConfigThemesService} from "../../../../service/config/config-themes.service";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-button-panel',
@@ -41,7 +42,7 @@ import {ConfigThemesService} from "../../../../service/config/config-themes.serv
     MatDivider,
     MatList,
     TaskButtonComponent,
-
+    MatTooltip,
   ],
   templateUrl: './buttonpanel.component.html',
   styleUrls: ['./buttonpanel.component.css'],
@@ -231,6 +232,10 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   getLabelByAction(action: ActionId): string {
     return FnfActionLabels.actionIdLabelMap[action] ?? action;
+  }
+
+  getShortLabelByAction(action: ActionId): string {
+    return this.getLabelByAction(action).replaceAll('...', '');
   }
 
   @HostListener('window:keydown', ['$event'])

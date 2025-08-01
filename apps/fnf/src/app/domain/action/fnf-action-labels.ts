@@ -8,7 +8,7 @@ export class FnfActionLabels {
     COPY_2_CLIPBOARD_NAMES_AS_JSON: "Copy names to clipboard as JSON",
     OPEN_COPY_DLG: "Copy",
     OPEN_MOVE_DLG: "Move",
-    OPEN_MKDIR_DLG: "Create Dir",
+    OPEN_MKDIR_DLG: "MkDir",
     OPEN_CREATE_FILE_DLG: "Create File",
     OPEN_DELETE_DLG: "Delete",
     OPEN_EDIT_DLG: "Edit",

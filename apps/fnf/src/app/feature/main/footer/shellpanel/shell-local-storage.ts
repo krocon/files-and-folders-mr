@@ -9,7 +9,7 @@ import {BehaviorSubject} from "rxjs";
 export class ShellLocalStorage {
 
 
-  private readonly innerService = new TypedDataService<boolean>("shellVisible", true);
+  private readonly innerService = new TypedDataService<boolean>("shellVisible", false);
 
 
   setShellVisible(visible: boolean = true) {

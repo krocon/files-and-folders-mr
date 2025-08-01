@@ -64,7 +64,7 @@ describe("ButtonPanel Keyboard Interaction", () => {
     cy.get(".button-panel .panel-button").should("contain", "View");
     cy.get(".button-panel .panel-button").should("contain", "Edit");
     cy.get(".button-panel .panel-button").should("contain", "Move");
-    cy.get(".button-panel .panel-button").should("contain", "Create Dir");
+    cy.get(".button-panel .panel-button").should("contain", "MkDir");
     cy.get(".button-panel .panel-button").should("contain", "Delete");
 
     cy.screenshot("buttonpanel-default-buttons");

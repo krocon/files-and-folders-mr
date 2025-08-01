@@ -1,6 +1,5 @@
 {
   "default": [
-    "OPEN_VIEW_DLG",
     "OPEN_EDIT_DLG",
     "OPEN_COPY_DLG",
     "OPEN_MOVE_DLG",
@@ -8,7 +7,6 @@
     "OPEN_DELETE_DLG"
   ],
   "shift": [
-    "OPEN_VIEW_DLG",
     "OPEN_CREATE_FILE_DLG",
     "OPEN_COPY_DLG",
     "OPEN_RENAME_DLG",
@@ -17,7 +15,6 @@
   ],
   "cmd": [
     "OPEN_VIEW_DLG",
-    "OPEN_EDIT_DLG",
     "OPEN_COPY_DLG",
     "OPEN_MULTIRENAME_DLG",
     "OPEN_MKDIR_DLG",
@@ -25,7 +22,6 @@
   ],
   "alt": [
     "OPEN_VIEW_DLG",
-    "OPEN_EDIT_DLG",
     "OPEN_COPY_DLG",
     "OPEN_MULTIRENAME_DLG",
     "OPEN_MKDIR_DLG",
