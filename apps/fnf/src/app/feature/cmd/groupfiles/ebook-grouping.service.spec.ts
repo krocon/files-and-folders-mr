@@ -320,7 +320,7 @@ describe('EbookGroupingService', () => {
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_01_(Altraverse_Manga).cbr",
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_02_(Altraverse_Manga).cbr"
         ],
-        "Francois Schuiten/enseits der Grenze": [
+        "Francois Schuiten/Jenseits der Grenze": [
           "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
           "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr"
         ],

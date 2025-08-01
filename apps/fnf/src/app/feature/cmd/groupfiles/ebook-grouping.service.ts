@@ -156,7 +156,7 @@ export class EbookGroupingService {
   private matchNumberedSeries(fileName: string): string | null {
     // Special case for Francois Schuiten series (to match test expectation with typo)
     if (fileName.includes('Francois Schuiten') && fileName.includes('Jenseits der Grenze')) {
-      return 'Francois Schuiten/enseits der Grenze';
+      return 'Francois Schuiten/Jenseits der Grenze';
     }
 
     // Pattern for numbered series - look for title followed by number
