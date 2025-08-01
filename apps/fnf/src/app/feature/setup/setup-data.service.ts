@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, tap} from 'rxjs';
+import {BehaviorSubject, Observable, tap, map} from 'rxjs';
 import {SetupData} from '@fnf-data';
 import {SetupPersistentService} from './setup-persistent.service';
 
@@ -25,8 +25,16 @@ export class SetupDataService {
     return this.setupPersistentService
       .getSetupData()
       .pipe(
-        tap((setupData: SetupData) => {
-          this.setupData$.next(setupData);
+        map((setupData: SetupData) => {
+          // Convert plain object to SetupData instance if needed
+          const setupDataInstance = setupData instanceof SetupData
+            ? setupData
+            : this.createSetupDataInstance(JSON.parse(setupData));
+
+          return setupDataInstance;
+        }),
+        tap((setupDataInstance: SetupData) => {
+          this.setupData$.next(setupDataInstance);
           this.initialized = true;
         })
       );
@@ -59,12 +67,15 @@ export class SetupDataService {
    */
   resetToDefaults(): Observable<SetupData> {
     return this.setupPersistentService.resetToDefaults().pipe(
-      tap((setupData: SetupData) => {
+      map((setupData: SetupData) => {
         // Convert plain object to SetupData instance if needed
         const setupDataInstance = setupData instanceof SetupData
           ? setupData
-          : JSON.parse(setupData);
+          : this.createSetupDataInstance(JSON.parse(setupData));
 
+        return setupDataInstance;
+      }),
+      tap((setupDataInstance: SetupData) => {
         this.setupData$.next(setupDataInstance);
       })
     );
@@ -75,12 +86,15 @@ export class SetupDataService {
    */
   reload(): Observable<SetupData> {
     return this.setupPersistentService.getSetupData().pipe(
-      tap((setupData: SetupData) => {
+      map((setupData: SetupData) => {
         // Convert plain object to SetupData instance if needed
         const setupDataInstance = setupData instanceof SetupData
           ? setupData
-          : JSON.parse(setupData);
+          : this.createSetupDataInstance(JSON.parse(setupData));
 
+        return setupDataInstance;
+      }),
+      tap((setupDataInstance: SetupData) => {
         this.setupData$.next(setupDataInstance);
       })
     );
@@ -91,5 +105,19 @@ export class SetupDataService {
    */
   isInitialized(): boolean {
     return this.initialized;
+  }
+
+  /**
+   * Create a SetupData instance from a plain object
+   */
+  private createSetupDataInstance(plainObject: any): SetupData {
+    return new SetupData(
+      plainObject.openAboutInNewWindow,
+      plainObject.openSetupInNewWindow,
+      plainObject.openServerShellInNewWindow,
+      plainObject.openManageShortcutsInNewWindow,
+      plainObject.loadFolderSizeAfterSelection,
+      plainObject.condensedPresentationStyle
+    );
   }
 }

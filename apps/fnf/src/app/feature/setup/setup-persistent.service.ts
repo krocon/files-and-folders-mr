@@ -9,7 +9,7 @@ import {SetupData} from '@fnf-data';
 export class SetupPersistentService {
 
   private static readonly config = {
-    apiUrl: '/api/setup'
+    baseUrl: '/api/setup'
   };
 
   constructor(private http: HttpClient) {
@@ -20,20 +20,20 @@ export class SetupPersistentService {
   }
 
   getSetupData(): Observable<SetupData> {
-    return this.http.get<SetupData>(SetupPersistentService.config.apiUrl);
+    return this.http.get<SetupData>(SetupPersistentService.config.baseUrl);
   }
 
   getDefaultSetupData(): Observable<SetupData> {
-    const apiUrl = SetupPersistentService.config.apiUrl;
-    return this.http.get<SetupData>(`${apiUrl}/defaults`);
+    const baseUrl = SetupPersistentService.config.baseUrl;
+    return this.http.get<SetupData>(`${baseUrl}/defaults`);
   }
 
   saveSetupData(setupData: SetupData): Observable<{ success: boolean; message: string }> {
-    return this.http.put<{ success: boolean; message: string }>(SetupPersistentService.config.apiUrl, setupData);
+    return this.http.put<{ success: boolean; message: string }>(SetupPersistentService.config.baseUrl, setupData);
   }
 
   resetToDefaults(): Observable<SetupData> {
-    const apiUrl = SetupPersistentService.config.apiUrl;
-    return this.http.post<SetupData>(`${apiUrl}/reset`, {});
+    const baseUrl = SetupPersistentService.config.baseUrl;
+    return this.http.post<SetupData>(`${baseUrl}/reset`, {});
   }
 }
