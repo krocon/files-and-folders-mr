@@ -54,7 +54,7 @@ describe('SetupDataService', () => {
     });
 
     it('should handle plain object response from persistent service', (done) => {
-      const plainObject = JSON.stringify(mockSetupData);
+      const plainObject = mockSetupData;
       mockPersistentService.getSetupData.mockReturnValue(of(plainObject as any));
 
       service.init().subscribe(setupData => {
@@ -155,8 +155,7 @@ describe('SetupDataService', () => {
 
     it('should handle plain object response from reset', (done) => {
       const defaultData = new SetupData();
-      const plainObject = JSON.stringify(defaultData);
-      mockPersistentService.resetToDefaults.mockReturnValue(of(plainObject as any));
+      mockPersistentService.resetToDefaults.mockReturnValue(of(defaultData));
 
       service.resetToDefaults().subscribe(setupData => {
         expect(setupData.openAboutInNewWindow).toBe(defaultData.openAboutInNewWindow);
