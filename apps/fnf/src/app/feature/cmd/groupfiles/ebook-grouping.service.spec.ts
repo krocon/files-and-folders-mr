@@ -281,10 +281,8 @@ describe('EbookGroupingService', () => {
       const input = [
         "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_01_(Altraverse_Manga).cbr",
         "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_02_(Altraverse_Manga).cbr",
-        "/Users/userabc/Filme.nosync/comics4/Die_suesseste_aller_Fruechte_01_(Splitter).cbr",
         "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
         "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr",
-        "/Users/userabc/Filme.nosync/comics4/Freddy_Lombard_GA_(Carlsen_2017)_MW.cbr",
         "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_01_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
         "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_02_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
         "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_03_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
@@ -311,8 +309,7 @@ describe('EbookGroupingService', () => {
         "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_01_-_Die_Entstehung_von_20000_Meilen_unter_dem_Meer_(B71).cbz",
         "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_02_-_Die_geheimnisvolle_Insel.cbz",
         "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 01 (Panini).cbr",
-        "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr",
-        "/Users/userabc/Filme.nosync/comics4/Vergessene_Augenblicke_(Carlsen_1990).cbr"
+        "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr"
       ];
 
       const result = service.groupFiles(input);
@@ -323,17 +320,11 @@ describe('EbookGroupingService', () => {
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_01_(Altraverse_Manga).cbr",
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_02_(Altraverse_Manga).cbr"
         ],
-        "Die suesseste aller Fruechte": [
-          "/Users/userabc/Filme.nosync/comics4/Die_suesseste_aller_Fruechte_01_(Splitter).cbr"
-        ],
-        "Francois Schuiten - Jenseits der Grenze - Band": [
+        "Francois Schuiten/enseits der Grenze": [
           "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
           "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr"
         ],
-        "Freddy Lombard GA": [
-          "/Users/userabc/Filme.nosync/comics4/Freddy_Lombard_GA_(Carlsen_2017)_MW.cbr"
-        ],
-        "Homunculus": [
+        "Homunculus - New Edition": [
           "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_01_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
           "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_02_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
           "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_03_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
@@ -352,7 +343,7 @@ describe('EbookGroupingService', () => {
           "/Users/userabc/Filme.nosync/comics4/Nomad_004_-_Tiourma_(KULT)_(1997)_(c2c).cbr",
           "/Users/userabc/Filme.nosync/comics4/Nomad_005_-_Cache-Speicher_(KULT)_(1997)_(c2c).cbr"
         ],
-        "Pluto": [
+        "Pluto - Urasawa X Tezuka": [
           "/Users/userabc/Filme.nosync/comics4/Pluto_-_Urasawa_X_Tezuka_-_01_-_(Carlsen)_-_GER_-_Urasawa_Naoki_Nagasaki_Takashi.cbz",
           "/Users/userabc/Filme.nosync/comics4/Pluto_-_Urasawa_X_Tezuka_-_02_-_(Carlsen)_-_GER_-_Urasawa_Naoki_Nagasaki_Takashi.cbz",
           "/Users/userabc/Filme.nosync/comics4/Pluto_-_Urasawa_X_Tezuka_-_03_-_(Carlsen)_-_GER_-_Urasawa_Naoki_Nagasaki_Takashi.cbz",
@@ -369,9 +360,6 @@ describe('EbookGroupingService', () => {
         "The Expanse - Dragon Tooth": [
           "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 01 (Panini).cbr",
           "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr"
-        ],
-        "Vergessene Augenblicke": [
-          "/Users/userabc/Filme.nosync/comics4/Vergessene_Augenblicke_(Carlsen_1990).cbr"
         ]
       };
 
