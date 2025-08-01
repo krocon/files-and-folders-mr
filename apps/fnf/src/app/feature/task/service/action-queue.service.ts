@@ -279,7 +279,9 @@ export class ActionQueueService {
 
       queue.buttonStates.clean = queue.actions.filter(a => a.status === 'ERROR' || a.status === 'SUCCESS').length > 0;
       queue.buttonStates.pause = hasPendings;
-      queue.buttonStates.resume = progress.unfinished > 0 && queue.status === 'PAUSED' && hasPendings;
+      queue.buttonStates.resume = progress.unfinished > 0
+        && (queue.status === 'PAUSED' || queue.status === 'ERROR')
+        && hasPendings;
       queue.buttonStates.stop = hasPendings;
     }
   }

@@ -75,6 +75,16 @@
     </button>
 
     <button
+        (click)="onDeleteAllClicked()"
+        [disabled]="!queue.buttonStates.stop"
+        mat-stroked-button>
+      <mat-icon>stop</mat-icon>
+      Stop All
+    </button>
+
+    <div></div>
+
+    <button
         (click)="onPauseNextClicked()"
         [disabled]="!queue.buttonStates.pause"
         mat-stroked-button>
@@ -90,13 +100,6 @@
       Resume
     </button>
 
-    <button
-        (click)="onDeleteAllClicked()"
-        [disabled]="!queue.buttonStates.stop"
-        mat-stroked-button>
-      <mat-icon>stop</mat-icon>
-      Stop All
-    </button>
 
   </div>
 </div>
