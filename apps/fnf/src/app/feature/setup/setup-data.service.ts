@@ -67,14 +67,6 @@ export class SetupDataService {
    */
   resetToDefaults(): Observable<SetupData> {
     return this.setupPersistentService.resetToDefaults().pipe(
-      map((setupData: SetupData) => {
-        // Convert plain object to SetupData instance if needed
-        const setupDataInstance = setupData instanceof SetupData
-          ? setupData
-          : this.createSetupDataInstance(JSON.parse(setupData));
-
-        return setupDataInstance;
-      }),
       tap((setupDataInstance: SetupData) => {
         this.setupData$.next(setupDataInstance);
       })
@@ -86,14 +78,6 @@ export class SetupDataService {
    */
   reload(): Observable<SetupData> {
     return this.setupPersistentService.getSetupData().pipe(
-      map((setupData: SetupData) => {
-        // Convert plain object to SetupData instance if needed
-        const setupDataInstance = setupData instanceof SetupData
-          ? setupData
-          : this.createSetupDataInstance(JSON.parse(setupData));
-
-        return setupDataInstance;
-      }),
       tap((setupDataInstance: SetupData) => {
         this.setupData$.next(setupDataInstance);
       })
