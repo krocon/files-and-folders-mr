@@ -4,8 +4,8 @@ import * as fs from "node:fs";
 
 const getEnvironmentVariables = () => {
 
-  const version = '31.07.2025 17:08';
-  const commitHash = '694a3f5';
+  const version = '31.07.2025 22:48';
+  const commitHash = '02c78c9';
 
   const dockerAssetPrefix = process.env.FNF_ASSETS_ROOT || '/usr/src/app/apps/fnf-api/assets';
   const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
@@ -175,6 +175,8 @@ export const environment = {
           '*',
           'http://localhost:4200',
           'http://localhost:3333',
+          'http://localhost:3335',
+          'http://localhost:3337',
           'http://localhost:' + process.env.PORT,
           'http://localhost:' + frontendPort,
           'http://localhost:' + websocketPort,
