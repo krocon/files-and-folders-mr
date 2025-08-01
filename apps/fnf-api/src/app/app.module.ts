@@ -29,6 +29,7 @@ import {ButtonModule} from "./config/button/button.module";
 import {ToolModule} from "./config/tool/tool.module";
 import {ThemeModule} from "./config/theme/theme.module";
 import {SearchPatternModule} from "./config/search/search-pattern.module";
+import {SetupModule} from "./config/setup/setup.module";
 import {environment} from "../environments/environment";
 
 export const config = new Config(
@@ -78,6 +79,7 @@ export const config = new Config(
     ButtonModule,
     ToolModule,
     SearchPatternModule,
+    SetupModule,
     DownloadModule
   ],
   controllers: [

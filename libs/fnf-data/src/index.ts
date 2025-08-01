@@ -89,6 +89,8 @@ export * from './models/prompt/prompt-data-if';
 
 export * from './models/dialog/confirmation-dialog.data';
 
+export * from './models/setup/setup-data';
+
 export { getParent } from "./models/file/get-parent";
 export { isSameDir } from "./models/file/is-same-dir";
 export { isRoot } from "./models/file/is-root";

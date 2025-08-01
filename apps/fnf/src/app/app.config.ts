@@ -32,6 +32,7 @@ import {ShortcutService} from "./service/config/shortcut.service";
 import {SearchPatternsService} from "./service/config/search-patterns.service";
 import {PromptService} from "./service/config/prompt.service";
 import {ConfigThemesService} from "./service/config/config-themes.service";
+import {SetupPersistentService} from "./feature/setup/setup-persistent.service";
 
 
 export function getChangedPort(url: string, ports: number[], index: number = 0) {
@@ -83,7 +84,7 @@ export async function initPorts() {
 
   console.info('        > Waiting for API server...');
   await checkSomeApiPortaAsync();
-  console.info('        > API Ports found  : ', window['apiPorts']);
+  console.info('        > API Ports found  : ', availableApiPorts);
 
   return availableApiPorts;
 }
@@ -118,6 +119,8 @@ async function init() {
   WalkdirService.forRoot(environment.walkdir);
   WalkdirSyncService.forRoot(environment.walkdir);
   WalkSocketService.forRoot(environment.walkdir);
+
+  SetupPersistentService.forRoot(environment.setup);
 
   console.info('        > Services configured');
 }

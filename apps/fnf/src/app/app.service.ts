@@ -15,6 +15,7 @@ import {
   FindData,
   isZipUrl,
   PanelIndex,
+  SetupData,
   Sysinfo,
   SysinfoIf
 } from "@fnf-data";
@@ -37,6 +38,7 @@ import {ShellLocalStorage} from "./feature/main/footer/shellpanel/shell-local-st
 import {BrowserOsService} from "./service/browseros/browser-os.service";
 import {PanelManagementService} from "./service/panel/panel-management-service";
 import {ActionExecutionService} from "./service/action-execution.service";
+import {SetupDataService} from "./feature/setup/setup-data.service";
 
 
 @Injectable({
@@ -79,6 +81,7 @@ export class AppService {
     private readonly findSocketService: FindSocketService,
     private readonly shellLocalStorage: ShellLocalStorage,
     private readonly browserOsService: BrowserOsService,
+    private readonly setupDataService: SetupDataService,
   ) {
 
 
@@ -142,7 +145,7 @@ export class AppService {
       Observable<AllinfoIf>,
       Observable<ShortcutActionMapping | undefined>,
       Observable<CmdIf[] | undefined>,
-      // Observable<string[]>
+      Observable<SetupData>
     ] = [
       this.configService.getConfig(),
       this.sysinfoService.getSysinfo(),
@@ -151,7 +154,7 @@ export class AppService {
 
       this.shortcutService.getShortcuts(this.browserOs),
       this.toolService.fetchTools(this.browserOs),
-      // this.fileSystemService.getVolumes$()
+      this.setupDataService.init()
     ];
 
     combineLatest(obs)
@@ -164,7 +167,7 @@ export class AppService {
                allInfo,
                shortcutActionMapping,
                defaultTools,
-               // volumes
+               setupData
              ]) => {
 
           this.config = config;
@@ -193,6 +196,7 @@ export class AppService {
           console.info('        > Sysinfo          :', this.sysinfo);
           console.info('        > Config           :', this.config);
           console.info('        > All Info         :', allInfo);
+          console.info('        > Setup Data       :', setupData);
         }),
       )
       .subscribe({

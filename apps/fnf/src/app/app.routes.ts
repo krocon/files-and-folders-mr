@@ -19,6 +19,11 @@ export const routes: Routes = [
       import("./feature/shell/servershell.component").then(m => m.ServershellComponent)
   },
   {
+    path: "setup",
+    loadComponent: () =>
+      import("./feature/setup/setup.component").then(m => m.SetupComponent)
+  },
+  {
     path: "**",
     redirectTo: "files"
   }

@@ -1,0 +1,39 @@
+:host {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+
+    > * {
+        padding: 12px;
+    }
+}
+
+.dlg-content-div {
+    height: 100%;
+    padding-top: 12px;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    grid-gap: 24px;
+    align-items: center;
+
+    .form-section {
+        margin-top: 12px;
+    }
+
+    .dlg-content-header-div {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-gap: 12px;
+    }
+}
+
+
+.mat-mdc-dialog-actions {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-gap: 12px;
+
+    .mdc-button {
+        min-width: 200px;
+    }
+}
+

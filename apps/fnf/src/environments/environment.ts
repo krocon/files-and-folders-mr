@@ -34,6 +34,9 @@ export const environment = {
   clean: {
     apiUrl: apiPrefix1 + "/clean"
   },
+  setup: {
+    apiUrl: apiPrefix1 + "/setup"
+  },
   shell: {
     shellUrl: apiPrefix1 + "/shell",
     spawnUrl: apiPrefix1 + "/spawn",
