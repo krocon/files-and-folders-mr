@@ -18,7 +18,7 @@ describe('SetupPersistentService', () => {
 
   beforeEach(() => {
     // Reset the service config to default before each test
-    SetupPersistentService.forRoot({baseUrl: '/api/setup'});
+    SetupPersistentService.forRoot({apiUrl: '/api/setup'});
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
@@ -38,7 +38,7 @@ describe('SetupPersistentService', () => {
 
   describe('forRoot', () => {
     it('should configure the service with provided config', () => {
-      const config = {baseUrl: '/custom/api/setup'};
+      const config = {apiUrl: '/custom/api/setup'};
       SetupPersistentService.forRoot(config);
 
       // Access the private config through service methods to verify it was set
