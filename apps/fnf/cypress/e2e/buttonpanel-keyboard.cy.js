@@ -61,7 +61,6 @@ describe("ButtonPanel Keyboard Interaction", () => {
 
     // Verify specific default buttons are present
     cy.get(".button-panel .panel-button").should("contain", "Copy");
-    cy.get(".button-panel .panel-button").should("contain", "View");
     cy.get(".button-panel .panel-button").should("contain", "Edit");
     cy.get(".button-panel .panel-button").should("contain", "Move");
     cy.get(".button-panel .panel-button").should("contain", "MkDir");

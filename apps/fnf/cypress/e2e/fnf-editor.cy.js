@@ -40,7 +40,12 @@ describe("FnF Editor Component", () => {
   });
 
   it("should display the fnf-editor component in shell output", () => {
-    // First, we need to trigger a shell command that produces output
+    // First, enable the shell panel using CMD_SHELL shortcut
+    cy.get("body").type("{cmd+shift+c}");
+
+    // Wait for shell panel to appear
+    cy.get("app-shell-panel", {timeout: 5000}).should("exist");
+    
     // Focus on the shell input field
     cy.get("app-shell-panel input").should("exist").click().clear();
 
@@ -62,6 +67,12 @@ describe("FnF Editor Component", () => {
   });
 
   it("should load Monaco editor within the fnf-editor component", () => {
+    // First, enable the shell panel using CMD_SHELL shortcut
+    cy.get("body").type("{cmd+shift+c}");
+
+    // Wait for shell panel to appear
+    cy.get("app-shell-panel", {timeout: 5000}).should("exist");
+    
     // Execute a command to get shell output
     cy.get("app-shell-panel input").should("exist").click().clear();
     cy.get("app-shell-panel input").type("echo 'Hello World'");
@@ -81,6 +92,12 @@ describe("FnF Editor Component", () => {
   });
 
   it("should display text content in the Monaco editor", () => {
+    // First, enable the shell panel using CMD_SHELL shortcut
+    cy.get("body").type("{cmd+shift+c}");
+
+    // Wait for shell panel to appear
+    cy.get("app-shell-panel", {timeout: 5000}).should("exist");
+    
     // Execute a command to get shell output with some content
     cy.get("app-shell-panel input").should("exist").click().clear();
     cy.get("app-shell-panel input").type("echo 'Test content for editor'");
@@ -101,6 +118,12 @@ describe("FnF Editor Component", () => {
   });
 
   it("should be read-only in shell output context", () => {
+    // First, enable the shell panel using CMD_SHELL shortcut
+    cy.get("body").type("{cmd+shift+c}");
+
+    // Wait for shell panel to appear
+    cy.get("app-shell-panel", {timeout: 5000}).should("exist");
+    
     // Execute a command to get shell output
     cy.get("app-shell-panel input").should("exist").click().clear();
     cy.get("app-shell-panel input").type("pwd");
@@ -124,6 +147,12 @@ describe("FnF Editor Component", () => {
   });
 
   it("should have proper styling and dimensions", () => {
+    // First, enable the shell panel using CMD_SHELL shortcut
+    cy.get("body").type("{cmd+shift+c}");
+
+    // Wait for shell panel to appear
+    cy.get("app-shell-panel", {timeout: 5000}).should("exist");
+    
     // Execute a command to get shell output
     cy.get("app-shell-panel input").should("exist").click().clear();
     cy.get("app-shell-panel input").type("date");

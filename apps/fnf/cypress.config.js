@@ -125,7 +125,7 @@ module.exports = defineConfig({
 
         cleanupTestEnvironment() {
           return fs
-            .delete(appTestDir)
+            .remove(appTestDir)
             .then(() => fs
               .mkdir(appTestDir)
               .then(() => true)
