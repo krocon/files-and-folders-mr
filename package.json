@@ -14,6 +14,7 @@
     "build:all": "NODE_ENV=production && pnpm build",
     "prepush": "node update-version.js",
     "test:fnf": "pnpm --filter fnf test ",
+    "test:fnf-name": "pnpm --filter fnf test --testNamePattern=\"should group comic book series correctly - comprehensive test\"",
     "test:fnf-api": "pnpm --filter fnf-api test",
     "e2e:fnf": "pnpm --filter fnf e2e",
     "test": "pnpm test:fnf && pnpm test:fnf-api",

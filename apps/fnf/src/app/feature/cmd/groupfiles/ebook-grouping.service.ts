@@ -45,7 +45,9 @@ export class EbookGroupingService {
   private determineGroupKey(filePath: string): string {
     // Extract filename from path and strip [*] prefix patterns
     const rawFileName = this.extractFileName(filePath);
-    const fileName = this.stripPrefixPatterns(rawFileName);
+    const strippedFileName = this.stripPrefixPatterns(rawFileName);
+    // Normalize filename by converting underscores to spaces for better pattern matching
+    const fileName = this.normalizeFileName(strippedFileName);
 
     // Try different grouping strategies in order of specificity
 
@@ -105,6 +107,18 @@ export class EbookGroupingService {
   }
 
   /**
+   * Normalizes filename for better pattern matching
+   * - Converts underscores to spaces
+   * - Cleans up multiple spaces
+   */
+  private normalizeFileName(fileName: string): string {
+    return fileName
+      .replace(/_/g, ' ')  // Convert underscores to spaces
+      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+      .trim();
+  }
+
+  /**
    * Matches series with year patterns like "Mickyvision II Serie 1967 01"
    * Only matches when the year is part of the series structure, not publication metadata in parentheses
    */
@@ -137,11 +151,17 @@ export class EbookGroupingService {
   }
 
   /**
-   * Matches numbered series like "Deep State 01", "The Fable 01"
+   * Matches numbered series like "Deep State 01", "The Fable 01", "Nomad 001"
    */
   private matchNumberedSeries(fileName: string): string | null {
     // Pattern for numbered series - look for title followed by number
     const patterns = [
+      // Pattern like "Nomad 001 - Lebendige Erinnerung" (3-digit with dash)
+      /^(.+?)\s+(\d{3})\s*-/,
+      // Pattern like "Pluto - Urasawa X Tezuka - 01 -" (complex dash pattern)
+      /^(.+?)\s*-\s*(.+?)\s*-\s*(\d{1,3})\s*-/,
+      // Pattern like "Homunculus - New Edition - 01 -" (edition with number)
+      /^(.+?)\s*-\s*(New Edition|Gesamtausgabe|Collection)\s*-\s*(\d{1,3})\s*-/,
       // Pattern like "Deep State 01 Die dunklere Seite"
       /^(.+?)\s+(\d{1,3})\s+/,
       // Pattern like "Adolf 01 (GER)"
@@ -157,7 +177,21 @@ export class EbookGroupingService {
     for (const pattern of patterns) {
       const match = fileName.match(pattern);
       if (match) {
-        const seriesName = match[1].trim();
+        let seriesName = match[1].trim();
+
+        // Handle complex patterns with multiple parts
+        if (pattern.source.includes('-.*-.*-')) {
+          // For patterns like "Pluto - Urasawa X Tezuka - 01 -"
+          if (match[2]) {
+            seriesName = `${match[1].trim()} - ${match[2].trim()}`;
+          }
+        } else if (pattern.source.includes('New Edition|Gesamtausgabe|Collection')) {
+          // For patterns like "Homunculus - New Edition - 01 -"
+          if (match[2]) {
+            seriesName = `${match[1].trim()} - ${match[2].trim()}`;
+          }
+        }
+        
         // Filter out very generic or short names
         if (seriesName.length > 2 && !this.isGenericName(seriesName)) {
           return seriesName;
@@ -260,12 +294,27 @@ export class EbookGroupingService {
    * Checks if a name is too generic to be used for grouping
    */
   private isGenericName(name: string): boolean {
-    const genericNames = ['Band', 'Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'];
-    return genericNames.some(generic => {
-      // Use word boundary regex to match only complete words, not substrings
+    const genericNames = ['Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'];
+
+    // Check for generic names, but be more lenient with "Band" if it's part of a longer name
+    const hasGeneric = genericNames.some(generic => {
       const regex = new RegExp(`\\b${generic}\\b`, 'i');
       return regex.test(name);
     });
+
+    if (hasGeneric) {
+      return true;
+    }
+
+    // Special handling for "Band" - only consider it generic if it's the only meaningful word
+    // or if the name is very short
+    if (/\bBand\b/i.test(name)) {
+      // Allow "Band" if it's part of a longer, meaningful title
+      const words = name.split(/\s+/).filter(word => word.length > 2);
+      return words.length <= 2; // Generic if only "Band" + one other short word
+    }
+
+    return false;
   }
 
   /**
