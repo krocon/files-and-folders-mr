@@ -1,210 +1,327 @@
-# Files and Folders MR
+# 🗂️ Files and Folders MR
 
-Become a master of file management with "**Files and Folders**" (FnF). FnF is an orthodox browser based file manager for
-Mac OS X, Windows and Linux.
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://hub.docker.com/r/krocon/files-and-folders-mr)
+[![Angular](https://img.shields.io/badge/Angular-20-red?logo=angular)](https://angular.io/)
+[![NestJS](https://img.shields.io/badge/NestJS-Latest-ea2845?logo=nestjs)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![AI Powered](https://img.shields.io/badge/AI-Powered-green?logo=openai)](https://openai.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-The server component based on Node.js, the client component on AngularJS.
+> **The Next-Generation File Manager** - A powerful, AI-enhanced orthodox file manager that revolutionizes how you
+> interact with your files and folders.
 
-It's a fun project. Documentation will be expanded, and new features will be added.
+## ✨ Why Choose Files and Folders MR?
 
-![screen](https://cloud.githubusercontent.com/assets/11378781/14437724/ed962c40-0022-11e6-963f-523c2225df9b.png)
+**Files and Folders MR** isn't just another file manager—it's your intelligent file management companion. Built with
+cutting-edge technology and powered by AI, it transforms mundane file operations into effortless, intelligent workflows.
 
-## Main features of FnF:
+### 🚀 **Key Highlights**
 
-* Cross-platform (Frontend: browser, Backend: node.js)
-* Orthodox file managers (two-panel directory view with a command line below)
-* Tabbed interface
-* All operations working in queues
-* Multi-rename tool (Batch rename, apply filename changes to a group of files simultaneously)
-* Multi-group tool (Arranging and Grouping files, moving files to folders)
-* Directory history for changing back to recently viewed directories.
-* Configurable extensions menu to start external programs
-* User definable colors
-* User definable keyboard shortcuts
-* File List Filtering: Quickly filter a list of files by name, extension, or kind.
-* Smart Sorting: Sort by folders, packages, or files first.
-* Work with your files side-by-side in a customizable Dual Pane View and enjoy Full Keyboard Navigation.
-* Access frequently used files and folders with Bookmarks and Tab Presets.
-* View and manipulate hidden files.
-* Application Launcher: Access your apps with the press of a key.
-* Copy Names or Path of selected files and folders as text or json to clipboard.
-* Open a terminal window with active folder ("New Terminal Here")
-* Much more
+- 🤖 **AI-Powered Operations** - Let GPT-4 intelligently rename and organize your files
+- 🎯 **Orthodox Interface** - Classic dual-pane design with modern Angular 20 technology
+- 🖥️ **Cross-Platform** - Works seamlessly on Windows, macOS, and Linux
+- 🐳 **Docker Ready** - Deploy anywhere with one command
+- ⚡ **Lightning Fast** - Built with TypeScript, Angular 20, and NestJS
+- 🎨 **Fully Customizable** - Themes, shortcuts, and UI to match your workflow
 
-## For end user
+---
 
-### Step 1: Build
+## 🎯 **Core Features**
 
-Build a docker container:
+### 🤖 **AI-Enhanced File Management**
 
-```bash
-npm run pnpm-i && npm run build:all && npm run docker:build
+- **Smart Rename**: AI-powered batch renaming with natural language prompts
+- **Intelligent Grouping**: Automatically organize files into logical folders
+- **Context-Aware Suggestions**: Get intelligent recommendations for file operations
+- **Multiple AI Models**: Support for OpenAI GPT-4 and Llama models
+
+### 📁 **Advanced File Operations**
+
+- **Multi-Rename Tool**: Batch rename with regex patterns and AI assistance
+- **Multi-Directory Creation**: Create complex folder structures instantly
+- **Pack/Unpack**: Handle archives with ease (ZIP, TAR, etc.)
+- **Advanced Search**: Find files with powerful filtering options
+- **Goto Anything**: Quick navigation with fuzzy search
+
+### 🖥️ **Professional Interface**
+
+- **Dual-Pane View**: Classic orthodox file manager layout
+- **Tabbed Interface**: Multiple locations open simultaneously
+- **Built-in Terminal**: Integrated shell with full xterm.js support
+- **Task Manager**: Monitor background operations in real-time
+- **Customizable Themes**: Personalize colors and appearance
+
+### ⚡ **Power User Features**
+
+- **Keyboard Shortcuts**: Fully customizable hotkeys for every action
+- **Bookmarks & History**: Quick access to frequently used locations
+- **Hidden Files Support**: Toggle system and hidden file visibility
+- **Clipboard Integration**: Copy file paths and names as text or JSON
+- **External Program Launcher**: Launch applications directly from the file manager
+
+---
+
+## 📸 **Screenshots**
+
+> *Experience the power of AI-enhanced file management*
+
+**Main Interface**
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Files and Folders MR - AI-Powered File Manager                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ [📁 Documents]     [📁 Projects]      [🔍 Search]     [🤖 AI Tools]        │
+├─────────────────────┬───────────────────────────────────────────────────────┤
+│ Left Panel          │ Right Panel                                           │
+│ 📁 folder1/         │ 📁 src/                                              │
+│ 📄 document.pdf     │ 📄 main.ts                                           │
+│ 📄 image.jpg        │ 📄 app.component.ts                                  │
+│ 📄 data.json        │ 📁 components/                                       │
+├─────────────────────┴───────────────────────────────────────────────────────┤
+│ Terminal: ~/Projects/my-app $ npm run build                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Step 2a: Start with docker compose
+---
 
-#### Configure
+## 🚀 **Quick Start**
 
-Configure a docker compose:
+### Option 1: Docker (Recommended)
 
-```md
+**Single Command Setup:**
+```bash
+docker run -p 3333:3333 -p 3334:3334 \
+  -v /:/fnf \
+  -e FNF_OPENAI_API_KEY='your-openai-key-here' \
+  -e FNF_START_PATH='/fnf' \
+  --name files-and-folders \
+  krocon/files-and-folders-mr
+```
+
+**Access your file manager at:** `http://localhost:3333`
+
+### Option 2: Docker Compose
+
+Create `docker-compose.yml`:
+
+```yaml
 services:
-fnf-instance-1:
-image: krocon/files-and-folders-mr
-container_name: fnf-1
-ports:
-- "3333:3333"
-- "3334:3334"
-volumes:
-- /:/
-environment:
-- FNF_INCOMPATIBLE_PATHS=
-- FNF_START_PATH=/fnf
-- FNF_DOCKER_ROOT=/fnf
-- FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
-- FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
-- FNF_OPENAI_MODEL='gpt-4'
-- FNF_AI_COMPLETION_SERVICE='openai'
-- NODE_ENV=production
-restart: unless-stopped
-
-fnf-instance-2:
-image: krocon/files-and-folders-mr
-container_name: fnf-2
-ports:
-- "3335:3333"
-- "3336:3334"
-volumes:
-- /:/
-environment:
-- FNF_INCOMPATIBLE_PATHS=
-- FNF_START_PATH=/fnf
-- FNF_DOCKER_ROOT=/fnf
-- FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
-- FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
-- FNF_OPENAI_MODEL='gpt-4'
-- FNF_AI_COMPLETION_SERVICE='openai'
-- NODE_ENV=production
-restart: unless-stopped
-```
-
-#### Start
-
-```bash
-docker compose up
-```
-
-#### Stop
-
-```bash
-docker compose down
-```
-
-### Step 2b: Simple docker
-
-```bash
-docker run -p 3333:3333 -p 3334:3334 -v /Users:/fnf/Users -v /Volumes:/fnf/Volumes --name fnf --env=FNF_INCOMPATIBLE_PATHS='' --env=FNF_START_PATH='fnf' --env=NODE_ENV=production -d krocon/files-and-folders-mr
-
-```
-
-### Step 2c: Start without docker
-
-Start frontend and backend:
-
-```bash
-npm run start:fnf
+  files-and-folders:
+    image: krocon/files-and-folders-mr
+    container_name: fnf
+    ports:
+      - "3333:3333"
+      - "3334:3334"
+    volumes:
+      - /:/fnf
+    environment:
+      - FNF_OPENAI_API_KEY=your-openai-key-here
+      - FNF_OPENAI_API_URL=https://api.openai.com/v1/chat/completions
+      - FNF_OPENAI_MODEL=gpt-4
+      - FNF_START_PATH=/fnf
+      - NODE_ENV=production
+    restart: unless-stopped
 ```
 
 ```bash
-npm run start:fnf-api
+docker compose up -d
 ```
 
-## Project Structure
-
-- `apps/fnf`: Angular 20 frontend application
-- `apps/fnf-api`: NestJS backend API
-- `libs/fnf-data`: Shared library with common models and utilities
-
-## Prerequisites
-
-- Node.js >= 18.0.0
-- pnpm >= 8.0.0
-
-## Getting Started
-
-### Install Dependencies
+### Option 3: Development Setup
 
 ```bash
+# Clone and install
+git clone <repository-url>
+cd files-and-folders-mr
 npm run pnpm-i
-```
 
-This will install dependencies for the root project and all packages.
-
-### Build
-
-```bash
+# Build all components
 npm run build:all
+
+# Start services
+npm run start:fnf-api    # Backend (port 3000)
+npm run start:fnf        # Frontend (port 4200)
 ```
 
-This will build the shared library, Angular frontend, and NestJS backend in the correct order.
+---
 
-### Run Applications
+## 🤖 **AI Configuration**
 
-#### Start Angular Frontend
+To unlock the full power of AI features, configure your OpenAI API key:
 
+### Environment Variables
 ```bash
-npm run start:fnf
+export FNF_OPENAI_API_KEY="sk-your-openai-api-key-here"
+export FNF_OPENAI_MODEL="gpt-4"
+export FNF_AI_COMPLETION_SERVICE="openai"
 ```
 
-The Angular application will be available at http://localhost:4200.
+### Supported AI Models
 
-#### Start NestJS Backend
+- **OpenAI GPT-4** (Recommended)
+- **OpenAI GPT-3.5-turbo**
+- **Llama Models** (Local deployment)
 
+### AI Features in Action
+
+- **"Rename these photos by date and location"** → Intelligent batch renaming
+- **"Group these files by project type"** → Smart folder organization
+- **"Clean up this downloads folder"** → Automated file sorting
+
+---
+
+## 🛠️ **Configuration**
+
+### Keyboard Shortcuts
+
+Fully customizable shortcuts for power users:
+
+- `Ctrl+C` - Copy files
+- `Ctrl+V` - Paste files
+- `F5` - Refresh view
+- `F6` - Move files
+- `F7` - Create directory
+- `F8` - Delete files
+- `Ctrl+Shift+T` - Open terminal here
+
+### Themes & Appearance
+
+- **Dark Mode** - Easy on the eyes
+- **Light Mode** - Clean and bright
+- **Custom Colors** - Match your desktop theme
+- **Font Customization** - Choose your preferred typeface
+
+---
+
+## 🏗️ **Architecture**
+
+**Modern Tech Stack:**
+
+- **Frontend**: Angular 20 + TypeScript + Material Design
+- **Backend**: NestJS + Node.js + Express
+- **AI Integration**: OpenAI API + Custom completion services
+- **Terminal**: xterm.js for full shell integration
+- **Build**: Webpack 5 + Angular CLI
+- **Testing**: Jest + Cypress
+
+**Project Structure:**
+
+```
+files-and-folders-mr/
+├── apps/
+│   ├── fnf/           # Angular 20 Frontend
+│   └── fnf-api/       # NestJS Backend API
+├── libs/
+│   └── fnf-data/      # Shared TypeScript Models
+├── docker-compose.yml # Container orchestration
+└── package.json       # Monorepo configuration
+```
+
+---
+
+## 🧪 **Development**
+
+### Prerequisites
+
+- Node.js ≥ 18.0.0
+- pnpm ≥ 8.0.0
+- Docker (optional)
+
+### Build Commands
 ```bash
-npm run start:fnf-api
+npm run build:all      # Build everything
+npm run test           # Run all tests
+npm run e2e            # End-to-end tests
+npm run docker:build   # Build Docker image
 ```
-
-The NestJS API will be available at http://localhost:3000.
 
 ### Testing
 
-```bash
-npm run test
-```
+- **Unit Tests**: Jest for components and services
+- **E2E Tests**: Cypress for user workflows
+- **API Tests**: Automated backend testing
 
-This will run tests for all packages.
+---
 
-## Development
+## 🌟 **Use Cases**
 
-### Shared Library
+### For Developers
 
-The shared library contains common models and utilities that can be used by both the frontend and backend applications.
+- **Project Management**: Navigate codebases with dual-pane efficiency
+- **Build Automation**: Integrated terminal for development workflows
+- **File Organization**: AI-powered sorting of assets and dependencies
 
-To build the shared library:
+### For Content Creators
 
-```bash
-pnpm build:fnf-domain
-```
+- **Media Management**: Organize photos, videos, and assets intelligently
+- **Batch Operations**: Rename hundreds of files with AI assistance
+- **Archive Handling**: Extract and create archives seamlessly
 
-### Angular Frontend
+### For System Administrators
 
-The Angular frontend is located in `apps/fnf`. It's built with Angular 19 and uses the shared library.
+- **Server Management**: Remote file operations via web interface
+- **Log Analysis**: Navigate and search through system logs
+- **Backup Operations**: Organize and verify backup archives
 
-To build the Angular frontend:
+### For Power Users
 
-```bash
-pnpm build:fnf
-```
+- **Productivity**: Keyboard-driven file operations
+- **Customization**: Tailor the interface to your workflow
+- **Automation**: Script complex file operations
 
-### NestJS Backend
+---
 
-The NestJS backend is located in `apps/fnf-api`. It's built with the latest version of NestJS and uses the shared library.
+## 🤝 **Contributing**
 
-To build the NestJS backend:
+We welcome contributions! Here's how to get started:
 
-```bash
-pnpm build:fnf-api
-```
+1. **Fork** the repository
+2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
+4. **Push** to the branch: `git push origin feature/amazing-feature`
+5. **Open** a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Write tests for new features
+- Update documentation
+- Ensure Docker compatibility
+
+---
+
+## 📄 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 **Acknowledgments**
+
+- **Angular Team** - For the amazing framework
+- **NestJS Team** - For the powerful backend framework
+- **OpenAI** - For AI capabilities that transform file management
+- **xterm.js** - For excellent terminal integration
+- **Community Contributors** - For making this project better
+
+---
+
+## 📞 **Support**
+
+- 💬 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
+- 📖 **Documentation**: [Wiki](https://github.com/your-repo/wiki)
+- 🐳 **Docker Hub**: [krocon/files-and-folders-mr](https://hub.docker.com/r/krocon/files-and-folders-mr)
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you find it useful! ⭐**
+
+*Built with ❤️ by developers, for developers*
+
+</div>
 
 
 
