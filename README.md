@@ -1,8 +1,123 @@
 # Files and Folders MR
 
-**Coming soon. Work in progress!**
+Become a master of file management with "**Files and Folders**" (FnF). FnF is an orthodox browser based file manager for
+Mac OS X, Windows and Linux.
 
-A monorepo project with Angular 20 frontend and NestJS backend.
+The server component based on Node.js, the client component on AngularJS.
+
+It's a fun project. Documentation will be expanded, and new features will be added.
+
+![screen](https://cloud.githubusercontent.com/assets/11378781/14437724/ed962c40-0022-11e6-963f-523c2225df9b.png)
+
+## Main features of FnF:
+
+* Cross-platform (Frontend: browser, Backend: node.js)
+* Orthodox file managers (two-panel directory view with a command line below)
+* Tabbed interface
+* All operations working in queues
+* Multi-rename tool (Batch rename, apply filename changes to a group of files simultaneously)
+* Multi-group tool (Arranging and Grouping files, moving files to folders)
+* Directory history for changing back to recently viewed directories.
+* Configurable extensions menu to start external programs
+* User definable colors
+* User definable keyboard shortcuts
+* File List Filtering: Quickly filter a list of files by name, extension, or kind.
+* Smart Sorting: Sort by folders, packages, or files first.
+* Work with your files side-by-side in a customizable Dual Pane View and enjoy Full Keyboard Navigation.
+* Access frequently used files and folders with Bookmarks and Tab Presets.
+* View and manipulate hidden files.
+* Application Launcher: Access your apps with the press of a key.
+* Copy Names or Path of selected files and folders as text or json to clipboard.
+* Open a terminal window with active folder ("New Terminal Here")
+* Much more
+
+## For end user
+
+### Step 1: Build
+
+Build a docker container:
+
+```bash
+npm run pnpm-i && npm run build:all && npm run docker:build
+```
+
+### Step 2a: Start with docker compose
+
+#### Configure
+
+Configure a docker compose:
+
+```md
+services:
+fnf-instance-1:
+image: krocon/files-and-folders-mr
+container_name: fnf-1
+ports:
+- "3333:3333"
+- "3334:3334"
+volumes:
+- /:/
+environment:
+- FNF_INCOMPATIBLE_PATHS=
+- FNF_START_PATH=/fnf
+- FNF_DOCKER_ROOT=/fnf
+- FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
+- FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
+- FNF_OPENAI_MODEL='gpt-4'
+- FNF_AI_COMPLETION_SERVICE='openai'
+- NODE_ENV=production
+restart: unless-stopped
+
+fnf-instance-2:
+image: krocon/files-and-folders-mr
+container_name: fnf-2
+ports:
+- "3335:3333"
+- "3336:3334"
+volumes:
+- /:/
+environment:
+- FNF_INCOMPATIBLE_PATHS=
+- FNF_START_PATH=/fnf
+- FNF_DOCKER_ROOT=/fnf
+- FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
+- FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
+- FNF_OPENAI_MODEL='gpt-4'
+- FNF_AI_COMPLETION_SERVICE='openai'
+- NODE_ENV=production
+restart: unless-stopped
+```
+
+#### Start
+
+```bash
+docker compose up
+```
+
+#### Stop
+
+```bash
+docker compose down
+```
+
+### Step 2b: Simple docker
+
+```bash
+docker run -p 3333:3333 -p 3334:3334 -v /Users:/fnf/Users -v /Volumes:/fnf/Volumes --name fnf --env=FNF_INCOMPATIBLE_PATHS='' --env=FNF_START_PATH='fnf' --env=NODE_ENV=production -d krocon/files-and-folders-mr
+
+```
+
+### Step 2c: Start without docker
+
+Start frontend and backend:
+
+```bash
+npm run start:fnf
+```
+
+```bash
+npm run start:fnf-api
+```
 
 ## Project Structure
 
@@ -20,7 +135,7 @@ A monorepo project with Angular 20 frontend and NestJS backend.
 ### Install Dependencies
 
 ```bash
-pnpm install:all
+npm run pnpm-i
 ```
 
 This will install dependencies for the root project and all packages.
@@ -28,7 +143,7 @@ This will install dependencies for the root project and all packages.
 ### Build
 
 ```bash
-pnpm build
+npm run build:all
 ```
 
 This will build the shared library, Angular frontend, and NestJS backend in the correct order.
@@ -38,7 +153,7 @@ This will build the shared library, Angular frontend, and NestJS backend in the 
 #### Start Angular Frontend
 
 ```bash
-pnpm start:fnf
+npm run start:fnf
 ```
 
 The Angular application will be available at http://localhost:4200.
@@ -46,7 +161,7 @@ The Angular application will be available at http://localhost:4200.
 #### Start NestJS Backend
 
 ```bash
-pnpm start:fnf-api
+npm run start:fnf-api
 ```
 
 The NestJS API will be available at http://localhost:3000.
@@ -54,7 +169,7 @@ The NestJS API will be available at http://localhost:3000.
 ### Testing
 
 ```bash
-pnpm test
+npm run test
 ```
 
 This will run tests for all packages.
@@ -92,45 +207,6 @@ pnpm build:fnf-api
 ```
 
 
-
-
-
-
-
-## Deployment
-
-To deploy this project to GitHub, a GitHub Actions workflow has been set up. The workflow uses an SSH deployment key to push changes to the GitHub repository.
-
-### Setting up GitHub Secrets
-
-Before the deployment workflow can work, you need to set up the following secrets in your GitHub repository:
-
-1. **DEPLOY_KEY**: The private SSH key for deployment
-   - Copy the contents of the `fnf2` file
-   - Go to your GitHub repository > Settings > Secrets and variables > Actions
-   - Click "New repository secret"
-   - Name: `DEPLOY_KEY`
-   - Value: *paste the contents of the fnf2 file*
-
-2. **GITHUB_REPO_URL**: The SSH URL of your GitHub repository
-   - Format: `git@github.com:username/repository.git`
-   - Go to your GitHub repository > Settings > Secrets and variables > Actions
-   - Click "New repository secret"
-   - Name: `GITHUB_REPO_URL`
-   - Value: *your repository's SSH URL*
-
-### Adding the Deployment Key to GitHub
-
-You also need to add the public key as a deploy key in your GitHub repository:
-
-1. Go to your GitHub repository > Settings > Deploy keys
-2. Click "Add deploy key"
-3. Title: `Deployment Key`
-4. Key: *paste the contents of the fnf2.pub file*
-5. Check "Allow write access"
-6. Click "Add key"
-
-Once these steps are completed, the GitHub Actions workflow will be able to push changes to your repository.
 
 
 
