@@ -30,7 +30,7 @@ export async function createfile(para: FilePara): Promise<DirEventIf[]> {
   await fse.ensureDir(para.target.dir);
   await fse.writeFile(filePath, '');
 
-  const targetItem = new FileItem(para.target.dir, para.target.base, para.target.ext, new Date().toISOString(), 0, false);
+  const targetItem = new FileItem(para.target.dir, para.target.base, para.target.ext, new Date().toISOString(), -1, false);
   const item1 = new DirEvent(para.target.dir, [targetItem], false, false, 1, "", "add");
   const item2 = new DirEvent(para.target.dir, [], false, false, 1, "", "unselectall");
   const item3 = new DirEvent(para.target.dir, [targetItem], false, false, 1, "", "focus");

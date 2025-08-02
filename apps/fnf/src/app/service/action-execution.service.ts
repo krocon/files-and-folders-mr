@@ -82,7 +82,7 @@ export class ActionExecutionService {
 
 
   executeActionById(id: ActionId) {
-    console.log('AES> executeActionById:', id);
+    // console.log('AES> executeActionById:', id);
     const panelIndex = this.pms.getActivePanelIndex();
     const tabsPanelData = this.pms.getTabsPanelData(panelIndex);
 

@@ -39,6 +39,7 @@ import {BrowserOsService} from "./service/browseros/browser-os.service";
 import {PanelManagementService} from "./service/panel/panel-management-service";
 import {ActionExecutionService} from "./service/action-execution.service";
 import {SetupDataService} from "./feature/setup/setup-data.service";
+import {MetaKeys} from "./domain/meta-keys.if";
 
 
 @Injectable({
@@ -487,8 +488,8 @@ export class AppService {
     return this.shortcutService.getFirstShortcutByActionAsTokens(action);
   }
 
-  getSimplestShortcutsByAction(action: ActionId): string[] {
-    return this.shortcutService.getSimplestShortcutsByAction(action);
+  getSimplestShortcutsByAction(action: ActionId, metaKeys: MetaKeys): string[] {
+    return this.shortcutService.getSimplestShortcutsByAction(action, metaKeys);
   }
 
   getShortcutAsLabelTokens(sc: string): string[] {

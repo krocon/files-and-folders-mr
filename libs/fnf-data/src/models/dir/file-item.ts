@@ -20,7 +20,7 @@ export class FileItem implements FileItemIf {
     public base: string = '',
     public ext: string = '',
     public date: string = '',
-    public size: number = 0,
+    public size: number = -1,
     public isDir: boolean = false,
     public abs: boolean = false,
     public meta: FileItemMetaIf = new FileItemMeta()

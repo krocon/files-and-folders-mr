@@ -59,7 +59,7 @@ export class SizeCellRendererComponent implements ComponentRendererIf<FileItemIf
     this.text = formattedSize;
     this.tooltip = `${size.toLocaleString("en-US", {minimumFractionDigits: 0})} bytes (${formattedSize})`;
 
-    if (fileItem.isDir && size === 0) {
+    if (fileItem.isDir && (fileItem.size < 0 || fileItem.size === null)) {
       this.text = ' DIR';
       this.tooltip = ' DIRECTORY';
       return undefined;

@@ -13,12 +13,11 @@
         @if (getLabelByAction(id)) {
           <span>&nbsp;{{ getShortLabelByAction(id) }}</span>
         }
-        @if (getSimplestShortcutsByAction(id)) {
+        @if (getSimplestShortcutsByAction(id, metaKeys)) {
           <fnf-shortcut
-              [keys]="getSimplestShortcutsByAction(id)"
+              [keys]="getSimplestShortcutsByAction(id,  metaKeys)"
               style="float: left;margin: 0 12px 0 0;"></fnf-shortcut>
         }
-
       </button>
     }
 

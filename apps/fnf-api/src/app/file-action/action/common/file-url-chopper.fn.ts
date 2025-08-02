@@ -17,7 +17,7 @@ export function fileUrl2CheckOrAddDirEvents(url: string, panelIndex: PanelIndex)
   return arr.map(
     (item, i) => new DirEvent(
       item.dir,
-      [new FileItem(item.dir, item.base, i == 0 ? fileExt(item.base) : '', '', 0, true, false)],
+      [new FileItem(item.dir, item.base, i == 0 ? fileExt(item.base) : '', '', -1, true, false)],
       i == 0,
       i === arr.length - 1,
       1,

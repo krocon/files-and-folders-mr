@@ -2,7 +2,7 @@
   {
     "id": "CMD_EDIT_FILE",
     "label": "Edit",
-    "shortcut": "control 4",
+    "shortcut": "ctrl shift 4",
     "cmd": "code ",
     "fileLimit": 4,
     "para": " $file ",

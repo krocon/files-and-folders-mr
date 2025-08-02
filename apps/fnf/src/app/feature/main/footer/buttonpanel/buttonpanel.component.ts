@@ -27,6 +27,7 @@ import {LookAndFeelService} from "../../../../service/look-and-feel.service";
 import {ConfigButtonsService} from "../../../../service/config/config-buttons.service";
 import {ConfigThemesService} from "../../../../service/config/config-themes.service";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MetaKeys} from "../../../../domain/meta-keys.if";
 
 @Component({
   selector: 'app-button-panel',
@@ -57,6 +58,14 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   themeCustomNames: string[] = [];
 
   buttons: { [key: string]: ButtonEnableStatesKey[] } = {};
+
+
+  metaKeys: MetaKeys = {
+    "ctrl": false,
+    "cmd": false,
+    "alt": false,
+    "shift": false
+  };
 
 
   menuItems0: ActionId[] = [
@@ -221,8 +230,8 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     return this.appService.getFirstShortcutByActionAsTokens(action);
   }
 
-  getSimplestShortcutsByAction(action: ActionId) {
-    return this.appService.getSimplestShortcutsByAction(action);
+  getSimplestShortcutsByAction(action: ActionId, metaKeys: MetaKeys) {
+    return this.appService.getSimplestShortcutsByAction(action, metaKeys);
   }
 
 
@@ -251,6 +260,11 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   private updateButtonList(event: KeyboardEvent): void {
     let newButtons: ButtonEnableStatesKey[];
 
+    this.metaKeys.alt = event.altKey;
+    this.metaKeys.ctrl = event.ctrlKey;
+    this.metaKeys.cmd = event.metaKey;
+    this.metaKeys.shift = event.shiftKey;
+
     // Check modifier keys in priority order
     // if (event.ctrlKey) {
     //   newButtons = this.buttons['ctrl'];
@@ -268,7 +282,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     // Only update and trigger change detection if the button list actually changed
     if (this.currentButtons !== newButtons) {
       this.currentButtons = newButtons;
-      this.cdr.markForCheck();
     }
+    this.cdr.markForCheck();
   }
 }

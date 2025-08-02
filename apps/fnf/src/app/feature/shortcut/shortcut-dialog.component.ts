@@ -57,6 +57,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
   private filterTextChanged = new Subject<string>();
   private subscription: Subscription | null = null;
 
+
   constructor(
     private readonly shortcutService: ShortcutService,
     private readonly browserOsService: BrowserOsService,
@@ -64,6 +65,9 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
     private readonly dialog: MatDialog,
     private readonly cdr: ChangeDetectorRef,
   ) {
+  }
+
+  ngOnInit(): void {
     this.subscription = this.filterTextChanged
       .pipe(
         debounceTime(300),
@@ -72,9 +76,7 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
       .subscribe(filterText => {
         this.applyFilter(filterText);
       });
-  }
 
-  ngOnInit(): void {
     this.loadShortcutsForOsType(this.selectedOsType);
     this.browserOs = this.browserOsService.browserOs;
   }

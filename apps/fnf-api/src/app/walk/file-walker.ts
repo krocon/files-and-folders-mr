@@ -23,7 +23,7 @@ export class FileWalker {
       .filter(f => fs.existsSync(f))
       .map(f => {
         const stats = fs.statSync(f);
-        return new FileItem(f, '', '', '', stats?.size ?? 0, stats.isDirectory());
+        return new FileItem(f, '', '', '', stats?.size ?? -1, stats.isDirectory());
       });
 
     this.files = [...initialFiles];

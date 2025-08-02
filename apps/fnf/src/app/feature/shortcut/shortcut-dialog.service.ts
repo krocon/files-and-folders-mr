@@ -20,7 +20,7 @@ export class ShortcutDialogService {
       .open<ShortcutDialogComponent>(ShortcutDialogComponent, {
         height: 'calc(100vH - 100px)',
         width: 'calc(100vW - 100px)',
-        maxWidth:'850px'
+        maxWidth: '950px'
       })
       .afterClosed()
       .subscribe(item => {

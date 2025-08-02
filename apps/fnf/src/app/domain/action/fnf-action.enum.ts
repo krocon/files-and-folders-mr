@@ -1,6 +1,7 @@
 export const PSEUDO_ACTIONS = [
   'DUMMY_ACTION',
   'DO_NOTHING',
+  'PRINT_DEBUG',
   '-',
 ];
 
@@ -66,6 +67,7 @@ export const actionIds = [
   "SELECT_LEFT_PANEL",
   "SELECT_RIGHT_PANEL",
   "SPACE_PRESSED",
+  "SHIFT_SPACE_PRESSED",
   "TOGGLE_FILTER",
   "TOGGLE_HIDDEN_FILES",
   "TOGGLE_PANEL",

@@ -85,7 +85,7 @@ export class DirService {
           .map(s => {
             const base = fixPath(s.replace(p, ''))
               .replace(/^\//g, '');
-            const fileItem = new FileItem(p, base, path.extname(base), null, 0, true);
+            const fileItem = new FileItem(p, base, path.extname(base), null, -1, true);
             this.addStats2FileItem(fileItem);
             return fileItem;
           });

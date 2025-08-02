@@ -52,12 +52,18 @@ export class SelectionManagerForObjectModels<T> {
       this.previousRowIndex = this.focusIndex;
 
       // Move focus to next row if possible
-      const nextFocusIndex = Math.min(
-        this.bodyModel.getFilteredRows().length - 1,
-        this.focusIndex + 1
-      );
+      const nextFocusIndex =
+        evt.shiftKey ?
+          Math.max(
+            0,
+            this.focusIndex - 1
+          ) :
+          Math.min(
+            this.bodyModel.getFilteredRows().length - 1,
+            this.focusIndex + 1
+          );
 
-      if (nextFocusIndex > this.focusIndex) {
+      if (nextFocusIndex !== this.focusIndex) {
         this.bodyModel.setFocusedRowIndex(nextFocusIndex);
       }
 

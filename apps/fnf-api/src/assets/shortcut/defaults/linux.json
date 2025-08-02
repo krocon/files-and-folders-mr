@@ -6,6 +6,7 @@
   "shift f7": "OPEN_MKDIR_DLG",
   "f8": "OPEN_DELETE_DLG",
   "space": "SPACE_PRESSED",
+  "shift space": "SHIFT_SPACE_PRESSED",
   "cmd left": "HOME_PRESSED",
   "cmd right": "END_PRESSED",
   "cmd up": "PAGEUP_PRESSED",

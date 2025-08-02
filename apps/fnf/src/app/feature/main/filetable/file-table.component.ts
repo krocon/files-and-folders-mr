@@ -364,7 +364,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
       .pipe(takeWhile(() => this.alive))
       .subscribe(
         (evt: QueueNotifyEventIf) => {
-          console.info('filetable> notifyService: ', evt);
+          // console.info('filetable> notifyService: ', evt);
           if (Array.isArray(evt.data)) {
             const arr = evt.data as Array<DirEventIf>;
             this.handleDirEvent(arr);
@@ -483,7 +483,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
   async actionCall(action: string) {
-    console.info('filetable> actionCall: ', action);
+    // console.info('filetable> actionCall: ', action);
     if (action === 'RELOAD_DIR') {
       this.reload();
 
@@ -510,7 +510,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (action === "REDUCE_SELECTION") {
       this.openSelectionDialog(false);
 
-    } else if (action === "SPACE_PRESSED") {
+    } else if (action === "SPACE_PRESSED" || action === "SHIFT_SPACE_PRESSED") {
       const r = this.bodyAreaModel.getFocusedRowIndex();
       if (this.tableApi && r > -1) {
         const row = this.bodyAreaModel.getRowByIndex(r);
@@ -1047,7 +1047,7 @@ export class FileTableComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private handleRelevantDirEvent(dirEvent: DirEventIf, zi: ZipUrlInfo) {
     if (!this.tableApi || !dirEvent || !this.dirPara) return;
-    console.info('handleRelevantDirEvent', dirEvent);
+    //console.info('handleRelevantDirEvent', dirEvent);
     if (dirEvent.action === "reload") {
       this.reload();
 

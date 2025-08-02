@@ -1,5 +1,6 @@
 {
   "space": "SPACE_PRESSED",
+  "shift space": "SHIFT_SPACE_PRESSED",
   "home": "HOME_PRESSED",
   "end": "END_PRESSED",
   "pageup": "PAGEUP_PRESSED",
