@@ -79,6 +79,8 @@
   "cmd ctrl f10": "OPEN_PACK_DLG",
   "cmd ctrl f11": "OPEN_DOWNLOAD_DLG",
   "cmd ctrl alt f1": "OPEN_ABOUT_DLG",
-  "cmd ctrl f12": "OPEN_ATTRIBUTE_DLG"
+  "cmd ctrl f12": "OPEN_ATTRIBUTE_DLG",
+  "ctrl f11": "OPEN_TASK_DLG",
+  "ctrl f12": "OPEN_MENU"
 
 }

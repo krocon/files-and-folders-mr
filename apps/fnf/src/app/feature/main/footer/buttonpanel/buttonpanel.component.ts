@@ -1,11 +1,11 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   HostListener,
   Input,
   OnDestroy,
-  OnInit
+  OnInit, ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
@@ -52,6 +52,9 @@ import {MetaKeys} from "../../../../domain/meta-keys.if";
 export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   @Input() buttonEnableStates = new ButtonEnableStates();
+
+  @ViewChild('trigger') menuTrigger!: MatMenuTrigger;
+
 
 
   themeDefaultNames: string[] = [];
@@ -185,6 +188,16 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
         this.currentButtons = this.buttons['default'];
         this.cdr.markForCheck();
       });
+
+    this.actionExecutionService
+      .actionEvents$
+      .subscribe(action => {
+        if (action === 'OPEN_TASK_DLG') {
+          this.openTaskManager();
+        } else if (action === 'OPEN_MENU') {
+          this.menuTrigger.openMenu();
+        }
+      })
   }
 
   init() {
@@ -192,14 +205,14 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   }
 
 
-  openButtonSheet() {
+  openTaskManager() {
     const config = new MatBottomSheetConfig();
     config.panelClass = 'fnf-top-sheet';
     this.matBottomSheet.open(TaskListComponent, config);
   }
 
 
-  closeButtonSheet() {
+  closeTaskManager() {
     this.matBottomSheet.dismiss();
   }
 

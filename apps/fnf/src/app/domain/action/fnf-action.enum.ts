@@ -53,6 +53,8 @@ export const actionIds = [
   "OPEN_DOWNLOAD_DLG",
   "OPEN_VIEW_DLG",
   "OPEN_CREATE_FILE_DLG",
+  "OPEN_TASK_DLG",
+  "OPEN_MENU",
 
   "PAGEDOWN_PRESSED",
   "PAGEUP_PRESSED",

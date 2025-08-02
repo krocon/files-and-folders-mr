@@ -23,6 +23,8 @@ export class FnfActionLabels {
     TOGGLE_HIDDEN_FILES: "Toggle Hidden Files",
     TOGGLE_SHELL: "Toggle Shell",
 
+    OPEN_MENU: "Menu",
+    OPEN_TASK_DLG: "Taskmanager...",
     OPEN_SETUP_DLG: "Setup...",
     OPEN_ABOUT_DLG: "About...",
     OPEN_SHELL_DLG: "Server Shell...",
