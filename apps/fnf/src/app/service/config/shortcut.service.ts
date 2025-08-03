@@ -8,6 +8,8 @@ import {MetaKeys} from "../../domain/meta-keys.if";
 
 export type ShortcutActionMapping = { [key: string]: string };
 
+// Reverse mapping from ActionId to key combinations
+export type ActionShortcutMapping = { [actionId: string]: string[] };
 
 @Injectable({
   providedIn: "root"
@@ -20,6 +22,17 @@ export class ShortcutService {
 
   // Initialize with default shortcuts to ensure something is available before init() is called
   private activeShortcuts: ShortcutActionMapping = {};
+
+  // Reverse mapping for ActionId to key combinations
+  private actionToShortcuts: ActionShortcutMapping = {};
+
+  // Key modifier mapping for conversion
+  private static readonly keyModifierMapping: { [key: string]: string } = {
+    'ctrl': 'Control',
+    'cmd': 'Meta',
+    'alt': 'Alt',
+    'shift': 'Shift'
+  };
 
   constructor(
     private readonly httpClient: HttpClient,
@@ -177,7 +190,9 @@ export class ShortcutService {
       .get<ShortcutActionMapping>(`${ShortcutService.config.apiUrl}/${os}`)
       .pipe(
         tap(shortcuts => {
-          this.activeShortcuts = shortcuts; // no merge! this.updateShortcutMappings(shortcuts);
+          this.activeShortcuts = shortcuts;
+          // Build reverse mapping for ActionId conversion
+          this.buildActionToShortcutsMapping(shortcuts);
         }),
         catchError(error => {
           console.error('Failed to load shortcuts from API:', error);
@@ -307,6 +322,89 @@ export class ShortcutService {
       updatedMappings[harmonizeShortcut(key)] = value;
     });
 
+    // Build reverse mapping after updating shortcuts
+    this.buildActionToShortcutsMapping(updatedMappings);
+
     return updatedMappings;
+  }
+
+  /**
+   * Build reverse mapping from ActionId to key combinations
+   */
+  private buildActionToShortcutsMapping(shortcuts: ShortcutActionMapping): void {
+    this.actionToShortcuts = {};
+
+    Object.entries(shortcuts).forEach(([shortcut, actionId]) => {
+      if (!this.actionToShortcuts[actionId]) {
+        this.actionToShortcuts[actionId] = [];
+      }
+      this.actionToShortcuts[actionId].push(shortcut);
+    });
+  }
+
+  /**
+   * Convert ActionIds in shortcut sequences to key combinations
+   * Example: "(OPEN_COPY_DLG)(Users)(Enter)" -> "(Control|Meta|c)(Users)(Enter)"
+   */
+  convertActionIdsInSequence(sequence: string): string {
+    // Match patterns like (ACTIONID) where ACTIONID is all caps with underscores
+    const actionIdPattern = /\(([A-Z_]+)\)/g;
+
+    return sequence.replace(actionIdPattern, (match, actionId) => {
+      // Check if this is actually an ActionId (exists in our reverse mapping)
+      if (this.actionToShortcuts[actionId] && this.actionToShortcuts[actionId].length > 0) {
+        // Get the first (or shortest) shortcut for this action
+        const shortcuts = this.actionToShortcuts[actionId];
+        const selectedShortcut = this.selectBestShortcut(shortcuts);
+
+        // Convert the shortcut to the required format
+        const convertedShortcut = this.convertShortcutToSequenceFormat(selectedShortcut);
+        return `(${convertedShortcut})`;
+      }
+
+      // If not an ActionId, return as-is
+      return match;
+    });
+  }
+
+  /**
+   * Select the best shortcut from available options (prefer shorter, simpler shortcuts)
+   */
+  private selectBestShortcut(shortcuts: string[]): string {
+    if (shortcuts.length === 1) {
+      return shortcuts[0];
+    }
+
+    // Sort by length and complexity (fewer modifiers first)
+    return shortcuts.sort((a, b) => {
+      const aModifiers = (a.match(/\b(ctrl|cmd|alt|shift)\b/g) || []).length;
+      const bModifiers = (b.match(/\b(ctrl|cmd|alt|shift)\b/g) || []).length;
+
+      // Prefer fewer modifiers, then shorter length
+      if (aModifiers !== bModifiers) {
+        return aModifiers - bModifiers;
+      }
+      return a.length - b.length;
+    })[0];
+  }
+
+  /**
+   * Convert shortcut format to sequence format with proper key mapping
+   * Example: "ctrl cmd c" -> "Control|Meta|c"
+   */
+  private convertShortcutToSequenceFormat(shortcut: string): string {
+    const parts = shortcut.split(' ').filter(part => part.trim());
+
+    return parts.map(part => {
+      // Convert modifiers using the mapping
+      return ShortcutService.keyModifierMapping[part.toLowerCase()] || part;
+    }).join('|');
+  }
+
+  /**
+   * Process shortcuts array and convert any ActionId sequences
+   */
+  processShortcutSequences(shortcuts: string[]): string[] {
+    return shortcuts.map(shortcut => this.convertActionIdsInSequence(shortcut));
   }
 }

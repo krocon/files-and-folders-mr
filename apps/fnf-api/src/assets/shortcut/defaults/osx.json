@@ -65,7 +65,6 @@
   "cmd ctrl enter": "DUMMY_ACTION",
   "cmd ctrl shift r": "CMD_REVEAL_IN_FINDER",
   "cmd alt t": "ADD_NEW_TAB",
-  "alt ø": "ADD_NEW_TAB",
   "shift f11": "TOGGLE_SHELL",
   "cmd ctrl f1": "RELOAD_DIR_0",
   "cmd ctrl f2": "RELOAD_DIR_1",

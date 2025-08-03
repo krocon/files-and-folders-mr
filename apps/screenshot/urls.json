@@ -3,21 +3,21 @@
     "name": "main-01",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      "(Control|Meta|g)(Users)(Enter)"
+      "(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)"
     ]
   },
   {
     "name": "main-02",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      "(Meta|Alt|t)"
+      "(ADD_NEW_TAB)"
     ]
   },
   {
     "name": "multi-03",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      "(Tab)(Control|Meta|g)(Users)(Enter)(ArrowDown)(Enter)(ArrowDown)(Control|Meta|c)"
+      "(Tab)(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)(ArrowDown)(Enter)(ArrowDown)(OPEN_COPY_DLG)"
     ]
   }
 ]
