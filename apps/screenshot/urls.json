@@ -1,0 +1,16 @@
+[
+  {
+    "name": "main-start",
+    "url": "http://localhost:4200/"
+  },
+  {
+    "name": "multi-rename-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      [
+        "Meta",
+        "KeyF6"
+      ]
+    ]
+  }
+]

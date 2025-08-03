@@ -1,0 +1,14 @@
+{
+  "name": "screenshot",
+  "version": "1.0.0",
+  "description": "Developer utility for taking screenshots",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node screenshot.js",
+    "screenshot": "node screenshot.js"
+  },
+  "dependencies": {
+    "puppeteer": "^24.15.0"
+  }
+}

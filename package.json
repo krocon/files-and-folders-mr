@@ -1,11 +1,12 @@
 {
   "name": "files-and-folders-mr",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Files and Folders project with Angular and NestJS",
   "scripts": {
     "pnpm-i": "pnpm i -f",
     "start:fnf": "pnpm --filter fnf start",
     "start:fnf-api": "pnpm --filter fnf-api start",
+    "start_screenshot": "pnpm --filter screenshot start",
     "prebuild": "node update-version.js",
     "build:fnf": "pnpm --filter fnf build",
     "build:fnf-api": "pnpm --filter fnf-api build",
@@ -37,7 +38,6 @@
     "docker-bash": "docker run -it --rm krocon/files-and-folders-mr /bin/bash ",
     "docker:print-container-id": "docker ps | grep  ' krocon/files-and-folders-mr ' | awk '{ print $1 }'",
     "docker:logs": "docker logs $(docker ps | grep  ' krocon/files-and-folders-mr ' | awk '{ print $1 }') "
-
   },
   "private": true,
   "engines": {
