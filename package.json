@@ -13,7 +13,7 @@
     "build:fnf-data": "pnpm --filter fnf-data build",
     "build:screenshot": "pnpm --filter screenshot build",
     "build": "pnpm build:fnf-data && pnpm build:fnf && pnpm build:fnf-api",
-    "build:all": "NODE_ENV=production && pnpm build",
+    "build:all": "pnpm build",
     "prepush": "node update-version.js",
     "test:fnf": "pnpm --filter fnf test ",
     "test:fnf-api": "pnpm --filter fnf-api test",
