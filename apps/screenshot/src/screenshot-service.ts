@@ -19,6 +19,10 @@ export class ScreenshotError extends Error {
  * Service class for managing screenshot operations
  */
 export class ScreenshotService {
+
+  private lafs: string[] = [
+    'bitbucket', 'blackboard', 'coffee', 'combat', 'cypress', 'light', 'norton', 'paper'
+  ];
   private browser: Browser | null = null;
   private page: Page | null = null;
   private localStorageInitialized: boolean = false;
@@ -69,33 +73,23 @@ export class ScreenshotService {
       console.log(`📋 Loading configuration from ${CONFIG.URLS_INPUT_FILE}...`);
       await fs.access(CONFIG.URLS_INPUT_FILE);
       const configData = await fs.readFile(CONFIG.URLS_INPUT_FILE, "utf-8");
-      let views = JSON.parse(configData);
+      let views = JSON.parse(configData) as ScreenshotConfig[];
 
       // Validate each configuration entry
       const validatedViews: ScreenshotConfig[] = [];
+
+
       for (let i = 0; i < views.length; i++) {
-        const view = views[i];
-        const {name, url, shortcuts} = view;
-
-        // Validate shortcuts if provided
-        if (shortcuts !== undefined) {
-          if (!Array.isArray(shortcuts)) {
-            console.warn(`⚠️ Config entry "${name}": shortcuts must be an array, skipping shortcuts`);
-            validatedViews.push({name, url});
-            continue;
+        for (let j = 0; j < this.lafs.length; j++) {
+          const laf = this.lafs[j];
+          const view = views[i];
+          let {name, url, shortcuts} = view;
+          if (shortcuts !== undefined && Array.isArray(shortcuts)) {
+            shortcuts = ['(CHANGE_LAF_' + laf.toUpperCase() + ')', ...shortcuts];
+            validatedViews.push({name, url, shortcuts, laf});
+          } else {
+            validatedViews.push({name, url, laf});
           }
-
-          const validShortcuts = shortcuts.filter(shortcut => {
-            if (typeof shortcut !== 'string') {
-              console.warn(`⚠️ Config entry "${name}": skipping non-string shortcut`);
-              return false;
-            }
-            return true;
-          });
-
-          validatedViews.push({name, url, shortcuts: validShortcuts});
-        } else {
-          validatedViews.push({name, url});
         }
       }
       console.log(`✅ Loaded ${validatedViews.length} valid screenshot configurations`);
@@ -121,10 +115,10 @@ export class ScreenshotService {
       throw new ScreenshotError('Page not initialized', config.name);
     }
 
-    const {name, url, shortcuts} = config;
+    const {name, url, shortcuts, laf} = config;
 
     try {
-      console.log(`📸 Capturing: ${name} → ${url}`);
+      console.log(`\n📸 Capturing: ${name} → ${url}`);
 
       // Navigate to the URL with timeout
       await this.page.goto(url, {
@@ -144,13 +138,17 @@ export class ScreenshotService {
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       // Take screenshot
-      const screenshotPath = path.join(CONFIG.OUT_DIR, `${name}.png`) as `${string}.png`;
+      const screenshotPath = path.join(CONFIG.OUT_DIR, laf);
+      const file = path.join(CONFIG.OUT_DIR, laf, `${name}.png`) as `${string}.png`;
+
+      await fs.mkdir(screenshotPath, {recursive: true});
+
       await this.page.screenshot({
-        path: screenshotPath,
-        fullPage: false // Capture only the viewport
+        path: file,
+        fullPage: true // Capture only the viewport
       });
 
-      console.log(`✅ Screenshot saved: ${screenshotPath}`);
+      console.log(`✅ Screenshot saved: ${file}`);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -175,6 +173,7 @@ export class ScreenshotService {
       try {
         await this.captureScreenshot(config, actionIdMapping);
         results.push({name: config.name, success: true});
+
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : String(error);
         console.error(`❌ Failed to capture ${config.name}: ${errorMessage}`);

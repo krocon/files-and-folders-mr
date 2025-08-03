@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 
 import {ApiError, createActionIdToShortcutMapping, loadShortcutMapping} from "./api-client.js";
-import {ScreenshotError, ScreenshotService} from "./screenshot-service.js";
+import {ScreenshotService} from "./screenshot-service.js";
+import * as console from "node:console";
 
 const cwd = process.cwd();
 
 
-/**
- * Main application class that orchestrates the screenshot taking process
- */
+
 class ScreenshotApp {
   private screenshotService: ScreenshotService;
 
@@ -16,9 +15,7 @@ class ScreenshotApp {
     this.screenshotService = new ScreenshotService();
   }
 
-  /**
-   * Main execution function
-   */
+
   async run(): Promise<void> {
     let exitCode = 0;
 
@@ -43,36 +40,15 @@ class ScreenshotApp {
         }
       }
 
-      // Load screenshot configurations
       const configs = await this.screenshotService.loadConfiguration();
-
-      // Capture screenshots
       await this.screenshotService.captureScreenshots(configs, actionIdMapping);
 
       console.log('✅ Screenshot application completed successfully');
 
     } catch (error) {
       exitCode = 1;
+      console.error(`❌ Screenshot Error: ${error}`);
 
-      if (error instanceof ScreenshotError) {
-        console.error(`❌ Screenshot Error: ${error.message}`);
-        if (error.screenshotName) {
-          console.error(`   Screenshot: ${error.screenshotName}`);
-        }
-      } else if (error instanceof ApiError) {
-        console.error(`❌ API Error: ${error.message}`);
-        if (error.statusCode) {
-          console.error(`   Status Code: ${error.statusCode}`);
-        }
-      } else {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.error(`❌ Unexpected Error: ${errorMessage}`);
-
-        // Log stack trace for debugging in development
-        if (process.env.NODE_ENV === 'development' && error instanceof Error && error.stack) {
-          console.error('Stack trace:', error.stack);
-        }
-      }
     } finally {
       // Always cleanup resources
       await this.screenshotService.cleanup();
@@ -84,9 +60,7 @@ class ScreenshotApp {
   }
 }
 
-/**
- * Handle uncaught exceptions and unhandled rejections
- */
+
 process.on('uncaughtException', (error: Error) => {
   console.error('❌ Uncaught Exception:', error.message);
   if (process.env.NODE_ENV === 'development' && error.stack) {
@@ -104,9 +78,7 @@ process.on('unhandledRejection', (reason: unknown) => {
   process.exit(1);
 });
 
-/**
- * Handle graceful shutdown
- */
+
 process.on('SIGINT', () => {
   console.log('\n🛑 Received SIGINT, shutting down gracefully...');
   process.exit(0);
@@ -117,10 +89,8 @@ process.on('SIGTERM', () => {
   process.exit(0);
 });
 
-// Execute the application
-const app = new ScreenshotApp();
 
-app
+new ScreenshotApp()
   .run()
   .catch((error: Error) => {
     console.error('❌ Fatal Error:', error.message);

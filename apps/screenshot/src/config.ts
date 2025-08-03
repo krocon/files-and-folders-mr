@@ -8,7 +8,7 @@ export const CONFIG = {
   URLS_INPUT_FILE: "./data.json",
   OUT_DIR: "./screenshots",
   SHORTCUTS_API_URL: "http://localhost:3333/api/shortcuts/osx",
-  VIEWPORT: {width: 1024, height: 768} as ViewportConfig,
+  VIEWPORT: {width: 1280, height: 720} as ViewportConfig,
   DELAYS: {
     BETWEEN_SHORTCUTS: 300,
     BEFORE_SCREENSHOT: 800,
@@ -41,9 +41,7 @@ export const KEYS: readonly KeyInput[] = [
   "EndCall", "VolumeDown", "VolumeUp"
 ] as const;
 
-/**
- * Modifier keys that should be held down during shortcuts
- */
+
 export const MODIFIER_KEYS: readonly KeyInput[] = ["Shift", "Control", "Alt", "Meta"] as const;
 
 /**

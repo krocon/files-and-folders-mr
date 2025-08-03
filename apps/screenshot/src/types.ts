@@ -12,6 +12,7 @@ export interface ViewportConfig {
  * Configuration for a single screenshot capture
  */
 export interface ScreenshotConfig {
+  laf: string;
   name: string;
   url: string;
   shortcuts?: string[];
