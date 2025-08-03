@@ -4,10 +4,11 @@
   "description": "Developer utility for taking screenshots",
   "private": true,
   "type": "module",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/screenshot.js",
-    "screenshot": "npm run build && node dist/screenshot.js",
+    "start": "npm run build && node dist/index.js",
+    "screenshot": "npm run build && node dist/index.js",
     "dev": "tsc --watch"
   },
   "dependencies": {
