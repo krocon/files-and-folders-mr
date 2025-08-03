@@ -10,7 +10,7 @@ interface ViewportConfig {
 interface ScreenshotConfig {
   name: string;
   url: string;
-  shortcuts?: KeyInput[][];
+  shortcuts?: string[];
 }
 
 type KeyboardKey = KeyInput;
@@ -23,6 +23,23 @@ const VIEWPORT: ViewportConfig = {width: 1024, height: 768};
 const KEYS: readonly KeyInput[] = [
   "Power", "Eject", "Abort", "Help", "Backspace", "Tab", "Numpad5", "NumpadEnter", "Enter", "\r", "\n", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "AltLeft", "AltRight", "Pause", "CapsLock", "Escape", "Convert", "NonConvert", "Space", "Numpad9", "PageUp", "Numpad3", "PageDown", "End", "Numpad1", "Home", "Numpad7", "ArrowLeft", "Numpad4", "Numpad8", "ArrowUp", "ArrowRight", "Numpad6", "Numpad2", "ArrowDown", "Select", "Open", "PrintScreen", "Insert", "Numpad0", "Delete", "NumpadDecimal", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "MetaLeft", "MetaRight", "ContextMenu", "NumpadMultiply", "NumpadAdd", "NumpadSubtract", "NumpadDivide", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "F16", "F17", "F18", "F19", "F20", "F21", "F22", "F23", "F24", "NumLock", "ScrollLock", "AudioVolumeMute", "AudioVolumeDown", "AudioVolumeUp", "MediaTrackNext", "MediaTrackPrevious", "MediaStop", "MediaPlayPause", "Semicolon", "Equal", "NumpadEqual", "Comma", "Minus", "Period", "Slash", "Backquote", "BracketLeft", "Backslash", "BracketRight", "Quote", "AltGraph", "Props", "Cancel", "Clear", "Shift", "Control", "Alt", "Accept", "ModeChange", "Print", "Execute", "Meta", "Attn", "CrSel", "ExSel", "EraseEof", "Play", "ZoomOut", "SoftLeft", "SoftRight", "Camera", "Call", "EndCall", "VolumeDown", "VolumeUp"
 ] as const;
+
+/**
+ * Parses a parenthesized shortcut string into key sequences
+ * Example: "(Control|Meta|g)(Users)(Enter)" -> [["Control", "Meta", "g"], ["Users"], ["Enter"]]
+ */
+function parseShortcutString(shortcutString: string): KeyInput[][] {
+  const sequences: KeyInput[][] = [];
+  const regex = /\(([^)]+)\)/g;
+  let match;
+
+  while ((match = regex.exec(shortcutString)) !== null) {
+    const keys = match[1].split('|').map(key => key.trim() as KeyInput);
+    sequences.push(keys);
+  }
+
+  return sequences;
+}
 
 /**
  * Handles keyboard key press, either as a modifier (held down) or a regular key press
@@ -96,10 +113,13 @@ async function run(): Promise<void> {
 
       // Execute shortcuts if provided
       if (Array.isArray(shortcuts)) {
-        for (const shortcut of shortcuts) {
-          console.log(`⌨️ Triggering shortcut: ${shortcut.join(" + ")}`);
-          await pressShortcut(page, shortcut);
-          await delay(300);
+        for (const shortcutString of shortcuts) {
+          console.log(`⌨️ Triggering shortcut: ${shortcutString}`);
+          const keySequences = parseShortcutString(shortcutString);
+          for (const sequence of keySequences) {
+            await pressShortcut(page, sequence);
+            await delay(300);
+          }
         }
       }
 

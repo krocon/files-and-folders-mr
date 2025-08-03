@@ -3,62 +3,21 @@
     "name": "main-01",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      [
-        "Control",
-        "Meta",
-        "g"
-      ],
-      [
-        "Users"
-      ],
-      [
-        "Enter"
-      ]
+      "(Control|Meta|g)(Users)(Enter)"
     ]
   },
   {
     "name": "main-02",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      [
-        "Meta",
-        "Alt",
-        "t"
-      ]
+      "(Meta|Alt|t)"
     ]
   },
   {
     "name": "multi-03",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      [
-        "Tab"
-      ],
-      [
-        "Control",
-        "Meta",
-        "g"
-      ],
-      [
-        "Users"
-      ],
-      [
-        "Enter"
-      ],
-      [
-        "ArrowDown"
-      ],
-      [
-        "Enter"
-      ],
-      [
-        "ArrowDown"
-      ],
-      [
-        "Control",
-        "Meta",
-        "c"
-      ]
+      "(Tab)(Control|Meta|g)(Users)(Enter)(ArrowDown)(Enter)(ArrowDown)(Control|Meta|c)"
     ]
   }
 ]
