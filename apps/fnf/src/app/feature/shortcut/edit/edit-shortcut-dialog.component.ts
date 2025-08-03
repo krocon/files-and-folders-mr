@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, OnDestroy, HostListener, ElementRef, ViewChild, AfterViewInit} from "@angular/core";
+import {Component, HostListener, Inject, OnDestroy, OnInit} from "@angular/core";
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -16,6 +16,7 @@ import {ActionIdLabelShortcut} from "../action-id-label-shortcut";
 import {ShortcutComponent} from "../../main/footer/buttonpanel/shortcut/shortcut.component";
 import {ShortcutService} from "../../../service/config/shortcut.service";
 import {BrowserOsType} from "@fnf-data";
+import {CommonModule} from "@angular/common";
 
 export interface EditShortcutDialogData {
   actionItem: ActionIdLabelShortcut;
@@ -27,6 +28,7 @@ export interface EditShortcutDialogData {
   templateUrl: "./edit-shortcut-dialog.component.html",
   styleUrls: ["./edit-shortcut-dialog.component.css"],
   imports: [
+    CommonModule,
     MatDialogModule,
     MatDialogTitle,
     MatDialogContent,
@@ -37,7 +39,7 @@ export interface EditShortcutDialogData {
     MatInputModule,
     FormsModule,
     ShortcutComponent,
-    MatIconButton,
+    MatIconButton
   ],
   standalone: true,
 })
@@ -76,19 +78,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     this.shortcuts.splice(index, 1);
   }
 
-  private startCapturingShortcut(index: number): void {
-    this.isCapturingShortcut = true;
-    this.captureIndex = index;
-    this.currentShortcutInput = '';
-    this.capturedKeystrokes = [];
-
-    // Clear any existing timeout
-    if (this.captureTimeout) {
-      clearTimeout(this.captureTimeout);
-      this.captureTimeout = null;
-    }
-  }
-
   @HostListener('document:keyup', ['$event'])
   onKeyUp(event: KeyboardEvent): void {
     if (!this.isCapturingShortcut) {
@@ -122,25 +111,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       this.captureTimeout = setTimeout(() => {
         this.finalizeShortcutCapture();
       }, this.CAPTURE_DELAY_MS);
-    }
-  }
-
-  private finalizeShortcutCapture(): void {
-    if (this.captureIndex >= 0 && this.capturedKeystrokes.length > 0) {
-      // Join all captured keystrokes into a single shortcut string
-      const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
-      this.shortcuts[this.captureIndex] = uniqueKeystrokes.join(' ');
-    }
-
-    // Reset capture state
-    this.isCapturingShortcut = false;
-    this.captureIndex = -1;
-    this.currentShortcutInput = '';
-    this.capturedKeystrokes = [];
-
-    if (this.captureTimeout) {
-      clearTimeout(this.captureTimeout);
-      this.captureTimeout = null;
     }
   }
 
@@ -221,5 +191,37 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
         console.error('Failed to save shortcuts:', error);
       }
     });
+  }
+
+  private startCapturingShortcut(index: number): void {
+    this.isCapturingShortcut = true;
+    this.captureIndex = index;
+    this.currentShortcutInput = '';
+    this.capturedKeystrokes = [];
+
+    // Clear any existing timeout
+    if (this.captureTimeout) {
+      clearTimeout(this.captureTimeout);
+      this.captureTimeout = null;
+    }
+  }
+
+  private finalizeShortcutCapture(): void {
+    if (this.captureIndex >= 0 && this.capturedKeystrokes.length > 0) {
+      // Join all captured keystrokes into a single shortcut string
+      const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
+      this.shortcuts[this.captureIndex] = uniqueKeystrokes.join(' ');
+    }
+
+    // Reset capture state
+    this.isCapturingShortcut = false;
+    this.captureIndex = -1;
+    this.currentShortcutInput = '';
+    this.capturedKeystrokes = [];
+
+    if (this.captureTimeout) {
+      clearTimeout(this.captureTimeout);
+      this.captureTimeout = null;
+    }
   }
 }
