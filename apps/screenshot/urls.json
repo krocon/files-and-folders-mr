@@ -1,7 +1,31 @@
 [
   {
     "name": "main-start",
-    "url": "http://localhost:4200/"
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      [
+        "Control",
+        "Meta",
+        "g"
+      ],
+      [
+        "Users"
+      ],
+      [
+        "Enter"
+      ]
+    ]
+  },
+  {
+    "name": "main-start-new-left-tab",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      [
+        "Meta",
+        "Alt",
+        "t"
+      ]
+    ]
   },
   {
     "name": "multi-rename-dialog",
