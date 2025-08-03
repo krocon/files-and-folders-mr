@@ -41,6 +41,15 @@ export class ScreenshotService {
       this.page = await this.browser.newPage();
       await this.page.setViewport(CONFIG.VIEWPORT);
 
+      // Clear localStorage for clean state (wrapped in try-catch for security)
+      try {
+        await this.page.evaluate('localStorage.clear()');
+      } catch (error) {
+        // localStorage may not be accessible in some contexts (e.g., about:blank)
+        console.log('⚠️ Could not clear localStorage (this is normal for some page contexts)');
+      }
+
+
       console.log('✅ Browser initialized successfully');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
