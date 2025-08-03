@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
-import {loadShortcutMapping, createActionIdToShortcutMapping, ApiError} from "./api-client.js";
-import {ScreenshotService, ScreenshotError} from "./screenshot-service.js";
+import {ApiError, createActionIdToShortcutMapping, loadShortcutMapping} from "./api-client.js";
+import {ScreenshotError, ScreenshotService} from "./screenshot-service.js";
+
+const cwd = process.cwd();
+
 
 /**
  * Main application class that orchestrates the screenshot taking process
@@ -23,7 +26,7 @@ class ScreenshotApp {
       console.log('🎬 Starting screenshot application...');
 
       // Initialize screenshot service
-      await this.screenshotService.initialize();
+      await this.screenshotService.initialize(cwd);
       await this.screenshotService.ensureOutputDirectory();
 
       // Load shortcut mapping from API
@@ -116,7 +119,10 @@ process.on('SIGTERM', () => {
 
 // Execute the application
 const app = new ScreenshotApp();
-app.run().catch((error: Error) => {
-  console.error('❌ Fatal Error:', error.message);
-  process.exit(1);
-});
+
+app
+  .run()
+  .catch((error: Error) => {
+    console.error('❌ Fatal Error:', error.message);
+    process.exit(1);
+  });

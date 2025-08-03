@@ -15,10 +15,8 @@ export class ApiError extends Error {
 /**
  * Loads the shortcut mapping from the API endpoint
  */
-export async function loadShortcutMapping(apiUrl?: string): Promise<ShortcutMapping> {
-  const url = apiUrl || CONFIG.SHORTCUTS_API_URL;
-
-  if (!url || typeof url !== 'string') {
+export async function loadShortcutMapping(url: string = CONFIG.SHORTCUTS_API_URL): Promise<ShortcutMapping> {
+  if (!url) {
     throw new ApiError('API URL must be a non-empty string');
   }
 

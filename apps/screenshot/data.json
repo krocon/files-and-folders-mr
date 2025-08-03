@@ -21,13 +21,6 @@
     ]
   },
   {
-    "name": "main-bitbucket",
-    "url": "http://localhost:4200/",
-    "shortcuts": [
-      "(CHANGE_LAF_BITBUCKET)"
-    ]
-  },
-  {
     "name": "main-blackboard",
     "url": "http://localhost:4200/",
     "shortcuts": [
@@ -77,11 +70,195 @@
     ]
   },
   {
-    "name": "multi-copy-dialog",
+    "name": "open-copy-dialog",
     "url": "http://localhost:4200/",
     "shortcuts": [
       "(CHANGE_LAF_LIGHT)",
-      "(Tab)(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)(ArrowDown)(Enter)(ArrowDown)(OPEN_COPY_DLG)"
+      "(OPEN_COPY_DLG)"
+    ]
+  },
+  {
+    "name": "open-create-file-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_CREATE_FILE_DLG)"
+    ]
+  },
+  {
+    "name": "open-move-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_MOVE_DLG)"
+    ]
+  },
+  {
+    "name": "open-rename-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_RENAME_DLG)"
+    ]
+  },
+  {
+    "name": "open-multi-rename-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_MULTIRENAME_DLG)"
+    ]
+  },
+  {
+    "name": "open-mkdir-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_MKDIR_DLG)"
+    ]
+  },
+  {
+    "name": "open-delete-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_DELETE_DLG)"
+    ]
+  },
+  {
+    "name": "open-goto-anything-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_GOTO_ANYTHING_DLG)"
+    ]
+  },
+  {
+    "name": "open-chdir-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_CHDIR_DLG)"
+    ]
+  },
+  {
+    "name": "open-delete-empty-folders-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_DELETE_EMPTY_FOLDERS_DLG)"
+    ]
+  },
+  {
+    "name": "open-group-files-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_GROUPFILES_DLG)"
+    ]
+  },
+  {
+    "name": "open-find-dublicates-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_FIND_DUBLICATES_DLG)"
+    ]
+  },
+  {
+    "name": "open-find-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_FIND_DLG)"
+    ]
+  },
+  {
+    "name": "open-select-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_SELECT_DLG)"
+    ]
+  },
+  {
+    "name": "open-color-config-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_COLORCONFIG_DLG)"
+    ]
+  },
+  {
+    "name": "open-job-queue-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_JOB_QUEUE_DLG)"
+    ]
+  },
+  {
+    "name": "open-multi-mkdir-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_MULTIMKDIR_DLG)"
+    ]
+  },
+  {
+    "name": "open-setup-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_SETUP_DLG)"
+    ]
+  },
+  {
+    "name": "open-shell-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_SHORTCUT_DLG)"
+    ]
+  },
+  {
+    "name": "open-pack-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_PACK_DLG)"
+    ]
+  },
+  {
+    "name": "open-download-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_DOWNLOAD_DLG)"
+    ]
+  },
+  {
+    "name": "open-attribute-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_ATTRIBUTE_DLG)"
+    ]
+  },
+  {
+    "name": "open-task-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_TASK_DLG)"
+    ]
+  },
+  {
+    "name": "open-menu",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_MENU)"
     ]
   }
 ]

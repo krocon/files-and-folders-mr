@@ -1,14 +1,9 @@
 import puppeteer, {Browser, Page} from "puppeteer";
 import fs from "fs/promises";
 import path from "path";
-import {ScreenshotConfig, ActionIdMapping} from "./types.js";
+import {ActionIdMapping, ScreenshotConfig} from "./types.js";
 import {CONFIG} from "./config.js";
-import {
-  delay,
-  parseShortcutString,
-  pressShortcut,
-  convertActionIdShortcuts
-} from "./shortcut-utils.js";
+import {convertActionIdShortcuts, delay, parseShortcutString, pressShortcut} from "./shortcut-utils.js";
 
 /**
  * Custom error class for screenshot-related errors
@@ -30,7 +25,7 @@ export class ScreenshotService {
   /**
    * Initializes the browser and page
    */
-  async initialize(): Promise<void> {
+  async initialize(cwd: string): Promise<void> {
     try {
       console.log('🚀 Launching browser...');
       this.browser = await puppeteer.launch({
@@ -44,13 +39,58 @@ export class ScreenshotService {
       // Clear localStorage for clean state (wrapped in try-catch for security)
       try {
         await this.page.evaluate('localStorage.clear()');
+
+        await this.page.evaluate("localStorage.setItem(\"activePanelIndex\", \"1\")");
+        await this.page.evaluate("localStorage.setItem(\"theme\", \"light\")");
+        await this.page.evaluate("localStorage.setItem(\"fav\", JSON.stringify([\"Users\"]))");
+
+        const t0 = {
+          "panelIndex": 0, "tabs": [
+            {
+              "path": cwd,
+              "history": ["/Users", cwd],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 10,
+              "historyIndex": 0
+            },
+            {
+              "path": "/Users",
+              "history": ["/Users"],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 11,
+              "historyIndex": 0
+            }
+          ], "selectedTabIndex": 1
+        };
+        await this.page.evaluate("localStorage.setItem(\"tabs0\", \"" + JSON.stringify(t0) + "\")");
+
+        const t1 = {
+          "panelIndex": 1, "tabs": [
+            {
+              "path": cwd + "/screenshots",
+              "history": ["/Users", cwd],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 25,
+              "historyIndex": 0
+            }
+          ], "selectedTabIndex": 0
+        };
+        await this.page.evaluate("localStorage.setItem(\"tabs1\", \"" + JSON.stringify(t1) + "\")");
+
+        console.log('✅ Browser initialized successfully');
+
       } catch (error) {
         // localStorage may not be accessible in some contexts (e.g., about:blank)
-        console.log('⚠️ Could not clear localStorage (this is normal for some page contexts)');
+        console.log('⚠️ Could not clear localStorage (this is normal for some page contexts)', error);
       }
 
 
-      console.log('✅ Browser initialized successfully');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new ScreenshotError(`Failed to initialize browser: ${errorMessage}`);
@@ -76,60 +116,15 @@ export class ScreenshotService {
   async loadConfiguration(): Promise<ScreenshotConfig[]> {
     try {
       console.log(`📋 Loading configuration from ${CONFIG.URLS_INPUT_FILE}...`);
-
-      // Check if file exists
-      try {
-        await fs.access(CONFIG.URLS_INPUT_FILE);
-      } catch {
-        throw new ScreenshotError(`Configuration file not found: ${CONFIG.URLS_INPUT_FILE}`);
-      }
-
+      await fs.access(CONFIG.URLS_INPUT_FILE);
       const configData = await fs.readFile(CONFIG.URLS_INPUT_FILE, "utf-8");
-
-      if (!configData.trim()) {
-        throw new ScreenshotError('Configuration file is empty');
-      }
-
-      let views: unknown;
-      try {
-        views = JSON.parse(configData);
-      } catch (parseError) {
-        throw new ScreenshotError('Configuration file contains invalid JSON');
-      }
-
-      if (!Array.isArray(views)) {
-        throw new ScreenshotError('Configuration must be an array of screenshot configs');
-      }
+      let views = JSON.parse(configData);
 
       // Validate each configuration entry
       const validatedViews: ScreenshotConfig[] = [];
       for (let i = 0; i < views.length; i++) {
         const view = views[i];
-
-        if (!view || typeof view !== 'object') {
-          console.warn(`⚠️ Skipping invalid config entry at index ${i}: not an object`);
-          continue;
-        }
-
-        const {name, url, shortcuts} = view as Partial<ScreenshotConfig>;
-
-        if (!name || typeof name !== 'string') {
-          console.warn(`⚠️ Skipping config entry at index ${i}: missing or invalid name`);
-          continue;
-        }
-
-        if (!url || typeof url !== 'string') {
-          console.warn(`⚠️ Skipping config entry at index ${i}: missing or invalid URL`);
-          continue;
-        }
-
-        // Validate URL format
-        try {
-          new URL(url);
-        } catch {
-          console.warn(`⚠️ Skipping config entry "${name}": invalid URL format`);
-          continue;
-        }
+        const {name, url, shortcuts} = view;
 
         // Validate shortcuts if provided
         if (shortcuts !== undefined) {
@@ -152,11 +147,6 @@ export class ScreenshotService {
           validatedViews.push({name, url});
         }
       }
-
-      if (validatedViews.length === 0) {
-        throw new ScreenshotError('No valid screenshot configurations found');
-      }
-
       console.log(`✅ Loaded ${validatedViews.length} valid screenshot configurations`);
       return validatedViews;
 
@@ -166,43 +156,6 @@ export class ScreenshotService {
       }
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new ScreenshotError(`Failed to load configuration: ${errorMessage}`);
-    }
-  }
-
-  /**
-   * Executes shortcuts for a given screenshot configuration
-   */
-  private async executeShortcuts(
-    shortcuts: string[],
-    actionIdMapping: ActionIdMapping,
-    screenshotName: string
-  ): Promise<void> {
-    if (!this.page) {
-      throw new ScreenshotError('Page not initialized', screenshotName);
-    }
-
-    for (const shortcutString of shortcuts) {
-      try {
-        // Convert ActionId shortcuts to keyboard shortcuts
-        const convertedShortcut = convertActionIdShortcuts(shortcutString, actionIdMapping);
-
-        if (convertedShortcut !== shortcutString) {
-          console.log(`🔄 Converted shortcut: ${shortcutString} → ${convertedShortcut}`);
-        }
-
-        console.log(`⌨️ Triggering shortcut: ${convertedShortcut}`);
-
-        const keySequences = parseShortcutString(convertedShortcut);
-
-        for (const sequence of keySequences) {
-          await pressShortcut(this.page, sequence);
-          await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
-        }
-      } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        console.warn(`⚠️ Failed to execute shortcut "${shortcutString}" for ${screenshotName}: ${errorMessage}`);
-        // Continue with other shortcuts instead of failing completely
-      }
     }
   }
 
@@ -305,6 +258,39 @@ export class ScreenshotService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn(`⚠️ Error during cleanup: ${errorMessage}`);
+    }
+  }
+
+  /**
+   * Executes shortcuts for a given screenshot configuration
+   */
+  private async executeShortcuts(
+    shortcuts: string[],
+    actionIdMapping: ActionIdMapping,
+    screenshotName: string
+  ): Promise<void> {
+    if (!this.page) {
+      throw new ScreenshotError('Page not initialized', screenshotName);
+    }
+
+    for (const shortcutString of shortcuts) {
+      try {
+        // Convert ActionId shortcuts to keyboard shortcuts
+        const convertedShortcut = convertActionIdShortcuts(shortcutString, actionIdMapping);
+        if (convertedShortcut !== shortcutString) {
+          console.log(`🔄 Converted shortcut: ${shortcutString} → ${convertedShortcut}`);
+        }
+        console.log(`⌨️ Triggering shortcut: ${convertedShortcut}`);
+        const keySequences = parseShortcutString(convertedShortcut);
+        for (const sequence of keySequences) {
+          await pressShortcut(this.page, sequence);
+          await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        console.warn(`⚠️ Failed to execute shortcut "${shortcutString}" for ${screenshotName}: ${errorMessage}`);
+        // Continue with other shortcuts instead of failing completely
+      }
     }
   }
 }
