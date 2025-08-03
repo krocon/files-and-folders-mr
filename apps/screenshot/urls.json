@@ -1,6 +1,6 @@
 [
   {
-    "name": "main-start",
+    "name": "main-01",
     "url": "http://localhost:4200/",
     "shortcuts": [
       [
@@ -17,7 +17,7 @@
     ]
   },
   {
-    "name": "main-start-new-left-tab",
+    "name": "main-02",
     "url": "http://localhost:4200/",
     "shortcuts": [
       [
@@ -28,12 +28,36 @@
     ]
   },
   {
-    "name": "multi-rename-dialog",
+    "name": "multi-03",
     "url": "http://localhost:4200/",
     "shortcuts": [
       [
+        "Tab"
+      ],
+      [
+        "Control",
         "Meta",
-        "F6"
+        "g"
+      ],
+      [
+        "Users"
+      ],
+      [
+        "Enter"
+      ],
+      [
+        "ArrowDown"
+      ],
+      [
+        "Enter"
+      ],
+      [
+        "ArrowDown"
+      ],
+      [
+        "Control",
+        "Meta",
+        "c"
       ]
     ]
   }

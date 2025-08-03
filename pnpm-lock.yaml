@@ -254,7 +254,14 @@ importers:
     dependencies:
       puppeteer:
         specifier: ^24.15.0
-        version: 24.15.0
+        version: 24.15.0(typescript@5.8.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.9
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
 
   libs/fnf-data:
     dependencies:
@@ -10650,7 +10657,7 @@ packages:
       - utf-8-validate
     dev: false
 
-  /puppeteer@24.15.0:
+  /puppeteer@24.15.0(typescript@5.8.3):
     resolution: {integrity: sha512-HPSOTw+DFsU/5s2TUUWEum9WjFbyjmvFDuGHtj2X4YUz2AzOzvKMkT3+A3FR+E+ZefiX/h3kyLyXzWJWx/eMLQ==}
     engines: {node: '>=18'}
     hasBin: true

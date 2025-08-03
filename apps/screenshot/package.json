@@ -5,10 +5,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node screenshot.js",
-    "screenshot": "node screenshot.js"
+    "build": "tsc",
+    "start": "npm run build && node dist/screenshot.js",
+    "screenshot": "npm run build && node dist/screenshot.js",
+    "dev": "tsc --watch"
   },
   "dependencies": {
     "puppeteer": "^24.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.8.3"
   }
 }
