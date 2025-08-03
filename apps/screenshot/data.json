@@ -4,12 +4,6 @@
     "url": "http://localhost:4200/",
     "shortcuts": [
       "(CHANGE_LAF_LIGHT)",
-      "(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)",
-      "(Tab)",
-      "(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)",
-      "(ADD_NEW_TAB)",
-      "(ArrowDown)",
-      "(Enter)",
       "(SELECT_ALL)"
     ]
   },

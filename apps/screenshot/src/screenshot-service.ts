@@ -21,12 +21,15 @@ export class ScreenshotError extends Error {
 export class ScreenshotService {
   private browser: Browser | null = null;
   private page: Page | null = null;
+  private localStorageInitialized: boolean = false;
+  private cwd: string = '';
 
   /**
    * Initializes the browser and page
    */
   async initialize(cwd: string): Promise<void> {
     try {
+      this.cwd = cwd;
       console.log('🚀 Launching browser...');
       this.browser = await puppeteer.launch({
         headless: true,
@@ -36,59 +39,7 @@ export class ScreenshotService {
       this.page = await this.browser.newPage();
       await this.page.setViewport(CONFIG.VIEWPORT);
 
-      // Clear localStorage for clean state (wrapped in try-catch for security)
-      try {
-        await this.page.evaluate('localStorage.clear()');
-
-        await this.page.evaluate("localStorage.setItem(\"activePanelIndex\", \"1\")");
-        await this.page.evaluate("localStorage.setItem(\"theme\", \"light\")");
-        await this.page.evaluate("localStorage.setItem(\"fav\", JSON.stringify([\"Users\"]))");
-
-        const t0 = {
-          "panelIndex": 0, "tabs": [
-            {
-              "path": cwd,
-              "history": ["/Users", cwd],
-              "filterActive": false,
-              "hiddenFilesVisible": false,
-              "filterText": "",
-              "id": 10,
-              "historyIndex": 0
-            },
-            {
-              "path": "/Users",
-              "history": ["/Users"],
-              "filterActive": false,
-              "hiddenFilesVisible": false,
-              "filterText": "",
-              "id": 11,
-              "historyIndex": 0
-            }
-          ], "selectedTabIndex": 1
-        };
-        await this.page.evaluate("localStorage.setItem(\"tabs0\", \"" + JSON.stringify(t0) + "\")");
-
-        const t1 = {
-          "panelIndex": 1, "tabs": [
-            {
-              "path": cwd + "/screenshots",
-              "history": ["/Users", cwd],
-              "filterActive": false,
-              "hiddenFilesVisible": false,
-              "filterText": "",
-              "id": 25,
-              "historyIndex": 0
-            }
-          ], "selectedTabIndex": 0
-        };
-        await this.page.evaluate("localStorage.setItem(\"tabs1\", \"" + JSON.stringify(t1) + "\")");
-
-        console.log('✅ Browser initialized successfully');
-
-      } catch (error) {
-        // localStorage may not be accessible in some contexts (e.g., about:blank)
-        console.log('⚠️ Could not clear localStorage (this is normal for some page contexts)', error);
-      }
+      console.log('✅ Browser initialized successfully');
 
 
     } catch (error) {
@@ -181,6 +132,9 @@ export class ScreenshotService {
         timeout: 30000 // 30 second timeout
       });
 
+      // Initialize localStorage after navigation (only once)
+      await this.initializeLocalStorage();
+
       // Execute shortcuts if provided
       if (Array.isArray(shortcuts) && shortcuts.length > 0) {
         await this.executeShortcuts(shortcuts, actionIdMapping, name);
@@ -258,6 +212,71 @@ export class ScreenshotService {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       console.warn(`⚠️ Error during cleanup: ${errorMessage}`);
+    }
+  }
+
+  /**
+   * Initializes localStorage with required values after navigation
+   */
+  private async initializeLocalStorage(): Promise<void> {
+    if (!this.page || this.localStorageInitialized) {
+      return;
+    }
+
+    try {
+      await this.page.evaluate('localStorage.clear()');
+
+      await this.page.evaluate("localStorage.setItem(\"activePanelIndex\", \"1\")");
+      await this.page.evaluate("localStorage.setItem(\"theme\", \"light\")");
+      await this.page.evaluate("localStorage.setItem(\"fav\", JSON.stringify([\"Users\"]))");
+
+      const t0 = {
+        "panelIndex": 0, "tabs": [
+          {
+            "path": this.cwd,
+            "history": ["/Users", this.cwd],
+            "filterActive": false,
+            "hiddenFilesVisible": false,
+            "filterText": "",
+            "id": 10,
+            "historyIndex": 0
+          },
+          {
+            "path": "/Users",
+            "history": ["/Users"],
+            "filterActive": false,
+            "hiddenFilesVisible": false,
+            "filterText": "",
+            "id": 11,
+            "historyIndex": 0
+          }
+        ], "selectedTabIndex": 1
+      };
+      const tabs0Json = JSON.stringify(t0).replace(/"/g, '\\"');
+      await this.page.evaluate(`localStorage.setItem("tabs0", "${tabs0Json}")`);
+
+      const t1 = {
+        "panelIndex": 1, "tabs": [
+          {
+            "path": this.cwd + "/screenshots",
+            "history": ["/Users", this.cwd],
+            "filterActive": false,
+            "hiddenFilesVisible": false,
+            "filterText": "",
+            "id": 25,
+            "historyIndex": 0
+          }
+        ], "selectedTabIndex": 0
+      };
+      const tabs1Json = JSON.stringify(t1).replace(/"/g, '\\"');
+      await this.page.evaluate(`localStorage.setItem("tabs1", "${tabs1Json}")`);
+
+      this.localStorageInitialized = true;
+      console.log('✅ localStorage initialized successfully');
+
+    } catch (error) {
+      // localStorage may not be accessible in some contexts
+      console.log('⚠️ Could not initialize localStorage:', error);
     }
   }
 
