@@ -77,9 +77,17 @@
   "cmd ctrl f9": "OPEN_UNPACK_DLG",
   "cmd ctrl f10": "OPEN_PACK_DLG",
   "cmd ctrl f11": "OPEN_DOWNLOAD_DLG",
-  "cmd ctrl alt f1": "OPEN_ABOUT_DLG",
+  "cmd ctrl alt f12": "OPEN_ABOUT_DLG",
   "cmd ctrl f12": "OPEN_ATTRIBUTE_DLG",
   "ctrl f11": "OPEN_TASK_DLG",
-  "ctrl f12": "OPEN_MENU"
+  "ctrl f12": "OPEN_MENU",
+  "cmd ctrl alt f1": "CHANGE_LAF_BITBUCKET",
+  "cmd ctrl alt f2": "CHANGE_LAF_BLACKBOARD",
+  "cmd ctrl alt f3": "CHANGE_LAF_COFFEE",
+  "cmd ctrl alt f4": "CHANGE_LAF_COMBAT",
+  "cmd ctrl alt f5": "CHANGE_LAF_CYPRESS",
+  "cmd ctrl alt f6": "CHANGE_LAF_LIGHT",
+  "cmd ctrl alt f7": "CHANGE_LAF_NORTON",
+  "cmd ctrl alt f8": "CHANGE_LAF_PAPER"
 
 }

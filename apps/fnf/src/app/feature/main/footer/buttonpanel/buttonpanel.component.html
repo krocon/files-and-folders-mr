@@ -1,6 +1,7 @@
 <div class="button-panel-container">
   <div class="button-panel">
 
+    <!-- Action Buttons -->
     @for (id of currentButtons; track id) {
       <button
           (click)="onButtonClick(id)"
@@ -22,8 +23,7 @@
     }
 
 
-
-
+    <!-- Main menu -->
     <button
         #trigger="matMenuTrigger"
         [matMenuTriggerFor]="menuAction"
@@ -115,7 +115,6 @@
 
           </mat-list>
         </div>
-
       </div>
     </mat-menu>
 
@@ -126,6 +125,7 @@
         (onClose)="closeTaskManager()"
         class="panel-button"></fnf-task-button>
 
+    <!-- Look & Feel -->
     <button
         [matMenuTriggerFor]="menuSettings"
         class="panel-button icon-only"
@@ -157,6 +157,7 @@
     </mat-menu>
 
 
+    <!-- Shortcuts -->
     <button
         (click)="triggerAction('OPEN_SHORTCUT_DLG')"
         class="panel-button icon-only"
@@ -164,30 +165,13 @@
       <mat-icon>keyboard</mat-icon>
     </button>
 
+    <!-- Debugging -->
     <button
         (click)="triggerAction('PRINT_DEBUG')"
         class="panel-button icon-only"
         mat-stroked-button>
       <mat-icon>bug_report</mat-icon>
     </button>
-
-
-    <!--button
-        [matMenuTriggerFor]="menuTools"
-        class="panel-button row-reverse"
-        mat-stroked-button>
-      Tools
-      <mat-icon>keyboard_arrow_up</mat-icon>
-    </button>
-    <mat-menu #menuTools="matMenu">
-      @for (tool of tools; track tool) {
-        <button
-            mat-menu-item
-            (click)="onToolClicked(tool)">{{ tool.label }}
-          <fnf-shortcut [keys]="getShortcutAsLabelTokens(tool.shortcut)"></fnf-shortcut>
-        </button>
-      }
-    </mat-menu-->
 
   </div>
 </div>

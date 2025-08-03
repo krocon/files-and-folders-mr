@@ -5,7 +5,7 @@ import {ViewportConfig} from "./types.js";
  * Application configuration constants
  */
 export const CONFIG = {
-  URLS_INPUT_FILE: "./urls.json",
+  URLS_INPUT_FILE: "./data.json",
   OUT_DIR: "./screenshots",
   SHORTCUTS_API_URL: "http://localhost:3333/api/shortcuts/osx",
   VIEWPORT: {width: 1024, height: 768} as ViewportConfig,

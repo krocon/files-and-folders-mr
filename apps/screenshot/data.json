@@ -1,0 +1,86 @@
+[
+  {
+    "name": "main-01",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)",
+      "(Tab)",
+      "(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)",
+      "(ADD_NEW_TAB)",
+      "(ArrowDown)",
+      "(Enter)"
+    ]
+  },
+  {
+    "name": "main-bitbucket",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_BITBUCKET)"
+    ]
+  },
+  {
+    "name": "main-bitbucket",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_BITBUCKET)"
+    ]
+  },
+  {
+    "name": "main-blackboard",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_BLACKBOARD)"
+    ]
+  },
+  {
+    "name": "main-coffee",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_COFFEE)"
+    ]
+  },
+  {
+    "name": "main-combat",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_COMBAT)"
+    ]
+  },
+  {
+    "name": "main-cypress",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_CYPRESS)"
+    ]
+  },
+  {
+    "name": "main-light",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)"
+    ]
+  },
+  {
+    "name": "main-norton",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_NORTON)"
+    ]
+  },
+  {
+    "name": "main-paper",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_PAPER)"
+    ]
+  },
+  {
+    "name": "multi-copy-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(CHANGE_LAF_LIGHT)",
+      "(Tab)(OPEN_GOTO_ANYTHING_DLG)(Users)(Enter)(ArrowDown)(Enter)(ArrowDown)(OPEN_COPY_DLG)"
+    ]
+  }
+]
