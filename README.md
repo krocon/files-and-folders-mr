@@ -232,6 +232,7 @@ files-and-folders-mr/
 
 | Variable                      | Description                                                                    | Default                                                                |
 |-------------------------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| **FNF_FRONTEND_HOST**         | Host URL for the Angular frontend application                                  | `http://localhost:` + frontend port                                    |
 | **FNF_FRONTEND_PORT**         | Port for the Angular frontend application                                      | `4201`                                                                 |
 | **FNF_BACKEND_PORT**          | Port for the NestJS backend API server                                         | `3333`                                                                 |
 | **FNF_WEBSOCKET_PORT**        | Port for the WebSocket server communication                                    | `3334`                                                                 |

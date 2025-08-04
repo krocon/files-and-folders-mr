@@ -12,6 +12,7 @@ const getEnvironmentVariables = () => {
   const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
 
   const frontendPort = process.env.FNF_FRONTEND_PORT ? Number(process.env.frontendPort) : 4201;
+  const frontendHost = process.env.FNF_FRONTEND_HOST ? process.env.FNF_FRONTEND_HOST : ('http://localhost:' + frontendPort);
   const backendPort = process.env.FNF_BACKEND_PORT ? Number(process.env.backendPort) : 3333;
   const websocketPort = process.env.FNF_WEBSOCKET_PORT ? Number(process.env.websocketPort) : 3334;
 
@@ -53,6 +54,7 @@ const getEnvironmentVariables = () => {
     version,
     commitHash,
     frontendPort,
+    frontendHost,
     backendPort,
     websocketPort,
 
@@ -95,6 +97,9 @@ export const environment = {
 
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
+  },
+  get frontendHost() {
+    return getEnvironmentVariables().frontendHost;
   },
   get backendPort() {
     return getEnvironmentVariables().backendPort;

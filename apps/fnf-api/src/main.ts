@@ -11,18 +11,19 @@ events.EventEmitter.defaultMaxListeners = 20;
 
 async function bootstrap() {
 
-  const frontendPort = environment.frontendPort;
-  const backendPort = environment.backendPort;
+  const frontendPort = environment.frontendPort || 3333;
+  const frontendHost = environment.frontendHost || ('http://localhost:' + frontendPort);
+  const backendPort = environment.backendPort || 3333;
   const websocketPort = environment.websocketPort || 3334;
-  Logger.log('FnF Ports                           :', {websocketPort, backendPort, frontendPort});
+  Logger.log('FnF Ports                           :', {websocketPort, backendPort, frontendPort, frontendHost});
 
   const app = await NestFactory.create(AppModule);
   const globalPrefix = 'api';
 
   app.setGlobalPrefix(globalPrefix);
   app.enableCors({
-    origin: 'http://localhost:' + frontendPort, // Passe hier den Frontend-Port an
-    credentials: true,
+    origin: '*',
+    credentials: false,
   });
   app.useGlobalFilters(new HttpExceptionFilter());
 
@@ -35,9 +36,8 @@ async function bootstrap() {
   // Socket.IO Setup with CORS
   const io = new SocketIOServer(httpServer.getHttpServer(), {
     cors: {
-      origin: 'http://localhost:4200', // Frontend
-      methods: ['GET', 'POST'],
-      credentials: true,
+      origin: '*',
+      credentials: false,
     },
   });
 
