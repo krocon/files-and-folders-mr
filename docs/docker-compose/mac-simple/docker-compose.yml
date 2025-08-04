@@ -6,12 +6,11 @@ services:
       - "3333:3333"
       - "3334:3334"
     volumes:
-      - /mnt/user:/fnf/user
-      - /mnt/remotes:/fnf/remotes
-      - /mnt/disks:/fnf/disks
+      - /:/fnf
     environment:
       - FNF_INCOMPATIBLE_PATHS=
-      - FNF_START_PATH=/fnf/user
+      - FNF_CONTAINER_PATHS=
+      - FNF_START_PATH=/fnf/Users
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY=
       - FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'

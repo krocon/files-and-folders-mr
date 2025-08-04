@@ -1,0 +1,25 @@
+services:
+  fnf-instance-1:
+    image: krocon/files-and-folders
+    container_name: fnf-1
+    ports:
+      - "3333:3333"
+      - "3334:3334"
+    volumes:
+      - /mnt/user:/fnf/user
+      - /mnt/remotes:/fnf/remotes
+      - /mnt/disks:/fnf/disks
+    environment:
+      - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/user,/fnf/remotes,/fnf/disks
+      - FNF_START_PATH=/fnf/user
+      - FNF_DOCKER_ROOT=/fnf
+      - FNF_OPENAI_API_KEY=
+      - FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
+      - FNF_OPENAI_MODEL='gpt-4'
+      - FNF_LLAMA_API_KEY='your-llama-api-key-here'
+      - FNF_LLAMA_API_URL='http://localhost:11434/api/generate'
+      - FNF_LLAMA_MODEL='llama3'
+      - FNF_AI_COMPLETION_SERVICE='openai'
+      - NODE_ENV=production
+    restart: unless-stopped

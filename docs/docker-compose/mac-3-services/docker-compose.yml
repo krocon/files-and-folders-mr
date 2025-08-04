@@ -10,6 +10,7 @@ services:
       - /Volumes:/fnf/Volumes
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/Users,/fnf/Volumes
       - FNF_START_PATH=/fnf
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
@@ -33,6 +34,7 @@ services:
       - /Volumes:/fnf/Volumes
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/Users,/fnf/Volumes
       - FNF_START_PATH=/fnf
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
@@ -56,6 +58,7 @@ services:
       - /Volumes:/fnf/Volumes
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/Users,/fnf/Volumes
       - FNF_START_PATH=/fnf
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'

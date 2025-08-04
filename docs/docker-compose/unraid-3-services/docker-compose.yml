@@ -11,6 +11,7 @@ services:
       - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/user,/fnf/remotes,/fnf/disks
       - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY=
@@ -35,6 +36,7 @@ services:
       - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/user,/fnf/remotes,/fnf/disks
       - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY=
@@ -59,6 +61,7 @@ services:
       - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
+      - FNF_CONTAINER_PATHS=/fnf/user,/fnf/remotes,/fnf/disks
       - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
       - FNF_OPENAI_API_KEY=

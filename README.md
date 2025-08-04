@@ -228,27 +228,28 @@ files-and-folders-mr/
 - pnpm ≥ 8.0.0
 - Docker (optional)
 
-###
+### Environment Variables
 
-FNF_FRONTEND_PORT
-FNF_BACKEND_PORT
-FNF_WEBSOCKET_PORT
-FNF_ASSETS_ROOT
+| Variable                      | Description                                                                    | Default                                                                |
+|-------------------------------|--------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| **FNF_FRONTEND_PORT**         | Port for the Angular frontend application                                      | `4201`                                                                 |
+| **FNF_BACKEND_PORT**          | Port for the NestJS backend API server                                         | `3333`                                                                 |
+| **FNF_WEBSOCKET_PORT**        | Port for the WebSocket server communication                                    | `3334`                                                                 |
+| **FNF_ASSETS_ROOT**           | Root directory path for application assets                                     | `/usr/src/app/apps/fnf-api/assets` (Docker) or `../src/assets` (local) |
+| **FNF_INCOMPATIBLE_PATHS**    | Comma-separated list of paths that should be avoided or blocked                | _(none)_                                                               |
+| **FNF_START_PATH**            | Initial directory path when the file manager starts                            | User home directory (Windows) or `/` (Unix/Linux)                      |
+| **FNF_CONTAINER_PATHS**       | Comma-separated list of container mount paths, used as fallback for start path | _(none)_                                                               |
+| **FNF_DOCKER_ROOT**           | Docker container root path for file system operations                          | _(none)_                                                               |
+| **FNF_OPENAI_API_URL**        | OpenAI API endpoint URL for AI completion services                             | `https://api.openai.com/v1/chat/completions`                           |
+| **FNF_OPENAI_API_KEY**        | OpenAI API key for authentication (required for AI features)                   | _(empty string)_                                                       |
+| **FNF_OPENAI_MODEL**          | OpenAI model to use for AI completions                                         | `gpt-4`                                                                |
+| **FNF_LLAMA_API_URL**         | Llama API endpoint URL for local AI completion services                        | `http://localhost:11434/api/generate`                                  |
+| **FNF_LLAMA_API_KEY**         | Llama API key for authentication                                               | _(empty string)_                                                       |
+| **FNF_LLAMA_MODEL**           | Llama model to use for AI completions                                          | `llama3`                                                               |
+| **FNF_AI_COMPLETION_SERVICE** | Which AI service to use for completions (`openai` or `llama`)                  | `openai`                                                               |
 
-FNF_INCOMPATIBLE_PATHS
-FNF_START_PATH
-FNF_CONTAINER_PATHS
-FNF_DOCKER_ROOT
-
-FNF_OPENAI_API_URL
-FNF_OPENAI_API_KEY
-FNF_OPENAI_MODEL
-
-FNF_LLAMA_API_URL
-FNF_LLAMA_API_KEY
-FNF_LLAMA_MODEL
-
-FNF_AI_COMPLETION_SERVICE
+> **Note**: The `FNF_START_PATH` follows a priority order: environment variable → first path from
+`FNF_CONTAINER_PATHS` → user home directory (Windows) → root directory `/` (Unix/Linux).
 
 ### Build Commands
 ```bash
