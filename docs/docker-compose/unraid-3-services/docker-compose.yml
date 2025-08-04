@@ -3,7 +3,7 @@ services:
     image: krocon/files-and-folders
     container_name: fnf-frontend
     labels:
-      - net.unraid.docker.icon=https://raw.githubusercontent.com/krocon/files-and-folders-mr/refs/heads/main/apps/fnf/src/assets/img/folder_open_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg
+      - net.unraid.docker.icon=http://192.168.178.62:3333/assets/img/folder_open_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.png
       - net.unraid.docker.webui=http://192.168.178.62:3333/
       - net.unraid.docker.description=Files and Folders
     ports:
