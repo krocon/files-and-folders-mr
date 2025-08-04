@@ -6,13 +6,14 @@ services:
       - "3333:3333"
       - "3334:3334"
     volumes:
-      - /Users:/fnf/Users
-      - /Volumes:/fnf/Volumes
+      - /mnt/user:/fnf/user
+      - /mnt/remotes:/fnf/remotes
+      - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
-      - FNF_START_PATH=/fnf
+      - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
-      - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
+      - FNF_OPENAI_API_KEY=
       - FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
       - FNF_OPENAI_MODEL='gpt-4'
       - FNF_LLAMA_API_KEY='your-llama-api-key-here'
@@ -29,13 +30,14 @@ services:
       - "3335:3333"
       - "3336:3334"
     volumes:
-      - /Users:/fnf/Users
-      - /Volumes:/fnf/Volumes
+      - /mnt/user:/fnf/user
+      - /mnt/remotes:/fnf/remotes
+      - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
-      - FNF_START_PATH=/fnf
+      - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
-      - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
+      - FNF_OPENAI_API_KEY=
       - FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
       - FNF_OPENAI_MODEL='gpt-4'
       - FNF_LLAMA_API_KEY='your-llama-api-key-here'
@@ -52,13 +54,14 @@ services:
       - "3337:3333"
       - "3338:3334"
     volumes:
-      - /Users:/fnf/Users
-      - /Volumes:/fnf/Volumes
+      - /mnt/user:/fnf/user
+      - /mnt/remotes:/fnf/remotes
+      - /mnt/disks:/fnf/disks
     environment:
       - FNF_INCOMPATIBLE_PATHS=
-      - FNF_START_PATH=/fnf
+      - FNF_START_PATH=/fnf/user
       - FNF_DOCKER_ROOT=/fnf
-      - FNF_OPENAI_API_KEY='sk-youropenaiapikeyhere'
+      - FNF_OPENAI_API_KEY=
       - FNF_OPENAI_API_URL='https://api.openai.com/v1/chat/completions'
       - FNF_OPENAI_MODEL='gpt-4'
       - FNF_LLAMA_API_KEY='your-llama-api-key-here'

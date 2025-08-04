@@ -100,25 +100,26 @@ export class AppModule {
     Logger.log(`
     ├─ config      
     │  ├──  incompatiblePaths: ${config.incompatiblePaths}
-    │  ├──  containerPaths: ${config.containerPaths}
-    │  ├──  startPath: ${config.startPath}
-    │  └──  dockerRoot: ${config.dockerRoot}
+    │  ├──  containerPaths   : ${config.containerPaths}
+    │  ├──  startPath        : ${config.startPath}
+    │  └──  dockerRoot       : ${config.dockerRoot}
     │  
     ├─ process.env    
 ${envBuf.join('\n')} 
     │
     └─ environment   
-       ├──  production: ${environment.production}
-       ├──  version: ${environment.version}
-       ├──  commitHash: ${environment.commitHash}
-       ├──  frontendPort: ${environment.frontendPort}
+       ├──  production   : ${environment.production}
+       ├──  version      : ${environment.version}
+       ├──  commitHash   : ${environment.commitHash}
+       ├──  frontendPort : ${environment.frontendPort}
+       ├──  backendPort  : ${environment.backendPort}
        ├──  websocketPort: ${environment.websocketPort}
        │ 
-       ├──  openaiApiUrl: ${environment.openaiApiUrl}
-       ├──  openaiModel: ${environment.openaiModel}
+       ├──  openaiApiUrl : ${environment.openaiApiUrl}
+       ├──  openaiModel  : ${environment.openaiModel}
        │ 
-       ├──  llamaApiUrl: ${environment.llamaApiUrl}
-       ├──  llamaModel: ${environment.llamaModel}
+       ├──  llamaApiUrl  : ${environment.llamaApiUrl}
+       ├──  llamaModel   : ${environment.llamaModel}
        │ 
        └──  aiCompletionService: ${environment.aiCompletionService}   
     `);

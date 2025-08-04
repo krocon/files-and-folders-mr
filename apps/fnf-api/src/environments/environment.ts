@@ -11,8 +11,9 @@ const getEnvironmentVariables = () => {
   const dockerAssetPrefix = process.env.FNF_ASSETS_ROOT || '/usr/src/app/apps/fnf-api/assets';
   const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
 
-  const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
-  const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
+  const frontendPort = process.env.FNF_FRONTEND_PORT ? Number(process.env.frontendPort) : 4201;
+  const backendPort = process.env.FNF_BACKEND_PORT ? Number(process.env.backendPort) : 3333;
+  const websocketPort = process.env.FNF_WEBSOCKET_PORT ? Number(process.env.websocketPort) : 3334;
 
   const shortcutsDefaultsPath = assetsPrefix + '/shortcut/defaults';
   const shortcutsCustomPath = assetsPrefix + '/shortcut/custom';
@@ -52,6 +53,7 @@ const getEnvironmentVariables = () => {
     version,
     commitHash,
     frontendPort,
+    backendPort,
     websocketPort,
 
     shortcutsDefaultsPath,
@@ -93,6 +95,9 @@ export const environment = {
 
   get frontendPort() {
     return getEnvironmentVariables().frontendPort;
+  },
+  get backendPort() {
+    return getEnvironmentVariables().backendPort;
   },
   get websocketPort() {
     return getEnvironmentVariables().websocketPort;
