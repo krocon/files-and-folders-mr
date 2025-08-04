@@ -6,11 +6,27 @@ import {AppService} from './app/app.service';
 import {HttpExceptionFilter} from './app/http-exception.filter';
 import {environment} from './environments/environment';
 import * as events from 'events';
+import {IoAdapter} from '@nestjs/platform-socket.io';
+import {ServerOptions} from 'socket.io';
 // import { Request, Response } from 'express';
 
 // Increase the max listeners to prevent the MaxListenersExceededWarning
 // Default is 10, setting to 20 to accommodate the application's needs
 events.EventEmitter.defaultMaxListeners = 20;
+
+class SocketIOAdapter extends IoAdapter {
+  createIOServer(port: number, options?: ServerOptions): any {
+    const server = super.createIOServer(port, {
+      ...options,
+      cors: {
+        origin: true,
+        credentials: false,
+        methods: ['GET', 'POST']
+      }
+    });
+    return server;
+  }
+}
 
 
 // OR conditionally import based on NODE_ENV
@@ -28,6 +44,7 @@ async function bootstrap() {
     origin: '*',
     credentials: false,
   });
+  app.useWebSocketAdapter(new SocketIOAdapter(app));
   app.useGlobalFilters(new HttpExceptionFilter());
   // app.useGlobalPipes(new ValidationPipe())
   const port = process.env.PORT || 3333;

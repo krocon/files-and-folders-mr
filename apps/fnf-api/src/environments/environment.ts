@@ -179,9 +179,8 @@ export const environment = {
   get websocketOptions() {
     return {
       cors: {
-        origin: [
-          '*'
-        ]
+        origin: true,
+        credentials: false
       }
     };
   }
