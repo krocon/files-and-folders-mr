@@ -112,7 +112,6 @@ ${envBuf.join('\n')}
        ├──  version      : ${environment.version}
        ├──  commitHash   : ${environment.commitHash}
        ├──  frontendPort : ${environment.frontendPort}
-       ├──  backendPort  : ${environment.backendPort}
        ├──  websocketPort: ${environment.websocketPort}
        │ 
        ├──  openaiApiUrl : ${environment.openaiApiUrl}

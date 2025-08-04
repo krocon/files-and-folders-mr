@@ -14,8 +14,8 @@ const apiPrefix3 = availableApiPorts.length > 2 ? (apiPrefix1.replaceAll(/:\d\d\
 
 export const environment = {
 
-  version: '03.08.2025 16:06',
-  commitHash: 'e2c765b',
+  version: '04.08.2025 16:41',
+  commitHash: '5e3afa8',
 
   availableApiPorts,
 

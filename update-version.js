@@ -30,8 +30,7 @@ function updateEnvironmentFiles() {
   const files = [
     path.join(scriptDir, "apps/fnf/src/environments/environment.ts"),
     path.join(scriptDir, "apps/fnf/src/environments/environment.prod.ts"),
-    path.join(scriptDir, "apps/fnf-api/src/environments/environment.ts"),
-    path.join(scriptDir, "apps/fnf-api/src/environments/environment.prod.ts")
+    path.join(scriptDir, "apps/fnf-api/src/environments/environment.ts")
   ];
 
   files.forEach(filePath => {
