@@ -1,4 +1,4 @@
-# 🗂️ Files and Folders MR
+# 🗂️ Files and Folders
 
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://hub.docker.com/r/krocon/files-and-folders-mr)
 [![Angular](https://img.shields.io/badge/Angular-20-red?logo=angular)](https://angular.io/)
@@ -10,9 +10,9 @@
 > **The Next-Generation File Manager** - A powerful, AI-enhanced orthodox file manager that revolutionizes how you
 > interact with your files and folders.
 
-## ✨ Why Choose Files and Folders MR?
+## ✨ Why Choose Files and Folders?
 
-**Files and Folders MR** isn't just another file manager—it's your intelligent file management companion. Built with
+**Files and Folders** isn't just another file manager—it's your intelligent file management companion. Built with
 cutting-edge technology and powered by AI, it transforms mundane file operations into effortless, intelligent workflows.
 
 ### 🚀 **Key Highlights**
@@ -23,6 +23,61 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
 - 🐳 **Docker Ready** - Deploy anywhere with one command
 - ⚡ **Lightning Fast** - Built with TypeScript, Angular 20, and NestJS
 - 🎨 **Fully Customizable** - Themes, shortcuts, and UI to match your workflow
+
+---
+
+
+<style>
+.theme-showcase {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 1280px;
+  min-height: 720px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.theme-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+  animation: smoothThemeRotate 24s infinite;
+  transform: scale(1);
+}
+
+.theme-image:nth-child(1) { animation-delay: 0s; }
+.theme-image:nth-child(2) { animation-delay: 3s; }
+.theme-image:nth-child(3) { animation-delay: 6s; }
+.theme-image:nth-child(4) { animation-delay: 9s; }
+.theme-image:nth-child(5) { animation-delay: 12s; }
+.theme-image:nth-child(6) { animation-delay: 15s; }
+.theme-image:nth-child(7) { animation-delay: 18s; }
+.theme-image:nth-child(8) { animation-delay: 21s; }
+
+@keyframes smoothThemeRotate {
+  0% { opacity: 0; transform: scale(1.02); }
+  4.17% { opacity: 1; transform: scale(1); }
+  8.33% { opacity: 1; transform: scale(1); }
+  12.5% { opacity: 0; transform: scale(0.98); }
+  100% { opacity: 0; transform: scale(0.98); }
+}
+</style>
+
+<div class="theme-showcase">
+  <img src="apps/screenshot/screenshots/cypress/main.png" alt="Cypress Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/blackboard/main.png" alt="Blackboard Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/bitbucket/main.png" alt="Bitbucket Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/paper/main.png" alt="Paper Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/light/main.png" alt="Light Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/norton/main.png" alt="Norton Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/combat/main.png" alt="Combat Theme" class="theme-image">
+  <img src="apps/screenshot/screenshots/coffee/main.png" alt="Coffee Theme" class="theme-image">
+</div>
 
 ---
 
@@ -65,23 +120,89 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
 
 > *Experience the power of AI-enhanced file management*
 
-**Main Interface**
+### 🖥️ **Main Interface**
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ Files and Folders MR - AI-Powered File Manager                             │
-├─────────────────────────────────────────────────────────────────────────────┤
-│ [📁 Documents]     [📁 Projects]      [🔍 Search]     [🤖 AI Tools]        │
-├─────────────────────┬───────────────────────────────────────────────────────┤
-│ Left Panel          │ Right Panel                                           │
-│ 📁 folder1/         │ 📁 src/                                              │
-│ 📄 document.pdf     │ 📄 main.ts                                           │
-│ 📄 image.jpg        │ 📄 app.component.ts                                  │
-│ 📄 data.json        │ 📁 components/                                       │
-├─────────────────────┴───────────────────────────────────────────────────────┤
-│ Terminal: ~/Projects/my-app $ npm run build                                 │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+The clean, modern interface with dual-pane file management and integrated terminal:
+
+![Main Interface](apps/screenshot/screenshots/light/main.png)
+
+### 📋 **Application Menu**
+
+Access all features through the comprehensive menu system:
+
+![Application Menu](apps/screenshot/screenshots/light/open-menu.png)
+
+### 🔍 **Search & Navigation**
+
+#### Goto Anything Dialog
+
+Quick navigation with fuzzy search capabilities:
+
+![Goto Anything](apps/screenshot/screenshots/light/open-goto-anything-dialog.png)
+
+#### Find Files Dialog
+
+Advanced search with powerful filtering options:
+
+![Find Files](apps/screenshot/screenshots/light/open-find-dialog.png)
+
+### 📁 **File Operations**
+
+#### Multi-Rename Tool
+
+AI-powered batch renaming with regex patterns:
+
+![Multi-Rename](apps/screenshot/screenshots/light/open-multi-rename-dialog.png)
+
+#### Directory Operations
+
+Create multiple directories with complex structures:
+
+![Multi-Directory Creation](apps/screenshot/screenshots/light/open-multi-mkdir-dialog.png)
+
+#### File Management
+
+Copy, move, and organize files efficiently:
+
+![Copy Dialog](apps/screenshot/screenshots/light/open-copy-dialog.png)
+
+![Move Dialog](apps/screenshot/screenshots/light/open-move-dialog.png)
+
+### 🗜️ **Archive Operations**
+
+Pack and unpack archives with ease:
+
+![Pack Dialog](apps/screenshot/screenshots/light/open-pack-dialog.png)
+
+### 🤖 **AI-Powered Features**
+
+#### Group Files Dialog
+
+Intelligent file organization with AI assistance:
+
+![Group Files](apps/screenshot/screenshots/light/open-group-files-dialog.png)
+
+### 💻 **Terminal Integration**
+
+Built-in terminal with full xterm.js support:
+
+![Shell Dialog](apps/screenshot/screenshots/light/open-shell-dialog.png)
+
+### ⚙️ **Configuration**
+
+#### Application Settings
+
+Configure all aspects of the file manager:
+
+![Setup Dialog](apps/screenshot/screenshots/light/open-setup-dialog.png)
+
+### 📊 **Task Management**
+
+Monitor background operations in real-time:
+
+![Task Manager](apps/screenshot/screenshots/light/open-task-dialog.png)
+
+![Job Queue](apps/screenshot/screenshots/light/open-job-queue-dialog.png)
 
 ---
 
