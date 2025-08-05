@@ -10,15 +10,13 @@
   </style>
 
   <path
-      d="M1,5.5 A1,1 0 0 1 2,4.5 L2,5.5 Z"
+      d="M0,1 A1,1 0 0 1 1,0 L2,1 Z"
       class="filled"/>
-  <!-- Viertelkreissegment links oben -->
-  <!--  <path d="M2,5 A3,3 0 0 1 0,3 L0,5 Z" class="filled"/>-->
 
-  <!-- Viertelkreissegment rechts oben -->
-  <!--  <path d="M5,5 A3,3 0 0 1 3,3 L3,5 Z" class="filled"/>-->
+  <path
+      d="M2.5,1 A1,1 0 0 1 3.5,0 L4.5,1 Z"
+      class="filled"/>
 
-  <!-- Quadrate -->
   <rect
       x="0"
       y="3"
