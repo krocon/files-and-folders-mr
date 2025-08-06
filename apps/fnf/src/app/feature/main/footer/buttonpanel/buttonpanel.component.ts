@@ -23,7 +23,7 @@ import {TaskButtonComponent} from "../../../task/task-list/task-button.component
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
 import {ActionExecutionService} from "../../../../service/action-execution.service";
-import {LookAndFeelService} from "../../../../service/look-and-feel.service";
+import {LookAndFeelService} from "../../../themes/look-and-feel.service";
 import {ConfigButtonsService} from "../../../../service/config/config-buttons.service";
 import {ConfigThemesService} from "../../../../service/config/config-themes.service";
 import {MatTooltip} from "@angular/material/tooltip";

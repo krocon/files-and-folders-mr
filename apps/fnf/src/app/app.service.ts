@@ -1,5 +1,5 @@
 import {Injectable, Output} from "@angular/core";
-import {LookAndFeelService} from "./service/look-and-feel.service";
+import {LookAndFeelService} from "./feature/themes/look-and-feel.service";
 import {ShortcutActionMapping, ShortcutService} from "./service/config/shortcut.service";
 import {SysinfoService} from "./service/sysinfo.service";
 import {ConfigService} from "./service/config/config.service";
@@ -84,7 +84,7 @@ export class AppService {
     private readonly browserOsService: BrowserOsService,
     private readonly setupDataService: SetupDataService,
   ) {
-
+    this.lookAndFeelService.init();
 
     this.favDataService
       .valueChanges()

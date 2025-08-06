@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {Subject, takeUntil} from 'rxjs';
+import {combineLatest, Subject, takeUntil} from 'rxjs';
 import {ColorDataIf} from '@fnf-data';
 import {ConfigThemesService} from '../../service/config/config-themes.service';
 import {ColorService} from './color.service';
@@ -14,6 +14,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {ColorPickerDirective} from 'ngx-color-picker';
+import {LookAndFeelService} from "./look-and-feel.service";
 
 interface ThemeTableRow {
   selected: boolean;
@@ -44,7 +45,7 @@ interface ThemeTableRow {
 export class ThemesComponent implements OnInit, OnDestroy {
 
   themeForm: FormGroup;
-  themeDefaultNames: string[] = [];
+  themeNames: string[] = [];
   selectedTheme: ColorDataIf | null = null;
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
@@ -63,12 +64,13 @@ export class ThemesComponent implements OnInit, OnDestroy {
     private readonly configThemesService: ConfigThemesService,
     private readonly cdr: ChangeDetectorRef,
     private readonly colorService: ColorService,
+    private readonly lookAndFeelService: LookAndFeelService,
   ) {
     this.themeForm = this.createForm();
   }
 
   ngOnInit(): void {
-    this.loadDefaultThemeNames();
+    this.loadThemeNames();
     this.setupFormSubscriptions();
   }
 
@@ -125,16 +127,10 @@ export class ThemesComponent implements OnInit, OnDestroy {
       return this.getColorPreview(this.getColorValue(key), loop + 1);
     }
 
-    // If it's a valid CSS color, return it
-    if (this.colorService.isColorValue(value)) {
-      return value;
-    }
-
-    // Default fallback
-    return '#ffffff';
+    return value;
   }
 
-  onApply(): void {
+  onSave(): void {
     if (!this.selectedTheme) {
       return;
     }
@@ -157,7 +153,9 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   private setupFormSubscriptions(): void {
     // Subscribe to theme selection changes
-    this.themeForm.get('selectedThemeName')?.valueChanges
+    this.themeForm
+      .get('selectedThemeName')
+      ?.valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe(themeName => {
         if (themeName) {
@@ -173,13 +171,17 @@ export class ThemesComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadDefaultThemeNames(): void {
-    this.configThemesService
-      .loadDefaultNames()
+  private loadThemeNames(): void {
+    const obs = [
+      this.configThemesService.loadDefaultNames(),
+      this.configThemesService.loadCustomNames(),
+    ];
+
+    combineLatest(obs)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (names) => {
-          this.themeDefaultNames = names;
+          this.themeNames = [...names[0], ...names[1].filter(name => !names[0].includes(name))];
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -205,6 +207,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
           this.prepareTableData();
           this.isLoading = false;
           this.cdr.detectChanges();
+          this.lookAndFeelService.emitColors(this.tableData2Colors());
         },
         error: (error) => {
           console.error('Error loading theme:', error);
@@ -262,6 +265,16 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
 
     this.cdr.detectChanges();
+    this.lookAndFeelService.emitColors(this.tableData2Colors());
+  }
+
+  private tableData2Colors() {
+    const colors: { [key: string]: string } = {};
+    for (let i = 0; i < this.themeTableData.length; i++) {
+      const t = this.themeTableData[i];
+      colors[t.key] = t.value;
+    }
+    return colors;
   }
 
   private navigateToFiles(): void {

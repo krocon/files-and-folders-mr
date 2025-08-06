@@ -8,7 +8,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Default Theme</mat-label>
           <mat-select formControlName="selectedThemeName">
-            @for (themeName of themeDefaultNames; track themeName) {
+            @for (themeName of themeNames; track themeName) {
               <mat-option [value]="themeName">{{ themeName }}</mat-option>
             }
           </mat-select>
@@ -133,15 +133,15 @@
   </button>
 
   <button
-      (click)="onApply()"
+      (click)="onSave()"
       [disabled]="isSaving || isLoading || !selectedTheme"
       color="primary"
       mat-raised-button
       type="button">
     @if (isSaving) {
-      Applying...
+      Saving...
     } @else {
-      Apply
+      Save
     }
   </button>
 </div>
