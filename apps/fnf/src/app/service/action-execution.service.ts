@@ -140,6 +140,13 @@ export class ActionExecutionService {
     } else if (id === "OPEN_SETUP_DLG") {
       this.router.navigate(['/setup']);
 
+    } else if (id === "OPEN_THEMES_DLG") {
+      // this.router.navigate(['/themes']);
+      const strWindowFeatures = "location=no,height=800,width=1024,scrollbars=yes,status=yes";
+      const url = location.origin + "/themes";
+      window.open(url, "_blank", strWindowFeatures);
+
+
     } else if (id === "OPEN_SHELL_DLG") {
       this.router.navigate(['/shell']);
 

@@ -26,17 +26,23 @@ export class LookAndFeelService {
 
 
   async init() {
-    const themeName = this.getTheme();
-    if (themeName) {
-      this.loadAndApplyLookAndFeel(themeName);
+    if (location.pathname === "/themes") {
+      // we are on the 'Edit Themes' page, so we load the default theme:
+      this.loadAndApplyLookAndFeel('light');
+
+    } else {
+      const themeName = this.getTheme();
+      if (themeName) {
+        this.loadAndApplyLookAndFeel(themeName);
+      }
+      // Listen for CSS updates from other browser windows:
+      this.socket
+        .fromEvent<CssColors, string>("onCssUpdate")
+        .subscribe(wd => {
+          console.info('onCssUpdate', wd);
+          this.applyColors(wd);
+        });
     }
-    // wir lauschen auf css-Updates aus anderen Browser-Fenstern:
-    this.socket
-      .fromEvent<CssColors, string>("onCssUpdate")
-      .subscribe(wd => {
-        console.info('onCssUpdate', wd);
-        this.applyColors(wd);
-      });
   }
 
 
