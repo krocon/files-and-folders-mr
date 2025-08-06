@@ -8,7 +8,6 @@
     "start:fnf-api": "pnpm --filter fnf-api start",
     "start:screenshot": "pnpm --filter screenshot start",
     "prebuild": "node update-version.js",
-    "convert-svg-to-png": "node convert-svg-to-png.js",
     "build:fnf": "pnpm --filter fnf build",
     "build:fnf-api": "pnpm --filter fnf-api build",
     "build:fnf-data": "pnpm --filter fnf-data build",

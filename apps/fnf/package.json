@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "prebuild": "node ../../update-version.js",
+    "convert-svg-to-png": "node convert-svg-to-png.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "jest --runInBand",

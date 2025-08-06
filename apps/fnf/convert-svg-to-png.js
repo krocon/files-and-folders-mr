@@ -5,13 +5,19 @@ const path = require("path");
 // Define common icon sizes
 const iconSizes = [16, 24, 32, 48, 64, 128, 256, 512];
 
-// Input SVG file path
-const svgPath = "./src/assets/ff.svg";
+const colors = [
+  "black",
+  "gray",
+  "green",
+  "white"
+];
 
-// Output directory for PNG files
-const outputDir = "./src/assets/icons";
 
-async function convertSvgToPng() {
+async function convertSvgToPng(color) {
+
+  const svgPath = `./src/assets/logo/ff-${color}.svg`;
+  const outputDir = "./src/assets/logo/png";
+
   try {
     // Create output directory if it doesn't exist
     if (!fs.existsSync(outputDir)) {
@@ -28,7 +34,7 @@ async function convertSvgToPng() {
 
     // Convert to each size
     for (const size of iconSizes) {
-      const outputPath = path.join(outputDir, `ff-${size}x${size}.png`);
+      const outputPath = path.join(outputDir, `ff-${color}-${size}x${size}.png`);
 
       await sharp(svgBuffer)
         .resize(size, size)
@@ -42,15 +48,20 @@ async function convertSvgToPng() {
       console.log(`✓ Generated: ff-${size}x${size}.png`);
     }
 
-    console.log("");
-    console.log("All PNG files generated successfully!");
-    console.log(`Files saved to: ${outputDir}`);
-
   } catch (error) {
     console.error("Error converting SVG to PNG:", error);
     process.exit(1);
   }
 }
 
-// Run the conversion
-convertSvgToPng();
+
+(async () => {
+  for (let i = 0; i < colors.length; i++) {
+    const color = colors[i];
+    // Run the conversion
+    await convertSvgToPng(color);
+  }
+  console.log("");
+  console.log("All PNG files generated successfully!");
+  console.log(`Files saved.`);
+})();
