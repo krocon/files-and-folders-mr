@@ -1,35 +1,38 @@
-<form [formGroup]="themeForm">
+
 
   <div class="fnf-header-bg-color fnf-header-fg">
     <h2 mat-dialog-title>Theme Editor</h2>
 
     <!-- Header Section: Theme Selector and Filter -->
-    <div class="theme-header-section">
-      <div class="theme-selector-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Default Theme</mat-label>
-          <mat-select formControlName="selectedThemeName">
-            @for (themeName of themeDefaultNames; track themeName) {
-              <mat-option [value]="themeName">{{ themeName }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
+    <form [formGroup]="themeForm">
+      <div class="theme-header-section">
+        <div class="theme-selector-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Default Theme</mat-label>
+            <mat-select formControlName="selectedThemeName">
+              @for (themeName of themeDefaultNames; track themeName) {
+                <mat-option [value]="themeName">{{ themeName }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <div class="table-filter-group">
-        <mat-form-field appearance="outline">
-          <mat-label>Table Filter</mat-label>
-          <input
-              matInput
-              formControlName="tableFilter"
-              placeholder="Filter theme values...">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
+        <div class="table-filter-group">
+          <mat-form-field appearance="outline">
+            <mat-label>Table Filter</mat-label>
+            <input
+                matInput
+                formControlName="tableFilter"
+                placeholder="Filter theme values...">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 
   <div class="dlg-content-div">
+
     @if (isLoading) {
       <div class="loading-container">
         <span>Loading theme data...</span>
@@ -40,28 +43,34 @@
       <!-- Content Section: Theme Values Table -->
       <div class="theme-table-section">
         @if (filteredTableData.length > 0) {
-          <div class="custom-table">
-            <div class="table-header">
-              <div class="header-cell checkbox-cell">Selected</div>
-              <div class="header-cell key-cell">Key</div>
-              <div class="header-cell value-cell">Value</div>
-            </div>
-            <div class="table-body">
+
+
+          <table class="custom-table">
+            <thead class="table-header">
+            <tr>
+              <th class="header-cell checkbox-cell">Selected</th>
+              <th class="header-cell key-cell">Key</th>
+              <th class="header-cell value-cell">Value</th>
+            </tr>
+            </thead>
+
+            <tbody class="table-body">
               @for (row of filteredTableData; track row.key; let i = $index) {
-                <div
+                <tr
                     class="table-row"
                     [class.selected]="row.selected">
-                  <div class="body-cell checkbox-cell">
+                  <td class="body-cell checkbox-cell">
                     <mat-checkbox
                         [(ngModel)]="row.selected"
                         (change)="onRowSelectionChange(i, $event.checked)"></mat-checkbox>
-                  </div>
-                  <div class="body-cell key-cell">
+                  </td>
+                  <td class="body-cell key-cell">
                     <span class="key-text">{{ row.key }}</span>
-                  </div>
-                  <div class="body-cell value-cell">
+                  </td>
+
+                  <td class="body-cell value-cell">
                     <div class="value-editor">
-                      @if (isColorValue(row.value)) {
+
                         <div class="color-input-container">
                           <div
                               class="color-preview"
@@ -70,25 +79,31 @@
                               (colorPickerChange)="onColorChange(i, $event)"
                               [cpPosition]="'bottom'"
                               [cpPresetColors]="presetColors"></div>
+                          @if (isColorValue(row.value)) {
+                            <input
+                                class="color-text-input"
+                                type="color"
+                                [(ngModel)]="row.value"
+                                (ngModelChange)="onValueChange(i, $event)"
+                                placeholder="CSS color or variable">
+                          }
                           <input
                               class="color-text-input"
                               [(ngModel)]="row.value"
                               (ngModelChange)="onValueChange(i, $event)"
                               placeholder="CSS color or variable">
                         </div>
-                      } @else {
-                        <input
-                            class="text-input"
-                            [(ngModel)]="row.value"
-                            (ngModelChange)="onValueChange(i, $event)"
-                            placeholder="CSS value or variable">
-                      }
+
                     </div>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               }
-            </div>
-          </div>
+            </tbody>
+          </table>
+
+          <pre>
+            {{ filteredTableData|json }}
+          </pre>
         } @else if (selectedTheme) {
           <div class="no-data-message">
             <span>No theme data available</span>
@@ -128,4 +143,3 @@
     </button>
   </div>
 
-</form>

@@ -41,6 +41,7 @@ interface ThemeTableRow {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemesComponent implements OnInit, OnDestroy {
+
   private destroy$ = new Subject<void>();
 
   themeForm: FormGroup;
@@ -138,8 +139,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
   private prepareTableData(): void {
-    console.info('this.selectedTheme', this.selectedTheme); // TODO del
-
     if (!this.selectedTheme) {
       return;
     }
@@ -149,7 +148,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
       key,
       value
     }));
-    console.info('this.themeTableData', this.themeTableData); // TODO del
     this.applyTableFilter(this.themeForm.get('tableFilter')?.value || '');
   }
 
@@ -163,7 +161,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
         row.value.toLowerCase().includes(filter)
       );
     }
-    console.info('this.filteredTableData', this.filteredTableData); // TODO del
     this.cdr.detectChanges();
   }
 
@@ -214,6 +211,9 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
   isColorValue(value: string): boolean {
+    if (value.startsWith('var(')) {
+      return false;
+    }
     // Check if the value looks like a color (hex, rgb, rgba, hsl, hsla, or named colors)
     const colorRegex = /^(#[0-9a-f]{3,8}|rgb\(|rgba\(|hsl\(|hsla\(|var\(--.*-color\)|transparent|inherit|initial|unset)$/i;
     const namedColors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
