@@ -24,6 +24,11 @@ export const routes: Routes = [
       import("./feature/setup/setup.component").then(m => m.SetupComponent)
   },
   {
+    path: "themes",
+    loadComponent: () =>
+      import("./feature/themes/themes.component").then(m => m.ThemesComponent)
+  },
+  {
     path: "**",
     redirectTo: "files"
   }

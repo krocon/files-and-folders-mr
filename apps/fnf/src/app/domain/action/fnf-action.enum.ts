@@ -46,6 +46,7 @@ export const actionIds = [
   "OPEN_RENAME_DLG",
   "OPEN_SELECT_DLG",
   "OPEN_SETUP_DLG",
+  "OPEN_THEMES_DLG",
   "OPEN_SHELL_DLG",
   "OPEN_SHORTCUT_DLG",
   "OPEN_UNPACK_DLG",

@@ -79,6 +79,7 @@
   "cmd ctrl f11": "OPEN_DOWNLOAD_DLG",
   "cmd ctrl alt f12": "OPEN_ABOUT_DLG",
   "cmd ctrl f12": "OPEN_ATTRIBUTE_DLG",
+  "cmd ctrl f13": "OPEN_THEMES_DLG",
   "ctrl f11": "OPEN_TASK_DLG",
   "ctrl f12": "OPEN_MENU",
   "cmd ctrl alt f1": "CHANGE_LAF_BITBUCKET",

@@ -1,0 +1,131 @@
+<form [formGroup]="themeForm">
+
+  <div class="fnf-header-bg-color fnf-header-fg">
+    <h2 mat-dialog-title>Theme Editor</h2>
+
+    <!-- Header Section: Theme Selector and Filter -->
+    <div class="theme-header-section">
+      <div class="theme-selector-group">
+        <mat-form-field appearance="outline">
+          <mat-label>Default Theme</mat-label>
+          <mat-select formControlName="selectedThemeName">
+            @for (themeName of themeDefaultNames; track themeName) {
+              <mat-option [value]="themeName">{{ themeName }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="table-filter-group">
+        <mat-form-field appearance="outline">
+          <mat-label>Table Filter</mat-label>
+          <input
+              matInput
+              formControlName="tableFilter"
+              placeholder="Filter theme values...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="dlg-content-div">
+    @if (isLoading) {
+      <div class="loading-container">
+        <span>Loading theme data...</span>
+      </div>
+    } @else {
+
+
+      <!-- Content Section: Theme Values Table -->
+      <div class="theme-table-section">
+        @if (filteredTableData.length > 0) {
+          <div class="custom-table">
+            <div class="table-header">
+              <div class="header-cell checkbox-cell">Selected</div>
+              <div class="header-cell key-cell">Key</div>
+              <div class="header-cell value-cell">Value</div>
+            </div>
+            <div class="table-body">
+              @for (row of filteredTableData; track row.key; let i = $index) {
+                <div
+                    class="table-row"
+                    [class.selected]="row.selected">
+                  <div class="body-cell checkbox-cell">
+                    <mat-checkbox
+                        [(ngModel)]="row.selected"
+                        (change)="onRowSelectionChange(i, $event.checked)"></mat-checkbox>
+                  </div>
+                  <div class="body-cell key-cell">
+                    <span class="key-text">{{ row.key }}</span>
+                  </div>
+                  <div class="body-cell value-cell">
+                    <div class="value-editor">
+                      @if (isColorValue(row.value)) {
+                        <div class="color-input-container">
+                          <div
+                              class="color-preview"
+                              [style.background-color]="getColorPreview(row.value)"
+                              [colorPicker]="row.value"
+                              (colorPickerChange)="onColorChange(i, $event)"
+                              [cpPosition]="'bottom'"
+                              [cpPresetColors]="presetColors"></div>
+                          <input
+                              class="color-text-input"
+                              [(ngModel)]="row.value"
+                              (ngModelChange)="onValueChange(i, $event)"
+                              placeholder="CSS color or variable">
+                        </div>
+                      } @else {
+                        <input
+                            class="text-input"
+                            [(ngModel)]="row.value"
+                            (ngModelChange)="onValueChange(i, $event)"
+                            placeholder="CSS value or variable">
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        } @else if (selectedTheme) {
+          <div class="no-data-message">
+            <span>No theme data available</span>
+          </div>
+        } @else {
+          <div class="no-selection-message">
+            <span>Please select a theme to edit</span>
+          </div>
+        }
+      </div>
+
+    }
+  </div>
+
+  <div class="dlg-actions-div fnf-header-bg-color fnf-header-fg">
+    <div class="spacer"></div>
+
+    <button
+        (click)="onCancel()"
+        [disabled]="isSaving"
+        mat-raised-button
+        type="button">
+      Cancel
+    </button>
+
+    <button
+        (click)="onApply()"
+        [disabled]="isSaving || isLoading || !selectedTheme"
+        color="primary"
+        mat-raised-button
+        type="button">
+      @if (isSaving) {
+        Applying...
+      } @else {
+        Apply
+      }
+    </button>
+  </div>
+
+</form>
