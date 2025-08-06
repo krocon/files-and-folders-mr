@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {FormBuilder, FormGroup, ReactiveFormsModule, FormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {Subject, takeUntil} from 'rxjs';
 import {ColorDataIf} from '@fnf-data';
@@ -42,8 +42,6 @@ interface ThemeTableRow {
 })
 export class ThemesComponent implements OnInit, OnDestroy {
 
-  private destroy$ = new Subject<void>();
-
   themeForm: FormGroup;
   themeDefaultNames: string[] = [];
   selectedTheme: ColorDataIf | null = null;
@@ -56,6 +54,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#800080',
     '#008000', '#800000', '#000080', '#808080', '#c0c0c0'
   ];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private readonly router: Router,
@@ -74,6 +73,76 @@ export class ThemesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  onRowSelectionChange(index: number, selected: boolean): void {
+    if (index >= 0 && index < this.filteredTableData.length) {
+      this.filteredTableData[index].selected = selected;
+
+      // Update the original data as well
+      const originalIndex = this.themeTableData.findIndex(row =>
+        row.key === this.filteredTableData[index].key
+      );
+      if (originalIndex >= 0) {
+        this.themeTableData[originalIndex].selected = selected;
+      }
+
+      this.cdr.detectChanges();
+    }
+  }
+
+  onColorChange(index: number, color: string): void {
+    if (index >= 0 && index < this.filteredTableData.length) {
+      this.filteredTableData[index].value = color;
+      this.updateOriginalData(index, color);
+    }
+  }
+
+  onValueChange(index: number, value: string): void {
+    if (index >= 0 && index < this.filteredTableData.length) {
+      this.filteredTableData[index].value = value;
+      this.updateOriginalData(index, value);
+    }
+  }
+
+  isColorValue(value: string): boolean {
+    if (value.startsWith('var(')) {
+      return false;
+    }
+    // Check if the value looks like a color (hex, rgb, rgba, hsl, hsla, or named colors)
+    const colorRegex = /^(#[0-9a-f]{3,8}|rgb\(|rgba\(|hsl\(|hsla\(|var\(--.*-color\)|transparent|inherit|initial|unset)$/i;
+    const namedColors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
+
+    return colorRegex.test(value.trim()) || namedColors.includes(value.trim().toLowerCase());
+  }
+
+  getColorPreview(value: string): string {
+    // If it's a CSS variable, return a default color for preview
+    if (value.startsWith('var(')) {
+      return '#cccccc';
+    }
+
+    // If it's a valid CSS color, return it
+    if (this.isColorValue(value)) {
+      return value;
+    }
+
+    // Default fallback
+    return '#ffffff';
+  }
+
+  onApply(): void {
+    if (!this.selectedTheme) {
+      return;
+    }
+
+    // TODO: Implement apply functionality
+    // This will be implemented later as mentioned in the issue description
+    console.log('Apply theme changes:', this.selectedTheme);
+  }
+
+  onCancel(): void {
+    this.navigateToFiles();
   }
 
   private createForm(): FormGroup {
@@ -125,6 +194,10 @@ export class ThemesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (theme) => {
+          Object.entries(theme.colors).forEach(([key, value]) => {
+            theme.colors[key] = this.expandHex(value);
+          });
+
           this.selectedTheme = theme;
           this.prepareTableData();
           this.isLoading = false;
@@ -136,6 +209,14 @@ export class ThemesComponent implements OnInit, OnDestroy {
           this.cdr.detectChanges();
         }
       });
+  }
+
+  private expandHex(hex: string): string {
+    if (/^#([a-f\d])([a-f\d])([a-f\d])$/i.test(hex)) {
+      return hex.replace(/^#([a-f\d])([a-f\d])([a-f\d])$/i,
+        (_, r, g, b) => `#${r}${r}${g}${g}${b}${b}`);
+    }
+    return hex;
   }
 
   private prepareTableData(): void {
@@ -164,36 +245,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges();
   }
 
-  onRowSelectionChange(index: number, selected: boolean): void {
-    if (index >= 0 && index < this.filteredTableData.length) {
-      this.filteredTableData[index].selected = selected;
-
-      // Update the original data as well
-      const originalIndex = this.themeTableData.findIndex(row =>
-        row.key === this.filteredTableData[index].key
-      );
-      if (originalIndex >= 0) {
-        this.themeTableData[originalIndex].selected = selected;
-      }
-
-      this.cdr.detectChanges();
-    }
-  }
-
-  onColorChange(index: number, color: string): void {
-    if (index >= 0 && index < this.filteredTableData.length) {
-      this.filteredTableData[index].value = color;
-      this.updateOriginalData(index, color);
-    }
-  }
-
-  onValueChange(index: number, value: string): void {
-    if (index >= 0 && index < this.filteredTableData.length) {
-      this.filteredTableData[index].value = value;
-      this.updateOriginalData(index, value);
-    }
-  }
-
   private updateOriginalData(filteredIndex: number, value: string): void {
     const key = this.filteredTableData[filteredIndex].key;
     const originalIndex = this.themeTableData.findIndex(row => row.key === key);
@@ -208,46 +259,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
 
     this.cdr.detectChanges();
-  }
-
-  isColorValue(value: string): boolean {
-    if (value.startsWith('var(')) {
-      return false;
-    }
-    // Check if the value looks like a color (hex, rgb, rgba, hsl, hsla, or named colors)
-    const colorRegex = /^(#[0-9a-f]{3,8}|rgb\(|rgba\(|hsl\(|hsla\(|var\(--.*-color\)|transparent|inherit|initial|unset)$/i;
-    const namedColors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
-
-    return colorRegex.test(value.trim()) || namedColors.includes(value.trim().toLowerCase());
-  }
-
-  getColorPreview(value: string): string {
-    // If it's a CSS variable, return a default color for preview
-    if (value.startsWith('var(')) {
-      return '#cccccc';
-    }
-
-    // If it's a valid CSS color, return it
-    if (this.isColorValue(value)) {
-      return value;
-    }
-
-    // Default fallback
-    return '#ffffff';
-  }
-
-  onApply(): void {
-    if (!this.selectedTheme) {
-      return;
-    }
-
-    // TODO: Implement apply functionality
-    // This will be implemented later as mentioned in the issue description
-    console.log('Apply theme changes:', this.selectedTheme);
-  }
-
-  onCancel(): void {
-    this.navigateToFiles();
   }
 
   private navigateToFiles(): void {

@@ -101,13 +101,12 @@
             </tbody>
           </table>
 
-          <pre>
-            {{ filteredTableData|json }}
-          </pre>
+
         } @else if (selectedTheme) {
           <div class="no-data-message">
             <span>No theme data available</span>
           </div>
+
         } @else {
           <div class="no-selection-message">
             <span>Please select a theme to edit</span>
