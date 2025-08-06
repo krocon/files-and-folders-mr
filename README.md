@@ -27,61 +27,16 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
 ---
 
 
-<style>
-img {
-  max-width: 640px;
-}
 
-.theme-showcase {
-  position: relative;
-  width: 100%;
-  height: auto;
-  max-width: 640px;
-  min-height: 360px;
-  margin: 0 auto;
-  overflow: hidden;
-}
 
-.theme-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  opacity: 0;
-  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-  animation: smoothThemeRotate 48s infinite;
-  transform: scale(1);
-}
-
-.theme-image:nth-child(1) { animation-delay: 0s; }
-.theme-image:nth-child(2) { animation-delay: 6s; }
-.theme-image:nth-child(3) { animation-delay: 12s; }
-.theme-image:nth-child(4) { animation-delay: 18s; }
-.theme-image:nth-child(5) { animation-delay: 24s; }
-.theme-image:nth-child(6) { animation-delay: 30s; }
-.theme-image:nth-child(7) { animation-delay: 36s; }
-.theme-image:nth-child(8) { animation-delay: 42s; }
-
-@keyframes smoothThemeRotate {
-  0% { opacity: 0; transform: scale(1.02); }
-  4.17% { opacity: 1; transform: scale(1); }
-  8.33% { opacity: 1; transform: scale(1); }
-  12.5% { opacity: 0; transform: scale(0.98); }
-  100% { opacity: 0; transform: scale(0.98); }
-}
-</style>
-
-<div class="theme-showcase">
-  <img src="apps/screenshot/screenshots/cypress/main.png" alt="Cypress Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/blackboard/main.png" alt="Blackboard Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/bitbucket/main.png" alt="Bitbucket Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/paper/main.png" alt="Paper Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/light/main.png" alt="Light Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/norton/main.png" alt="Norton Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/combat/main.png" alt="Combat Theme" class="theme-image">
-  <img src="apps/screenshot/screenshots/coffee/main.png" alt="Coffee Theme" class="theme-image">
-</div>
+<img src="apps/screenshot/screenshots/cypress/main.png" alt="Cypress Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/blackboard/main.png" alt="Blackboard Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/bitbucket/main.png" alt="Bitbucket Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/paper/main.png" alt="Paper Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/light/main.png" alt="Light Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/norton/main.png" alt="Norton Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/combat/main.png" alt="Combat Theme" style="width: 25%; height: 25%;">
+<img src="apps/screenshot/screenshots/coffee/main.png" alt="Coffee Theme" style="width: 25%; height: 25%;">
 
 ---
 
