@@ -38,7 +38,7 @@ interface ThemeTableRow {
     ColorPickerDirective
   ],
   templateUrl: './themes.component.html',
-  styleUrls: ['./themes.component.scss'],
+  styleUrls: ['./themes.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemesComponent implements OnInit, OnDestroy {
@@ -111,10 +111,18 @@ export class ThemesComponent implements OnInit, OnDestroy {
     return this.colorService.isColorValue(v);
   }
 
-  getColorPreview(value: string): string {
+  private getColorValue(key: string): string {
+    return this.themeTableData.filter(row => row.key === key)[0].value;
+  }
+
+  getColorPreview(value: string, loop: number = 0): string {
     // If it's a CSS variable, return a default color for preview
     if (value.startsWith('var(')) {
-      return '#cccccc';
+      if (loop > 10) {
+        return '#ffffff';
+      }
+      const key = value.replace('var(', '').replace(')', '');
+      return this.getColorPreview(this.getColorValue(key), loop + 1);
     }
 
     // If it's a valid CSS color, return it
@@ -258,5 +266,12 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   private navigateToFiles(): void {
     this.router.navigate(['/files']);
+  }
+
+  endsWith(key: string | undefined, color: string) {
+    if (!key) {
+      return false;
+    }
+    return key.endsWith(color);
   }
 }
