@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {Subject, takeUntil} from 'rxjs';
 import {ColorDataIf} from '@fnf-data';
 import {ConfigThemesService} from '../../service/config/config-themes.service';
+import {ColorService} from './color.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
@@ -61,6 +62,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder,
     private readonly configThemesService: ConfigThemesService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly colorService: ColorService,
   ) {
     this.themeForm = this.createForm();
   }
@@ -105,15 +107,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
   }
 
-  isColorValue(value: string): boolean {
-    if (value.startsWith('var(')) {
-      return false;
-    }
-    // Check if the value looks like a color (hex, rgb, rgba, hsl, hsla, or named colors)
-    const colorRegex = /^(#[0-9a-f]{3,8}|rgb\(|rgba\(|hsl\(|hsla\(|var\(--.*-color\)|transparent|inherit|initial|unset)$/i;
-    const namedColors = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'pink', 'brown', 'black', 'white', 'gray', 'grey'];
-
-    return colorRegex.test(value.trim()) || namedColors.includes(value.trim().toLowerCase());
+  isColorValue(v: string): boolean {
+    return this.colorService.isColorValue(v);
   }
 
   getColorPreview(value: string): string {
@@ -123,7 +118,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
 
     // If it's a valid CSS color, return it
-    if (this.isColorValue(value)) {
+    if (this.colorService.isColorValue(value)) {
       return value;
     }
 
