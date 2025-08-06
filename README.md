@@ -28,12 +28,16 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
 
 
 <style>
+img {
+  max-width: 640px;
+}
+
 .theme-showcase {
   position: relative;
   width: 100%;
   height: auto;
-  max-width: 1280px;
-  min-height: 720px;
+  max-width: 640px;
+  min-height: 360px;
   margin: 0 auto;
   overflow: hidden;
 }
@@ -46,18 +50,18 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
   height: auto;
   opacity: 0;
   transition: opacity 1s ease-in-out, transform 1s ease-in-out;
-  animation: smoothThemeRotate 24s infinite;
+  animation: smoothThemeRotate 48s infinite;
   transform: scale(1);
 }
 
 .theme-image:nth-child(1) { animation-delay: 0s; }
-.theme-image:nth-child(2) { animation-delay: 3s; }
-.theme-image:nth-child(3) { animation-delay: 6s; }
-.theme-image:nth-child(4) { animation-delay: 9s; }
-.theme-image:nth-child(5) { animation-delay: 12s; }
-.theme-image:nth-child(6) { animation-delay: 15s; }
-.theme-image:nth-child(7) { animation-delay: 18s; }
-.theme-image:nth-child(8) { animation-delay: 21s; }
+.theme-image:nth-child(2) { animation-delay: 6s; }
+.theme-image:nth-child(3) { animation-delay: 12s; }
+.theme-image:nth-child(4) { animation-delay: 18s; }
+.theme-image:nth-child(5) { animation-delay: 24s; }
+.theme-image:nth-child(6) { animation-delay: 30s; }
+.theme-image:nth-child(7) { animation-delay: 36s; }
+.theme-image:nth-child(8) { animation-delay: 42s; }
 
 @keyframes smoothThemeRotate {
   0% { opacity: 0; transform: scale(1.02); }
