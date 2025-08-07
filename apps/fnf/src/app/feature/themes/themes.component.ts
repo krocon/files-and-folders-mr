@@ -315,6 +315,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
             theme.colors[key] = this.expandHex(value);
           });
 
+          this.presetColors = this.colorService.getRealColorsFromTheme(theme);
+
           this.selectedTheme = theme;
           this.prepareTableData();
           this.isLoading = false;

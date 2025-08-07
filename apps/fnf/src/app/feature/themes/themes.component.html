@@ -170,7 +170,7 @@
                           <div
                               class="color-preview"
                               [style.background-color]="getColorPreview(row.value)"
-                              [colorPicker]="row.value"
+                              [(colorPicker)]="row.value"
                               (colorPickerChange)="onColorChange(i, $event)"
                               [cpPosition]="'bottom'"
                               [cpPresetColors]="presetColors"></div>
@@ -197,6 +197,13 @@
                 </td>
               </tr>
             }
+          <tr>
+            <td
+                colspan="3"
+                style="height: 600px">
+              <!-- Empty row for spacing, because of color picker -->
+            </td>
+          </tr>
           </tbody>
         </table>
 
