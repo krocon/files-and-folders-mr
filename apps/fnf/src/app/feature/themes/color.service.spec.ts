@@ -169,4 +169,161 @@ describe('ColorService', () => {
       });
     });
   });
+
+  describe('invertCssColor', () => {
+    describe('should invert hex colors correctly', () => {
+      it('should invert 3-digit hex colors', () => {
+        expect(service.invertCssColor('#fff')).toBe('#000');
+        expect(service.invertCssColor('#000')).toBe('#fff');
+        expect(service.invertCssColor('#f00')).toBe('#0ff');
+        expect(service.invertCssColor('#0f0')).toBe('#f0f');
+        expect(service.invertCssColor('#00f')).toBe('#ff0');
+      });
+
+      it('should invert 6-digit hex colors', () => {
+        expect(service.invertCssColor('#ffffff')).toBe('#000000');
+        expect(service.invertCssColor('#000000')).toBe('#ffffff');
+        expect(service.invertCssColor('#ff0000')).toBe('#00ffff');
+        expect(service.invertCssColor('#00ff00')).toBe('#ff00ff');
+        expect(service.invertCssColor('#0000ff')).toBe('#ffff00');
+        expect(service.invertCssColor('#123456')).toBe('#edcba9');
+      });
+
+      it('should invert 8-digit hex colors with alpha', () => {
+        expect(service.invertCssColor('#ffffff80')).toBe('#00000080');
+        expect(service.invertCssColor('#000000ff')).toBe('#ffffffff');
+        expect(service.invertCssColor('#ff000080')).toBe('#00ffff80');
+      });
+
+      it('should handle mixed case hex colors', () => {
+        expect(service.invertCssColor('#AbCdEf')).toBe('#543210');
+        expect(service.invertCssColor('#FFFFFF')).toBe('#000000');
+      });
+    });
+
+    describe('should invert RGB/RGBA colors correctly', () => {
+      it('should invert rgb() format', () => {
+        expect(service.invertCssColor('rgb(255, 255, 255)')).toBe('rgb(0, 0, 0)');
+        expect(service.invertCssColor('rgb(0, 0, 0)')).toBe('rgb(255, 255, 255)');
+        expect(service.invertCssColor('rgb(255, 0, 0)')).toBe('rgb(0, 255, 255)');
+        expect(service.invertCssColor('rgb(123, 45, 67)')).toBe('rgb(132, 210, 188)');
+      });
+
+      it('should invert rgba() format', () => {
+        expect(service.invertCssColor('rgba(255, 255, 255, 1)')).toBe('rgba(0, 0, 0, 1)');
+        expect(service.invertCssColor('rgba(0, 0, 0, 0.5)')).toBe('rgba(255, 255, 255, 0.5)');
+        expect(service.invertCssColor('rgba(123, 45, 67, 0.8)')).toBe('rgba(132, 210, 188, 0.8)');
+      });
+
+      it('should handle whitespace in rgb/rgba', () => {
+        expect(service.invertCssColor('rgb( 255 , 0 , 0 )')).toBe('rgb(0, 255, 255)');
+        expect(service.invertCssColor('rgba( 100 , 150 , 200 , 0.7 )')).toBe('rgba(155, 105, 55, 0.7)');
+      });
+    });
+
+    describe('should invert HSL/HSLA colors correctly', () => {
+      it('should invert hsl() format', () => {
+        expect(service.invertCssColor('hsl(0, 100%, 50%)')).toBe('hsl(180, 100%, 50%)');
+        expect(service.invertCssColor('hsl(180, 100%, 50%)')).toBe('hsl(0, 100%, 50%)');
+        expect(service.invertCssColor('hsl(120, 50%, 25%)')).toBe('hsl(300, 50%, 75%)');
+        expect(service.invertCssColor('hsl(240, 75%, 75%)')).toBe('hsl(60, 75%, 25%)');
+      });
+
+      it('should invert hsla() format', () => {
+        expect(service.invertCssColor('hsla(0, 100%, 50%, 1)')).toBe('hsla(180, 100%, 50%, 1)');
+        expect(service.invertCssColor('hsla(120, 50%, 25%, 0.5)')).toBe('hsla(300, 50%, 75%, 0.5)');
+        expect(service.invertCssColor('hsla(240, 75%, 75%, 0.8)')).toBe('hsla(60, 75%, 25%, 0.8)');
+      });
+
+      it('should handle hue wraparound correctly', () => {
+        expect(service.invertCssColor('hsl(350, 50%, 50%)')).toBe('hsl(170, 50%, 50%)');
+        expect(service.invertCssColor('hsl(10, 50%, 50%)')).toBe('hsl(190, 50%, 50%)');
+      });
+    });
+
+    describe('should invert named colors correctly', () => {
+      it('should invert basic named colors', () => {
+        expect(service.invertCssColor('black')).toBe('#ffffff');
+        expect(service.invertCssColor('white')).toBe('#000000');
+        expect(service.invertCssColor('red')).toBe('#00ffff');
+        expect(service.invertCssColor('green')).toBe('#ff00ff');
+        expect(service.invertCssColor('blue')).toBe('#ffff00');
+        expect(service.invertCssColor('yellow')).toBe('#0000ff');
+        expect(service.invertCssColor('cyan')).toBe('#ff0000');
+        expect(service.invertCssColor('magenta')).toBe('#00ff00');
+      });
+
+      it('should handle case insensitive named colors', () => {
+        expect(service.invertCssColor('BLACK')).toBe('#ffffff');
+        expect(service.invertCssColor('White')).toBe('#000000');
+        expect(service.invertCssColor('RED')).toBe('#00ffff');
+      });
+
+      it('should handle whitespace around named colors', () => {
+        expect(service.invertCssColor(' black ')).toBe('#ffffff');
+        expect(service.invertCssColor('  white  ')).toBe('#000000');
+      });
+
+      it('should return original color for unmapped named colors', () => {
+        expect(service.invertCssColor('aliceblue')).toBe('aliceblue');
+        expect(service.invertCssColor('antiquewhite')).toBe('antiquewhite');
+      });
+    });
+
+    describe('should handle CSS keywords correctly', () => {
+      it('should not invert CSS keywords', () => {
+        expect(service.invertCssColor('transparent')).toBe('transparent');
+        expect(service.invertCssColor('inherit')).toBe('inherit');
+        expect(service.invertCssColor('initial')).toBe('initial');
+        expect(service.invertCssColor('unset')).toBe('unset');
+      });
+
+      it('should handle case insensitive CSS keywords', () => {
+        expect(service.invertCssColor('TRANSPARENT')).toBe('TRANSPARENT');
+        expect(service.invertCssColor('Inherit')).toBe('Inherit');
+      });
+    });
+
+    describe('should handle invalid inputs correctly', () => {
+      it('should return original value for invalid colors', () => {
+        expect(service.invertCssColor('invalid-color')).toBe('invalid-color');
+        expect(service.invertCssColor('not-a-color')).toBe('not-a-color');
+        expect(service.invertCssColor('123')).toBe('123');
+        expect(service.invertCssColor('hello world')).toBe('hello world');
+      });
+
+      it('should return original value for empty or null inputs', () => {
+        expect(service.invertCssColor('')).toBe('');
+        expect(service.invertCssColor('   ')).toBe('   ');
+      });
+
+      it('should return original value for malformed color functions', () => {
+        expect(service.invertCssColor('rgb(')).toBe('rgb(');
+        expect(service.invertCssColor('rgba(255, 255)')).toBe('rgba(255, 255)');
+        expect(service.invertCssColor('hsl(invalid)')).toBe('hsl(invalid)');
+      });
+
+      it('should return original value for CSS variables', () => {
+        expect(service.invertCssColor('var(--primary-color)')).toBe('var(--primary-color)');
+        expect(service.invertCssColor('var(--background-color)')).toBe('var(--background-color)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should handle colors with extra whitespace', () => {
+        expect(service.invertCssColor('  #ffffff  ')).toBe('#000000');
+        expect(service.invertCssColor('\t#000000\t')).toBe('#ffffff');
+      });
+
+      it('should preserve original format for invalid hex lengths', () => {
+        expect(service.invertCssColor('#ff')).toBe('#ff');
+        expect(service.invertCssColor('#fffffffff')).toBe('#fffffffff');
+      });
+
+      it('should preserve original format for invalid input', () => {
+        expect(service.invertCssColor('var(--abc-def)')).toBe('var(--abc-def)');
+        expect(service.invertCssColor('ghjk')).toBe('ghjk');
+      });
+    });
+  });
 });
