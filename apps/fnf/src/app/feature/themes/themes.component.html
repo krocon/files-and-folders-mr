@@ -1,13 +1,15 @@
-<div>
+<div class="fnf-border-bottom">
   <h2 mat-dialog-title>Theme Editor</h2>
 
   <!-- Header Section: Theme Selector and Filter -->
   <form [formGroup]="themeForm">
     <div class="theme-header-section">
+      <div><!-- spacer --></div>
+
       <div class="theme-selector-group">
         <button
             [matMenuTriggerFor]="themeMenu"
-            color="primary"
+            color=""
             mat-raised-button>
           {{ themeForm.get('selectedThemeName')?.value || 'Load Theme' }}
           <mat-icon>arrow_drop_down</mat-icon>
@@ -22,6 +24,8 @@
           }
         </mat-menu>
       </div>
+
+      <div><!-- spacer --></div>
 
       <div class="table-filter-group">
         <mat-form-field appearance="outline">
