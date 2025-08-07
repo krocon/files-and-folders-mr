@@ -620,4 +620,110 @@ export class ColorService {
     // Default fallback
     return `rgba(${Math.round(rgba.r)}, ${Math.round(rgba.g)}, ${Math.round(rgba.b)}, ${rgba.a})`;
   }
+
+  /**
+   * Merges two colors using different blending modes
+   * @param color1 - The first color (base color)
+   * @param color2 - The second color (blend color)
+   * @param ratio - The blend ratio (0-1, default: 0.5)
+   * @param mode - The blending mode ('alpha', 'additive', 'average', default: 'alpha')
+   * @returns The merged color in the same format as color1
+   */
+  mergeColors(color1: string, color2: string, ratio: number = 0.5, mode: 'alpha' | 'additive' | 'average' = 'alpha'): string {
+    // Trim whitespace first
+    const trimmedColor1 = color1?.trim() || '';
+    const trimmedColor2 = color2?.trim() || '';
+
+    if (!this.isColorValue(trimmedColor1) || !this.isColorValue(trimmedColor2)) {
+      return color1;
+    }
+
+    // Clamp ratio between 0 and 1
+    ratio = Math.max(0, Math.min(1, ratio));
+
+    const rgba1 = this.colorToRgba(trimmedColor1);
+    const rgba2 = this.colorToRgba(trimmedColor2);
+
+    if (!rgba1 || !rgba2) {
+      return color1;
+    }
+
+    let mergedRgba: { r: number; g: number; b: number; a: number };
+
+    switch (mode) {
+      case 'additive':
+        mergedRgba = {
+          r: Math.min(255, rgba1.r + (rgba2.r * ratio)),
+          g: Math.min(255, rgba1.g + (rgba2.g * ratio)),
+          b: Math.min(255, rgba1.b + (rgba2.b * ratio)),
+          a: Math.max(rgba1.a, rgba2.a * ratio)
+        };
+        break;
+
+      case 'average':
+        mergedRgba = {
+          r: rgba1.r * (1 - ratio) + rgba2.r * ratio,
+          g: rgba1.g * (1 - ratio) + rgba2.g * ratio,
+          b: rgba1.b * (1 - ratio) + rgba2.b * ratio,
+          a: rgba1.a * (1 - ratio) + rgba2.a * ratio
+        };
+        break;
+
+      case 'alpha':
+      default:
+        // Alpha blending: color1 * (1 - ratio) + color2 * ratio
+        mergedRgba = {
+          r: rgba1.r * (1 - ratio) + rgba2.r * ratio,
+          g: rgba1.g * (1 - ratio) + rgba2.g * ratio,
+          b: rgba1.b * (1 - ratio) + rgba2.b * ratio,
+          a: rgba1.a * (1 - ratio) + rgba2.a * ratio
+        };
+        break;
+    }
+
+    // Round values
+    mergedRgba.r = Math.round(mergedRgba.r);
+    mergedRgba.g = Math.round(mergedRgba.g);
+    mergedRgba.b = Math.round(mergedRgba.b);
+    mergedRgba.a = Math.round(mergedRgba.a * 1000) / 1000; // Round to 3 decimal places
+
+    return this.rgbaToOriginalFormat(mergedRgba, trimmedColor1);
+  }
+
+  /**
+   * Blends two colors using alpha blending
+   * @param color1 - The base color
+   * @param color2 - The overlay color
+   * @param alpha - The alpha value for color2 (0-1)
+   * @returns The blended color in the same format as color1
+   */
+  blendColorsAlpha(color1: string, color2: string, alpha: number): string {
+    // Trim whitespace first
+    const trimmedColor1 = color1?.trim() || '';
+    const trimmedColor2 = color2?.trim() || '';
+
+    if (!this.isColorValue(trimmedColor1) || !this.isColorValue(trimmedColor2)) {
+      return color1;
+    }
+
+    // Clamp alpha between 0 and 1
+    alpha = Math.max(0, Math.min(1, alpha));
+
+    const rgba1 = this.colorToRgba(trimmedColor1);
+    const rgba2 = this.colorToRgba(trimmedColor2);
+
+    if (!rgba1 || !rgba2) {
+      return color1;
+    }
+
+    // Alpha blending formula: result = background * (1 - alpha) + foreground * alpha
+    const blendedRgba = {
+      r: Math.round(rgba1.r * (1 - alpha) + rgba2.r * alpha),
+      g: Math.round(rgba1.g * (1 - alpha) + rgba2.g * alpha),
+      b: Math.round(rgba1.b * (1 - alpha) + rgba2.b * alpha),
+      a: Math.round((rgba1.a * (1 - alpha) + rgba2.a * alpha) * 1000) / 1000
+    };
+
+    return this.rgbaToOriginalFormat(blendedRgba, trimmedColor1);
+  }
 }

@@ -515,4 +515,152 @@ describe('ColorService', () => {
       });
     });
   });
+
+  describe('mergeColors', () => {
+    describe('should merge colors with alpha blending mode (default)', () => {
+      it('should merge hex colors with default ratio (0.5)', () => {
+        expect(service.mergeColors('#ff0000', '#0000ff')).toBe('#800080');
+        expect(service.mergeColors('#ffffff', '#000000')).toBe('#808080');
+        expect(service.mergeColors('#ff0000', '#00ff00')).toBe('#808000');
+      });
+
+      it('should merge hex colors with custom ratio', () => {
+        expect(service.mergeColors('#ff0000', '#0000ff', 0.25)).toBe('#bf0040');
+        expect(service.mergeColors('#ff0000', '#0000ff', 0.75)).toBe('#4000bf');
+        expect(service.mergeColors('#ffffff', '#000000', 0.1)).toBe('#e6e6e6');
+      });
+
+      it('should merge rgb colors', () => {
+        expect(service.mergeColors('rgb(255, 0, 0)', 'rgb(0, 0, 255)')).toBe('rgb(128, 0, 128)');
+        expect(service.mergeColors('rgb(255, 255, 255)', 'rgb(0, 0, 0)', 0.3)).toBe('rgb(179, 179, 179)');
+      });
+
+      it('should merge rgba colors', () => {
+        expect(service.mergeColors('rgba(255, 0, 0, 1)', 'rgba(0, 0, 255, 0.5)')).toBe('rgba(128, 0, 128, 0.75)');
+        expect(service.mergeColors('rgba(255, 255, 255, 0.8)', 'rgba(0, 0, 0, 0.6)', 0.25)).toBe('rgba(191, 191, 191, 0.75)');
+      });
+
+      it('should merge hsl colors', () => {
+        expect(service.mergeColors('hsl(0, 100%, 50%)', 'hsl(240, 100%, 50%)')).toBe('hsl(300, 100%, 25%)');
+        expect(service.mergeColors('hsl(120, 50%, 50%)', 'hsl(240, 75%, 25%)', 0.3)).toBe('hsl(139, 47%, 37%)');
+      });
+
+      it('should merge named colors', () => {
+        expect(service.mergeColors('red', 'blue')).toBe('rgb(128, 0, 128)');
+        expect(service.mergeColors('white', 'black', 0.2)).toBe('rgb(204, 204, 204)');
+      });
+
+      it('should merge mixed color formats', () => {
+        expect(service.mergeColors('#ff0000', 'rgb(0, 0, 255)')).toBe('#800080');
+        expect(service.mergeColors('red', 'hsl(240, 100%, 50%)')).toBe('rgb(128, 0, 128)');
+        expect(service.mergeColors('rgba(255, 0, 0, 0.8)', '#0000ff', 0.25)).toBe('rgba(191, 0, 64, 0.85)');
+      });
+    });
+
+    describe('should merge colors with additive blending mode', () => {
+      it('should add colors together', () => {
+        expect(service.mergeColors('#800000', '#008000', 0.5, 'additive')).toBe('#804000');
+        expect(service.mergeColors('rgb(100, 100, 100)', 'rgb(50, 50, 50)', 1, 'additive')).toBe('rgb(150, 150, 150)');
+      });
+
+      it('should cap at maximum values', () => {
+        expect(service.mergeColors('#ffffff', '#ffffff', 0.5, 'additive')).toBe('#ffffff');
+        expect(service.mergeColors('rgb(200, 200, 200)', 'rgb(100, 100, 100)', 1, 'additive')).toBe('rgb(255, 255, 255)');
+      });
+    });
+
+    describe('should merge colors with average blending mode', () => {
+      it('should average colors correctly', () => {
+        expect(service.mergeColors('#ff0000', '#0000ff', 0.5, 'average')).toBe('#800080');
+        expect(service.mergeColors('rgb(100, 100, 100)', 'rgb(200, 200, 200)', 0.3, 'average')).toBe('rgb(130, 130, 130)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should return first color for invalid inputs', () => {
+        expect(service.mergeColors('invalid-color', '#ff0000')).toBe('invalid-color');
+        expect(service.mergeColors('#ff0000', 'invalid-color')).toBe('#ff0000');
+        expect(service.mergeColors('', '#ff0000')).toBe('');
+      });
+
+      it('should clamp ratio values', () => {
+        expect(service.mergeColors('#ff0000', '#0000ff', -0.5)).toBe('#ff0000');
+        expect(service.mergeColors('#ff0000', '#0000ff', 1.5)).toBe('#0000ff');
+        expect(service.mergeColors('#ff0000', '#0000ff', 0)).toBe('#ff0000');
+        expect(service.mergeColors('#ff0000', '#0000ff', 1)).toBe('#0000ff');
+      });
+
+      it('should handle whitespace', () => {
+        expect(service.mergeColors('  #ff0000  ', '  #0000ff  ')).toBe('#800080');
+        expect(service.mergeColors(' rgb(255, 0, 0) ', ' rgb(0, 0, 255) ', 0.25)).toBe('rgb(191, 0, 64)');
+      });
+
+      it('should preserve original format', () => {
+        expect(service.mergeColors('#ff0000', 'rgb(0, 0, 255)')).toBe('#800080');
+        expect(service.mergeColors('rgb(255, 0, 0)', '#0000ff')).toBe('rgb(128, 0, 128)');
+        expect(service.mergeColors('hsl(0, 100%, 50%)', 'rgb(0, 0, 255)')).toBe('hsl(300, 100%, 25%)');
+      });
+    });
+  });
+
+  describe('blendColorsAlpha', () => {
+    describe('should blend colors using alpha blending', () => {
+      it('should blend hex colors', () => {
+        expect(service.blendColorsAlpha('#ff0000', '#0000ff', 0.5)).toBe('#800080');
+        expect(service.blendColorsAlpha('#ffffff', '#000000', 0.25)).toBe('#bfbfbf');
+        expect(service.blendColorsAlpha('#000000', '#ffffff', 0.75)).toBe('#bfbfbf');
+      });
+
+      it('should blend rgb colors', () => {
+        expect(service.blendColorsAlpha('rgb(255, 0, 0)', 'rgb(0, 0, 255)', 0.5)).toBe('rgb(128, 0, 128)');
+        expect(service.blendColorsAlpha('rgb(100, 100, 100)', 'rgb(200, 200, 200)', 0.3)).toBe('rgb(130, 130, 130)');
+      });
+
+      it('should blend rgba colors', () => {
+        expect(service.blendColorsAlpha('rgba(255, 0, 0, 1)', 'rgba(0, 0, 255, 0.5)', 0.5)).toBe('rgba(128, 0, 128, 0.75)');
+        expect(service.blendColorsAlpha('rgba(255, 255, 255, 0.8)', 'rgba(0, 0, 0, 0.6)', 0.25)).toBe('rgba(191, 191, 191, 0.75)');
+      });
+
+      it('should blend hsl colors', () => {
+        expect(service.blendColorsAlpha('hsl(0, 100%, 50%)', 'hsl(240, 100%, 50%)', 0.5)).toBe('hsl(300, 100%, 25%)');
+        expect(service.blendColorsAlpha('hsl(120, 50%, 50%)', 'hsl(240, 75%, 25%)', 0.3)).toBe('hsl(139, 47%, 37%)');
+      });
+
+      it('should blend named colors', () => {
+        expect(service.blendColorsAlpha('red', 'blue', 0.5)).toBe('rgb(128, 0, 128)');
+        expect(service.blendColorsAlpha('white', 'black', 0.2)).toBe('rgb(204, 204, 204)');
+      });
+
+      it('should blend mixed color formats', () => {
+        expect(service.blendColorsAlpha('#ff0000', 'rgb(0, 0, 255)', 0.5)).toBe('#800080');
+        expect(service.blendColorsAlpha('red', 'hsl(240, 100%, 50%)', 0.25)).toBe('rgb(191, 0, 64)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should return first color for invalid inputs', () => {
+        expect(service.blendColorsAlpha('invalid-color', '#ff0000', 0.5)).toBe('invalid-color');
+        expect(service.blendColorsAlpha('#ff0000', 'invalid-color', 0.5)).toBe('#ff0000');
+        expect(service.blendColorsAlpha('', '#ff0000', 0.5)).toBe('');
+      });
+
+      it('should clamp alpha values', () => {
+        expect(service.blendColorsAlpha('#ff0000', '#0000ff', -0.5)).toBe('#ff0000');
+        expect(service.blendColorsAlpha('#ff0000', '#0000ff', 1.5)).toBe('#0000ff');
+        expect(service.blendColorsAlpha('#ff0000', '#0000ff', 0)).toBe('#ff0000');
+        expect(service.blendColorsAlpha('#ff0000', '#0000ff', 1)).toBe('#0000ff');
+      });
+
+      it('should handle whitespace', () => {
+        expect(service.blendColorsAlpha('  #ff0000  ', '  #0000ff  ', 0.5)).toBe('#800080');
+        expect(service.blendColorsAlpha(' rgb(255, 0, 0) ', ' rgb(0, 0, 255) ', 0.25)).toBe('rgb(191, 0, 64)');
+      });
+
+      it('should preserve original format', () => {
+        expect(service.blendColorsAlpha('#ff0000', 'rgb(0, 0, 255)', 0.5)).toBe('#800080');
+        expect(service.blendColorsAlpha('rgb(255, 0, 0)', '#0000ff', 0.5)).toBe('rgb(128, 0, 128)');
+        expect(service.blendColorsAlpha('hsl(0, 100%, 50%)', 'rgb(0, 0, 255)', 0.5)).toBe('hsl(300, 100%, 25%)');
+      });
+    });
+  });
 });
