@@ -26,6 +26,93 @@
         </mat-form-field>
       </div>
     </div>
+
+    <!-- Filter Checkboxes Section -->
+    <div class="filter-checkboxes-section">
+      <!-- Panels Row -->
+      <div
+          class="filter-row"
+          formGroupName="panels">
+        <span class="filter-label">Panels:</span>
+        <mat-checkbox
+            formControlName="all"
+            [indeterminate]="isIndeterminate('panels')"
+            (change)="onAllCheckboxChange('panels', $event.checked)">all
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="activepanel"
+            (change)="onIndividualCheckboxChange('panels')">activepanel
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="inactivepanel"
+            (change)="onIndividualCheckboxChange('panels')">inactivepanel
+        </mat-checkbox>
+      </div>
+
+      <!-- Areas Row -->
+      <div
+          class="filter-row"
+          formGroupName="areas">
+        <span class="filter-label">Areas:</span>
+        <mat-checkbox
+            formControlName="all"
+            [indeterminate]="isIndeterminate('areas')"
+            (change)="onAllCheckboxChange('areas', $event.checked)">all
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="header"
+            (change)="onIndividualCheckboxChange('areas')">header
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="table"
+            (change)="onIndividualCheckboxChange('areas')">table
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="footer"
+            (change)="onIndividualCheckboxChange('areas')">footer
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="tooltip"
+            (change)="onIndividualCheckboxChange('areas')">tooltip
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="errorPanel"
+            (change)="onIndividualCheckboxChange('areas')">error-panel
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="material"
+            (change)="onIndividualCheckboxChange('areas')">material
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="scrollbar"
+            (change)="onIndividualCheckboxChange('areas')">scrollbar
+        </mat-checkbox>
+      </div>
+
+      <!-- Property Row -->
+      <div
+          class="filter-row"
+          formGroupName="property">
+        <span class="filter-label">Property:</span>
+        <mat-checkbox
+            formControlName="all"
+            [indeterminate]="isIndeterminate('property')"
+            (change)="onAllCheckboxChange('property', $event.checked)">all
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="fg"
+            (change)="onIndividualCheckboxChange('property')">fg
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="bg"
+            (change)="onIndividualCheckboxChange('property')">bg
+        </mat-checkbox>
+        <mat-checkbox
+            formControlName="border"
+            (change)="onIndividualCheckboxChange('property')">border
+        </mat-checkbox>
+      </div>
+    </div>
   </form>
 </div>
 

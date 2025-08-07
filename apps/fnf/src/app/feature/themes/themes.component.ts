@@ -22,6 +22,30 @@ interface ThemeTableRow {
   value: string;
 }
 
+interface FilterInterface {
+  panels: {
+    all: boolean;
+    activepanel: boolean;
+    inactivepanel: boolean;
+  };
+  areas: {
+    all: boolean;
+    header: boolean;
+    table: boolean;
+    footer: boolean;
+    tooltip: boolean;
+    errorPanel: boolean;
+    material: boolean;
+    scrollbar: boolean;
+  };
+  property: {
+    all: boolean;
+    fg: boolean;
+    bg: boolean;
+    border: boolean;
+  };
+}
+
 @Component({
   selector: 'app-themes',
   standalone: true,
@@ -72,6 +96,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadThemeNames();
     this.setupFormSubscriptions();
+    this.loadTheme(this.lookAndFeelService.getTheme());
   }
 
   ngOnDestroy(): void {
@@ -93,6 +118,57 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
       this.cdr.detectChanges();
     }
+  }
+
+  onAllCheckboxChange(groupName: 'panels' | 'areas' | 'property', checked: boolean): void {
+    const group = this.themeForm.get(groupName) as FormGroup;
+    if (!group) return;
+
+    // Get all controls in the group except 'all'
+    const controls = Object.keys(group.controls).filter(key => key !== 'all');
+
+    // Set all checkboxes in the group to the same state as 'all'
+    controls.forEach(controlName => {
+      group.get(controlName)?.setValue(checked, {emitEvent: false});
+    });
+
+    this.applyFilters();
+  }
+
+  onIndividualCheckboxChange(groupName: 'panels' | 'areas' | 'property'): void {
+    const group = this.themeForm.get(groupName) as FormGroup;
+    if (!group) return;
+
+    // Get all controls in the group except 'all'
+    const controls = Object.keys(group.controls).filter(key => key !== 'all');
+    const checkedCount = controls.filter(controlName =>
+      group.get(controlName)?.value === true
+    ).length;
+
+    // Update 'all' checkbox state based on individual checkboxes
+    const allControl = group.get('all');
+    if (checkedCount === 0) {
+      allControl?.setValue(false, {emitEvent: false});
+    } else if (checkedCount === controls.length) {
+      allControl?.setValue(true, {emitEvent: false});
+    } else {
+      // For semi-selected state, we'll use indeterminate property in template
+      allControl?.setValue(false, {emitEvent: false});
+    }
+
+    this.applyFilters();
+  }
+
+  isIndeterminate(groupName: 'panels' | 'areas' | 'property'): boolean {
+    const group = this.themeForm.get(groupName) as FormGroup;
+    if (!group) return false;
+
+    const controls = Object.keys(group.controls).filter(key => key !== 'all');
+    const checkedCount = controls.filter(controlName =>
+      group.get(controlName)?.value === true
+    ).length;
+
+    return checkedCount > 0 && checkedCount < controls.length;
   }
 
   onColorChange(index: number, color: string): void {
@@ -147,7 +223,28 @@ export class ThemesComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.formBuilder.group({
       selectedThemeName: [''],
-      tableFilter: ['']
+      tableFilter: [''],
+      panels: this.formBuilder.group({
+        all: [true],
+        activepanel: [true],
+        inactivepanel: [true]
+      }),
+      areas: this.formBuilder.group({
+        all: [true],
+        header: [true],
+        table: [true],
+        footer: [true],
+        tooltip: [true],
+        errorPanel: [true],
+        material: [true],
+        scrollbar: [true]
+      }),
+      property: this.formBuilder.group({
+        all: [true],
+        fg: [true],
+        bg: [true],
+        border: [true]
+      })
     });
   }
 
@@ -169,6 +266,15 @@ export class ThemesComponent implements OnInit, OnDestroy {
       .subscribe(filterValue => {
         this.applyTableFilter(filterValue || '');
       });
+
+    // Subscribe to checkbox filter changes
+    ['panels', 'areas', 'property'].forEach(groupName => {
+      this.themeForm.get(groupName)?.valueChanges
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(() => {
+          this.applyFilters();
+        });
+    });
   }
 
   private loadThemeNames(): void {
@@ -239,16 +345,109 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
   private applyTableFilter(filterValue: string): void {
-    if (!filterValue.trim()) {
-      this.filteredTableData = [...this.themeTableData];
-    } else {
-      const filter = filterValue.toLowerCase();
-      this.filteredTableData = this.themeTableData.filter(row =>
+    this.applyFilters();
+  }
+
+  private applyFilters(): void {
+    if (!this.themeTableData.length) {
+      this.filteredTableData = [];
+      this.cdr.detectChanges();
+      return;
+    }
+
+    let filtered = [...this.themeTableData];
+
+    // Apply text filter
+    const textFilter = this.themeForm.get('tableFilter')?.value?.trim();
+    if (textFilter) {
+      const filter = textFilter.toLowerCase();
+      filtered = filtered.filter(row =>
         row.key.toLowerCase().includes(filter) ||
         row.value.toLowerCase().includes(filter)
       );
     }
+
+    // Apply checkbox filters
+    filtered = filtered.filter(row => this.passesCheckboxFilters(row.key));
+
+    this.filteredTableData = filtered;
     this.cdr.detectChanges();
+  }
+
+  private passesCheckboxFilters(key: string): boolean {
+    const panelsGroup = this.themeForm.get('panels');
+    const areasGroup = this.themeForm.get('areas');
+    const propertyGroup = this.themeForm.get('property');
+
+    if (!panelsGroup || !areasGroup || !propertyGroup) return true;
+
+    // Check panels filter
+    const panelsMatch = this.checkPanelsFilter(key, panelsGroup);
+    if (!panelsMatch) return false;
+
+    // Check areas filter
+    const areasMatch = this.checkAreasFilter(key, areasGroup);
+    if (!areasMatch) return false;
+
+    // Check property filter
+    const propertyMatch = this.checkPropertyFilter(key, propertyGroup);
+    if (!propertyMatch) return false;
+
+    return true;
+  }
+
+  private checkPanelsFilter(key: string, panelsGroup: any): boolean {
+    const activepanelChecked = panelsGroup.get('activepanel')?.value;
+    const inactivepanelChecked = panelsGroup.get('inactivepanel')?.value;
+
+    if (activepanelChecked && inactivepanelChecked) return true;
+    if (!activepanelChecked && !inactivepanelChecked) return false;
+
+
+    if (activepanelChecked) {
+      return key.includes('activepanel');
+    }
+    // 'inactivepanel' is checked
+    return !key.includes('activepanel');
+  }
+
+  private checkAreasFilter(key: string, areasGroup: any): boolean {
+    const areas = ['header', 'table', 'footer', 'tooltip', 'material', 'scrollbar'];
+    const errorPanelChecked = areasGroup.get('errorPanel')?.value;
+
+    // Special case for error-panel (mapped to errorPanel in form)
+    if (key.includes('error-panel')) {
+      return errorPanelChecked;
+    }
+
+    // Check other areas
+    for (const area of areas) {
+      if (key.includes(area)) {
+        return areasGroup.get(area)?.value;
+      }
+    }
+
+    // If key doesn't contain area-specific terms, it passes if any area filter is checked
+    return areas.some(area => areasGroup.get(area)?.value) || errorPanelChecked;
+  }
+
+  private checkPropertyFilter(key: string, propertyGroup: any): boolean {
+    const fgChecked = propertyGroup.get('fg')?.value;
+    const bgChecked = propertyGroup.get('bg')?.value;
+    const borderChecked = propertyGroup.get('border')?.value;
+
+    if (key.includes('-fg-') || key.endsWith('-fg-color')) {
+      return fgChecked;
+    }
+    if (key.includes('-bg-') || key.endsWith('-bg-color')) {
+      return bgChecked;
+    }
+    if (key.includes('-border-') || key.endsWith('-border-color')) {
+      return borderChecked;
+    }
+
+    // If key doesn't contain property-specific terms, it passes if any property filter is checked
+    return fgChecked || bgChecked || borderChecked;
   }
 
   private updateOriginalData(filteredIndex: number, value: string): void {
