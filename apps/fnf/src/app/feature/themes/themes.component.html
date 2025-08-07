@@ -205,6 +205,15 @@
 <div class="dlg-actions-div fnf-header-bg-color fnf-header-fg">
 
   <div class="multi-edit-div">
+
+    <mat-checkbox
+        [checked]="isAllSelected()"
+        [indeterminate]="isIndeterminate()"
+        (change)="onToggleAllSelections($event.checked)"
+        class="selection-toggle-checkbox">
+      &nbsp;&nbsp;
+    </mat-checkbox>
+
     @if (selectionCount) {
       Selected: {{ selectionCount }} &nbsp;&nbsp;
       <app-css-variable-editor

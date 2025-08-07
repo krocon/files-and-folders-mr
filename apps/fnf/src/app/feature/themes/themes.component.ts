@@ -167,7 +167,13 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  isIndeterminate(groupName: 'panels' | 'areas' | 'property'): boolean {
+  isIndeterminate(groupName?: 'panels' | 'areas' | 'property'): boolean {
+    // If no groupName provided, check for table row selections
+    if (!groupName) {
+      const selectedCount = this.filteredTableData.filter(row => row.selected).length;
+      return selectedCount > 0 && selectedCount < this.filteredTableData.length;
+    }
+
     const group = this.themeForm.get(groupName) as FormGroup;
     if (!group) return false;
 
@@ -177,6 +183,28 @@ export class ThemesComponent implements OnInit, OnDestroy {
     ).length;
 
     return checkedCount > 0 && checkedCount < controls.length;
+  }
+
+  isAllSelected(): boolean {
+    return this.filteredTableData.length > 0 &&
+      this.filteredTableData.every(row => row.selected);
+  }
+
+  onToggleAllSelections(selectAll: boolean): void {
+    this.filteredTableData.forEach((row, index) => {
+      row.selected = selectAll;
+
+      // Update the original data as well
+      const originalIndex = this.themeTableData.findIndex(originalRow =>
+        originalRow.key === row.key
+      );
+      if (originalIndex >= 0) {
+        this.themeTableData[originalIndex].selected = selectAll;
+      }
+    });
+
+    this.countSelections();
+    this.cdr.detectChanges();
   }
 
 
