@@ -1,0 +1,30 @@
+<div class="value-editor">
+  <div class="color-input-container">
+    <div>
+      @if (endsWith(key, '-color')) {
+        <div
+            class="color-preview"
+            [style.background-color]="getColorPreview(value)"
+            [(colorPicker)]="value"
+            (colorPickerChange)="onColorChange($event)"
+            [cpPosition]="'bottom'"
+            [cpPresetColors]="presetColors"></div>
+      }
+    </div>
+    <input
+        class="color-text-input"
+        [(ngModel)]="value"
+        (ngModelChange)="onValueChange($event)"
+        placeholder="CSS color or variable">
+    <div>
+      @if (endsWith(key, '-color') && isColorValue(value)) {
+        <input
+            class="color-text-input"
+            type="color"
+            [(ngModel)]="value"
+            (ngModelChange)="onValueChange($event)"
+            placeholder="CSS color or variable">
+      }
+    </div>
+  </div>
+</div>

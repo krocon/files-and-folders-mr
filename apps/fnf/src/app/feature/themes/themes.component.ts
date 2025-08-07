@@ -14,8 +14,8 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
-import {ColorPickerDirective} from 'ngx-color-picker';
 import {LookAndFeelService} from "./look-and-feel.service";
+import {CssVariableEditorComponent} from './css-variable-editor.component';
 
 interface ThemeTableRow {
   selected: boolean;
@@ -62,7 +62,7 @@ interface FilterInterface {
     MatFormFieldModule,
     MatIconModule,
     MatCheckboxModule,
-    ColorPickerDirective
+    CssVariableEditorComponent
   ],
   templateUrl: './themes.component.html',
   styleUrls: ['./themes.component.css'],
@@ -187,26 +187,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
   }
 
-  isColorValue(v: string): boolean {
-    return this.colorService.isColorValue(v);
-  }
-
-  private getColorValue(key: string): string {
-    return this.themeTableData.filter(row => row.key === key)[0].value;
-  }
-
-  getColorPreview(value: string, loop: number = 0): string {
-    // If it's a CSS variable, return a default color for preview
-    if (value.startsWith('var(')) {
-      if (loop > 10) {
-        return '#ffffff';
-      }
-      const key = value.replace('var(', '').replace(')', '');
-      return this.getColorPreview(this.getColorValue(key), loop + 1);
-    }
-
-    return value;
-  }
 
   onSave(): void {
     if (!this.selectedTheme) {
@@ -488,10 +468,4 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/files']);
   }
 
-  endsWith(key: string | undefined, color: string) {
-    if (!key) {
-      return false;
-    }
-    return key.endsWith(color);
-  }
 }

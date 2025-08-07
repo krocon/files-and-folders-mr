@@ -166,38 +166,13 @@
                 </td>
 
                 <td class="body-cell value-cell">
-                  <div class="value-editor">
-
-                    <div class="color-input-container">
-                      <div>
-                        @if (endsWith(row?.key, '-color')) {
-                          <div
-                              class="color-preview"
-                              [style.background-color]="getColorPreview(row.value)"
-                              [(colorPicker)]="row.value"
-                              (colorPickerChange)="onColorChange(i, $event)"
-                              [cpPosition]="'bottom'"
-                              [cpPresetColors]="presetColors"></div>
-                        }
-                      </div>
-                      <input
-                          class="color-text-input"
-                          [(ngModel)]="row.value"
-                          (ngModelChange)="onValueChange(i, $event)"
-                          placeholder="CSS color or variable">
-                      <div>
-                        @if (endsWith(row?.key, '-color') && isColorValue(row.value)) {
-                          <input
-                              class="color-text-input"
-                              type="color"
-                              [(ngModel)]="row.value"
-                              (ngModelChange)="onValueChange(i, $event)"
-                              placeholder="CSS color or variable">
-                        }
-                      </div>
-                    </div>
-
-                  </div>
+                  <app-css-variable-editor
+                      [key]="row.key"
+                      [value]="row.value"
+                      [presetColors]="presetColors"
+                      [themeTableData]="themeTableData"
+                      (valueChange)="onValueChange(i, $event)"
+                      (colorChange)="onColorChange(i, $event)"></app-css-variable-editor>
                 </td>
               </tr>
             }

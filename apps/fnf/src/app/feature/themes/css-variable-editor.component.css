@@ -1,0 +1,29 @@
+.color-input-container {
+    display: grid;
+    grid-template-columns: 45px 250px auto;
+    justify-content: start;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+
+    .color-text-input,
+    & > * {
+        height: 30px !important;
+    }
+
+    .color-preview {
+        width: 30px;
+        height: 30px;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .color-input {
+        display: inline-block;
+        vertical-align: middle;
+        min-width: 200px;
+    }
+}
