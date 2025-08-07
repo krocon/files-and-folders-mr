@@ -326,4 +326,193 @@ describe('ColorService', () => {
       });
     });
   });
+
+  describe('brighter', () => {
+    describe('should make colors brighter correctly', () => {
+      it('should brighten hex colors', () => {
+        expect(service.brighter('#000000', 50)).toBe('#808080');
+        expect(service.brighter('#808080', 25)).toBe('#a0a0a0');
+        expect(service.brighter('#ff0000', 20)).toBe('#ff3333');
+      });
+
+      it('should brighten rgb colors', () => {
+        expect(service.brighter('rgb(0, 0, 0)', 50)).toBe('rgb(128, 128, 128)');
+        expect(service.brighter('rgb(128, 128, 128)', 25)).toBe('rgb(160, 160, 160)');
+      });
+
+      it('should brighten rgba colors', () => {
+        expect(service.brighter('rgba(0, 0, 0, 0.5)', 50)).toBe('rgba(128, 128, 128, 0.5)');
+        expect(service.brighter('rgba(100, 100, 100, 0.8)', 20)).toBe('rgba(131, 131, 131, 0.8)');
+      });
+
+      it('should brighten hsl colors', () => {
+        expect(service.brighter('hsl(0, 100%, 25%)', 25)).toBe('hsl(0, 43%, 44%)');
+        expect(service.brighter('hsl(120, 50%, 30%)', 20)).toBe('hsl(120, 28%, 44%)');
+      });
+
+      it('should brighten hsla colors', () => {
+        expect(service.brighter('hsla(0, 100%, 25%, 0.7)', 25)).toBe('hsla(0, 43%, 44%, 0.7)');
+        expect(service.brighter('hsla(240, 75%, 40%, 1)', 10)).toBe('hsla(240, 59%, 46%, 1)');
+      });
+
+      it('should brighten named colors', () => {
+        expect(service.brighter('black', 50)).toBe('rgb(128, 128, 128)');
+        expect(service.brighter('red', 25)).toBe('rgb(255, 64, 64)');
+        expect(service.brighter('blue', 20)).toBe('rgb(51, 51, 255)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should return original color for val = 0', () => {
+        expect(service.brighter('#ff0000', 0)).toBe('#ff0000');
+        expect(service.brighter('rgb(100, 100, 100)', 0)).toBe('rgb(100, 100, 100)');
+      });
+
+      it('should cap at maximum brightness', () => {
+        expect(service.brighter('#ffffff', 50)).toBe('#ffffff');
+        expect(service.brighter('hsl(0, 100%, 90%)', 50)).toBe('hsl(0, 100%, 95%)');
+      });
+
+      it('should return original color for invalid inputs', () => {
+        expect(service.brighter('invalid-color', 50)).toBe('invalid-color');
+        expect(service.brighter('#ff0000', -10)).toBe('#ff0000');
+        expect(service.brighter('#ff0000', 150)).toBe('#ff0000');
+        expect(service.brighter('', 50)).toBe('');
+      });
+
+      it('should handle whitespace', () => {
+        expect(service.brighter('  #000000  ', 50)).toBe('#808080');
+        expect(service.brighter(' rgb(0, 0, 0) ', 50)).toBe('rgb(128, 128, 128)');
+      });
+    });
+  });
+
+  describe('darker', () => {
+    describe('should make colors darker correctly', () => {
+      it('should darken hex colors', () => {
+        expect(service.darker('#ffffff', 50)).toBe('#808080');
+        expect(service.darker('#808080', 25)).toBe('#606060');
+        expect(service.darker('#ff0000', 20)).toBe('#cc0000');
+      });
+
+      it('should darken rgb colors', () => {
+        expect(service.darker('rgb(255, 255, 255)', 50)).toBe('rgb(128, 128, 128)');
+        expect(service.darker('rgb(128, 128, 128)', 25)).toBe('rgb(96, 96, 96)');
+      });
+
+      it('should darken rgba colors', () => {
+        expect(service.darker('rgba(255, 255, 255, 0.5)', 50)).toBe('rgba(128, 128, 128, 0.5)');
+        expect(service.darker('rgba(200, 200, 200, 0.8)', 20)).toBe('rgba(160, 160, 160, 0.8)');
+      });
+
+      it('should darken hsl colors', () => {
+        expect(service.darker('hsl(0, 100%, 75%)', 25)).toBe('hsl(0, 43%, 56%)');
+        expect(service.darker('hsl(120, 50%, 70%)', 20)).toBe('hsl(120, 28%, 56%)');
+      });
+
+      it('should darken hsla colors', () => {
+        expect(service.darker('hsla(0, 100%, 75%, 0.7)', 25)).toBe('hsla(0, 43%, 56%, 0.7)');
+        expect(service.darker('hsla(240, 75%, 60%, 1)', 10)).toBe('hsla(240, 59%, 54%, 1)');
+      });
+
+      it('should darken named colors', () => {
+        expect(service.darker('white', 50)).toBe('rgb(128, 128, 128)');
+        expect(service.darker('red', 25)).toBe('rgb(191, 0, 0)');
+        expect(service.darker('blue', 20)).toBe('rgb(0, 0, 204)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should return original color for val = 0', () => {
+        expect(service.darker('#ff0000', 0)).toBe('#ff0000');
+        expect(service.darker('rgb(100, 100, 100)', 0)).toBe('rgb(100, 100, 100)');
+      });
+
+      it('should cap at minimum darkness', () => {
+        expect(service.darker('#000000', 50)).toBe('#000000');
+        expect(service.darker('hsl(0, 100%, 10%)', 50)).toBe('hsl(0, 100%, 5%)');
+      });
+
+      it('should return original color for invalid inputs', () => {
+        expect(service.darker('invalid-color', 50)).toBe('invalid-color');
+        expect(service.darker('#ff0000', -10)).toBe('#ff0000');
+        expect(service.darker('#ff0000', 150)).toBe('#ff0000');
+        expect(service.darker('', 50)).toBe('');
+      });
+
+      it('should handle whitespace', () => {
+        expect(service.darker('  #ffffff  ', 50)).toBe('#808080');
+        expect(service.darker(' rgb(255, 255, 255) ', 50)).toBe('rgb(128, 128, 128)');
+      });
+    });
+  });
+
+  describe('transparent', () => {
+    describe('should make colors more transparent correctly', () => {
+      it('should add transparency to hex colors', () => {
+        expect(service.transparent('#ff0000', 50)).toBe('#ff000080');
+        expect(service.transparent('#000000', 25)).toBe('#000000bf');
+        expect(service.transparent('#ffffff', 75)).toBe('#ffffff40');
+      });
+
+      it('should adjust transparency in rgb colors', () => {
+        expect(service.transparent('rgb(255, 0, 0)', 50)).toBe('rgba(255, 0, 0, 0.5)');
+        expect(service.transparent('rgb(0, 0, 0)', 25)).toBe('rgba(0, 0, 0, 0.75)');
+        expect(service.transparent('rgb(255, 255, 255)', 75)).toBe('rgba(255, 255, 255, 0.25)');
+      });
+
+      it('should adjust transparency in rgba colors', () => {
+        expect(service.transparent('rgba(255, 0, 0, 1)', 50)).toBe('rgba(255, 0, 0, 0.5)');
+        expect(service.transparent('rgba(0, 0, 0, 0.8)', 25)).toBe('rgba(0, 0, 0, 0.6)');
+        expect(service.transparent('rgba(255, 255, 255, 0.6)', 50)).toBe('rgba(255, 255, 255, 0.3)');
+      });
+
+      it('should adjust transparency in hsl colors', () => {
+        expect(service.transparent('hsl(0, 100%, 50%)', 50)).toBe('hsla(0, 100%, 50%, 0.5)');
+        expect(service.transparent('hsl(120, 50%, 25%)', 25)).toBe('hsla(120, 50%, 25%, 0.75)');
+      });
+
+      it('should adjust transparency in hsla colors', () => {
+        expect(service.transparent('hsla(0, 100%, 50%, 1)', 50)).toBe('hsla(0, 100%, 50%, 0.5)');
+        expect(service.transparent('hsla(240, 75%, 40%, 0.8)', 25)).toBe('hsla(240, 75%, 40%, 0.6)');
+      });
+
+      it('should adjust transparency in named colors', () => {
+        expect(service.transparent('red', 50)).toBe('rgba(255, 0, 0, 0.5)');
+        expect(service.transparent('blue', 25)).toBe('rgba(0, 0, 255, 0.75)');
+        expect(service.transparent('white', 75)).toBe('rgba(255, 255, 255, 0.25)');
+      });
+    });
+
+    describe('should handle edge cases', () => {
+      it('should return original color for val = 0', () => {
+        expect(service.transparent('#ff0000', 0)).toBe('#ff0000');
+        expect(service.transparent('rgb(100, 100, 100)', 0)).toBe('rgb(100, 100, 100)');
+        expect(service.transparent('rgba(100, 100, 100, 0.5)', 0)).toBe('rgba(100, 100, 100, 0.5)');
+      });
+
+      it('should cap at full transparency', () => {
+        expect(service.transparent('#ff0000', 100)).toBe('#ff000000');
+        expect(service.transparent('rgba(255, 0, 0, 0.5)', 100)).toBe('rgba(255, 0, 0, 0)');
+      });
+
+      it('should return original color for invalid inputs', () => {
+        expect(service.transparent('invalid-color', 50)).toBe('invalid-color');
+        expect(service.transparent('#ff0000', -10)).toBe('#ff0000');
+        expect(service.transparent('#ff0000', 150)).toBe('#ff0000');
+        expect(service.transparent('', 50)).toBe('');
+      });
+
+      it('should handle whitespace', () => {
+        expect(service.transparent('  #ff0000  ', 50)).toBe('#ff000080');
+        expect(service.transparent(' rgb(255, 0, 0) ', 50)).toBe('rgba(255, 0, 0, 0.5)');
+      });
+
+      it('should handle CSS keywords correctly', () => {
+        expect(service.transparent('transparent', 50)).toBe('transparent');
+        expect(service.transparent('inherit', 25)).toBe('inherit');
+        expect(service.transparent('initial', 75)).toBe('initial');
+      });
+    });
+  });
 });
