@@ -44,6 +44,14 @@
     }
 }
 
+.filter-checkboxes-section {
+    .filter-row {
+        display: grid;
+        grid-template-columns: 60px 70px 120px 80px 80px 80px 130px 80px 80px;
+        grid-gap: 24px;
+        align-items: center;
+    }
+}
 
 .no-data-message,
 .no-selection-message {
