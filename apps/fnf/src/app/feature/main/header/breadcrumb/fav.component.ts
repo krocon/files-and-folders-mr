@@ -36,10 +36,6 @@ import {FavDataService} from "../../../../domain/filepagedata/service/fav-data.s
   styles: `
       :host {
           display: flex;
-
-          .fav-checked {
-              fill: var(--fnf-header-link-selected-color);
-          }
       }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

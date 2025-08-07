@@ -1,0 +1,20 @@
+
+.fnf-active-panel {
+    .fav-checked {
+        fill: var(--fnf-header-link-selected-color);
+    }
+
+    .fav-unchecked {
+        fill: var(--fnf-header-fg-color);
+    }
+}
+
+.fnf-inactive-panel {
+    .fav-checked {
+        fill: var(--fnf-header-fg-color);
+    }
+
+    .fav-unchecked {
+        fill: var(--fnf-header-fg-color);
+    }
+}

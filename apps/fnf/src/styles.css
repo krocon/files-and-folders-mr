@@ -2,25 +2,23 @@
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 @import "css/fnf-css-custom-properties.css";
-@import "css/fnf-color.css";
 @import "css/fnf-color-classes.css";
 
-/*@import "css/table/table-color-vars.css";*/
-@import "css/table/main.css";
+@import "css/table/table-color-vars.css";
 @import "css/table/table-classes.css";
 @import "css/table/table-color-classes.css";
 @import "css/table/table-tree.css";
+@import "app/feature/main/filetable/file-table.component.global.css";
 
 @import "css/fnf-css-custom-properties.css";
 @import "css/fnf-color-classes.css";
-@import "css/fnf-color.css";
 @import "css/fnf-material.css";
-@import "css/tabpanel.component.global.css";
-@import "css/file-table.component.global.css";
-@import "css/buttonpanel.component.global.css";
 @import "css/fnf-scrollbar.css";
 
+@import "app/feature/main/header/tabpanel/tabpanel.component.global.css";
+@import "app/feature/main/footer/buttonpanel/buttonpanel.component.global.css";
 @import "app/feature/main/footer/shellpanel/shell-panel.global.css";
+@import "app/feature/main/header/breadcrumb/fav.component.global.css";
 
 
 html, body {

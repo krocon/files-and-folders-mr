@@ -173,8 +173,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   private loadThemeNames(): void {
     const obs = [
-      this.configThemesService.loadDefaultNames(),
       this.configThemesService.loadCustomNames(),
+      this.configThemesService.loadDefaultNames(),
     ];
 
     combineLatest(obs)

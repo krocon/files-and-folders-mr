@@ -9,6 +9,7 @@
     <div
         (click)="setActivePanel(0);"
         [class.fnf-active-panel]="activePanelIndex===0"
+        [class.fnf-inactive-panel]="activePanelIndex===1"
         class="panel-left fnf-header-fg-color">
       @if (initialized && tabsPanelData) {
         <app-breadcrumb
@@ -21,6 +22,7 @@
     <div
         (click)="setActivePanel(1);"
         [class.fnf-active-panel]="activePanelIndex===1"
+        [class.fnf-inactive-panel]="activePanelIndex===0"
         class="panel-right fnf-header-fg-color">
       @if (initialized && tabsPanelData) {
         <app-breadcrumb
@@ -35,6 +37,7 @@
     <div
         (click)="setActivePanel(0);"
         [class.fnf-active-panel]="activePanelIndex===0"
+        [class.fnf-inactive-panel]="activePanelIndex===1"
         class="panel-left">
       @if (initialized && tabsPanelData) {
         <app-tabpanel
@@ -53,6 +56,7 @@
     <div
         (click)="setActivePanel(1);"
         [class.fnf-active-panel]="activePanelIndex===1"
+        [class.fnf-inactive-panel]="activePanelIndex===0"
         class="panel-right">
       @if (initialized && tabsPanelData) {
         <app-tabpanel
@@ -74,6 +78,7 @@
         #splitPaneLeft
         (click)="setActivePanel(0);"
         [class.fnf-active-panel]="activePanelIndex===0"
+        [class.fnf-inactive-panel]="activePanelIndex===1"
         class="panel-left">
       @if (initialized && tabsPanelData) {
         <app-file-table
@@ -91,6 +96,7 @@
     <div
         (click)="setActivePanel(1);"
         [class.fnf-active-panel]="activePanelIndex===1"
+        [class.fnf-inactive-panel]="activePanelIndex===0"
         class="panel-right">
       @if (initialized && tabsPanelData) {
         <app-file-table
@@ -108,6 +114,7 @@
     <div
         (click)="setActivePanel(0);"
         [class.fnf-active-panel]="activePanelIndex===0"
+        [class.fnf-inactive-panel]="activePanelIndex===1"
         class="panel-left">
       @if (initialized) {
       <app-summary-label
@@ -120,6 +127,7 @@
     <div
         (click)="setActivePanel(1);"
         [class.fnf-active-panel]="activePanelIndex===1"
+        [class.fnf-inactive-panel]="activePanelIndex===0"
         class="panel-right">
       @if (initialized) {
       <app-summary-label
