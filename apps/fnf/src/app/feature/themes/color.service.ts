@@ -7,6 +7,62 @@ import {ColorDataIf} from "@fnf-data";
 export class ColorService {
 
 
+  /**
+   * Extracts all real color values from a theme's color data, filtering out CSS variables and invalid color values.
+   * This method iterates through all color properties in the theme and returns only the actual color values
+   * (hex, rgb, rgba, hsl, hsla, named colors) while excluding CSS custom properties like var(--color-name).
+   *
+   * @param cd - The color data interface containing the theme's color definitions
+   * @returns An array of unique color strings found in the theme, or an empty array if no valid colors are found
+   *
+   * @example
+   * // Basic usage with hex colors
+   * const themeData: ColorDataIf = {
+   *   colors: {
+   *     primary: '#3498db',
+   *     secondary: '#e74c3c',
+   *     background: '#ffffff'
+   *   }
+   * };
+   * const colors = colorService.getRealColorsFromTheme(themeData);
+   * // Returns: ['#3498db', '#e74c3c', '#ffffff']
+   *
+   * @example
+   * // Mixed color formats with CSS variables (variables are filtered out)
+   * const themeData: ColorDataIf = {
+   *   colors: {
+   *     primary: '#3498db',
+   *     secondary: 'rgb(231, 76, 60)',
+   *     accent: 'hsl(120, 100%, 50%)',
+   *     text: 'var(--text-color)',  // This will be filtered out
+   *     background: 'white'
+   *   }
+   * };
+   * const colors = colorService.getRealColorsFromTheme(themeData);
+   * // Returns: ['#3498db', 'rgb(231, 76, 60)', 'hsl(120, 100%, 50%)', 'white']
+   *
+   * @example
+   * // Empty or undefined colors object
+   * const emptyTheme: ColorDataIf = { colors: {} };
+   * const colors1 = colorService.getRealColorsFromTheme(emptyTheme);
+   * // Returns: []
+   *
+   * const undefinedTheme: ColorDataIf = {};
+   * const colors2 = colorService.getRealColorsFromTheme(undefinedTheme);
+   * // Returns: []
+   *
+   * @example
+   * // Duplicate colors are automatically removed
+   * const themeData: ColorDataIf = {
+   *   colors: {
+   *     primary: '#3498db',
+   *     secondary: '#3498db',  // Duplicate
+   *     tertiary: '#e74c3c'
+   *   }
+   * };
+   * const colors = colorService.getRealColorsFromTheme(themeData);
+   * // Returns: ['#3498db', '#e74c3c'] (duplicates removed)
+   */
   getRealColorsFromTheme(cd: ColorDataIf): string[] {
     const ret: Set<string> = new Set();
     if (cd.colors) {
@@ -23,9 +79,49 @@ export class ColorService {
   }
 
   /**
-   * Inverts a CSS color value
+   * Inverts a CSS color value by applying color inversion algorithms appropriate to each format.
+   * For RGB-based colors (hex, rgb, rgba), inverts by subtracting each channel from 255.
+   * For HSL colors, inverts hue by adding 180° and lightness by subtracting from 100%.
+   * For named colors, uses predefined color mappings.
+   * 
    * @param color - The color string to invert (hex, rgb, rgba, hsl, hsla, or named color)
    * @returns The inverted color in the same format, or the original color if inversion is not possible
+   *
+   * @example
+   * // Hex colors (3, 6, and 8 character formats)
+   * invertCssColor('#000')        // Returns '#fff'
+   * invertCssColor('#ffffff')     // Returns '#000000'
+   * invertCssColor('#ff0000ff')   // Returns '#00ffffff' (alpha preserved)
+   *
+   * @example
+   * // RGB and RGBA colors
+   * invertCssColor('rgb(255, 0, 0)')           // Returns 'rgb(0, 255, 255)'
+   * invertCssColor('rgba(255, 0, 0, 0.5)')     // Returns 'rgba(0, 255, 255, 0.5)'
+   *
+   * @example
+   * // HSL and HSLA colors
+   * invertCssColor('hsl(0, 100%, 50%)')        // Returns 'hsl(180, 100%, 50%)'
+   * invertCssColor('hsla(120, 50%, 25%, 0.5)') // Returns 'hsla(300, 50%, 75%, 0.5)'
+   *
+   * @example
+   * // Named colors
+   * invertCssColor('black')       // Returns '#ffffff'
+   * invertCssColor('white')       // Returns '#000000'
+   * invertCssColor('red')         // Returns '#00ffff'
+   * invertCssColor('blue')        // Returns '#ffff00'
+   *
+   * @example
+   * // CSS keywords (returned unchanged)
+   * invertCssColor('transparent') // Returns 'transparent'
+   * invertCssColor('inherit')     // Returns 'inherit'
+   * invertCssColor('initial')     // Returns 'initial'
+   * invertCssColor('unset')       // Returns 'unset'
+   *
+   * @example
+   * // Invalid or unsupported colors
+   * invertCssColor('')            // Returns ''
+   * invertCssColor('invalid')     // Returns 'invalid'
+   * invertCssColor('not-a-color') // Returns 'not-a-color'
    */
   invertCssColor(color: string): string {
     if (!color || !this.isColorValue(color)) {
@@ -190,6 +286,28 @@ export class ColorService {
    * @param color - The color string to brighten (hex, rgb, rgba, hsl, hsla, or named color)
    * @param val - The amount to brighten (0-100, where 0 = no change, 100 = maximum brightness)
    * @returns The brightened color in the same format, or the original color if brightening is not possible
+   * @example
+   * // Brighten hex colors
+   * colorService.brighter('#ff0000', 20); // Returns a brighter red
+   * colorService.brighter('#336699', 50); // Returns a much brighter blue
+   *
+   * // Brighten RGB colors
+   * colorService.brighter('rgb(255, 0, 0)', 30); // Returns brighter red in RGB format
+   * colorService.brighter('rgba(100, 150, 200, 0.8)', 25); // Returns brighter blue with preserved alpha
+   *
+   * // Brighten HSL colors
+   * colorService.brighter('hsl(240, 100%, 50%)', 40); // Returns brighter blue in HSL format
+   * colorService.brighter('hsla(120, 60%, 40%, 0.9)', 35); // Returns brighter green with preserved alpha
+   *
+   * // Brighten named colors
+   * colorService.brighter('red', 15); // Returns a brighter red
+   * colorService.brighter('darkblue', 60); // Returns a much brighter blue
+   *
+   * // Edge cases
+   * colorService.brighter('#ff0000', 0); // Returns '#ff0000' (no change)
+   * colorService.brighter('invalid-color', 50); // Returns 'invalid-color' (unchanged)
+   * colorService.brighter('#ff0000', -10); // Returns '#ff0000' (invalid val, unchanged)
+   * colorService.brighter('#ff0000', 150); // Returns '#ff0000' (val > 100, unchanged)
    */
   brighter(color: string, val: number): string {
     if (!color || !this.isColorValue(color) || val < 0 || val > 100) {
@@ -208,6 +326,22 @@ export class ColorService {
    * @param color - The color string to darken (hex, rgb, rgba, hsl, hsla, or named color)
    * @param val - The amount to darken (0-100, where 0 = no change, 100 = maximum darkness)
    * @returns The darkened color in the same format, or the original color if darkening is not possible
+   * @example
+   * // Darken a hex color by 20%
+   * colorService.darker('#ff0000', 20); // Returns a darker red, e.g., '#cc0000'
+   *
+   * // Darken an RGB color by 50%
+   * colorService.darker('rgb(255, 0, 0)', 50); // Returns 'rgb(128, 0, 0)'
+   *
+   * // Darken a named color by 30%
+   * colorService.darker('blue', 30); // Returns a darker blue
+   *
+   * // No change when val is 0
+   * colorService.darker('#00ff00', 0); // Returns '#00ff00' (unchanged)
+   *
+   * // Invalid inputs return the original color
+   * colorService.darker('invalid-color', 20); // Returns 'invalid-color'
+   * colorService.darker('#ff0000', -10); // Returns '#ff0000' (val must be 0-100)
    */
   darker(color: string, val: number): string {
     if (!color || !this.isColorValue(color) || val < 0 || val > 100) {
@@ -226,6 +360,29 @@ export class ColorService {
    * @param color - The color string to make transparent (hex, rgb, rgba, hsl, hsla, or named color)
    * @param val - The transparency amount (0-100, where 0 = no change, 100 = fully transparent)
    * @returns The color with adjusted transparency, or the original color if adjustment is not possible
+   * @example
+   * // Make a hex color 50% transparent
+   * transparent('#ff0000', 50) // Returns 'rgba(255, 0, 0, 0.5)'
+   *
+   * // Make an RGB color 25% transparent
+   * transparent('rgb(0, 255, 0)', 25) // Returns 'rgba(0, 255, 0, 0.75)'
+   *
+   * // Make an RGBA color more transparent
+   * transparent('rgba(0, 0, 255, 0.8)', 30) // Returns 'rgba(0, 0, 255, 0.56)'
+   *
+   * // Make an HSL color transparent
+   * transparent('hsl(120, 100%, 50%)', 40) // Returns 'hsla(120, 100%, 50%, 0.6)'
+   *
+   * // Make a named color transparent
+   * transparent('red', 75) // Returns 'rgba(255, 0, 0, 0.25)'
+   *
+   * // No change when val is 0
+   * transparent('#00ff00', 0) // Returns '#00ff00'
+   *
+   * // Invalid inputs return original color
+   * transparent('invalid-color', 50) // Returns 'invalid-color'
+   * transparent('#ff0000', -10) // Returns '#ff0000'
+   * transparent('#ff0000', 150) // Returns '#ff0000'
    */
   transparent(color: string, val: number): string {
     if (!color || !this.isColorValue(color) || val < 0 || val > 100) {
@@ -240,9 +397,58 @@ export class ColorService {
   }
 
   /**
-   * Checks if a given string value represents a valid color
+   * Checks if a given string value represents a valid color.
+   * Supports hex colors, RGB/RGBA, HSL/HSLA, CSS keywords, and named colors.
+   * Excludes all CSS variables (including those with color suffix).
+   * 
    * @param value - The string value to check
    * @returns true if the value is a valid color, false otherwise
+   *
+   * @example
+   * // Hex colors (3, 4, 6, or 8 characters)
+   * isColorValue('#fff')        // true
+   * isColorValue('#ffff')       // true
+   * isColorValue('#ffffff')     // true
+   * isColorValue('#ffffffff')   // true
+   * isColorValue('#123abc')     // true
+   *
+   * @example
+   * // RGB and RGBA colors
+   * isColorValue('rgb(255, 0, 0)')           // true
+   * isColorValue('rgba(255, 0, 0, 0.5)')     // true
+   * isColorValue('rgb(255,0,0)')             // true (spaces optional)
+   *
+   * @example
+   * // HSL and HSLA colors
+   * isColorValue('hsl(120, 100%, 50%)')      // true
+   * isColorValue('hsla(120, 100%, 50%, 0.8)') // true
+   *
+   * @example
+   * // CSS keywords
+   * isColorValue('transparent')  // true
+   * isColorValue('inherit')      // true
+   * isColorValue('initial')      // true
+   * isColorValue('unset')        // true
+   *
+   * @example
+   * // CSS variables (all return false)
+   * isColorValue('var(--primary-color)')     // false
+   * isColorValue('var(--background-color)')  // false
+   *
+   * @example
+   * // Named colors
+   * isColorValue('red')          // true
+   * isColorValue('blue')         // true
+   * isColorValue('aliceblue')    // true
+   * isColorValue('rebeccapurple') // true
+   *
+   * @example
+   * // Invalid values
+   * isColorValue('var(--spacing)')       // false (CSS variable)
+   * isColorValue('var(--primary-color)') // false (CSS variable, even with color suffix)
+   * isColorValue('not-a-color')          // false (unknown color name)
+   * isColorValue('#gg')                  // false (invalid hex characters)
+   * isColorValue('rgb(300, 0, 0)')       // false (RGB values out of range)
    */
   isColorValue(value: string): boolean {
     if (value.startsWith('var(')) {
@@ -628,6 +834,37 @@ export class ColorService {
    * @param ratio - The blend ratio (0-1, default: 0.5)
    * @param mode - The blending mode ('alpha', 'additive', 'average', default: 'alpha')
    * @returns The merged color in the same format as color1
+   *
+   * @example
+   * // Basic usage with default parameters (50% alpha blend)
+   * mergeColors('#ff0000', '#0000ff') // Returns '#800080' (purple)
+   *
+   * @example
+   * // Alpha blending with custom ratio
+   * mergeColors('#ff0000', '#0000ff', 0.3, 'alpha') // Returns '#b30033' (more red)
+   * mergeColors('#ff0000', '#0000ff', 0.7, 'alpha') // Returns '#4d00cc' (more blue)
+   *
+   * @example
+   * // Additive blending - adds colors together
+   * mergeColors('#ff0000', '#00ff00', 0.5, 'additive') // Returns '#ff8000' (orange-ish)
+   * mergeColors('#808080', '#404040', 0.5, 'additive') // Returns '#a0a0a0' (lighter gray)
+   *
+   * @example
+   * // Average blending - averages the color values
+   * mergeColors('#ff0000', '#00ff00', 0.5, 'average') // Returns '#808000' (olive)
+   * mergeColors('#ffffff', '#000000', 0.3, 'average') // Returns '#b3b3b3' (light gray)
+   *
+   * @example
+   * // Works with different color formats
+   * mergeColors('rgb(255, 0, 0)', 'rgb(0, 0, 255)', 0.5) // Returns 'rgb(128, 0, 128)'
+   * mergeColors('rgba(255, 0, 0, 0.8)', 'rgba(0, 0, 255, 0.6)', 0.5) // Returns 'rgba(128, 0, 128, 0.7)'
+   * mergeColors('hsl(0, 100%, 50%)', 'hsl(240, 100%, 50%)', 0.5) // Returns equivalent merged color
+   *
+   * @example
+   * // Edge cases
+   * mergeColors('#ff0000', '#0000ff', 0) // Returns '#ff0000' (100% first color)
+   * mergeColors('#ff0000', '#0000ff', 1) // Returns '#0000ff' (100% second color)
+   * mergeColors('red', 'blue', 0.5) // Returns 'rgb(128, 0, 128)' (named colors converted)
    */
   mergeColors(color1: string, color2: string, ratio: number = 0.5, mode: 'alpha' | 'additive' | 'average' = 'alpha'): string {
     // Trim whitespace first
@@ -691,11 +928,54 @@ export class ColorService {
   }
 
   /**
-   * Blends two colors using alpha blending
-   * @param color1 - The base color
-   * @param color2 - The overlay color
-   * @param alpha - The alpha value for color2 (0-1)
-   * @returns The blended color in the same format as color1
+   * Blends two colors using alpha blending technique.
+   *
+   * Alpha blending combines two colors by treating the second color as a semi-transparent
+   * overlay on top of the first color. The alpha parameter controls the opacity of the
+   * overlay color, where 0 means completely transparent (only base color visible) and 1
+   * means completely opaque (only overlay color visible).
+   *
+   * The blending formula used is: result = background * (1 - alpha) + foreground * alpha
+   *
+   * This method supports various color formats including hex (#rrggbb, #rgb), rgb/rgba,
+   * hsl/hsla, and named colors. The output format matches the input format of the base color.
+   *
+   * @param color1 - The base (background) color in any valid CSS color format
+   * @param color2 - The overlay (foreground) color in any valid CSS color format
+   * @param alpha - The alpha/opacity value for the overlay color (0-1, where 0 = transparent, 1 = opaque)
+   * @returns The blended color in the same format as the base color (color1)
+   *
+   * @example
+   * // Basic alpha blending with hex colors
+   * blendColorsAlpha('#ff0000', '#0000ff', 0.5) // Returns '#800080' (purple - 50% red, 50% blue)
+   * blendColorsAlpha('#ffffff', '#000000', 0.3) // Returns '#b3b3b3' (light gray - 70% white, 30% black)
+   *
+   * @example
+   * // Alpha blending with RGB colors
+   * blendColorsAlpha('rgb(255, 0, 0)', 'rgb(0, 255, 0)', 0.25) // Returns 'rgb(191, 64, 0)' (mostly red with some green)
+   * blendColorsAlpha('rgba(255, 0, 0, 0.8)', 'rgba(0, 0, 255, 0.6)', 0.5) // Blends with alpha channels
+   *
+   * @example
+   * // Alpha blending with HSL colors
+   * blendColorsAlpha('hsl(0, 100%, 50%)', 'hsl(120, 100%, 50%)', 0.4) // Red base with 40% green overlay
+   * blendColorsAlpha('hsla(240, 100%, 50%, 0.9)', 'hsla(60, 100%, 50%, 0.7)', 0.6) // Blue base with yellow overlay
+   *
+   * @example
+   * // Alpha blending with named colors
+   * blendColorsAlpha('red', 'blue', 0.3) // Returns 'rgb(179, 0, 76)' (mostly red with some blue)
+   * blendColorsAlpha('white', 'black', 0.1) // Returns 'rgb(230, 230, 230)' (very light gray)
+   *
+   * @example
+   * // Edge cases and transparency effects
+   * blendColorsAlpha('#ff0000', '#00ff00', 0) // Returns '#ff0000' (no overlay, pure base color)
+   * blendColorsAlpha('#ff0000', '#00ff00', 1) // Returns '#00ff00' (full overlay, pure overlay color)
+   * blendColorsAlpha('#ff0000', '#00ff00', 0.1) // Returns '#e61a00' (subtle green tint on red)
+   * blendColorsAlpha('#ff0000', '#00ff00', 0.9) // Returns '#1ae600' (strong green with red undertone)
+   *
+   * @example
+   * // Mixed color formats (output matches first color format)
+   * blendColorsAlpha('#ff0000', 'rgb(0, 255, 0)', 0.5) // Returns '#808000' (hex format preserved)
+   * blendColorsAlpha('rgb(255, 0, 0)', '#00ff00', 0.5) // Returns 'rgb(128, 128, 0)' (rgb format preserved)
    */
   blendColorsAlpha(color1: string, color2: string, alpha: number): string {
     // Trim whitespace first
