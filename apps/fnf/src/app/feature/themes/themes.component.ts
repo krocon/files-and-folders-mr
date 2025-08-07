@@ -9,6 +9,7 @@ import {ColorService} from './color.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
+import {MatMenuModule} from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -56,6 +57,7 @@ interface FilterInterface {
     MatDialogModule,
     MatButtonModule,
     MatSelectModule,
+    MatMenuModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
@@ -218,6 +220,10 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   onCancel(): void {
     this.navigateToFiles();
+  }
+
+  onThemeSelect(themeName: string): void {
+    this.themeForm.get('selectedThemeName')?.setValue(themeName);
   }
 
   private createForm(): FormGroup {
