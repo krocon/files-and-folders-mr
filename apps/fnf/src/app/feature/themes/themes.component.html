@@ -203,6 +203,21 @@
 </div>
 
 <div class="dlg-actions-div fnf-header-bg-color fnf-header-fg">
+
+  <div class="multi-edit-div">
+    @if (selectionCount) {
+      Selected: {{ selectionCount }} &nbsp;&nbsp;
+      <app-css-variable-editor
+          [cpPosition]="'top'"
+          [key]="'multi-color'"
+          [value]="multiValue"
+          [presetColors]="presetColors"
+          [themeTableData]="themeTableData"
+          (valueChange)="onValueChange(-1, $event)"
+          (colorChange)="onColorChange(-1, $event)"></app-css-variable-editor>
+    }
+  </div>
+
   <div class="spacer"></div>
 
   <button

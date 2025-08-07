@@ -80,6 +80,12 @@
     gap: 12px;
     border-top: 1px solid var(--fnf-header-border-color, #ddd);
 
+    .multi-edit-div {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
     .spacer {
         flex: 1;
     }

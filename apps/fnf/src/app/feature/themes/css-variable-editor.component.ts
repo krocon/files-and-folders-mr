@@ -18,6 +18,7 @@ import {ColorService} from './color.service';
 })
 export class CssVariableEditorComponent {
 
+  @Input() cpPosition: string = 'bottom';
   @Input() key: string = '';
   @Input() value: string = '';
   @Input() presetColors: string[] = [];

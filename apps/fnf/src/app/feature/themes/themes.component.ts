@@ -75,13 +75,18 @@ export class ThemesComponent implements OnInit, OnDestroy {
   selectedTheme: ColorDataIf | null = null;
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
+
+  multiValue = '#ffffff';
+
   isLoading = false;
   isSaving = false;
+
   presetColors: string[] = [
     '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff',
     '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#800080',
     '#008000', '#800000', '#000080', '#808080', '#c0c0c0'
   ];
+  public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -116,8 +121,9 @@ export class ThemesComponent implements OnInit, OnDestroy {
       );
       if (originalIndex >= 0) {
         this.themeTableData[originalIndex].selected = selected;
+        this.multiValue = this.themeTableData[originalIndex].value;
       }
-
+      this.countSelections();
       this.cdr.detectChanges();
     }
   }
@@ -173,20 +179,28 @@ export class ThemesComponent implements OnInit, OnDestroy {
     return checkedCount > 0 && checkedCount < controls.length;
   }
 
+
   onColorChange(index: number, color: string): void {
-    if (index >= 0 && index < this.filteredTableData.length) {
-      this.filteredTableData[index].value = color;
-      this.updateOriginalData(index, color);
-    }
+    this.onValueChange(index, color);
   }
+
 
   onValueChange(index: number, value: string): void {
     if (index >= 0 && index < this.filteredTableData.length) {
       this.filteredTableData[index].value = value;
       this.updateOriginalData(index, value);
+
+
+    } else if (index === -1) {
+      this.multiValue = value;
+
+      for (let i = 0; i < this.filteredTableData.length; i++) {
+        if (this.filteredTableData[i].selected) {
+          this.updateOriginalData(i, value);
+        }
+      }
     }
   }
-
 
   onSave(): void {
     if (!this.selectedTheme) {
@@ -204,6 +218,10 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   onThemeSelect(themeName: string): void {
     this.themeForm.get('selectedThemeName')?.setValue(themeName);
+  }
+
+  private countSelections() {
+    this.selectionCount = this.filteredTableData.filter(row => row.selected).length;
   }
 
   private createForm(): FormGroup {
