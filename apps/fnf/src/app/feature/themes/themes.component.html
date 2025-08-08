@@ -167,8 +167,7 @@
 
                 <td class="body-cell value-cell">
                   <app-css-variable-editor
-                      [key]="row.key"
-                      [value]="[row.value]"
+                      [value]="[row]"
                       [presetColors]="presetColors"
                       [themeTableData]="themeTableData"
                       (valueChange)="onValueChange(i, $event)"
@@ -207,9 +206,9 @@
   <div class="multi-edit-div">
 
     <mat-checkbox
+        (change)="onToggleAllSelections($event.checked)"
         [checked]="isAllSelected()"
         [indeterminate]="isIndeterminate()"
-        (change)="onToggleAllSelections($event.checked)"
         class="selection-toggle-checkbox">
       &nbsp;&nbsp;
     </mat-checkbox>
@@ -218,7 +217,6 @@
       Selected: {{ selectionCount }} &nbsp;&nbsp;
       <app-css-variable-editor
           [cpPosition]="'top'"
-          [key]="'multi-color'"
           [value]="multiValue"
           [presetColors]="presetColors"
           [themeTableData]="themeTableData"

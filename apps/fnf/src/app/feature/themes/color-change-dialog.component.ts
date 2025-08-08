@@ -1,29 +1,24 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-  MAT_DIALOG_DATA
-} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {MatSelect, MatSelectChange} from '@angular/material/select';
+import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatSlider, MatSliderThumb} from '@angular/material/slider';
 import {ColorService} from './color.service';
+import {ThemeTableRow} from './theme-table-row.model';
 
 export interface ColorChangeDialogData {
-  colors: string[];
-  onChange?: (colors: string[]) => void;
+  rows: ThemeTableRow[];
+  onChange?: (rows: ThemeTableRow[]) => void;
 }
 
 export interface ColorChangeDialogResult {
-  colors: string[];
+  rows: ThemeTableRow[];
 }
 
 @Component({
@@ -34,7 +29,6 @@ export interface ColorChangeDialogResult {
     FormsModule,
     MatDialogTitle,
     MatDialogContent,
-    MatDialogActions,
     MatButton,
     MatIconModule,
     MatFormField,
@@ -51,8 +45,8 @@ export interface ColorChangeDialogResult {
 })
 export class ColorChangeDialogComponent {
 
-  originalColors: string[];
-  workingColors: string[];
+  originalRows: ThemeTableRow[];
+  workingRows: ThemeTableRow[];
 
   // controls (defaults set to no-op so nothing changes until user interacts)
   invertEnabled: boolean = false;
@@ -69,14 +63,14 @@ export class ColorChangeDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ColorChangeDialogData,
     private readonly colorService: ColorService,
   ) {
-    this.originalColors = [...(data.colors || [])];
-    this.workingColors = [...this.originalColors];
+    this.originalRows = [...(data.rows || [])].map(r => ({...r}));
+    this.workingRows = this.originalRows.map(r => ({...r}));
   }
 
-  // Central recompute based on current controls applied to originalColors
+  // Central recompute based on current controls applied to originalRows
   recompute(): void {
-    const transformed = this.originalColors.map((orig) => {
-      let c = orig;
+    const transformed = this.originalRows.map((orig) => {
+      let c = orig.value;
 
       if (this.invertEnabled) {
         c = this.colorService.invertCssColor(c);
@@ -100,12 +94,12 @@ export class ColorChangeDialogComponent {
         c = this.colorService.blendColorsAlpha(c, this.blendColor, this.blendAlpha);
       }
 
-      return c;
+      return {...orig, value: c};
     });
 
-    this.workingColors = transformed;
+    this.workingRows = transformed;
     // Emit the change immediately if a callback is provided
-    this.data.onChange?.(this.workingColors);
+    this.data.onChange?.(this.workingRows);
   }
 
   // Actions for compatibility and quick toggles
@@ -151,9 +145,9 @@ export class ColorChangeDialogComponent {
     this.mergeMode = 'alpha';
     this.blendAlpha = 0;
     this.blendColor = '#000000';
-    this.workingColors = [...this.originalColors];
-    // Emit reset colors immediately
-    this.data.onChange?.(this.workingColors);
+    this.workingRows = this.originalRows.map(r => ({...r}));
+    // Emit reset rows immediately
+    this.data.onChange?.(this.workingRows);
   }
 
   onCancel(): void {
@@ -163,6 +157,6 @@ export class ColorChangeDialogComponent {
   onApply(): void {
     // Ensure latest settings are reflected
     this.recompute();
-    this.dialogRef.close({colors: this.workingColors});
+    this.dialogRef.close({rows: this.workingRows});
   }
 }

@@ -1,9 +1,9 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {of} from 'rxjs';
 import {ColorChangeDialogComponent, ColorChangeDialogData} from './color-change-dialog.component';
 import {ColorService} from './color.service';
+import {ThemeTableRow} from './theme-table-row.model';
 
 describe('ColorChangeDialogComponent', () => {
   let component: ColorChangeDialogComponent;
@@ -30,7 +30,10 @@ describe('ColorChangeDialogComponent', () => {
       imports: [ColorChangeDialogComponent, NoopAnimationsModule],
       providers: [
         {provide: MatDialogRef, useValue: mockDialogRef},
-        {provide: MAT_DIALOG_DATA, useValue: {colors: ['#ff0000']} as ColorChangeDialogData},
+        {
+          provide: MAT_DIALOG_DATA,
+          useValue: {rows: [{selected: false, key: 'k', value: '#ff0000'} as ThemeTableRow]} as ColorChangeDialogData
+        },
         {provide: ColorService, useValue: mockColorService},
       ]
     }).compileComponents();
@@ -42,19 +45,20 @@ describe('ColorChangeDialogComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-    expect(component.originalColors).toEqual(['#ff0000']);
-    expect(component.workingColors).toEqual(['#ff0000']);
+    expect(component.originalRows.length).toEqual(1);
+    expect(component.originalRows[0].value).toEqual('#ff0000');
+    expect(component.workingRows[0].value).toEqual('#ff0000');
   });
 
-  it('applyInvert should use ColorService and update workingColors, then onApply should close with result', () => {
+  it('applyInvert should use ColorService and update workingRows, then onApply should close with result', () => {
     mockColorService.invertCssColor.mockReturnValue('#00ffff');
 
     component.applyInvert();
     expect(mockColorService.invertCssColor).toHaveBeenCalledWith('#ff0000');
-    expect(component.workingColors).toEqual(['#00ffff']);
+    expect(component.workingRows.map(r => r.value)).toEqual(['#00ffff']);
 
     component.onApply();
-    expect(mockDialogRef.close).toHaveBeenCalledWith({colors: ['#00ffff']});
+    expect(mockDialogRef.close).toHaveBeenCalledWith({rows: [{selected: false, key: 'k', value: '#00ffff'}]});
   });
 
   it('applyMerge should call ColorService.mergeColors with defaults', () => {
@@ -66,6 +70,27 @@ describe('ColorChangeDialogComponent', () => {
     component.applyMerge();
 
     expect(mockColorService.mergeColors).toHaveBeenCalledWith('#ff0000', '#0000ff', 0.5, 'alpha');
-    expect(component.workingColors).toEqual(['#800080']);
+    expect(component.workingRows.map(r => r.value)).toEqual(['#800080']);
+  });
+
+  it('slider change (lightnessDelta) should update all values in workingRows', () => {
+    const rows: ThemeTableRow[] = [
+      {selected: false, key: 'k1', value: '#111111'},
+      {selected: false, key: 'k2', value: '#222222'},
+      {selected: false, key: 'k3', value: '#333333'},
+    ];
+
+    // prepare component state with multiple rows
+    component.originalRows = rows.map(r => ({...r}));
+    component.workingRows = rows.map(r => ({...r}));
+
+    // set slider to a non-zero value to trigger brighter()
+    component.lightnessDelta = 10;
+    (mockColorService.brighter as jest.Mock).mockImplementation((c: string, delta: number) => `${c}-b${delta}`);
+
+    component.recompute();
+
+    expect(component.workingRows.map(r => r.value)).toEqual(['#111111-b10', '#222222-b10', '#333333-b10']);
+    expect(mockColorService.brighter).toHaveBeenCalledTimes(3);
   });
 });

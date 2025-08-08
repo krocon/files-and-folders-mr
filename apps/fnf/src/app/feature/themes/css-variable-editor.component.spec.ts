@@ -4,6 +4,7 @@ import {of} from 'rxjs';
 import {CssVariableEditorComponent} from './css-variable-editor.component';
 import {MatDialog} from '@angular/material/dialog';
 import {ColorService} from './color.service';
+import {ThemeTableRow} from './theme-table-row.model';
 
 
 describe('CssVariableEditorComponent', () => {
@@ -32,8 +33,7 @@ describe('CssVariableEditorComponent', () => {
     fixture = TestBed.createComponent(CssVariableEditorComponent);
     component = fixture.componentInstance;
     // set inputs
-    component.key = 'primary-color';
-    component.value = ['#ff0000'];
+    component.value = [{selected: false, key: 'primary-color', value: '#ff0000'} as ThemeTableRow];
     fixture.detectChanges();
   });
 
@@ -41,36 +41,55 @@ describe('CssVariableEditorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('openColorChangeDialog should update value on dialog result and emit colorChange array', () => {
-    const emitted: string[][] = [];
+  it('openColorChangeDialog should update value on dialog result and emit colorChange rows', () => {
+    const emitted: ThemeTableRow[][] = [];
     component.colorChange.subscribe(v => emitted.push(v));
 
-    mockDialog.open.mockReturnValue({afterClosed: () => of({colors: ['#00ff00']})});
+    mockDialog.open.mockReturnValue({
+      afterClosed: () => of({
+        rows: [{
+          selected: false,
+          key: 'primary-color',
+          value: '#00ff00'
+        } as ThemeTableRow]
+      })
+    });
 
     component.openColorChangeDialog();
 
-    expect(component.value).toEqual(['#00ff00']);
-    expect(emitted).toEqual([['#00ff00']]);
+    expect(component.value.map(r => r.value)).toEqual(['#00ff00']);
+    expect(emitted.map(arr => arr.map(r => r.value))).toEqual([['#00ff00']]);
   });
 
-  it('openColorChangeDialog should pass all provided values to dialog and emit array with same length as input', () => {
-    const provided = ['#111111', '#222222', '#333333'];
+  it('openColorChangeDialog should pass all provided rows to dialog and emit rows with same length as input', () => {
+    const provided: ThemeTableRow[] = [
+      {selected: false, key: 'k1', value: '#111111'},
+      {selected: false, key: 'k2', value: '#222222'},
+      {selected: false, key: 'k3', value: '#333333'},
+    ];
     component.value = [...provided];
-    const emitted: string[][] = [];
+    const emitted: ThemeTableRow[][] = [];
     component.colorChange.subscribe(v => emitted.push(v));
 
-    mockDialog.open.mockReturnValue({afterClosed: () => of({colors: ['#aaaaaa', '#bbbbbb']})});
+    mockDialog.open.mockReturnValue({
+      afterClosed: () => of({
+        rows: [
+          {selected: false, key: 'k1', value: '#aaaaaa'},
+          {selected: false, key: 'k2', value: '#bbbbbb'}
+        ] as ThemeTableRow[]
+      })
+    });
 
     component.openColorChangeDialog();
 
-    // Ensure dialog was called with all colors
+    // Ensure dialog was called with all rows
     expect(mockDialog.open).toHaveBeenCalled();
     const callArgs = mockDialog.open.mock.calls[0][1];
-    expect(callArgs.data.colors).toEqual(provided);
+    expect(callArgs.data.rows.map((r: ThemeTableRow) => r.value)).toEqual(provided.map(r => r.value));
 
     // After close, ensure length equals input length (3), padding with first returned color
-    expect(component.value).toEqual(['#aaaaaa', '#bbbbbb', '#aaaaaa']);
-    expect(emitted).toEqual([['#aaaaaa', '#bbbbbb', '#aaaaaa']]);
+    expect(component.value.map(r => r.value)).toEqual(['#aaaaaa', '#bbbbbb', '#aaaaaa']);
+    expect(emitted.map(arr => arr.map(r => r.value))).toEqual([['#aaaaaa', '#bbbbbb', '#aaaaaa']]);
   });
 
   it('openColorChangeDialog should not change when dialog returns undefined', () => {

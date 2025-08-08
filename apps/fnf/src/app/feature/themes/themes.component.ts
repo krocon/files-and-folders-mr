@@ -17,11 +17,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {LookAndFeelService} from "./look-and-feel.service";
 import {CssVariableEditorComponent} from './css-variable-editor.component';
 
-interface ThemeTableRow {
-  selected: boolean;
-  key: string;
-  value: string;
-}
+// moved to theme-table-row.model.ts
+import {ThemeTableRow} from './theme-table-row.model';
 
 interface FilterInterface {
   panels: {
@@ -76,7 +73,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
 
-  multiValue: string[] = [];
+  multiValue: ThemeTableRow[] = [];
 
   isLoading = false;
   isSaving = false;
@@ -208,36 +205,45 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
 
-  onColorChange(index: number, colors: string[]): void {
-    this.onValueChange(index, colors);
+  onColorChange(index: number, rows: ThemeTableRow[]): void {
+    this.onValueChange(index, rows);
   }
 
 
-  onValueChange(index: number, values: string[]): void {
+  onValueChange(index: number, rows: ThemeTableRow[]): void {
     if (index >= 0 && index < this.filteredTableData.length) {
-      const value = values && values.length ? values[0] : '';
+      const value = rows && rows.length ? rows[0].value : '';
       this.filteredTableData[index].value = value;
       this.updateOriginalData(index, value);
 
 
     } else if (index === -1) {
-      // Multi-edit: apply values to selected rows in order
+      // Multi-edit: apply incoming rows' values to selected rows
       const selectedIndexes: number[] = [];
       for (let i = 0; i < this.filteredTableData.length; i++) {
         if (this.filteredTableData[i].selected) {
           selectedIndexes.push(i);
         }
       }
-      // Ensure parity: values array length equals selected count; if not, fill with first
+
+      const values = (rows || []).map(r => r.value);
+      // Ensure parity: values array length equals selected count; if not, fill with first value
       const arr = (values && values.length)
         ? values.slice(0, selectedIndexes.length).concat(new Array(Math.max(0, selectedIndexes.length - values.length)).fill(values[0]))
         : new Array(selectedIndexes.length).fill('');
 
-      this.multiValue = arr;
-
+      // Build multiValue rows array reflecting selected rows with updated values
+      const multiRows: ThemeTableRow[] = [];
       for (let j = 0; j < selectedIndexes.length; j++) {
-        this.updateOriginalData(selectedIndexes[j], arr[j]);
+        const idx = selectedIndexes[j];
+        const updated: ThemeTableRow = {
+          ...this.filteredTableData[idx],
+          value: arr[j]
+        };
+        multiRows.push(updated);
+        this.updateOriginalData(idx, arr[j]);
       }
+      this.multiValue = multiRows;
     }
   }
 
@@ -515,10 +521,10 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
   private rebuildMultiValueFromSelection(): void {
-    const arr: string[] = [];
+    const arr: ThemeTableRow[] = [];
     for (let i = 0; i < this.filteredTableData.length; i++) {
       if (this.filteredTableData[i].selected) {
-        arr.push(this.filteredTableData[i].value);
+        arr.push(this.filteredTableData[i]);
       }
     }
     this.multiValue = arr;

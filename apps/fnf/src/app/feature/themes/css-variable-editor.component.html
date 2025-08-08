@@ -1,31 +1,31 @@
 <div class="value-editor">
   <div class="color-input-container">
     <div>
-      @if (endsWith(key, '-color')) {
+      @if (endsWithKey('-color')) {
         <div
             class="color-preview"
-            [style.background-color]="getColorPreview(value && value.length ? value[0] : '')"
-            [colorPicker]="value && value.length ? value[0] : ''"
+            [style.background-color]="getColorPreview(value && value.length ? value[0].value : '')"
+            [colorPicker]="value && value.length ? value[0].value : ''"
             (colorPickerChange)="onColorArrayChange([$event])"
             [cpPosition]="cpPosition"
             [cpPresetColors]="presetColors"></div>
       }
     </div>
     <input
-        class="color-text-input"
-        [ngModel]="value && value.length ? value[0] : ''"
         (ngModelChange)="onValueChangeSingle($event)"
+        [ngModel]="value && value.length ? value[0].value : ''"
+        class="color-text-input"
         placeholder="CSS color or variable">
     <div class="actions">
-      @if (endsWith(key, '-color') && isColorValue(value && value.length ? value[0] : '')) {
+      @if (endsWithKey('-color') && isColorValue(value && value.length ? value[0].value : '')) {
         <input
             class="color-text-input"
             type="color"
-            [ngModel]="value && value.length ? value[0] : ''"
+            [ngModel]="value && value.length ? value[0].value : ''"
             (ngModelChange)="onValueChangeSingle($event)"
             placeholder="CSS color or variable">
       }
-      @if (endsWith(key, '-color')) {
+      @if (endsWithKey('-color')) {
         <button
             (click)="openColorChangeDialog()"
             aria-label="Open color transform dialog"
