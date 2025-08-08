@@ -29,9 +29,7 @@ import {ShortcutDialogService} from "../feature/shortcut/shortcut-dialog.service
 import {ToolService} from "./config/tool.service";
 import {FindSocketService} from "./find.socketio.service";
 import {CopyOrMoveOrDeleteDialogData} from "../feature/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.data";
-import {
-  CopyOrMoveOrDeleteDialogService
-} from "../feature/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.service";
+import {CopyOrMoveOrDeleteDialogService} from "../feature/cmd/copyormoveordelete/copy-or-move-or-delete-dialog.service";
 import {TabsPanelData} from "../domain/filepagedata/data/tabs-panel.data";
 import {SelectionDialogData} from "../feature/cmd/selection/selection-dialog.data";
 import {SelectionDialogService} from "../feature/cmd/selection/selection-dialog.service";
@@ -142,7 +140,7 @@ export class ActionExecutionService {
 
     } else if (id === "OPEN_THEMES_DLG") {
       // this.router.navigate(['/themes']);
-      const strWindowFeatures = "location=no,height=800,width=1024,scrollbars=yes,status=yes";
+      const strWindowFeatures = "location=no,height=800,width=1600,scrollbars=yes,status=yes";
       const url = location.origin + "/themes";
       window.open(url, "_blank", strWindowFeatures);
 

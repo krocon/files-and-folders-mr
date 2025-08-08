@@ -77,7 +77,9 @@ export class ThemesComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadThemeNames();
     this.setupFormSubscriptions();
-    this.loadTheme(this.lookAndFeelService.getTheme());
+    const theme = this.lookAndFeelService.getTheme();
+    this.onThemeSelect(theme);
+    this.loadTheme(theme);
   }
 
   ngOnDestroy(): void {

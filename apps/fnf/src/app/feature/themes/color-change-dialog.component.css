@@ -63,3 +63,7 @@
     background: transparent;
     padding: 0;
 }
+
+.mat-mdc-form-field-subscript-wrapper {
+    display: none
+}

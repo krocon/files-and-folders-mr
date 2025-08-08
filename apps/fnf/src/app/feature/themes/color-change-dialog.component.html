@@ -8,7 +8,6 @@
         <div
             class="swatch"
             [style.background-color]="r.value"></div>
-
         <div class="label">Original ({{ originalRows.length }})</div>
         <div class="value">{{ originalRows[0].value }}</div>
       </div><span class="arrow">→</span>
@@ -22,23 +21,7 @@
     }
   </div>
 
-  <div class="section">
-    <div class="row">
-      <button
-          (click)="applyInvert()"
-          color="primary"
-          mat-raised-button>
-        <mat-icon>invert_colors</mat-icon>
-        Invert
-      </button>
-      <button
-          (click)="onReset()"
-          mat-button>
-        <mat-icon>restart_alt</mat-icon>
-        Reset
-      </button>
-    </div>
-  </div>
+
 
   <div class="section">
     <div class="label-slider">
@@ -144,7 +127,24 @@
             matSliderThumb/>
       </mat-slider>
     </div>
+  </div>
 
+  <div class="section">
+    <div class="row">
+      <button
+          (click)="applyInvert()"
+          color="primary"
+          mat-raised-button>
+        <mat-icon>invert_colors</mat-icon>
+        Invert
+      </button>
+      <button
+          (click)="onReset()"
+          mat-button>
+        <mat-icon>restart_alt</mat-icon>
+        Reset
+      </button>
+    </div>
   </div>
 
 </mat-dialog-content>

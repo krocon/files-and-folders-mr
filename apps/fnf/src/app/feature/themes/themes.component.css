@@ -72,13 +72,16 @@
     font-style: italic;
 }
 
+.name-input {
+    width: 300px;
+}
 
 .dlg-actions-div {
     display: flex;
-    align-items: center;
-    padding: 15px 15px;
+    align-items: baseline;
+    padding: 15px 15px 0 15px;
     gap: 12px;
-    min-height: 60px;
+    min-height: 40px;
     border-top: 1px solid var(--fnf-header-border-color, #ddd);
 
     .multi-edit-div {

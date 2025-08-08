@@ -23,6 +23,7 @@
             </button>
           }
         </mat-menu>
+        /* */
       </div>
 
       <div><!-- spacer --></div>
@@ -230,7 +231,9 @@
   <div
       [formGroup]="themeForm"
       class="name-input-wrapper">
-    <mat-form-field appearance="outline">
+    <mat-form-field
+        appearance="outline"
+        class="name-input">
       <mat-label>Theme name</mat-label>
       <input
           matInput
