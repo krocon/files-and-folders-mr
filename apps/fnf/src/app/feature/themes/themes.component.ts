@@ -586,6 +586,37 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
 
   onDeleteTheme() {
+    if (!this.themeForm) return;
 
+    const nameControl = this.themeForm.get('selectedThemeName');
+    const name = (nameControl?.value || '').trim();
+
+    // Only allow deletion of custom themes
+    if (!name || !this.isDeleteEnabled()) {
+      return;
+    }
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
+
+    this.configThemesService.deleteTheme(name)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          // Choose a safe fallback theme (prefer 'light')
+          const fallback = 'light';
+          this.onThemeSelect(fallback);
+          this.loadTheme(fallback);
+          // Refresh known names after deletion
+          this.loadThemeNames();
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error deleting theme:', error);
+          this.isSaving = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 }

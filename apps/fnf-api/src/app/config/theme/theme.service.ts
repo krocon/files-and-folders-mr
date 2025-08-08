@@ -131,11 +131,33 @@ export class ThemeService {
 
     } catch (error) {
       // Custom file might not exist, which is fine
-      if (error.code === 'ENOENT') {
+      if ((error as any).code === 'ENOENT') {
         return null;
       }
       this.logger.error(`Failed to load custom colors for ${name}:`, error);
       return null;
+    }
+  }
+
+  /**
+   * Delete a custom theme file. This does not touch defaults.
+   */
+  async deleteTheme(name: string): Promise<void> {
+    try {
+      const customFilePath = join(this.customPath, `${name}.json`);
+      try {
+        await fs.unlink(customFilePath);
+        this.logger.log(`Deleted custom theme ${name}`);
+      } catch (error) {
+        // If file doesn't exist, treat as success
+        if ((error as any).code !== 'ENOENT') {
+          throw error;
+        }
+        this.logger.warn(`Custom theme ${name} not found to delete (ENOENT)`);
+      }
+    } catch (error) {
+      this.logger.error(`Failed to delete custom theme ${name}:`, error);
+      throw error;
     }
   }
 }

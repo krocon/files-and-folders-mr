@@ -44,4 +44,9 @@ export class ConfigThemesService {
     return this.httpClient.put<{ success: boolean; message: string }>(url, data);
   }
 
+  deleteTheme(themeName: string): Observable<{ success: boolean; message: string }> {
+    const url = `${ConfigThemesService.config.apiUrl}/${encodeURIComponent(themeName)}`;
+    return this.httpClient.delete<{ success: boolean; message: string }>(url);
+  }
+
 }

@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Logger, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Logger, Param, Post, Put} from '@nestjs/common';
 import {ThemeService} from './theme.service';
 import {ColorDataIf} from "@fnf-data";
 
@@ -59,5 +59,19 @@ export class ThemeController {
   async resetToDefaults(@Param('name') name: string): Promise<ColorDataIf> {
     this.logger.log(`Resetting colors to defaults for ${name}`);
     return await this.colorService.resetToDefaults(name);
+  }
+
+  @Delete(':name')
+  async deleteTheme(
+    @Param('name') name: string,
+  ): Promise<{ success: boolean; message: string }> {
+    this.logger.log(`Deleting theme ${name}`);
+    try {
+      await this.colorService.deleteTheme(name);
+      return {success: true, message: `Theme ${name} deleted`};
+    } catch (error: any) {
+      this.logger.error(`Failed to delete theme ${name}:`, error);
+      return {success: false, message: `Failed to delete theme: ${error?.message || 'unknown error'}`};
+    }
   }
 }
