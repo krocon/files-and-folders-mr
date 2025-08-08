@@ -5,17 +5,19 @@
     <div>
       <div
           class="swatch"
-          [style.background-color]="originalColor"></div>
-      <div class="label">Original</div>
-      <div class="value">{{ originalColor }}</div>
+          *ngFor="let c of originalColors"
+          [style.background-color]="c"></div>
+      <div class="label">Original ({{ originalColors.length }})</div>
+      <div class="value">{{ originalColors.join(', ') }}</div>
     </div>
     <span class="arrow">→</span>
     <div>
       <div
           class="swatch"
-          [style.background-color]="workingColor"></div>
-      <div class="label">Preview</div>
-      <div class="value">{{ workingColor }}</div>
+          *ngFor="let c of workingColors"
+          [style.background-color]="c"></div>
+      <div class="label">Preview ({{ workingColors.length }})</div>
+      <div class="value">{{ workingColors.join(', ') }}</div>
     </div>
   </div>
 

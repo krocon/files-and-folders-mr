@@ -18,12 +18,12 @@ import {MatSlider, MatSliderThumb} from '@angular/material/slider';
 import {ColorService} from './color.service';
 
 export interface ColorChangeDialogData {
-  color: string;
-  onChange?: (color: string) => void;
+  colors: string[];
+  onChange?: (colors: string[]) => void;
 }
 
 export interface ColorChangeDialogResult {
-  color: string;
+  colors: string[];
 }
 
 @Component({
@@ -51,8 +51,8 @@ export interface ColorChangeDialogResult {
 })
 export class ColorChangeDialogComponent {
 
-  originalColor: string;
-  workingColor: string;
+  originalColors: string[];
+  workingColors: string[];
 
   // controls (defaults set to no-op so nothing changes until user interacts)
   invertEnabled: boolean = false;
@@ -69,39 +69,43 @@ export class ColorChangeDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: ColorChangeDialogData,
     private readonly colorService: ColorService,
   ) {
-    this.originalColor = data.color;
-    this.workingColor = data.color;
+    this.originalColors = [...(data.colors || [])];
+    this.workingColors = [...this.originalColors];
   }
 
-  // Central recompute based on current controls applied to originalColor
+  // Central recompute based on current controls applied to originalColors
   recompute(): void {
-    let c = this.originalColor;
+    const transformed = this.originalColors.map((orig) => {
+      let c = orig;
 
-    if (this.invertEnabled) {
-      c = this.colorService.invertCssColor(c);
-    }
+      if (this.invertEnabled) {
+        c = this.colorService.invertCssColor(c);
+      }
 
-    if (this.lightnessDelta !== 0) {
-      c = this.lightnessDelta > 0
-        ? this.colorService.brighter(c, this.lightnessDelta)
-        : this.colorService.darker(c, -this.lightnessDelta);
-    }
+      if (this.lightnessDelta !== 0) {
+        c = this.lightnessDelta > 0
+          ? this.colorService.brighter(c, this.lightnessDelta)
+          : this.colorService.darker(c, -this.lightnessDelta);
+      }
 
-    if (this.transparency > 0) {
-      c = this.colorService.transparent(c, this.transparency);
-    }
+      if (this.transparency > 0) {
+        c = this.colorService.transparent(c, this.transparency);
+      }
 
-    if (this.mergeRatio > 0) {
-      c = this.colorService.mergeColors(c, this.mergeColor, this.mergeRatio, this.mergeMode);
-    }
+      if (this.mergeRatio > 0) {
+        c = this.colorService.mergeColors(c, this.mergeColor, this.mergeRatio, this.mergeMode);
+      }
 
-    if (this.blendAlpha > 0) {
-      c = this.colorService.blendColorsAlpha(c, this.blendColor, this.blendAlpha);
-    }
+      if (this.blendAlpha > 0) {
+        c = this.colorService.blendColorsAlpha(c, this.blendColor, this.blendAlpha);
+      }
 
-    this.workingColor = c;
+      return c;
+    });
+
+    this.workingColors = transformed;
     // Emit the change immediately if a callback is provided
-    this.data.onChange?.(this.workingColor);
+    this.data.onChange?.(this.workingColors);
   }
 
   // Actions for compatibility and quick toggles
@@ -147,9 +151,9 @@ export class ColorChangeDialogComponent {
     this.mergeMode = 'alpha';
     this.blendAlpha = 0;
     this.blendColor = '#000000';
-    this.workingColor = this.originalColor;
-    // Emit reset color immediately
-    this.data.onChange?.(this.workingColor);
+    this.workingColors = [...this.originalColors];
+    // Emit reset colors immediately
+    this.data.onChange?.(this.workingColors);
   }
 
   onCancel(): void {
@@ -159,6 +163,6 @@ export class ColorChangeDialogComponent {
   onApply(): void {
     // Ensure latest settings are reflected
     this.recompute();
-    this.dialogRef.close({color: this.workingColor});
+    this.dialogRef.close({colors: this.workingColors});
   }
 }

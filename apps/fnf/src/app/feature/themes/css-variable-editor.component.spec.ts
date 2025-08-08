@@ -45,7 +45,7 @@ describe('CssVariableEditorComponent', () => {
     const emitted: string[] = [];
     component.colorChange.subscribe(v => emitted.push(v));
 
-    mockDialog.open.mockReturnValue({afterClosed: () => of({color: '#00ff00'})});
+    mockDialog.open.mockReturnValue({afterClosed: () => of({colors: ['#00ff00']})});
 
     component.openColorChangeDialog();
 
