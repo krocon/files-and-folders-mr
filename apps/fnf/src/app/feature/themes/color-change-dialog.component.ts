@@ -62,8 +62,6 @@ export class ColorChangeDialogComponent {
   mergeMode: 'alpha' | 'additive' | 'average' = 'alpha';
   blendColor: string = '#000000';
   blendAlpha: number = 0; // 0..1 (0 means disabled/no effect)
-  // UI control for lightness adjustment magnitude (sign decided by action buttons)
-  adjustVal: number = 0;
 
   constructor(
     public dialogRef: MatDialogRef<ColorChangeDialogComponent, ColorChangeDialogResult | undefined>,
@@ -75,7 +73,7 @@ export class ColorChangeDialogComponent {
   }
 
   // Central recompute based on current controls applied to originalColor
-  private recompute(): void {
+  recompute(): void {
     let c = this.originalColor;
 
     if (this.invertEnabled) {
@@ -115,14 +113,14 @@ export class ColorChangeDialogComponent {
   }
 
   applyBrighter(): void {
-    const v = Math.abs(this.adjustVal || 0);
-    this.lightnessDelta = v;
+    // Deprecated in UI (replaced by single slider). Kept for compatibility/tests.
+    this.lightnessDelta = Math.abs(this.lightnessDelta || 0);
     this.recompute();
   }
 
   applyDarker(): void {
-    const v = Math.abs(this.adjustVal || 0);
-    this.lightnessDelta = -v;
+    // Deprecated in UI (replaced by single slider). Kept for compatibility/tests.
+    this.lightnessDelta = -Math.abs(this.lightnessDelta || 0);
     this.recompute();
   }
 
@@ -146,7 +144,6 @@ export class ColorChangeDialogComponent {
     this.mergeMode = 'alpha';
     this.blendAlpha = 0;
     this.blendColor = '#000000';
-    this.adjustVal = 0;
     this.workingColor = this.originalColor;
   }
 

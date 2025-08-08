@@ -8,18 +8,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {ColorChangeDialogComponent} from './color-change-dialog.component';
 
-/*
-Extend CssVariableEditorComponent with icon button 'tune' to open a new color change dialog with these functions from ColorService:
-  - invertCssColor
-  - brighter
-  - darker
-  - transparent
-  - mergeColors
-  - blendColorsAlpha
-Rules: .junie/instructions_angular.md
- */
-
-
 
 @Component({
   selector: 'app-css-variable-editor',

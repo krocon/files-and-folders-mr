@@ -38,31 +38,18 @@
 
   <div class="section">
     <div class="row">
-      <mat-label>Adjust (+ brighter / - darker): {{ adjustVal }}%</mat-label>
+      <mat-label>Brighter/Darker: {{ lightnessDelta }}%</mat-label>
       <mat-slider
-          [min]="0"
+          [min]="-100"
           [max]="100"
           [step]="1"
           [discrete]="true"
           [showTickMarks]="true">
         <input
             matSliderThumb
-            [(ngModel)]="adjustVal"/>
+            [(ngModel)]="lightnessDelta"
+            (ngModelChange)="recompute()"/>
       </mat-slider>
-    </div>
-    <div class="row">
-      <button
-          mat-stroked-button
-          (click)="applyBrighter()">
-        <mat-icon>light_mode</mat-icon>
-        Brighter
-      </button>
-      <button
-          mat-stroked-button
-          (click)="applyDarker()">
-        <mat-icon>dark_mode</mat-icon>
-        Darker
-      </button>
     </div>
   </div>
 
@@ -77,16 +64,9 @@
           [showTickMarks]="true">
         <input
             matSliderThumb
-            [(ngModel)]="transparency"/>
+            [(ngModel)]="transparency"
+            (ngModelChange)="recompute()"/>
       </mat-slider>
-    </div>
-    <div class="row">
-      <button
-          mat-stroked-button
-          (click)="applyTransparent()">
-        <mat-icon>opacity</mat-icon>
-        Transparent
-      </button>
     </div>
   </div>
 
@@ -97,17 +77,21 @@
         <input
             matInput
             [(ngModel)]="mergeColor"
+            (ngModelChange)="recompute()"
             placeholder="#rrggbb or rgb() or hsl() or name"/>
       </mat-form-field>
       <input
           class="native-color"
           type="color"
-          [(ngModel)]="mergeColor"/>
+          [(ngModel)]="mergeColor"
+          (ngModelChange)="recompute()"/>
     </div>
     <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Mode</mat-label>
-        <mat-select [(ngModel)]="mergeMode">
+        <mat-select
+            [(ngModel)]="mergeMode"
+            (ngModelChange)="recompute()">
           <mat-option value="alpha">alpha</mat-option>
           <mat-option value="additive">additive</mat-option>
           <mat-option value="average">average</mat-option>
@@ -121,17 +105,10 @@
             [step]="0.01">
           <input
               matSliderThumb
-              [(ngModel)]="mergeRatio"/>
+              [(ngModel)]="mergeRatio"
+              (ngModelChange)="recompute()"/>
         </mat-slider>
       </div>
-    </div>
-    <div class="row">
-      <button
-          mat-stroked-button
-          (click)="applyMerge()">
-        <mat-icon>call_merge</mat-icon>
-        Merge
-      </button>
     </div>
   </div>
 
@@ -142,12 +119,14 @@
         <input
             matInput
             [(ngModel)]="blendColor"
+            (ngModelChange)="recompute()"
             placeholder="#rrggbb or rgb() or hsl() or name"/>
       </mat-form-field>
       <input
           class="native-color"
           type="color"
-          [(ngModel)]="blendColor"/>
+          [(ngModel)]="blendColor"
+          (ngModelChange)="recompute()"/>
     </div>
     <div class="row">
       <div class="slider-col">
@@ -158,17 +137,10 @@
             [step]="0.01">
           <input
               matSliderThumb
-              [(ngModel)]="blendAlpha"/>
+              [(ngModel)]="blendAlpha"
+              (ngModelChange)="recompute()"/>
         </mat-slider>
       </div>
-    </div>
-    <div class="row">
-      <button
-          mat-stroked-button
-          (click)="applyBlend()">
-        <mat-icon>gradient</mat-icon>
-        Blend Alpha
-      </button>
     </div>
   </div>
 
