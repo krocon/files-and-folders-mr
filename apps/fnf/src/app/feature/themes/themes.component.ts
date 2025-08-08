@@ -17,6 +17,7 @@ import {CssVariableEditorComponent} from './css-variable-editor.component';
 
 // moved to theme-table-row.model.ts
 import {ThemeTableRow} from './theme-table-row.model';
+import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-confirmation-dialog.service";
 
 
 @Component({
@@ -70,6 +71,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly colorService: ColorService,
     private readonly lookAndFeelService: LookAndFeelService,
+    private readonly confirmationDialogService: FnfConfirmationDialogService,
   ) {
     this.themeForm = this.createForm();
   }
@@ -596,27 +598,32 @@ export class ThemesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.isSaving = true;
-    this.cdr.detectChanges();
+    this.confirmationDialogService.simpleConfirm(
+      'Delete', `Do you want to delete '${name}'?`,
+      () => {
+        this.isSaving = true;
+        this.cdr.detectChanges();
 
-    this.configThemesService.deleteTheme(name)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.isSaving = false;
-          // Choose a safe fallback theme (prefer 'light')
-          const fallback = 'light';
-          this.onThemeSelect(fallback);
-          this.loadTheme(fallback);
-          // Refresh known names after deletion
-          this.loadThemeNames();
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('Error deleting theme:', error);
-          this.isSaving = false;
-          this.cdr.detectChanges();
-        }
+        this.configThemesService.deleteTheme(name)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.isSaving = false;
+              // Choose a safe fallback theme (prefer 'light')
+              const fallback = 'light';
+              this.onThemeSelect(fallback);
+              this.loadTheme(fallback);
+              // Refresh known names after deletion
+              this.loadThemeNames();
+              this.cdr.detectChanges();
+            },
+            error: (error) => {
+              console.error('Error deleting theme:', error);
+              this.isSaving = false;
+              this.cdr.detectChanges();
+            }
+          });
       });
   }
+
 }
