@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {combineLatest, Subject, takeUntil} from 'rxjs';
@@ -8,7 +7,6 @@ import {ConfigThemesService} from '../../service/config/config-themes.service';
 import {ColorService} from './color.service';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
-import {MatSelectModule} from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -20,29 +18,6 @@ import {CssVariableEditorComponent} from './css-variable-editor.component';
 // moved to theme-table-row.model.ts
 import {ThemeTableRow} from './theme-table-row.model';
 
-interface FilterInterface {
-  panels: {
-    all: boolean;
-    activepanel: boolean;
-    inactivepanel: boolean;
-  };
-  areas: {
-    all: boolean;
-    header: boolean;
-    table: boolean;
-    footer: boolean;
-    tooltip: boolean;
-    errorPanel: boolean;
-    material: boolean;
-    scrollbar: boolean;
-  };
-  property: {
-    all: boolean;
-    fg: boolean;
-    bg: boolean;
-    border: boolean;
-  };
-}
 
 @Component({
   selector: 'app-themes',
@@ -53,7 +28,6 @@ interface FilterInterface {
     FormsModule,
     MatDialogModule,
     MatButtonModule,
-    MatSelectModule,
     MatMenuModule,
     MatInputModule,
     MatFormFieldModule,
@@ -91,7 +65,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   constructor(
-    private readonly router: Router,
     private readonly formBuilder: FormBuilder,
     private readonly configThemesService: ConfigThemesService,
     private readonly cdr: ChangeDetectorRef,
@@ -291,9 +264,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
       });
   }
 
-  onCancel(): void {
-    this.navigateToFiles();
-  }
 
   onThemeSelect(themeName: string): void {
     this.themeForm.get('selectedThemeName')?.setValue(themeName);
@@ -607,8 +577,5 @@ export class ThemesComponent implements OnInit, OnDestroy {
     return colors;
   }
 
-  private navigateToFiles(): void {
-    this.router.navigate(['/files']);
-  }
 
 }

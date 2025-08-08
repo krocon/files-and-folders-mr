@@ -43,9 +43,6 @@ export class CssVariableEditorComponent {
   }
 
   openColorChangeDialog(): void {
-    const firstColor = this.getFirstColor();
-    const initialColor = this.getColorPreview(firstColor);
-
     // Prepare rows for dialog; if none, synthesize a single row-like entry is not feasible; skip
     const rowsForDialog: ThemeTableRow[] = (this.value && this.value.length > 0)
       ? this.value.map(r => ({...r}))
@@ -153,8 +150,4 @@ export class CssVariableEditorComponent {
     return (this.value && this.value.length > 0) ? this.value[0].value : '';
   }
 
-  // Returns the first color considering the value array
-  private getFirstColor(): string {
-    return this.firstValueStr();
-  }
 }
