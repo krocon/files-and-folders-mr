@@ -23,7 +23,13 @@
             </button>
           }
         </mat-menu>
-        /* */
+        <button
+            mat-icon-button
+            color="warn"
+            [disabled]="!isDeleteEnabled()"
+            (click)="onDeleteTheme()">
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
 
       <div><!-- spacer --></div>

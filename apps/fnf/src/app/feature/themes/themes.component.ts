@@ -343,6 +343,11 @@ export class ThemesComponent implements OnInit, OnDestroy {
     });
   }
 
+  isDeleteEnabled(): boolean {
+    if (!this.themeForm) return false;
+    return !this.defaultThemeNames.includes(this.themeForm.get('selectedThemeName')?.value);
+  }
+
   private loadThemeNames(): void {
     const obs = [
       this.configThemesService.loadCustomNames(),
@@ -580,4 +585,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
 
+  onDeleteTheme() {
+
+  }
 }

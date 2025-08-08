@@ -51,6 +51,13 @@
             width: 100%;
         }
     }
+
+    .theme-selector-group {
+        display: grid;
+        grid-template-columns: auto auto;
+        align-items: center;
+        gap: 12px;
+    }
 }
 
 .filter-checkboxes-section {
