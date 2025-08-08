@@ -19,6 +19,7 @@ import {ColorService} from './color.service';
 
 export interface ColorChangeDialogData {
   color: string;
+  onChange?: (color: string) => void;
 }
 
 export interface ColorChangeDialogResult {
@@ -99,6 +100,8 @@ export class ColorChangeDialogComponent {
     }
 
     this.workingColor = c;
+    // Emit the change immediately if a callback is provided
+    this.data.onChange?.(this.workingColor);
   }
 
   // Actions for compatibility and quick toggles
@@ -145,6 +148,8 @@ export class ColorChangeDialogComponent {
     this.blendAlpha = 0;
     this.blendColor = '#000000';
     this.workingColor = this.originalColor;
+    // Emit reset color immediately
+    this.data.onChange?.(this.workingColor);
   }
 
   onCancel(): void {

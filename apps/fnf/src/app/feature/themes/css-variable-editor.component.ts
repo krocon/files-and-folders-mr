@@ -39,11 +39,18 @@ export class CssVariableEditorComponent {
 
   openColorChangeDialog(): void {
     const initialColor = this.getColorPreview(this.value);
-    const dialogRef = this.dialog.open<ColorChangeDialogComponent, { color: string }, {
-      color: string
-    }>(ColorChangeDialogComponent, {
-      data: {color: initialColor}
-    });
+    const dialogRef = this.dialog.open<ColorChangeDialogComponent, {
+      color: string;
+      onChange: (color: string) => void
+    }, { color: string }>(
+      ColorChangeDialogComponent,
+      {
+        data: {
+          color: initialColor,
+          onChange: (c: string) => this.onColorChange(c)
+        }
+      }
+    );
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.color) {
         this.onColorChange(result.color);
