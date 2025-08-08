@@ -9,6 +9,7 @@
       <div class="label">Original</div>
       <div class="value">{{ originalColor }}</div>
     </div>
+    <span class="arrow">→</span>
     <div>
       <div
           class="swatch"
@@ -37,7 +38,7 @@
   </div>
 
   <div class="section">
-    <div class="row">
+    <div class="label-slider">
       <mat-label>Brighter/Darker: {{ lightnessDelta }}%</mat-label>
       <mat-slider
           [min]="-100"
@@ -54,7 +55,7 @@
   </div>
 
   <div class="section">
-    <div class="row">
+    <div class="label-slider">
       <mat-label>Transparency: {{ transparency }}%</mat-label>
       <mat-slider
           [min]="0"
@@ -85,8 +86,6 @@
           type="color"
           [(ngModel)]="mergeColor"
           (ngModelChange)="recompute()"/>
-    </div>
-    <div class="row">
       <mat-form-field appearance="outline">
         <mat-label>Mode</mat-label>
         <mat-select
@@ -97,18 +96,19 @@
           <mat-option value="average">average</mat-option>
         </mat-select>
       </mat-form-field>
-      <div class="slider-col">
-        <mat-label>Ratio: {{ mergeRatio | number:'1.0-2' }}</mat-label>
-        <mat-slider
-            [min]="0"
-            [max]="1"
-            [step]="0.01">
-          <input
-              matSliderThumb
-              [(ngModel)]="mergeRatio"
-              (ngModelChange)="recompute()"/>
-        </mat-slider>
-      </div>
+    </div>
+
+    <div class="label-slider">
+      <mat-label>Ratio: {{ mergeRatio | number:'1.0-2' }}</mat-label>
+      <mat-slider
+          [min]="0"
+          [max]="1"
+          [step]="0.01">
+        <input
+            matSliderThumb
+            [(ngModel)]="mergeRatio"
+            (ngModelChange)="recompute()"/>
+      </mat-slider>
     </div>
   </div>
 
@@ -128,8 +128,8 @@
           [(ngModel)]="blendColor"
           (ngModelChange)="recompute()"/>
     </div>
-    <div class="row">
-      <div class="slider-col">
+
+    <div class="label-slider">
         <mat-label>Alpha: {{ blendAlpha | number:'1.0-2' }}</mat-label>
         <mat-slider
             [min]="0"
@@ -141,7 +141,7 @@
               (ngModelChange)="recompute()"/>
         </mat-slider>
       </div>
-    </div>
+
   </div>
 
 </mat-dialog-content>
