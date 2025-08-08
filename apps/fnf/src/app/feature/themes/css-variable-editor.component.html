@@ -16,7 +16,7 @@
         [(ngModel)]="value"
         (ngModelChange)="onValueChange($event)"
         placeholder="CSS color or variable">
-    <div>
+    <div class="actions">
       @if (endsWith(key, '-color') && isColorValue(value)) {
         <input
             class="color-text-input"
@@ -24,6 +24,14 @@
             [(ngModel)]="value"
             (ngModelChange)="onValueChange($event)"
             placeholder="CSS color or variable">
+      }
+      @if (endsWith(key, '-color')) {
+        <button
+            (click)="openColorChangeDialog()"
+            aria-label="Open color transform dialog"
+            matIconButton>
+          <mat-icon>tune</mat-icon>
+        </button>
       }
     </div>
   </div>

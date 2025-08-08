@@ -3,6 +3,23 @@ import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {ColorPickerDirective} from 'ngx-color-picker';
 import {ColorService} from './color.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatIconButton} from '@angular/material/button';
+import {ColorChangeDialogComponent} from './color-change-dialog.component';
+
+/*
+Extend CssVariableEditorComponent with icon button 'tune' to open a new color change dialog with these functions from ColorService:
+  - invertCssColor
+  - brighter
+  - darker
+  - transparent
+  - mergeColors
+  - blendColorsAlpha
+Rules: .junie/instructions_angular.md
+ */
+
+
 
 @Component({
   selector: 'app-css-variable-editor',
@@ -10,7 +27,9 @@ import {ColorService} from './color.service';
   imports: [
     CommonModule,
     FormsModule,
-    ColorPickerDirective
+    ColorPickerDirective,
+    MatIconModule,
+    MatIconButton
   ],
   templateUrl: './css-variable-editor.component.html',
   styleUrls: ['./css-variable-editor.component.css'],
@@ -27,7 +46,21 @@ export class CssVariableEditorComponent {
   @Output() valueChange = new EventEmitter<string>();
   @Output() colorChange = new EventEmitter<string>();
 
-  constructor(private readonly colorService: ColorService) {
+  constructor(private readonly colorService: ColorService, private readonly dialog: MatDialog) {
+  }
+
+  openColorChangeDialog(): void {
+    const initialColor = this.getColorPreview(this.value);
+    const dialogRef = this.dialog.open<ColorChangeDialogComponent, { color: string }, {
+      color: string
+    }>(ColorChangeDialogComponent, {
+      data: {color: initialColor}
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.color) {
+        this.onColorChange(result.color);
+      }
+    });
   }
 
   onValueChange(value: string): void {

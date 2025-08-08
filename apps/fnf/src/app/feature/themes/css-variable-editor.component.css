@@ -27,3 +27,9 @@
         min-width: 200px;
     }
 }
+
+.actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
