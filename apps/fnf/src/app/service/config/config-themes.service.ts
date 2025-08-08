@@ -39,5 +39,9 @@ export class ConfigThemesService {
     return this.httpClient.get<string[]>(url);
   }
 
+  saveTheme(themeName: string, data: ColorDataIf): Observable<{ success: boolean; message: string }> {
+    const url = `${ConfigThemesService.config.apiUrl}/${encodeURIComponent(themeName)}`;
+    return this.httpClient.put<{ success: boolean; message: string }>(url, data);
+  }
 
 }

@@ -69,6 +69,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   themeForm: FormGroup;
   themeNames: string[] = [];
+  defaultThemeNames: string[] = [];
+  customThemeNames: string[] = [];
   selectedTheme: ColorDataIf | null = null;
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
@@ -77,6 +79,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   isSaving = false;
+  isNamePredefined = false;
+  isNameEmpty = true;
 
   presetColors: string[] = [
     '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff',
@@ -252,9 +256,39 @@ export class ThemesComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // TODO: Implement apply functionality
-    // This will be implemented later as mentioned in the issue description
-    console.log('Apply theme changes:', this.selectedTheme);
+    const nameControl = this.themeForm.get('saveThemeName');
+    const name = (nameControl?.value || '').trim();
+
+    this.updateNameValidation();
+    if (this.isNameEmpty || this.isNamePredefined) {
+      return;
+    }
+
+    const data: ColorDataIf = {
+      name,
+      colors: this.tableData2Colors()
+    };
+
+    this.isSaving = true;
+    this.cdr.detectChanges();
+
+    this.configThemesService.saveTheme(name, data)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isSaving = false;
+          // refresh known names
+          this.loadThemeNames();
+          // set selected name to saved one
+          this.themeForm.get('selectedThemeName')?.setValue(name);
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error saving theme:', error);
+          this.isSaving = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   onCancel(): void {
@@ -263,6 +297,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   onThemeSelect(themeName: string): void {
     this.themeForm.get('selectedThemeName')?.setValue(themeName);
+    this.themeForm.get('saveThemeName')?.setValue(themeName);
+    this.updateNameValidation();
   }
 
   private countSelections() {
@@ -273,6 +309,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   private createForm(): FormGroup {
     return this.formBuilder.group({
       selectedThemeName: [''],
+      saveThemeName: [''],
       tableFilter: [''],
       panels: this.formBuilder.group({
         all: [true],
@@ -310,6 +347,13 @@ export class ThemesComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Subscribe to save name changes for validation
+    this.themeForm
+      .get('saveThemeName')
+      ?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.updateNameValidation());
+
     // Subscribe to filter changes
     this.themeForm.get('tableFilter')?.valueChanges
       .pipe(takeUntil(this.destroy$))
@@ -337,7 +381,13 @@ export class ThemesComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (names) => {
-          this.themeNames = [...names[0], ...names[1].filter(name => !names[0].includes(name))];
+          this.customThemeNames = names[0] || [];
+          this.defaultThemeNames = names[1] || [];
+          this.themeNames = [
+            ...this.customThemeNames,
+            ...this.defaultThemeNames.filter(name => !this.customThemeNames.includes(name))
+          ];
+          this.updateNameValidation();
           this.cdr.detectChanges();
         },
         error: (error) => {
@@ -501,6 +551,24 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
     // If key doesn't contain property-specific terms, it passes if any property filter is checked
     return fgChecked || bgChecked || borderChecked;
+  }
+
+  private updateNameValidation(): void {
+    const control = this.themeForm.get('saveThemeName');
+    const name = (control?.value || '').trim();
+    this.isNameEmpty = !name;
+    this.isNamePredefined = !!name && this.defaultThemeNames.includes(name);
+
+    if (control) {
+      const errors: any = {};
+      if (this.isNameEmpty) {
+        errors['required'] = true;
+      }
+      if (this.isNamePredefined) {
+        errors['predefined'] = true;
+      }
+      control.setErrors(Object.keys(errors).length ? errors : null);
+    }
   }
 
   private updateOriginalData(filteredIndex: number, value: string): void {

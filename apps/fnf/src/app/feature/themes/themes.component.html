@@ -227,17 +227,27 @@
 
   <div class="spacer"></div>
 
-  <button
-      (click)="onCancel()"
-      [disabled]="isSaving"
-      mat-raised-button
-      type="button">
-    Cancel
-  </button>
+  <div
+      [formGroup]="themeForm"
+      class="name-input-wrapper">
+    <mat-form-field appearance="outline">
+      <mat-label>Theme name</mat-label>
+      <input
+          matInput
+          formControlName="saveThemeName"
+          placeholder="Enter theme name">
+      @if (themeForm.get('saveThemeName')?.hasError('required')) {
+        <mat-error>Name is required</mat-error>
+      }
+      @if (themeForm.get('saveThemeName')?.hasError('predefined')) {
+        <mat-error>Predefined names are not allowed</mat-error>
+      }
+    </mat-form-field>
+  </div>
 
   <button
       (click)="onSave()"
-      [disabled]="isSaving || isLoading || !selectedTheme"
+      [disabled]="isSaving || isLoading || !selectedTheme || isNameEmpty || isNamePredefined"
       color="primary"
       mat-raised-button
       type="button">
