@@ -4,25 +4,25 @@
       @if (endsWith(key, '-color')) {
         <div
             class="color-preview"
-            [style.background-color]="getColorPreview(value)"
-            [(colorPicker)]="value"
-            (colorPickerChange)="onColorChange($event)"
+            [style.background-color]="getColorPreview(value && value.length ? value[0] : '')"
+            [colorPicker]="value && value.length ? value[0] : ''"
+            (colorPickerChange)="onColorArrayChange([$event])"
             [cpPosition]="cpPosition"
             [cpPresetColors]="presetColors"></div>
       }
     </div>
     <input
         class="color-text-input"
-        [(ngModel)]="value"
-        (ngModelChange)="onValueChange($event)"
+        [ngModel]="value && value.length ? value[0] : ''"
+        (ngModelChange)="onValueChangeSingle($event)"
         placeholder="CSS color or variable">
     <div class="actions">
-      @if (endsWith(key, '-color') && isColorValue(value)) {
+      @if (endsWith(key, '-color') && isColorValue(value && value.length ? value[0] : '')) {
         <input
             class="color-text-input"
             type="color"
-            [(ngModel)]="value"
-            (ngModelChange)="onValueChange($event)"
+            [ngModel]="value && value.length ? value[0] : ''"
+            (ngModelChange)="onValueChangeSingle($event)"
             placeholder="CSS color or variable">
       }
       @if (endsWith(key, '-color')) {

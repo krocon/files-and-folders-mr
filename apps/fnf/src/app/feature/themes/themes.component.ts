@@ -76,7 +76,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
 
-  multiValue = '#ffffff';
+  multiValue: string[] = [];
 
   isLoading = false;
   isSaving = false;
@@ -121,7 +121,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
       );
       if (originalIndex >= 0) {
         this.themeTableData[originalIndex].selected = selected;
-        this.multiValue = this.themeTableData[originalIndex].value;
+        this.rebuildMultiValueFromSelection();
       }
       this.countSelections();
       this.cdr.detectChanges();
@@ -208,24 +208,35 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
 
-  onColorChange(index: number, color: string): void {
-    this.onValueChange(index, color);
+  onColorChange(index: number, colors: string[]): void {
+    this.onValueChange(index, colors);
   }
 
 
-  onValueChange(index: number, value: string): void {
+  onValueChange(index: number, values: string[]): void {
     if (index >= 0 && index < this.filteredTableData.length) {
+      const value = values && values.length ? values[0] : '';
       this.filteredTableData[index].value = value;
       this.updateOriginalData(index, value);
 
 
     } else if (index === -1) {
-      this.multiValue = value;
-
+      // Multi-edit: apply values to selected rows in order
+      const selectedIndexes: number[] = [];
       for (let i = 0; i < this.filteredTableData.length; i++) {
         if (this.filteredTableData[i].selected) {
-          this.updateOriginalData(i, value);
+          selectedIndexes.push(i);
         }
+      }
+      // Ensure parity: values array length equals selected count; if not, fill with first
+      const arr = (values && values.length)
+        ? values.slice(0, selectedIndexes.length).concat(new Array(Math.max(0, selectedIndexes.length - values.length)).fill(values[0]))
+        : new Array(selectedIndexes.length).fill('');
+
+      this.multiValue = arr;
+
+      for (let j = 0; j < selectedIndexes.length; j++) {
+        this.updateOriginalData(selectedIndexes[j], arr[j]);
       }
     }
   }
@@ -250,6 +261,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   private countSelections() {
     this.selectionCount = this.filteredTableData.filter(row => row.selected).length;
+    this.rebuildMultiValueFromSelection();
   }
 
   private createForm(): FormGroup {
@@ -406,6 +418,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
     this.filteredTableData = filtered;
     this.cdr.detectChanges();
+    this.countSelections();
   }
 
   private passesCheckboxFilters(key: string): boolean {
@@ -499,6 +512,16 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
     this.cdr.detectChanges();
     this.lookAndFeelService.emitColors(this.tableData2Colors());
+  }
+
+  private rebuildMultiValueFromSelection(): void {
+    const arr: string[] = [];
+    for (let i = 0; i < this.filteredTableData.length; i++) {
+      if (this.filteredTableData[i].selected) {
+        arr.push(this.filteredTableData[i].value);
+      }
+    }
+    this.multiValue = arr;
   }
 
   private tableData2Colors() {

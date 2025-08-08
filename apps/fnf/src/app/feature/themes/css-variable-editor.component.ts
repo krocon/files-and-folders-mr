@@ -6,7 +6,11 @@ import {ColorService} from './color.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
-import {ColorChangeDialogComponent} from './color-change-dialog.component';
+import {
+  ColorChangeDialogComponent,
+  ColorChangeDialogData,
+  ColorChangeDialogResult
+} from './color-change-dialog.component';
 
 
 @Component({
@@ -27,45 +31,59 @@ export class CssVariableEditorComponent {
 
   @Input() cpPosition: string = 'bottom';
   @Input() key: string = '';
-  @Input() value: string = '';
+  // Value is an array; first element is visualized, outputs mirror the input length
+  @Input() value: string[] = [];
   @Input() presetColors: string[] = [];
   @Input() themeTableData: any[] = [];
 
-  @Output() valueChange = new EventEmitter<string>();
-  @Output() colorChange = new EventEmitter<string>();
+  @Output() valueChange = new EventEmitter<string[]>();
+  @Output() colorChange = new EventEmitter<string[]>();
 
   constructor(private readonly colorService: ColorService, private readonly dialog: MatDialog) {
   }
 
   openColorChangeDialog(): void {
-    const initialColor = this.getColorPreview(this.value);
-    const dialogRef = this.dialog.open<ColorChangeDialogComponent, {
-      colors: string[];
-      onChange: (colors: string[]) => void
-    }, { colors: string[] }>(
+    const firstColor = this.getFirstColor();
+    const initialColor = this.getColorPreview(firstColor);
+
+    // pass current array of values (or a single item) to the dialog
+    const colorsForDialog: string[] = (this.value && this.value.length > 0)
+      ? [...this.value]
+      : [initialColor];
+
+    const dialogRef = this.dialog.open<ColorChangeDialogComponent, ColorChangeDialogData, ColorChangeDialogResult>(
       ColorChangeDialogComponent,
       {
         data: {
-          colors: [initialColor],
-          onChange: (cs: string[]) => this.onColorChange(cs[0])
+          colors: colorsForDialog,
+          onChange: (cs: string[]) => this.onColorArrayChange(cs)
         }
       }
     );
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.colors && result.colors.length > 0) {
-        this.onColorChange(result.colors[0]);
+        this.onColorArrayChange(result.colors);
       }
     });
   }
 
-  onValueChange(value: string): void {
-    this.value = value;
-    this.valueChange.emit(value);
+  // Exposed for template change of text input
+  onValueChangeSingle(val: string): void {
+    const len = Math.max(1, this.value?.length || 0);
+    const arr = new Array(len).fill(val);
+    this.value = arr;
+    this.valueChange.emit(arr);
   }
 
-  onColorChange(color: string): void {
-    this.value = color;
-    this.colorChange.emit(color);
+  // Programmatic color changes from picker or dialog
+  onColorArrayChange(colors: string[]): void {
+    const len = Math.max(1, this.value?.length || 0);
+    // Ensure emitted array length equals current input length
+    const arr = (colors && colors.length)
+      ? colors.slice(0, len).concat(new Array(Math.max(0, len - colors.length)).fill(colors[0]))
+      : new Array(len).fill(this.firstValue());
+    this.value = arr;
+    this.colorChange.emit(arr);
   }
 
   endsWith(key: string | undefined, suffix: string): boolean {
@@ -81,6 +99,15 @@ export class CssVariableEditorComponent {
 
   private getColorValue(key: string): string {
     return this.themeTableData.filter(row => row.key === key)[0]?.value || '';
+  }
+
+  private firstValue(): string {
+    return (this.value && this.value.length > 0) ? this.value[0] : '';
+  }
+
+  // Returns the first color considering the value array
+  private getFirstColor(): string {
+    return this.firstValue();
   }
 
   getColorPreview(value: string, loop: number = 0): string {

@@ -168,7 +168,7 @@
                 <td class="body-cell value-cell">
                   <app-css-variable-editor
                       [key]="row.key"
-                      [value]="row.value"
+                      [value]="[row.value]"
                       [presetColors]="presetColors"
                       [themeTableData]="themeTableData"
                       (valueChange)="onValueChange(i, $event)"
