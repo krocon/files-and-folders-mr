@@ -58,7 +58,8 @@ export class CssVariableEditorComponent {
           maxHeight: '100vH',
           data: {
             rows: rowsForDialog,
-            onChange: (rows: ThemeTableRow[]) => this.onColorRowsChange(rows)
+            onChange: (rows: ThemeTableRow[]) => this.onColorRowsChange(rows),
+            themeTableData: this.themeTableData
           }
         }
       );

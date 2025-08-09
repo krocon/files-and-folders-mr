@@ -13,6 +13,7 @@ import {ColorService} from './color.service';
 import {ThemeTableRow} from './theme-table-row.model';
 
 export interface ColorChangeDialogData {
+  themeTableData: ThemeTableRow[];
   rows: ThemeTableRow[];
   onChange?: (rows: ThemeTableRow[]) => void;
 }
@@ -58,48 +59,65 @@ export class ColorChangeDialogComponent {
   blendColor: string = '#000000';
   blendAlpha: number = 0; // 0..1 (0 means disabled/no effect)
 
+  private themeTableData: ThemeTableRow[];
+
   constructor(
     public dialogRef: MatDialogRef<ColorChangeDialogComponent, ColorChangeDialogResult | undefined>,
     @Inject(MAT_DIALOG_DATA) public data: ColorChangeDialogData,
     private readonly colorService: ColorService,
   ) {
+    this.themeTableData = data.themeTableData;
     this.originalRows = [...(data.rows || [])].map(r => ({...r}));
     this.workingRows = this.originalRows.map(r => ({...r}));
   }
 
   // Central recompute based on current controls applied to originalRows
   recompute(): void {
-    const transformed = this.originalRows.map((orig) => {
-      let c = orig.value;
+    const transformed =
+      this.originalRows
+        .map((orig) => {
+          let c = orig.value;
+          if (c.startsWith('var(')) {
+            c = this.getColorByVar(c);
+          }
 
-      if (this.invertEnabled) {
-        c = this.colorService.invertCssColor(c);
-      }
+          if (this.invertEnabled) {
+            c = this.colorService.invertCssColor(c);
+          }
 
-      if (this.lightnessDelta !== 0) {
-        c = this.lightnessDelta > 0
-          ? this.colorService.brighter(c, this.lightnessDelta)
-          : this.colorService.darker(c, -this.lightnessDelta);
-      }
+          if (this.lightnessDelta !== 0) {
+            c = this.lightnessDelta > 0
+              ? this.colorService.brighter(c, this.lightnessDelta)
+              : this.colorService.darker(c, -this.lightnessDelta);
+          }
 
-      if (this.transparency > 0) {
-        c = this.colorService.transparent(c, this.transparency);
-      }
+          if (this.transparency > 0) {
+            c = this.colorService.transparent(c, this.transparency);
+          }
 
-      if (this.mergeRatio > 0) {
-        c = this.colorService.mergeColors(c, this.mergeColor, this.mergeRatio, this.mergeMode);
-      }
+          if (this.mergeRatio > 0) {
+            c = this.colorService.mergeColors(c, this.mergeColor, this.mergeRatio, this.mergeMode);
+          }
 
-      if (this.blendAlpha > 0) {
-        c = this.colorService.blendColorsAlpha(c, this.blendColor, this.blendAlpha);
-      }
+          if (this.blendAlpha > 0) {
+            c = this.colorService.blendColorsAlpha(c, this.blendColor, this.blendAlpha);
+          }
 
-      return {...orig, value: c};
-    });
+          return {...orig, value: c};
+        });
 
     this.workingRows = transformed;
     // Emit the change immediately if a callback is provided
     this.data.onChange?.(this.workingRows);
+  }
+
+  private getColorByVar(varStr: string): string {
+    const key = varStr.replace('var(', '').replace(')', '');
+    const value = this.themeTableData.filter(row => row.key === key)[0]?.value || '';
+    if (value.startsWith('var(')) {
+      return this.getColorByVar(value);
+    }
+    return value;
   }
 
   // Actions for compatibility and quick toggles
