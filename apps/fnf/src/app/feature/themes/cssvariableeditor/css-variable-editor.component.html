@@ -4,8 +4,8 @@
       @if (endsWithKey('-color')) {
         <div
             class="color-preview"
-            [style.background-color]="getColorPreview(value && value.length ? value[0].value : '')"
-            [colorPicker]="value && value.length ? value[0].value : ''"
+            [style.background-color]="getColorPreview(rows && rows.length ? rows[0].value : '')"
+            [colorPicker]="rows && rows.length ? rows[0].value : ''"
             (colorPickerChange)="onColorArrayChange([$event])"
             [cpPosition]="cpPosition"
             [cpPresetColors]="presetColors"></div>
@@ -13,7 +13,7 @@
     </div>
     <input
         (ngModelChange)="onValueChangeSingle($event)"
-        [ngModel]="value && value.length ? value[0].value : ''"
+        [ngModel]="rows && rows.length ? rows[0].value : ''"
         class="color-text-input"
         placeholder="CSS color or variable">
 

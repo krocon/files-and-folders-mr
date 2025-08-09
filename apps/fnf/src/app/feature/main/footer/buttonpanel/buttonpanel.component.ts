@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, ElementRef,
+  Component,
   HostListener,
   Input,
   OnDestroy,
-  OnInit, ViewChild
+  OnInit,
+  ViewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
@@ -23,7 +24,7 @@ import {TaskButtonComponent} from "../../../task/task-list/task-button.component
 import {FnfActionLabels} from "../../../../domain/action/fnf-action-labels";
 import {takeWhile} from "rxjs/operators";
 import {ActionExecutionService} from "../../../../service/action-execution.service";
-import {LookAndFeelService} from "../../../themes/look-and-feel.service";
+import {LookAndFeelService} from "../../../themes/service/look-and-feel.service";
 import {ConfigButtonsService} from "../../../../service/config/config-buttons.service";
 import {ConfigThemesService} from "../../../../service/config/config-themes.service";
 import {MatTooltip} from "@angular/material/tooltip";

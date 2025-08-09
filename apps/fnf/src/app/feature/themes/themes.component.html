@@ -174,9 +174,9 @@
 
                 <td class="body-cell value-cell">
                   <app-css-variable-editor
-                      [value]="[row]"
+                      [rows]="[row]"
                       [presetColors]="presetColors"
-                      [themeTableData]="themeTableData"
+                      [allThemeTableData]="themeTableData"
                       (valueChange)="onValueChange(i, $event)"
                       (colorChange)="onColorChange(i, $event)"></app-css-variable-editor>
                 </td>
@@ -225,9 +225,9 @@
       </div>
       <app-css-variable-editor
           [cpPosition]="'top'"
-          [value]="multiValue"
+          [rows]="multiValue"
           [presetColors]="presetColors"
-          [themeTableData]="themeTableData"
+          [allThemeTableData]="themeTableData"
           (valueChange)="onValueChange(-1, $event)"
           (colorChange)="onColorChange(-1, $event)"></app-css-variable-editor>
     }

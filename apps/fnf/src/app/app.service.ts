@@ -1,5 +1,5 @@
 import {Injectable, Output} from "@angular/core";
-import {LookAndFeelService} from "./feature/themes/look-and-feel.service";
+import {LookAndFeelService} from "./feature/themes/service/look-and-feel.service";
 import {ShortcutActionMapping, ShortcutService} from "./service/config/shortcut.service";
 import {SysinfoService} from "./service/sysinfo.service";
 import {ConfigService} from "./service/config/config.service";

@@ -1,9 +1,10 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ColorChangeDialogComponent, ColorChangeDialogData} from './color-change-dialog.component';
-import {ColorService} from './color.service';
-import {ThemeTableRow} from './theme-table-row.model';
+import {ColorChangeDialogComponent} from './color-change-dialog.component';
+import {ColorService} from '../service/color.service';
+import {ThemeTableRow} from '../theme-table-row.model';
+import {ColorChangeDialogData} from "./color-change-dialog.data";
 
 describe('ColorChangeDialogComponent', () => {
   let component: ColorChangeDialogComponent;

@@ -9,18 +9,10 @@ import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatSlider, MatSliderThumb} from '@angular/material/slider';
-import {ColorService} from './color.service';
-import {ThemeTableRow} from './theme-table-row.model';
-
-export interface ColorChangeDialogData {
-  themeTableData: ThemeTableRow[];
-  rows: ThemeTableRow[];
-  onChange?: (rows: ThemeTableRow[]) => void;
-}
-
-export interface ColorChangeDialogResult {
-  rows: ThemeTableRow[];
-}
+import {ColorService} from '../service/color.service';
+import {ThemeTableRow} from '../theme-table-row.model';
+import {ColorChangeDialogResult} from "./color-change-dialog.result";
+import {ColorChangeDialogData} from "./color-change-dialog.data";
 
 @Component({
   selector: 'app-color-change-dialog',
@@ -71,6 +63,7 @@ export class ColorChangeDialogComponent {
     this.workingRows = this.originalRows.map(r => ({...r}));
   }
 
+
   // Central recompute based on current controls applied to originalRows
   recompute(): void {
     const transformed =
@@ -107,49 +100,17 @@ export class ColorChangeDialogComponent {
         });
 
     this.workingRows = transformed;
-    // Emit the change immediately if a callback is provided
+    // Emit:
     this.data.onChange?.(this.workingRows);
   }
 
-  private getColorByVar(varStr: string): string {
-    const key = varStr.replace('var(', '').replace(')', '');
-    const value = this.themeTableData.filter(row => row.key === key)[0]?.value || '';
-    if (value.startsWith('var(')) {
-      return this.getColorByVar(value);
-    }
-    return value;
-  }
 
-  // Actions for compatibility and quick toggles
   applyInvert(): void {
     this.invertEnabled = !this.invertEnabled;
     this.recompute();
   }
 
   applyMerge(): void {
-    // No separate apply button in UI anymore, but keep method for tests/compatibility
-    this.recompute();
-  }
-
-  applyBrighter(): void {
-    // Deprecated in UI (replaced by single slider). Kept for compatibility/tests.
-    this.lightnessDelta = Math.abs(this.lightnessDelta || 0);
-    this.recompute();
-  }
-
-  applyDarker(): void {
-    // Deprecated in UI (replaced by single slider). Kept for compatibility/tests.
-    this.lightnessDelta = -Math.abs(this.lightnessDelta || 0);
-    this.recompute();
-  }
-
-  applyTransparent(): void {
-    // Transparency taken from this.transparency via slider
-    this.recompute();
-  }
-
-  applyBlend(): void {
-    // Blend parameters taken from this.blendColor and this.blendAlpha via UI
     this.recompute();
   }
 
@@ -164,17 +125,24 @@ export class ColorChangeDialogComponent {
     this.blendAlpha = 0;
     this.blendColor = '#000000';
     this.workingRows = this.originalRows.map(r => ({...r}));
-    // Emit reset rows immediately
+    // Emit:
     this.data.onChange?.(this.workingRows);
   }
 
-  onCancel(): void {
-    this.dialogRef.close(undefined);
-  }
-
   onApply(): void {
-    // Ensure latest settings are reflected
     this.recompute();
     this.dialogRef.close({rows: this.workingRows});
+  }
+
+  private getColorByVar(varStr: string, loop: number = 0): string {
+    const key = varStr.replace('var(', '').replace(')', '');
+    const value = this.themeTableData.filter(row => row.key === key)[0]?.value || '';
+    if (value.startsWith('var(')) {
+      if (loop > 10) {
+        return '#ffffff';
+      }
+      return this.getColorByVar(value, (loop + 1));
+    }
+    return value;
   }
 }

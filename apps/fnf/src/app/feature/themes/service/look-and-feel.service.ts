@@ -1,9 +1,9 @@
 import {Inject, Injectable} from "@angular/core";
 import {DOCUMENT} from "@angular/common";
-import {TypedDataService} from "../../common/typed-data.service";
+import {TypedDataService} from "../../../common/typed-data.service";
 import {Socket} from "ngx-socket-io";
 import {ColorDataIf, CssColors} from "@fnf-data";
-import {ConfigThemesService} from "../../service/config/config-themes.service";
+import {ConfigThemesService} from "../../../service/config/config-themes.service";
 
 
 @Injectable({

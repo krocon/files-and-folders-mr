@@ -3,8 +3,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {of} from 'rxjs';
 import {CssVariableEditorComponent} from './css-variable-editor.component';
 import {MatDialog} from '@angular/material/dialog';
-import {ColorService} from './color.service';
-import {ThemeTableRow} from './theme-table-row.model';
+import {ColorService} from '../service/color.service';
+import {ThemeTableRow} from '../theme-table-row.model';
 
 
 describe('CssVariableEditorComponent', () => {
@@ -33,7 +33,7 @@ describe('CssVariableEditorComponent', () => {
     fixture = TestBed.createComponent(CssVariableEditorComponent);
     component = fixture.componentInstance;
     // set inputs
-    component.value = [{selected: false, key: 'primary-color', value: '#ff0000'} as ThemeTableRow];
+    component.rows = [{selected: false, key: 'primary-color', value: '#ff0000'} as ThemeTableRow];
     fixture.detectChanges();
   });
 
@@ -57,7 +57,7 @@ describe('CssVariableEditorComponent', () => {
 
     component.openColorChangeDialog();
 
-    expect(component.value.map(r => r.value)).toEqual(['#00ff00']);
+    expect(component.rows.map(r => r.value)).toEqual(['#00ff00']);
     expect(emitted.map(arr => arr.map(r => r.value))).toEqual([['#00ff00']]);
   });
 
@@ -67,7 +67,7 @@ describe('CssVariableEditorComponent', () => {
       {selected: false, key: 'k2', value: '#222222'},
       {selected: false, key: 'k3', value: '#333333'},
     ];
-    component.value = [...provided];
+    component.rows = [...provided];
     const emitted: ThemeTableRow[][] = [];
     component.colorChange.subscribe(v => emitted.push(v));
 
@@ -88,16 +88,16 @@ describe('CssVariableEditorComponent', () => {
     expect(callArgs.data.rows.map((r: ThemeTableRow) => r.value)).toEqual(provided.map(r => r.value));
 
     // After close, ensure length equals input length (3), padding with first returned color
-    expect(component.value.map(r => r.value)).toEqual(['#aaaaaa', '#bbbbbb', '#aaaaaa']);
+    expect(component.rows.map(r => r.value)).toEqual(['#aaaaaa', '#bbbbbb', '#aaaaaa']);
     expect(emitted.map(arr => arr.map(r => r.value))).toEqual([['#aaaaaa', '#bbbbbb', '#aaaaaa']]);
   });
 
   it('openColorChangeDialog should not change when dialog returns undefined', () => {
-    const initial = [...component.value];
+    const initial = [...component.rows];
     mockDialog.open.mockReturnValue({afterClosed: () => of(undefined)});
 
     component.openColorChangeDialog();
 
-    expect(component.value).toEqual(initial);
+    expect(component.rows).toEqual(initial);
   });
 });
