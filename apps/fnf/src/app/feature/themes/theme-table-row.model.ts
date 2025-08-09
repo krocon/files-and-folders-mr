@@ -4,4 +4,3 @@ export interface ThemeTableRow {
   value: string;
 }
 
-export type ThemeTableRows = ThemeTableRow[];

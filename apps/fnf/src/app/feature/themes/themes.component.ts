@@ -17,6 +17,9 @@ import {CssVariableEditorComponent} from './cssvariableeditor/css-variable-edito
 
 import {ThemeTableRow} from './theme-table-row.model';
 import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-confirmation-dialog.service";
+import {MatDivider} from "@angular/material/divider";
+import {AddCssVarDialogService} from "./addcssvar/add-css-var-dialog.service";
+import {AddCssVarDialogData} from "./addcssvar/add-css-var-dialog.data";
 
 
 @Component({
@@ -33,7 +36,8 @@ import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-
     MatFormFieldModule,
     MatIconModule,
     MatCheckboxModule,
-    CssVariableEditorComponent
+    CssVariableEditorComponent,
+    MatDivider
   ],
   templateUrl: './themes.component.html',
   styleUrls: ['./themes.component.css'],
@@ -42,9 +46,11 @@ import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-
 export class ThemesComponent implements OnInit, OnDestroy {
 
   themeForm: FormGroup;
+
   themeNames: string[] = [];
   defaultThemeNames: string[] = [];
   customThemeNames: string[] = [];
+
   selectedTheme: ColorDataIf | null = null;
   themeTableData: ThemeTableRow[] = [];
   filteredTableData: ThemeTableRow[] = [];
@@ -64,6 +70,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly configThemesService: ConfigThemesService,
@@ -71,6 +78,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     private readonly colorService: ColorService,
     private readonly lookAndFeelService: LookAndFeelService,
     private readonly confirmationDialogService: FnfConfirmationDialogService,
+    private readonly addCssVarDialogService: AddCssVarDialogService,
   ) {
     this.themeForm = this.createForm();
   }
@@ -274,6 +282,76 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.updateNameValidation();
   }
 
+  isDeleteEnabled(): boolean {
+    if (!this.themeForm) return false;
+    return !this.defaultThemeNames.includes(this.themeForm.get('selectedThemeName')?.value);
+  }
+
+  onDeleteTheme() {
+    if (!this.themeForm) return;
+
+    const nameControl = this.themeForm.get('selectedThemeName');
+    const name = (nameControl?.value || '').trim();
+
+    // Only allow deletion of custom themes
+    if (!name || !this.isDeleteEnabled()) {
+      return;
+    }
+
+    this.confirmationDialogService.simpleConfirm(
+      'Delete', `Do you want to delete '${name}'?`,
+      () => {
+        this.isSaving = true;
+        this.cdr.detectChanges();
+
+        this.configThemesService.deleteTheme(name)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.isSaving = false;
+              // Choose a safe fallback theme (prefer 'light')
+              const fallback = 'light';
+              this.onThemeSelect(fallback);
+              this.loadTheme(fallback);
+              // Refresh known names after deletion
+              this.loadThemeNames();
+              this.cdr.detectChanges();
+            },
+            error: (error) => {
+              console.error('Error deleting theme:', error);
+              this.isSaving = false;
+              this.cdr.detectChanges();
+            }
+          });
+      });
+  }
+
+  onAddCssVariableClicked() {
+    if (this.selectedTheme !== null) {
+      const para = new AddCssVarDialogData(this.selectedTheme);
+      this.addCssVarDialogService.open(
+        para,
+        result => {
+          if (result?.target) {
+
+            const item = {
+              selected: true,
+              key: result.target,
+              value: '#ffffff'
+            };
+            this.filteredTableData.push(item);
+            this.themeTableData.push(item);
+            this.filteredTableData.sort(); // TODO comparator
+            this.themeTableData.sort();// TODO comparator
+
+            this.cdr.detectChanges();
+            console.log('this.filteredTableData', this.filteredTableData);
+          }
+        }
+      )
+    }
+  }
+
   private countSelections() {
     this.selectionCount = this.filteredTableData.filter(row => row.selected).length;
     this.rebuildMultiValueFromSelection();
@@ -330,8 +408,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
     // Subscribe to filter changes
     this.themeForm.get('tableFilter')?.valueChanges
       .pipe(takeUntil(this.destroy$))
-      .subscribe(filterValue => {
-        this.applyTableFilter(filterValue || '');
+      .subscribe(_ => {
+        this.applyFilters();
       });
 
     // Subscribe to checkbox filter changes
@@ -342,11 +420,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
           this.applyFilters();
         });
     });
-  }
-
-  isDeleteEnabled(): boolean {
-    if (!this.themeForm) return false;
-    return !this.defaultThemeNames.includes(this.themeForm.get('selectedThemeName')?.value);
   }
 
   private loadThemeNames(): void {
@@ -421,10 +494,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
       key,
       value
     }));
-    this.applyTableFilter(this.themeForm.get('tableFilter')?.value || '');
-  }
-
-  private applyTableFilter(filterValue: string): void {
     this.applyFilters();
   }
 
@@ -584,45 +653,4 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
     return colors;
   }
-
-
-  onDeleteTheme() {
-    if (!this.themeForm) return;
-
-    const nameControl = this.themeForm.get('selectedThemeName');
-    const name = (nameControl?.value || '').trim();
-
-    // Only allow deletion of custom themes
-    if (!name || !this.isDeleteEnabled()) {
-      return;
-    }
-
-    this.confirmationDialogService.simpleConfirm(
-      'Delete', `Do you want to delete '${name}'?`,
-      () => {
-        this.isSaving = true;
-        this.cdr.detectChanges();
-
-        this.configThemesService.deleteTheme(name)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe({
-            next: () => {
-              this.isSaving = false;
-              // Choose a safe fallback theme (prefer 'light')
-              const fallback = 'light';
-              this.onThemeSelect(fallback);
-              this.loadTheme(fallback);
-              // Refresh known names after deletion
-              this.loadThemeNames();
-              this.cdr.detectChanges();
-            },
-            error: (error) => {
-              console.error('Error deleting theme:', error);
-              this.isSaving = false;
-              this.cdr.detectChanges();
-            }
-          });
-      });
-  }
-
 }

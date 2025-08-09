@@ -1,0 +1,44 @@
+<h2
+    data-test-id="page-subtitle-h2"
+    mat-dialog-title>Add new CSS Variable</h2>
+
+<mat-dialog-content>
+  <form
+      [formGroup]="formGroup"
+      autocomplete="off">
+
+    <mat-form-field>
+      <input
+          (keydown.enter)="onOkClicked()"
+          [fnfAutofocus]="true"
+          formControlName="target"
+          matInput
+          placeholder="New CSS Variable"/>
+      <span
+          matTextPrefix
+          [innerText]="textPrefix"></span>
+      <span
+          matTextSuffix
+          [innerText]="textSuffix"></span>
+      <mat-error>Wrong value</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button"
+      mat-raised-button>
+    Cancel
+  </button>
+
+  <button
+      (click)="onOkClicked()"
+      [disabled]="!formGroup.valid"
+      color="primary"
+      data-test-id="dialog-ok-button"
+      mat-raised-button>
+    Create
+  </button>
+</mat-dialog-actions>

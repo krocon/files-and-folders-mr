@@ -38,7 +38,7 @@
     background: transparent;
 
     display: grid;
-    grid-template-columns: 200px 200px 1fr 400px auto;
+    grid-template-columns: 200px 200px 1fr auto auto 12px;
     gap: 20px;
     align-items: baseline;
 
@@ -67,6 +67,10 @@
         grid-gap: 24px;
         align-items: center;
     }
+}
+
+.custom-table td {
+    overflow-y: visible;
 }
 
 .no-data-message,

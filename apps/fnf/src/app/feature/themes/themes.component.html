@@ -12,10 +12,18 @@
             color=""
             mat-raised-button>
           {{ themeForm.get('selectedThemeName')?.value || 'Load Theme' }}
-          <mat-icon>arrow_drop_down</mat-icon>
         </button>
+
         <mat-menu #themeMenu="matMenu">
-          @for (themeName of themeNames; track themeName) {
+          @for (themeName of customThemeNames; track themeName) {
+            <button
+                mat-menu-item
+                (click)="onThemeSelect(themeName)">
+              {{ themeName }}
+            </button>
+          }
+          <mat-divider></mat-divider>
+          @for (themeName of defaultThemeNames; track themeName) {
             <button
                 mat-menu-item
                 (click)="onThemeSelect(themeName)">
@@ -34,8 +42,15 @@
 
       <div><!-- spacer --></div>
 
+      <button
+          mat-raised-button
+          color="secondary"
+          (click)="onAddCssVariableClicked()">
+        Add CSS Variable
+      </button>
+
       <div class="table-filter-group">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="fill">
           <mat-label>Table Filter</mat-label>
           <input
               formControlName="tableFilter"
@@ -44,6 +59,8 @@
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
+
+      <div><!-- spacer --></div>
     </div>
 
     <!-- Filter Checkboxes Section -->
@@ -132,6 +149,7 @@
         </mat-checkbox>
       </div>
     </div>
+
   </form>
 </div>
 
@@ -150,7 +168,7 @@
 
 
         <table class="custom-table">
-          <thead class="table-header">
+          <thead>
           <tr>
             <th class="header-cell checkbox-cell">Selected</th>
             <th class="header-cell key-cell">Key</th>
@@ -158,7 +176,7 @@
           </tr>
           </thead>
 
-          <tbody class="table-body">
+          <tbody>
             @for (row of filteredTableData; track row.key; let i = $index) {
               <tr
                   class="table-row"
