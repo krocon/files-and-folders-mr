@@ -92,9 +92,10 @@
     border-top: 1px solid var(--fnf-header-border-color, #ddd);
 
     .multi-edit-div {
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-template-columns: auto auto auto auto;
         gap: 12px;
+        align-items: center;
     }
 
     .spacer {

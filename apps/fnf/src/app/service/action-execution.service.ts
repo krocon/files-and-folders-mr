@@ -140,7 +140,7 @@ export class ActionExecutionService {
 
     } else if (id === "OPEN_THEMES_DLG") {
       // this.router.navigate(['/themes']);
-      const strWindowFeatures = "location=no,height=800,width=1600,scrollbars=yes,status=yes";
+      const strWindowFeatures = "location=no,height=1000,width=1200,scrollbars=yes,status=yes";
       const url = location.origin + "/themes";
       window.open(url, "_blank", strWindowFeatures);
 

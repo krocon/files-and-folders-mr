@@ -1,4 +1,4 @@
-<div class="value-editor">
+
   <div class="color-input-container">
     <div>
       @if (endsWithKey('-color')) {
@@ -16,23 +16,15 @@
         [ngModel]="value && value.length ? value[0].value : ''"
         class="color-text-input"
         placeholder="CSS color or variable">
-    <div class="actions">
-      @if (endsWithKey('-color') && isColorValue(value && value.length ? value[0].value : '')) {
-        <input
-            class="color-text-input"
-            type="color"
-            [ngModel]="value && value.length ? value[0].value : ''"
-            (ngModelChange)="onValueChangeSingle($event)"
-            placeholder="CSS color or variable">
-      }
-      @if (endsWithKey('-color')) {
-        <button
-            (click)="openColorChangeDialog()"
-            aria-label="Open color transform dialog"
-            matIconButton>
-          <mat-icon>tune</mat-icon>
-        </button>
-      }
-    </div>
+
+    @if (endsWithKey('-color')) {
+      <button
+          class="tune-button"
+          (click)="openColorChangeDialog()"
+          aria-label="Open color transform dialog"
+          matIconButton>
+        <mat-icon>tune</mat-icon>
+      </button>
+    }
+
   </div>
-</div>

@@ -39,6 +39,16 @@
   <div class="section">
     <div class="row">
       <mat-form-field appearance="outline">
+        <mat-label>Mode</mat-label>
+        <mat-select
+            (ngModelChange)="recompute()"
+            [(ngModel)]="mergeMode">
+          <mat-option value="alpha">alpha</mat-option>
+          <mat-option value="additive">additive</mat-option>
+          <mat-option value="average">average</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Merge color</mat-label>
         <input
             (ngModelChange)="recompute()"
@@ -51,20 +61,10 @@
           [(ngModel)]="mergeColor"
           class="native-color"
           type="color"/>
-      <mat-form-field appearance="outline">
-        <mat-label>Mode</mat-label>
-        <mat-select
-            (ngModelChange)="recompute()"
-            [(ngModel)]="mergeMode">
-          <mat-option value="alpha">alpha</mat-option>
-          <mat-option value="additive">additive</mat-option>
-          <mat-option value="average">average</mat-option>
-        </mat-select>
-      </mat-form-field>
     </div>
 
     <div class="label-slider">
-      <mat-label>Ratio: {{ mergeRatio | number:'1.0-2' }}</mat-label>
+      <mat-label>Merge Ratio: {{ mergeRatio | number:'1.0-2' }}</mat-label>
       <mat-slider
           [max]="1"
           [min]="0"
@@ -95,7 +95,7 @@
     </div>
 
     <div class="label-slider">
-      <mat-label>Alpha: {{ blendAlpha | number:'1.0-2' }}</mat-label>
+      <mat-label>Blend Alpha: {{ blendAlpha | number:'1.0-2' }}</mat-label>
       <mat-slider
           [max]="1"
           [min]="0"

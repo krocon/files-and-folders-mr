@@ -1,19 +1,19 @@
 .color-input-container {
     display: grid;
-    grid-template-columns: 45px 250px auto auto;
+    grid-template-columns: auto 250px auto;
     justify-content: start;
-    align-items: center;
-    gap: 12px;
+    align-items: top;
+    gap: 4px;
     position: relative;
 
     .color-text-input,
     & > * {
-        height: 30px !important;
+        height: 36px !important;
     }
 
     .color-preview {
         width: 30px;
-        height: 30px;
+        height: 36px;
         border: 2px solid #ccc;
         border-radius: 4px;
         cursor: pointer;
@@ -32,4 +32,8 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+
+    .tune-button {
+        width: 24px;
+    }
 }
