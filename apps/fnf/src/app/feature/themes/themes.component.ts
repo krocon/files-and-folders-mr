@@ -70,6 +70,15 @@ export class ThemesComponent implements OnInit, OnDestroy {
   public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
+  getIndexFromVarValue(value: string): number {
+    const key = value.replace('var(', '').replace(')', '');
+    return this.filteredTableData.findIndex(row => row.key === key);
+  }
+
+  getRowFromVarValue(value: string): ThemeTableRow {
+    const idx = this.getIndexFromVarValue(value);
+    return this.filteredTableData[idx];
+  }
 
   constructor(
     private readonly formBuilder: FormBuilder,

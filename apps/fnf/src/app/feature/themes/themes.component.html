@@ -182,6 +182,7 @@
                 class="header-cell value-cell"
                 (dblclick)="onHeaderDblClick('value')">Value
             </th>
+            <th></th>
           </tr>
           </thead>
 
@@ -207,6 +208,23 @@
                       [allThemeTableData]="themeTableData"
                       (valueChange)="onColorChange(i, $event)"
                       (colorChange)="onColorChange(i, $event)"></app-css-variable-editor>
+
+
+                </td>
+                <td>
+                  @if (row.value.startsWith('var(')) {
+                    <div class="two-column-div">
+                      <div>&larr;&nbsp;&nbsp;{{ getRowFromVarValue(row.value).key }}</div>
+
+                      <app-css-variable-editor
+                          [refresh]="refreshIndex"
+                          [rows]="[getRowFromVarValue(row.value)]"
+                          [presetColors]="presetColors"
+                          [allThemeTableData]="themeTableData"
+                          (valueChange)="onColorChange(getIndexFromVarValue(row.value), $event)"
+                          (colorChange)="onColorChange(getIndexFromVarValue(row.value), $event)"></app-css-variable-editor>
+                    </div>
+                  }
                 </td>
               </tr>
             }

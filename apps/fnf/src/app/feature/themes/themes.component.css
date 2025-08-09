@@ -79,6 +79,13 @@
     }
 }
 
+.two-column-div {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: center;
+}
+
 .no-data-message,
 .no-selection-message {
     display: flex;
