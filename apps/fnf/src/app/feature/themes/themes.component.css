@@ -69,8 +69,14 @@
     }
 }
 
-.custom-table td {
-    overflow-y: visible;
+.custom-table {
+    th {
+        cursor: pointer;
+    }
+
+    td {
+        overflow-y: visible;
+    }
 }
 
 .no-data-message,

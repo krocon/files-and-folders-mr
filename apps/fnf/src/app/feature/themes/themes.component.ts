@@ -15,7 +15,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {LookAndFeelService} from "./service/look-and-feel.service";
 import {CssVariableEditorComponent} from './cssvariableeditor/css-variable-editor.component';
 
-import {ThemeTableRow} from './theme-table-row.model';
+import {SortDirection, ThemeTableColumn, ThemeTableRow, themeTableRowComparator} from './theme-table-row.model';
 import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-confirmation-dialog.service";
 import {MatDivider} from "@angular/material/divider";
 import {AddCssVarDialogService} from "./addcssvar/add-css-var-dialog.service";
@@ -44,6 +44,9 @@ import {AddCssVarDialogData} from "./addcssvar/add-css-var-dialog.data";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemesComponent implements OnInit, OnDestroy {
+
+  sortColumn: ThemeTableColumn | null = null;
+  sortDirection: SortDirection = 'asc';
 
   refreshIndex = 0;
   themeForm: FormGroup;
@@ -333,11 +336,12 @@ export class ThemesComponent implements OnInit, OnDestroy {
               selected: true,
               key: result.target,
               value: '#ffffff'
-            };
+            } as ThemeTableRow;
             this.filteredTableData.push(item);
             this.themeTableData.push(item);
-            this.filteredTableData.sort(); // TODO comparator
-            this.themeTableData.sort();// TODO comparator
+
+            // Apply current sorting if any
+            this.applySort();
 
             this.cdr.detectChanges();
             console.log('this.filteredTableData', this.filteredTableData);
@@ -514,9 +518,38 @@ export class ThemesComponent implements OnInit, OnDestroy {
     // Apply checkbox filters
     filtered = filtered.filter(row => this.passesCheckboxFilters(row.key));
 
+    // Apply sorting if active
+    if (this.sortColumn) {
+      const comparator = themeTableRowComparator(this.sortColumn, this.sortDirection);
+      filtered.sort(comparator);
+    }
+
     this.filteredTableData = filtered;
     this.cdr.detectChanges();
     this.countSelections();
+  }
+
+  onHeaderDblClick(column: ThemeTableColumn): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.applySort();
+  }
+
+  private applySort(): void {
+    if (!this.sortColumn) {
+      // No sorting requested; just re-apply filters to rebuild filtered data
+      this.applyFilters();
+      return;
+    }
+    const comparator = themeTableRowComparator(this.sortColumn, this.sortDirection);
+    // Sort the source data so future filtering maintains consistent order
+    this.themeTableData.sort(comparator);
+    // Re-apply filters to get filtered view and ensure it is sorted
+    this.applyFilters();
   }
 
   private passesCheckboxFilters(key: string): boolean {

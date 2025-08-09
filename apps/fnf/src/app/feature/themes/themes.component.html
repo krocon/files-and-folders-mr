@@ -169,10 +169,19 @@
 
         <table class="custom-table">
           <thead>
-          <tr>
-            <th class="header-cell checkbox-cell">Selected</th>
-            <th class="header-cell key-cell">Key</th>
-            <th class="header-cell value-cell">Value</th>
+          <tr title="Double-click to sort">
+            <th
+                class="header-cell checkbox-cell"
+                (dblclick)="onHeaderDblClick('selected')">Selected
+            </th>
+            <th
+                class="header-cell key-cell"
+                (dblclick)="onHeaderDblClick('key')">Key
+            </th>
+            <th
+                class="header-cell value-cell"
+                (dblclick)="onHeaderDblClick('value')">Value
+            </th>
           </tr>
           </thead>
 
