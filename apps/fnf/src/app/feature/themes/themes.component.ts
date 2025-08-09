@@ -45,6 +45,7 @@ import {AddCssVarDialogData} from "./addcssvar/add-css-var-dialog.data";
 })
 export class ThemesComponent implements OnInit, OnDestroy {
 
+  refreshIndex = 0;
   themeForm: FormGroup;
 
   themeNames: string[] = [];
@@ -62,11 +63,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
   isNamePredefined = false;
   isNameEmpty = true;
 
-  presetColors: string[] = [
-    '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff',
-    '#ffff00', '#ff00ff', '#00ffff', '#ffa500', '#800080',
-    '#008000', '#800000', '#000080', '#808080', '#c0c0c0'
-  ];
+  presetColors: string[] = [];
   public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
@@ -194,11 +191,8 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
 
   onColorChange(index: number, rows: ThemeTableRow[]): void {
-    this.onValueChange(index, rows);
-  }
+    this.refreshIndex++;
 
-
-  onValueChange(index: number, rows: ThemeTableRow[]): void {
     if (index >= 0 && index < this.filteredTableData.length) {
       const value = rows && rows.length ? rows[0].value : '';
       this.filteredTableData[index].value = value;
@@ -233,6 +227,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
       }
       this.multiValue = multiRows;
     }
+    this.cdr.detectChanges();
   }
 
   onSave(): void {

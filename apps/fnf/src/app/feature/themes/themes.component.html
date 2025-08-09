@@ -192,10 +192,11 @@
 
                 <td class="body-cell value-cell">
                   <app-css-variable-editor
+                      [refresh]="refreshIndex"
                       [rows]="[row]"
                       [presetColors]="presetColors"
                       [allThemeTableData]="themeTableData"
-                      (valueChange)="onValueChange(i, $event)"
+                      (valueChange)="onColorChange(i, $event)"
                       (colorChange)="onColorChange(i, $event)"></app-css-variable-editor>
                 </td>
               </tr>
@@ -242,11 +243,12 @@
         Selected:&nbsp;{{ selectionCount }}
       </div>
       <app-css-variable-editor
+          [refresh]="refreshIndex"
           [cpPosition]="'top'"
           [rows]="multiValue"
           [presetColors]="presetColors"
           [allThemeTableData]="themeTableData"
-          (valueChange)="onValueChange(-1, $event)"
+          (valueChange)="onColorChange(-1, $event)"
           (colorChange)="onColorChange(-1, $event)"></app-css-variable-editor>
     }
     <div></div>

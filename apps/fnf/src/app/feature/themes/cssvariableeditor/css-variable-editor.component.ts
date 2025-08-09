@@ -32,13 +32,23 @@ export class CssVariableEditorComponent {
   @Input() rows: ThemeTableRow[] = [];
   @Input() presetColors: string[] = [];
   @Input() allThemeTableData: ThemeTableRow[] = [];
-
   @Output() valueChange = new EventEmitter<ThemeTableRow[]>();
   @Output() colorChange = new EventEmitter<ThemeTableRow[]>();
 
   constructor(
     private readonly colorService: ColorService,
     private readonly dialog: MatDialog) {
+  }
+
+  private _refresh: number = 0;
+
+  get refresh(): number {
+    return this._refresh;
+  }
+
+  @Input()
+  set refresh(value: number) {
+    this._refresh = value;
   }
 
   openColorChangeDialog(): void {
@@ -87,7 +97,6 @@ export class CssVariableEditorComponent {
     this.valueChange.emit(updated);
   }
 
-  // Programmatic color changes from picker (string[]) or dialog (rows)
   onColorArrayChange(colors: string[]): void {
     const len = Math.max(1, this.rows?.length || 0);
     const arr = (colors && colors.length)
