@@ -65,10 +65,20 @@ export class AddCssVarDialogComponent {
               Validators.minLength(1),
               Validators.maxLength(255),
               (control: AbstractControl): ValidationErrors | null => {
+
+                if (control.value && control.value.startsWith('-')) {
+                  return {"invalid": "Cannot start with '-'"};
+                }
+                if (control.value && control.value.endsWith('-')) {
+                  return {"invalid": "Cannot end with '-'"};
+                }
+                if (control.value && control.value.includes('--')) {
+                  return {"invalid": "Cannot contain '--'"};
+                }
                 const v = this.textPrefix + control.value + this.textSuffix;
                 if (control.value && Object.keys(this.data.selectedTheme.colors).includes(v)) {
                   return {
-                    "exists": "Already exists"
+                    "invalid": "Already exists"
                   };
                 }
                 return null;

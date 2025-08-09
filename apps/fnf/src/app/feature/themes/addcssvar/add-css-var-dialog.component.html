@@ -15,13 +15,24 @@
           matInput
           placeholder="New CSS Variable"/>
       <span
-          matTextPrefix
-          [innerText]="textPrefix"></span>
+          [innerText]="textPrefix"
+          matTextPrefix></span>
       <span
-          matTextSuffix
-          [innerText]="textSuffix"></span>
-      <mat-error>Wrong value</mat-error>
+          [innerText]="textSuffix"
+          matTextSuffix></span>
+
+      @if (formGroup.get('target')?.errors) {
+        <mat-error>
+          @if (formGroup.get('target')?.errors?.['required']) {
+            CSS variable name is required
+          }
+          @if (formGroup.get('target')?.errors?.['invalid']) {
+            {{ formGroup.get('target')?.errors?.['invalid'] }}
+          }
+        </mat-error>
+      }
     </mat-form-field>
+
   </form>
 </mat-dialog-content>
 
