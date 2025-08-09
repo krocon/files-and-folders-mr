@@ -61,6 +61,15 @@ export class TaskListCalculationService {
   }
 
   /**
+   * Backward compatibility method - now triggers queue monitoring
+   * @deprecated Use the automatic queue monitoring instead
+   */
+  updateQueue(actions: QueueActionEvent[], queueStatus: QueueStatus) {
+    // For backward compatibility, trigger an immediate update
+    this.monitorQueueAndUpdateEstimates();
+  }
+
+  /**
    * Monitors the main queue and updates estimates based on historical performance data
    */
   private monitorQueueAndUpdateEstimates() {
@@ -225,18 +234,22 @@ export class TaskListCalculationService {
 
     const minutes = Math.floor(totalRemainingSeconds / 60);
     const seconds = Math.floor(totalRemainingSeconds % 60);
-    const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+    if (minutes > 360) {
+      this.renderTime('?');
+      return;
+    }
+
+    let timeString: string;
+    if (minutes >= 60) {
+      const hours = Math.floor(totalRemainingSeconds / 3600);
+      const remainingMinutes = Math.floor((totalRemainingSeconds % 3600) / 60);
+      timeString = `${hours.toString().padStart(2, '0')}:${remainingMinutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+      timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
 
     this.renderTime(timeString);
-  }
-
-  /**
-   * Backward compatibility method - now triggers queue monitoring
-   * @deprecated Use the automatic queue monitoring instead
-   */
-  updateQueue(actions: QueueActionEvent[], queueStatus: QueueStatus) {
-    // For backward compatibility, trigger an immediate update
-    this.monitorQueueAndUpdateEstimates();
   }
 
   private renderTime(time: string) {

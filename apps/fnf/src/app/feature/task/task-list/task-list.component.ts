@@ -51,21 +51,7 @@ import {FnfCountupComponent} from "../../../common/countdown/fnf-countup.compone
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskListComponent implements OnInit, OnDestroy {
-  /*
-  Schritt 1:
-  Wenn ein QueueActionEvent der Queue übergeben wird mit 'move' oder 'copy', so muss die Dateigröße (im Falle eines Folders die Summe der Größen) in QueueActionEvent.size gespeichert werden.
 
-Schritt 2:
-   Die beiden Queue cmds 'move' und 'copy' brauchen oft viel Zeit.
-   Bitte implementiere eine Restzeit-Schätzung, die als Countdown im div.header (rechts oben) dargestellt wird (mm:ss).
-   Achte auf die Performance und runOutsideAngular.
-   Die Restzeit-Schätzung sollte die File-Größen berücksichtigen.
-   Wenn die Queue am Laufen ist, korrigiere periodisch die Schätzung (alle 20 Sekunden).
-   Rendere die Zeit als element.innerText='mm:ss' jede Sekunde, ohne angular zu nutzen.
-   Eventuell kannst du die Berechnung in einem Service kapseln (apps/fnf/src/app/component/task/task-list-calculation.service.ts)).
-   Wenn die Queue fertig ist (idle), dann setze die Zeitanzeige auf ''.
-   Wenn die Queue pausiert, dann zeige die letzte Zeitanzeige.
-   */
   queue: QueueIf;
   queueProgress: QueueProgress;
   status: StatusIconType = 'idle';
