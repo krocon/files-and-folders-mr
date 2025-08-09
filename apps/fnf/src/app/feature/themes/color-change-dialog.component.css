@@ -1,8 +1,12 @@
+.overflow-x-clip {
+    overflow-x: clip;
+}
+
 .preview-row {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-top: 16px;
     align-items: center;
 
     & > div {
@@ -49,6 +53,12 @@
 .row {
     display: flex;
     align-items: center;
+    gap: 12px;
+}
+
+.row.action-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     gap: 12px;
 }
 

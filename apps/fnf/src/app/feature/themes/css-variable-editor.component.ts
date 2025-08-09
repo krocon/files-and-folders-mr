@@ -48,20 +48,27 @@ export class CssVariableEditorComponent {
       ? this.value.map(r => ({...r}))
       : [];
 
-    const dialogRef = this.dialog.open<ColorChangeDialogComponent, ColorChangeDialogData, ColorChangeDialogResult>(
-      ColorChangeDialogComponent,
-      {
-        data: {
-          rows: rowsForDialog,
-          onChange: (rows: ThemeTableRow[]) => this.onColorRowsChange(rows)
+    const dialogRef =
+      this.dialog.open<ColorChangeDialogComponent, ColorChangeDialogData, ColorChangeDialogResult>(
+        ColorChangeDialogComponent,
+        {
+          minWidth: '600px',
+          width: '700px',
+          maxWidth: '100vW',
+          maxHeight: '100vH',
+          data: {
+            rows: rowsForDialog,
+            onChange: (rows: ThemeTableRow[]) => this.onColorRowsChange(rows)
+          }
         }
-      }
-    );
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.rows && result.rows.length > 0) {
-        this.onColorRowsChange(result.rows);
-      }
-    });
+      );
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
+        if (result && result.rows && result.rows.length > 0) {
+          this.onColorRowsChange(result.rows);
+        }
+      });
   }
 
   // Exposed for template change of text input

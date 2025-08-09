@@ -15,7 +15,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {LookAndFeelService} from "./look-and-feel.service";
 import {CssVariableEditorComponent} from './css-variable-editor.component';
 
-// moved to theme-table-row.model.ts
 import {ThemeTableRow} from './theme-table-row.model';
 import {FnfConfirmationDialogService} from "../../common/confirmationdialog/fnf-confirmation-dialog.service";
 

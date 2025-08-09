@@ -1,27 +1,6 @@
 <h2 mat-dialog-title>Color Transform</h2>
 
-<mat-dialog-content>
-  <div class="preview-row">
-
-    @for (r of originalRows; track r.key; let i = $index) {
-      <div>
-        <div
-            class="swatch"
-            [style.background-color]="r.value"></div>
-        <div class="label">Original ({{ originalRows.length }})</div>
-        <div class="value">{{ originalRows[0].value }}</div>
-      </div><span class="arrow">→</span>
-      <div>
-        <div
-            class="swatch"
-            [style.background-color]="workingRows[i].value"></div>
-        <div class="label">Result</div>
-        <div class="value">{{ workingRows[0].value }}</div>
-      </div>
-    }
-  </div>
-
-
+<mat-dialog-content class="overflow-x-clip">
 
   <div class="section">
     <div class="label-slider">
@@ -130,7 +109,7 @@
   </div>
 
   <div class="section">
-    <div class="row">
+    <div class="row action-row">
       <button
           (click)="applyInvert()"
           color="primary"
@@ -138,12 +117,33 @@
         <mat-icon>invert_colors</mat-icon>
         Invert
       </button>
+      <div><!-- stretch --></div>
       <button
           (click)="onReset()"
           mat-button>
         <mat-icon>restart_alt</mat-icon>
         Reset
       </button>
+    </div>
+  </div>
+
+
+  <div class="section">
+    <div class="preview-row">
+      @for (r of originalRows; track r.key; let i = $index) {
+        <div>
+          <div
+              class="swatch"
+              [style.background-color]="r.value"></div>
+          <div class="value">{{ originalRows[i].value }}</div>
+        </div><span class="arrow">→</span>
+        <div>
+          <div
+              class="swatch"
+              [style.background-color]="workingRows[i].value"></div>
+          <div class="value">{{ workingRows[i].value }}</div>
+        </div>
+      }
     </div>
   </div>
 
