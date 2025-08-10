@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -43,6 +43,7 @@ export class ButtonConfigDialogComponent implements OnInit, OnDestroy {
   constructor(
     private readonly dialogRef: MatDialogRef<ButtonConfigDialogComponent, boolean>,
     private readonly configButtonsService: ConfigButtonsService,
+    private readonly cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
   }
@@ -52,10 +53,12 @@ export class ButtonConfigDialogComponent implements OnInit, OnDestroy {
     this.configButtonsService
       .apiUrlButtons()
       .pipe(takeWhile(() => this.alive))
-      .subscribe(mapping => {
-        this.original = mapping;
-        this.editorText = JSON.stringify(mapping, null, 2);
-        this.loading = false;
+      .subscribe({
+        next: (mapping) => {
+          this.original = mapping;
+          this.setEditorFromMapping(mapping);
+        },
+        error: () => this.loadDefaultsToEditor(),
       });
   }
 
@@ -66,18 +69,12 @@ export class ButtonConfigDialogComponent implements OnInit, OnDestroy {
   onEditorChange(txt: string) {
     this.editorText = txt;
     this.isValidJson = this.validateJson(txt);
+    this.cdr.markForCheck();
   }
 
   onReset() {
     this.loading = true;
-    this.configButtonsService
-      .getDefaults()
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(mapping => {
-        this.editorText = JSON.stringify(mapping, null, 2);
-        this.isValidJson = true;
-        this.loading = false;
-      });
+    this.loadDefaultsToEditor();
   }
 
   onCancel() {
@@ -108,5 +105,26 @@ export class ButtonConfigDialogComponent implements OnInit, OnDestroy {
     } catch {
       return false;
     }
+  }
+
+  private setEditorFromMapping(mapping: ButtonMapping) {
+    this.editorText = JSON.stringify(mapping, null, 2);
+    this.isValidJson = true;
+    this.loading = false;
+    this.cdr.markForCheck();
+  }
+
+  private loadDefaultsToEditor() {
+    this.configButtonsService
+      .getDefaults()
+      .pipe(takeWhile(() => this.alive))
+      .subscribe({
+        next: (mapping) => this.setEditorFromMapping(mapping),
+        error: () => {
+          // If even defaults fail, stop loading to avoid spinner lock
+          this.loading = false;
+          this.cdr.markForCheck();
+        }
+      });
   }
 }
