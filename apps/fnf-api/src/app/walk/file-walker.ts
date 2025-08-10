@@ -12,6 +12,9 @@ export class FileWalker {
   private files: FileItemIf[];
   private step = 0;
   private readonly STEPS_PER_MESSAGE: number;
+  private readonly MAX_QUEUE_SIZE: number = 10000; // Limit memory usage
+  private isDisposed = false;
+  private processingPromise: Promise<void> | null = null;
 
 
   constructor(
@@ -115,7 +118,37 @@ export class FileWalker {
   }
 
   private async addNewFilesToProcess(entries: fs.Dirent[], parentDir: string): Promise<void> {
+    // Prevent memory issues by limiting queue size
+    if (this.files.length > this.MAX_QUEUE_SIZE) {
+      this.logger.warn(
+        `Queue size limit reached (${this.MAX_QUEUE_SIZE}). Skipping directory: ${parentDir}`,
+        'FileWalker'
+      );
+      this.logMemoryUsage('queue_limit_reached');
+      return;
+    }
+
+    // Process entries in batches to prevent memory spikes
+    const BATCH_SIZE = 100;
+    for (let i = 0; i < entries.length; i += BATCH_SIZE) {
+      if (this.isDisposed) return; // Stop if disposed
+
+      const batch = entries.slice(i, i + BATCH_SIZE);
+      await this.processBatch(batch, parentDir);
+
+      // Log memory usage periodically during large operations
+      if (i > 0 && i % (BATCH_SIZE * 10) === 0) {
+        this.logMemoryUsage('batch_processing');
+      }
+    }
+  }
+
+  private async processBatch(entries: fs.Dirent[], parentDir: string): Promise<void> {
+    const batchItems: FileItemIf[] = [];
+    
     for (const entry of entries) {
+      if (this.isDisposed) return; // Stop if disposed
+      
       const fullPath = path.join(parentDir, entry.name);
       const isDir = entry.isDirectory();
       let size = 0;
@@ -143,7 +176,7 @@ export class FileWalker {
         );
       }
 
-      this.files.push(new FileItem(
+      batchItems.push(new FileItem(
         fullPath,
         entry.name,
         '', // ext
@@ -153,26 +186,48 @@ export class FileWalker {
         false // abs
       ));
     }
+
+    // Add batch to queue only if not disposed and under limit
+    if (!this.isDisposed && this.files.length + batchItems.length <= this.MAX_QUEUE_SIZE) {
+      this.files.push(...batchItems);
+    }
   }
 
   private async processNextFile(): Promise<void> {
+    // Check if disposed or cancelled before processing
+    if (this.isDisposed) {
+      return;
+    }
+
     if (this.isProcessingComplete()) {
       this.emitFinalUpdate();
       return;
     }
 
     if (this.cancellings[this.walkParaData.emmitCancelKey]) {
+      this.logger.log('Processing cancelled by user', 'FileWalker');
+      this.dispose(); // Clean up on cancellation
       return;
     }
 
     this.step++;
     const currentItem = this.files.pop();
 
+    // Log memory usage periodically
+    if (this.step % 1000 === 0) {
+      this.logMemoryUsage('periodic_check');
+    }
+
     try {
       if (currentItem.isDir) {
         await this.processDirectory(currentItem);
       } else {
         this.processFile(currentItem);
+      }
+
+      // Check disposal state before continuing
+      if (this.isDisposed) {
+        return;
       }
 
       if (this.shouldEmitProgress()) {
@@ -196,11 +251,16 @@ export class FileWalker {
             isDirectory: currentItem.isDir
           } : 'unknown',
           error: error.message,
-          operation: 'file_processing'
+          operation: 'file_processing',
+          memoryUsage: this.getMemoryUsage()
         },
         'FileWalker'
       );
-      setImmediate(() => this.processNextFile());
+
+      // Continue processing if not disposed
+      if (!this.isDisposed) {
+        setImmediate(() => this.processNextFile());
+      }
     }
   }
 
@@ -211,7 +271,70 @@ export class FileWalker {
   private emitFinalUpdate(): void {
     this.walkData.last = true;
     this.emitWithDelay(this.walkParaData.emmitDataKey, this.walkData, () => {
-      // Final emit completed
+      // Final emit completed - cleanup resources
+      this.dispose();
     });
+  }
+
+  /**
+   * Dispose of resources and cleanup memory
+   */
+  public dispose(): void {
+    if (this.isDisposed) return;
+
+    this.isDisposed = true;
+
+    // Clear the files array to free memory
+    this.files.length = 0;
+    this.files = [];
+
+    // Log final memory usage
+    this.logMemoryUsage('disposal');
+
+    this.logger.log(
+      `FileWalker disposed. Processed ${this.walkData.fileCount} files, ${this.walkData.folderCount} folders`,
+      'FileWalker'
+    );
+  }
+
+  /**
+   * Check if the walker has been disposed
+   */
+  public isDisposedState(): boolean {
+    return this.isDisposed;
+  }
+
+  /**
+   * Get current memory usage information
+   */
+  private getMemoryUsage(): { rss: number; heapUsed: number; queueSize: number } {
+    const usage = process.memoryUsage();
+    return {
+      rss: Math.round(usage.rss / 1024 / 1024 * 100) / 100, // MB
+      heapUsed: Math.round(usage.heapUsed / 1024 / 1024 * 100) / 100, // MB
+      queueSize: this.files.length
+    };
+  }
+
+  /**
+   * Log memory usage at key points
+   */
+  private logMemoryUsage(operation: string): void {
+    const memory = this.getMemoryUsage();
+
+    if (memory.queueSize > 1000 || memory.heapUsed > 100) {
+      this.logger.logWithMetadata(
+        'info',
+        `Memory usage during ${operation}`,
+        {
+          rss: `${memory.rss} MB`,
+          heapUsed: `${memory.heapUsed} MB`,
+          queueSize: memory.queueSize,
+          operation,
+          step: this.step
+        },
+        'FileWalker'
+      );
+    }
   }
 }

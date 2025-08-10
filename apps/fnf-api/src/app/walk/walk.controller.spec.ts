@@ -8,9 +8,11 @@ import {
 } from '../file-action/action/common/test-setup-helper';
 import * as path from 'path';
 import * as fs from 'fs-extra';
+import {AppLoggerService} from '../shared/logger.service';
 
 describe('DirController', () => {
   let controller: DirController;
+  let mockLogger: AppLoggerService;
 
   // Define test paths
   const testDir = path.resolve('./test');
@@ -32,8 +34,25 @@ describe('DirController', () => {
     // Restore the test environment before each test
     await restoreTestEnvironment();
 
+    // Create mock logger
+    mockLogger = {
+      log: jest.fn(),
+      error: jest.fn(),
+      warn: jest.fn(),
+      debug: jest.fn(),
+      verbose: jest.fn(),
+      logWithMetadata: jest.fn(),
+      getWinstonLogger: jest.fn(),
+    } as unknown as AppLoggerService;
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [DirController],
+      providers: [
+        {
+          provide: AppLoggerService,
+          useValue: mockLogger,
+        },
+      ],
     }).compile();
 
     controller = module.get<DirController>(DirController);
