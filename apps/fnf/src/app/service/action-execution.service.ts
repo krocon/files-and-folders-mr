@@ -41,6 +41,7 @@ import {AttributeDialogResultData} from "../feature/cmd/attribute/attribute-dial
 import {GroupFileDialogResponse} from "../feature/cmd/groupfiles/data/group-file-dialog-response";
 import {ButtonConfigDialogService} from "../feature/config/button/button-config-dialog.service";
 import {FiletypeConfigDialogService} from "../feature/config/filetype/filetype-config-dialog.service";
+import {ToolConfigDialogService} from "../feature/config/tool/tool-config-dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -78,6 +79,7 @@ export class ActionExecutionService {
     private readonly router: Router,
     private readonly buttonConfigDialogService: ButtonConfigDialogService,
     private readonly filetypeConfigDialogService: FiletypeConfigDialogService,
+    private readonly toolConfigDialogService: ToolConfigDialogService,
   ) {
 
   }
@@ -154,6 +156,10 @@ export class ActionExecutionService {
 
     } else if (id === "OPEN_FILETYPE_CONFIG_DLG") {
       this.filetypeConfigDialogService.open(() => {
+      });
+
+    } else if (id === "OPEN_TOOL_CONFIG_DLG") {
+      this.toolConfigDialogService.open(() => {
       });
 
     } else if (id === "OPEN_SHELL_DLG") {

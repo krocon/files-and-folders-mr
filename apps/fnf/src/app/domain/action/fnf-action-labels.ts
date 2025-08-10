@@ -29,6 +29,7 @@ export class FnfActionLabels {
     OPEN_THEMES_DLG: "Edit Themes...",
     OPEN_BUTTON_CONFIG_DLG: "Button Configuration...",
     OPEN_FILETYPE_CONFIG_DLG: "File Type Configuration...",
+    OPEN_TOOL_CONFIG_DLG: "Tool Configuration...",
     OPEN_ABOUT_DLG: "About...",
     OPEN_SHELL_DLG: "Server Shell...",
     OPEN_JOB_QUEUE_DLG: "Open Action Queue Dialog",

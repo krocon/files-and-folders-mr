@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Edit Tool Configuration</h2>
+
+<mat-dialog-content style="padding-right: 0;">
+  <app-fnf-editor
+      [options]="editorOptions"
+      [(text)]="editorText"
+      (textChange)="onEditorChange($event)"></app-fnf-editor>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      mat-raised-button
+      (click)="onReset()">Reset
+  </button>
+  <div>
+    @if (!isValidJson) {
+      <span class="validation">
+        <mat-icon color="warn">error</mat-icon>
+      </span><span>JSON is invalid. Please correct errors to enable Save.</span>
+    }
+  </div>
+  <button
+      mat-raised-button
+      (click)="onCancel()">Cancel
+  </button>
+  <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!isValidJson"
+      (click)="onSave()">Save
+  </button>
+</mat-dialog-actions>

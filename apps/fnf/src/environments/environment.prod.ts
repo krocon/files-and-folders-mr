@@ -14,8 +14,8 @@ const apiPrefix3 = availableApiPorts.length > 2 ? (apiPrefix1.replaceAll(/:\d\d\
 
 export const environment = {
 
-  version: '10.08.2025 11:15',
-  commitHash: 'a509bf5',
+  version: '10.08.2025 12:36',
+  commitHash: '66df9f3',
 
   availableApiPorts,
 
@@ -97,6 +97,9 @@ export const environment = {
   tool: {
     loadUrl: apiPrefix1 + "/tools",
     shellUrl: apiPrefix1 + "/shell"
+  },
+  tools: {
+    apiUrl: apiPrefix1 + "/tools"
   },
   download: {
     downloadUrl: apiPrefix1 + "/download"

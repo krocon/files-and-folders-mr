@@ -5,8 +5,8 @@ import * as fs from "node:fs";
 
 const getEnvironmentVariables = () => {
 
-  const version = '10.08.2025 11:15';
-  const commitHash = 'a509bf5';
+  const version = '10.08.2025 12:36';
+  const commitHash = '66df9f3';
 
   const dockerAssetPrefix = process.env.FNF_ASSETS_ROOT || '/usr/src/app/apps/fnf-api/assets';
   const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
