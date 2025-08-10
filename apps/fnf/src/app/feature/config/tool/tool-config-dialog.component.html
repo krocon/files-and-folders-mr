@@ -1,4 +1,20 @@
+
 <h2 mat-dialog-title>Edit Tool Configuration</h2>
+
+<div class="title-bar">
+  <mat-form-field
+      appearance="outline"
+      style="width: 150px;">
+    <mat-label>OS</mat-label>
+    <mat-select
+        [(value)]="selectedOsType"
+        (selectionChange)="onOsTypeChange($event)">
+      <mat-option value="osx">macOS</mat-option>
+      <mat-option value="windows">Windows</mat-option>
+      <mat-option value="linux">Linux</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
 <mat-dialog-content style="padding-right: 0;">
   <app-fnf-editor

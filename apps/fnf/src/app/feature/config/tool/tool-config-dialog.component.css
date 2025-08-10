@@ -1,7 +1,14 @@
+.title-bar {
+    position: relative;
 
+    & > * {
+        position: absolute;
+        top: -44px;
+        right: 20px;
+    }
+}
 mat-dialog-content {
     display: grid;
-
 }
 
 mat-dialog-actions {

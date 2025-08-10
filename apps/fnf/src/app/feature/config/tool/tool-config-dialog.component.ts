@@ -8,13 +8,16 @@ import {
 } from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {MatOptionModule} from '@angular/material/core';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {CommonModule} from '@angular/common';
 import {FnfEditorComponent} from '../../common/editor/fnf-editor.component';
 import {FnfEditorOptions} from '../../common/editor/data/fnf-editor-options.interface';
 import {takeWhile} from 'rxjs/operators';
 import {ConfigToolsService} from '../../../service/config/config-tools.service';
 import {BrowserOsService} from '../../../service/browseros/browser-os.service';
-import {ToolData} from '@fnf-data';
+import {BrowserOsType, ToolData} from '@fnf-data';
 
 @Component({
   selector: 'fnf-tool-config-dialog',
@@ -28,6 +31,9 @@ import {ToolData} from '@fnf-data';
     MatDialogActions,
     MatButton,
     MatIconModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatFormFieldModule,
     FnfEditorComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,6 +43,7 @@ export class ToolConfigDialogComponent implements OnInit, OnDestroy {
   editorText = '';
   isValidJson = true;
   loading = false;
+  selectedOsType: BrowserOsType = 'osx';
   editorOptions: Partial<FnfEditorOptions> = {
     theme: 'vs',
     language: 'json',
@@ -57,18 +64,13 @@ export class ToolConfigDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loading = true;
-    const os = this.browserOsService.browserOs;
-    this.configToolsService
-      .getTools(os)
-      .pipe(takeWhile(() => this.alive))
-      .subscribe({
-        next: (mapping) => {
-          this.original = mapping;
-          this.setEditorFromMapping(mapping);
-        },
-        error: () => this.loadDefaultsToEditor(),
-      });
+    this.selectedOsType = this.browserOsService.browserOs;
+    this.loadToolsForOsType(this.selectedOsType);
+  }
+
+  onOsTypeChange(event: any): void {
+    this.selectedOsType = event.value;
+    this.loadToolsForOsType(this.selectedOsType);
   }
 
   ngOnDestroy(): void {
@@ -79,6 +81,20 @@ export class ToolConfigDialogComponent implements OnInit, OnDestroy {
     this.editorText = txt;
     this.isValidJson = this.validateJson(txt);
     this.cdr.markForCheck();
+  }
+
+  private loadToolsForOsType(osType: BrowserOsType): void {
+    this.loading = true;
+    this.configToolsService
+      .getTools(osType)
+      .pipe(takeWhile(() => this.alive))
+      .subscribe({
+        next: (mapping) => {
+          this.original = mapping;
+          this.setEditorFromMapping(mapping);
+        },
+        error: () => this.loadDefaultsToEditor(),
+      });
   }
 
   onReset() {
@@ -95,9 +111,8 @@ export class ToolConfigDialogComponent implements OnInit, OnDestroy {
     try {
       const parsed = JSON.parse(this.editorText) as ToolData;
       this.loading = true;
-      const os = this.browserOsService.browserOs;
       this.configToolsService
-        .saveTools(os, parsed)
+        .saveTools(this.selectedOsType, parsed)
         .pipe(takeWhile(() => this.alive))
         .subscribe(() => {
           this.loading = false;
@@ -125,9 +140,8 @@ export class ToolConfigDialogComponent implements OnInit, OnDestroy {
   }
 
   private loadDefaultsToEditor() {
-    const os = this.browserOsService.browserOs;
     this.configToolsService
-      .getDefaults(os)
+      .getDefaults(this.selectedOsType)
       .pipe(takeWhile(() => this.alive))
       .subscribe({
         next: (mapping) => this.setEditorFromMapping(mapping),
