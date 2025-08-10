@@ -3,9 +3,9 @@ import {takeWhile} from "rxjs/operators";
 import {AllinfoIf} from "@fnf-data";
 import {SysinfoService} from "../../service/sysinfo.service";
 import {JsonPipe} from "@angular/common";
-import {FnfTextLogoComponent} from "../common/textlogo/fnf-text-logo.component";
 import {Router} from "@angular/router";
 import {environment} from "../../../environments/environment";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: "fnf-about",
@@ -13,7 +13,7 @@ import {environment} from "../../../environments/environment";
   styleUrls: ["./about.component.css"],
   imports: [
     JsonPipe,
-    FnfTextLogoComponent
+    MatButton
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
