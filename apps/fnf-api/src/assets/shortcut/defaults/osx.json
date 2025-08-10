@@ -80,6 +80,7 @@
   "cmd ctrl alt f12": "OPEN_ABOUT_DLG",
   "cmd ctrl f12": "OPEN_ATTRIBUTE_DLG",
   "cmd ctrl f13": "OPEN_THEMES_DLG",
+  "cmd ctrl f14": "OPEN_BUTTON_CONFIG_DLG",
   "ctrl f11": "OPEN_TASK_DLG",
   "ctrl f12": "OPEN_MENU",
   "cmd ctrl alt f1": "CHANGE_LAF_BITBUCKET",
@@ -90,5 +91,4 @@
   "cmd ctrl alt f6": "CHANGE_LAF_LIGHT",
   "cmd ctrl alt f7": "CHANGE_LAF_NORTON",
   "cmd ctrl alt f8": "CHANGE_LAF_PAPER"
-
 }
