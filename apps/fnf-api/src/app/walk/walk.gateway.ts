@@ -3,12 +3,16 @@ import {Server} from "socket.io";
 import {environment} from "../../environments/environment";
 import {WalkParaData} from "@fnf-data";
 import {FileWalker} from "./file-walker";
+import {AppLoggerService} from "../shared/logger.service";
 
 @WebSocketGateway(environment.websocketPort, environment.websocketOptions)
 export class WalkGateway {
 
   @WebSocketServer() server: Server;
   private readonly cancellings = {};
+
+  constructor(private readonly logger: AppLoggerService) {
+  }
 
 
   /**
@@ -26,7 +30,7 @@ export class WalkGateway {
    */
   @SubscribeMessage("walkdir")
   walkdir(@MessageBody() walkParaData: WalkParaData): void {
-    new FileWalker(walkParaData, this.cancellings, this.server);
+    new FileWalker(walkParaData, this.cancellings, this.server, this.logger);
   }
 
   @SubscribeMessage("cancelwalk")

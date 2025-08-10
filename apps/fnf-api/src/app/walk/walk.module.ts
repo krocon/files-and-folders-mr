@@ -1,6 +1,7 @@
 import {Module} from "@nestjs/common";
 import {WalkGateway} from "./walk.gateway";
 import {DirController} from "./walk.controller";
+import {AppLoggerService} from "../shared/logger.service";
 
 
 @Module({
@@ -9,7 +10,8 @@ import {DirController} from "./walk.controller";
     DirController
   ],
   providers: [
-    WalkGateway
+    WalkGateway,
+    AppLoggerService
   ],
   exports: [
     WalkGateway

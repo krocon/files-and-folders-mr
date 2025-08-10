@@ -3,6 +3,7 @@ import {Server} from "socket.io";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as micromatch from "micromatch";
+import {AppLoggerService} from "../shared/logger.service";
 
 
 export class FileWalker {
@@ -16,7 +17,8 @@ export class FileWalker {
   constructor(
     private readonly walkParaData: WalkParaData,
     private readonly cancellings: Record<string, boolean>,
-    private readonly server: Server
+    private readonly server: Server,
+    private readonly logger: AppLoggerService
   ) {
     this.files = [];
     this.STEPS_PER_MESSAGE = walkParaData.stepsPerMessage;
@@ -34,8 +36,22 @@ export class FileWalker {
         await fs.access(f); // Check if file exists
         const stats = await fs.stat(f);
         initialFiles.push(new FileItem(f, '', '', '', stats?.size ?? -1, stats.isDirectory()));
-      } catch (e) {
-        // File doesn't exist or can't be accessed, skip it
+      } catch (error) {
+        // Log the error but continue processing other files
+        this.logger.warn(
+          `Skipping inaccessible file during initialization: ${f}`,
+          'FileWalker'
+        );
+        this.logger.logWithMetadata(
+          'warn',
+          `File access error during initialization`,
+          {
+            filePath: f,
+            error: error.message,
+            operation: 'initialization'
+          },
+          'FileWalker'
+        );
       }
     }
 
@@ -73,8 +89,21 @@ export class FileWalker {
     try {
       const entries = await fs.readdir(item.dir, {withFileTypes: true});
       await this.addNewFilesToProcess(entries, item.dir);
-    } catch (e) {
-      console.warn('Error reading directory: ' + item.dir);
+    } catch (error) {
+      this.logger.warn(
+        `Error reading directory: ${item.dir}`,
+        'FileWalker'
+      );
+      this.logger.logWithMetadata(
+        'warn',
+        `Directory reading error`,
+        {
+          directoryPath: item.dir,
+          error: error.message,
+          operation: 'directory_read'
+        },
+        'FileWalker'
+      );
     }
   }
 
@@ -96,8 +125,22 @@ export class FileWalker {
           const stats = await fs.lstat(fullPath);
           size = stats.size;
         }
-      } catch (e) {
-        // Error getting file stats, keep size as 0
+      } catch (error) {
+        // Log the error but continue with size = 0
+        this.logger.warn(
+          `Error getting file stats for: ${fullPath}`,
+          'FileWalker'
+        );
+        this.logger.logWithMetadata(
+          'warn',
+          `File stats error`,
+          {
+            filePath: fullPath,
+            error: error.message,
+            operation: 'file_stats'
+          },
+          'FileWalker'
+        );
       }
 
       this.files.push(new FileItem(
@@ -138,7 +181,25 @@ export class FileWalker {
         setImmediate(() => this.processNextFile()); // Use setImmediate to prevent call stack overflow
       }
     } catch (error) {
-      console.error('Error processing file:', error);
+      this.logger.error(
+        `Error processing file: ${error.message}`,
+        error.stack,
+        'FileWalker'
+      );
+      this.logger.logWithMetadata(
+        'error',
+        `File processing error`,
+        {
+          currentItem: currentItem ? {
+            path: currentItem.dir,
+            name: currentItem.base,
+            isDirectory: currentItem.isDir
+          } : 'unknown',
+          error: error.message,
+          operation: 'file_processing'
+        },
+        'FileWalker'
+      );
       setImmediate(() => this.processNextFile());
     }
   }

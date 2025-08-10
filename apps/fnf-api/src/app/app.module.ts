@@ -1,6 +1,7 @@
 import {Logger, Module} from "@nestjs/common";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import {ConfigModule as NestConfigModule} from "@nestjs/config";
+import {AppLoggerService} from "./shared/logger.service";
 
 import {join} from "path";
 
@@ -80,13 +81,14 @@ export const config = new Config(
     ToolModule,
     SearchPatternModule,
     SetupModule,
-    DownloadModule,
+    DownloadModule
   ],
   controllers: [
     AppController
   ],
   providers: [
-    AppService
+    AppService,
+    AppLoggerService
   ]
 })
 export class AppModule {

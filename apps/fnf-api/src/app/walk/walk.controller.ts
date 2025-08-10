@@ -4,12 +4,13 @@ import {FileItem, FileItemIf, WalkData, WalkParaData} from "@fnf-data";
 import * as fs from "fs-extra";
 import * as path from "path";
 import * as micromatch from "micromatch";
+import {AppLoggerService} from "../shared/logger.service";
 
 
 @Controller()
 export class DirController {
 
-  constructor() {
+  constructor(private readonly logger: AppLoggerService) {
   }
 
   @Post("walkdirsync")
@@ -33,8 +34,22 @@ export class DirController {
           stats.isDirectory(),
           path.isAbsolute(f) // abs
         ));
-      } catch (e) {
-        // File doesn't exist or can't be accessed, skip it
+      } catch (error) {
+        // Log the error but continue processing other files
+        this.logger.warn(
+          `Skipping inaccessible file: ${f}`,
+          'DirController'
+        );
+        this.logger.logWithMetadata(
+          'warn',
+          `File access error details`,
+          {
+            filePath: f,
+            error: error.message,
+            operation: 'initial_file_access'
+          },
+          'DirController'
+        );
       }
     }
 
@@ -69,8 +84,22 @@ export class DirController {
                 const stats = await fs.lstat(entryPath);
                 size = stats.size;
               }
-            } catch (e) {
-              console.warn('Error getting file stats: ' + entryPath);
+            } catch (error) {
+              this.logger.warn(
+                `Error getting file stats for: ${entryPath}`,
+                'DirController'
+              );
+              this.logger.logWithMetadata(
+                'warn',
+                `File stats error details`,
+                {
+                  filePath: entryPath,
+                  error: error.message,
+                  operation: 'file_stats'
+                },
+                'DirController'
+              );
+              // Continue with size = 0 as default
             }
 
             files.push(new FileItem(
@@ -83,8 +112,23 @@ export class DirController {
               path.isAbsolute(entryPath) // abs
             ));
           }
-        } catch (e) {
-          console.warn('Error reading directory: ' + path.join(currentItem.dir, currentItem.base));
+        } catch (error) {
+          const directoryPath = path.join(currentItem.dir, currentItem.base);
+          this.logger.warn(
+            `Error reading directory: ${directoryPath}`,
+            'DirController'
+          );
+          this.logger.logWithMetadata(
+            'warn',
+            `Directory reading error details`,
+            {
+              directoryPath,
+              error: error.message,
+              operation: 'directory_read'
+            },
+            'DirController'
+          );
+          // Continue processing other directories
         }
       } else {
         // Process file

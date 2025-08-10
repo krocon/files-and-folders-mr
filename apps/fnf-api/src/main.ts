@@ -1,13 +1,13 @@
-
-import {Logger} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app/app.module';
 import {AppService} from './app/app.service';
 import {HttpExceptionFilter} from './app/http-exception.filter';
+import {AppLoggerService} from './app/shared/logger.service';
 import {environment} from './environments/environment';
 import * as events from 'events';
 import {IoAdapter} from '@nestjs/platform-socket.io';
 import {ServerOptions} from 'socket.io';
+import * as fs from 'fs-extra';
 // import { Request, Response } from 'express';
 
 // Increase the max listeners to prevent the MaxListenersExceededWarning
@@ -36,44 +36,62 @@ class SocketIOAdapter extends IoAdapter {
 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
-  //app.enableCors();
-  app.enableCors({
-    origin: '*',
-    credentials: false,
-  });
-  app.useWebSocketAdapter(new SocketIOAdapter(app));
-  app.useGlobalFilters(new HttpExceptionFilter());
-  // app.useGlobalPipes(new ValidationPipe())
-  const port = process.env.PORT || 3333;
+  try {
+    // Ensure logs directory exists
+    await fs.ensureDir('logs');
 
-  // app.use('*', (req: Request, res: Response) => {
-  //   res.redirect('/');
-  // });
+    // Create the application
+    const app = await NestFactory.create(AppModule);
 
-  await app.listen(port, () => {
-    Logger.log('Listening at http://localhost:' + port + '/' + globalPrefix);
-    console.info('NestJS API is running on port:', port);
-    console.info('WebSocket server is running on port:', environment.websocketPort);
-  });
+    // Initialize logger service
+    const loggerService = new AppLoggerService();
+    app.useLogger(loggerService);
 
-  const server = app.getHttpServer();
-  const router = server._events.request._router;
-  const availableRoutes: [] = router.stack
-    .map(layer => {
-      if (layer.route) {
-        return {
-          path: layer.route.path,
-          method: layer.route.stack[0].method
-        };
-      }
-    })
-    .filter(item => item !== undefined);
-  AppService.availableRoutes = availableRoutes;
-  console.log('Routes:', availableRoutes);
+    // Configure application
+    const globalPrefix = 'api';
+    app.setGlobalPrefix(globalPrefix);
 
+    app.enableCors({
+      origin: '*',
+      credentials: false,
+    });
+
+    app.useWebSocketAdapter(new SocketIOAdapter(app));
+
+    // Use enhanced exception filter with logger
+    app.useGlobalFilters(new HttpExceptionFilter(loggerService));
+
+    const port = process.env.PORT || 3333;
+
+    await app.listen(port, () => {
+      loggerService.log(`Listening at http://localhost:${port}/${globalPrefix}`, 'Bootstrap');
+      loggerService.log(`NestJS API is running on port: ${port}`, 'Bootstrap');
+      loggerService.log(`WebSocket server is running on port: ${environment.websocketPort}`, 'Bootstrap');
+    });
+
+    // Log available routes
+    const server = app.getHttpServer();
+    const router = server._events.request._router;
+    const availableRoutes: [] = router.stack
+      .map(layer => {
+        if (layer.route) {
+          return {
+            path: layer.route.path,
+            method: layer.route.stack[0].method
+          };
+        }
+      })
+      .filter(item => item !== undefined);
+
+    AppService.availableRoutes = availableRoutes;
+    console.log('Routes:', availableRoutes);
+    //loggerService.logWithMetadata('info', 'Application routes registered', { routes: availableRoutes }, 'Bootstrap');
+
+  } catch (error) {
+    const loggerService = new AppLoggerService();
+    loggerService.error(`Failed to start application: ${error.message}`, error.stack, 'Bootstrap');
+    process.exit(1);
+  }
 }
 
 
