@@ -39,6 +39,7 @@ import {AttributeDialogService} from "../feature/cmd/attribute/attribute-dialog.
 import {AttributeDialogData} from "../feature/cmd/attribute/attribute-dialog.data";
 import {AttributeDialogResultData} from "../feature/cmd/attribute/attribute-dialog-result.data";
 import {GroupFileDialogResponse} from "../feature/cmd/groupfiles/data/group-file-dialog-response";
+import {ButtonConfigDialogService} from "../feature/config/button/button-config-dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,7 @@ export class ActionExecutionService {
     private readonly selectionDialogService: SelectionDialogService,
     private readonly attributeDialogService: AttributeDialogService,
     private readonly router: Router,
+    private readonly buttonConfigDialogService: ButtonConfigDialogService,
   ) {
 
   }
@@ -144,6 +146,9 @@ export class ActionExecutionService {
       const url = location.origin + "/themes";
       window.open(url, "_blank", strWindowFeatures);
 
+    } else if (id === "OPEN_BUTTON_CONFIG_DLG") {
+      this.buttonConfigDialogService.open(() => {
+      });
 
     } else if (id === "OPEN_SHELL_DLG") {
       this.router.navigate(['/shell']);

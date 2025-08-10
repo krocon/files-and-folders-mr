@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {FnfEditorOptions} from './data/fnf-editor-options.interface';
 import {FnfEditorOptionsClass} from './data/fnf-editor-options.class';
-// import {window} from "rxjs";
+
 
 declare const monaco: any;
 
@@ -33,9 +33,10 @@ declare const monaco: any;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FnfEditorComponent implements OnInit, OnDestroy {
+
   @ViewChild('editorContainer', {static: true}) editorContainer!: ElementRef<HTMLDivElement>;
   @Output() textChange = new EventEmitter<string>();
-  @Input() options: FnfEditorOptions = new FnfEditorOptionsClass();
+  @Input() options: Partial<FnfEditorOptions> = new FnfEditorOptionsClass();
   @Output() optionsChange = new EventEmitter<FnfEditorOptions>();
 
   private editor: any = null;
@@ -70,9 +71,14 @@ export class FnfEditorComponent implements OnInit, OnDestroy {
 
   // Method to update editor options
   updateOptions(newOptions: Partial<FnfEditorOptions>): void {
-    if (!this.editor) return;
+    if (!this.editor) {
+      // Still update internal options state
+      this.options = new FnfEditorOptionsClass({...(this.options as any), ...newOptions});
+      this.optionsChange.emit(new FnfEditorOptionsClass(this.options));
+      return;
+    }
 
-    const updatedOptions = {...this.options, ...newOptions};
+    const updatedOptions = new FnfEditorOptionsClass({...(this.options as any), ...newOptions});
     this.options = updatedOptions;
     this.optionsChange.emit(updatedOptions);
 
@@ -167,15 +173,16 @@ export class FnfEditorComponent implements OnInit, OnDestroy {
     }
 
     this.ngZone.runOutsideAngular(() => {
+      const opts = new FnfEditorOptionsClass(this.options);
       const editorOptions = {
         value: this._text,
-        language: this.options.language || 'plaintext',
-        theme: this.options.theme,
-        automaticLayout: this.options.automaticLayout !== false,
-        lineNumbers: this.options.lineNumbers,
-        minimap: {enabled: this.options.minimap},
-        wordWrap: this.options.wordWrap,
-        readOnly: this.options.readOnly || false,
+        language: opts.language || 'plaintext',
+        theme: opts.theme,
+        automaticLayout: opts.automaticLayout !== false,
+        lineNumbers: opts.lineNumbers,
+        minimap: {enabled: opts.minimap},
+        wordWrap: opts.wordWrap,
+        readOnly: opts.readOnly || false,
       };
 
       this.editor = monaco.editor.create(this.editorContainer.nativeElement, editorOptions);

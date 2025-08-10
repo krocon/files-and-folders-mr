@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Edit Button Configuration</h2>
+
+<mat-dialog-content>
+  <div class="editor-wrapper">
+    <app-fnf-editor
+        [options]="editorOptions"
+        [(text)]="editorText"
+        (textChange)="onEditorChange($event)"></app-fnf-editor>
+  </div>
+
+  <div
+      class="validation"
+      *ngIf="!isValidJson">
+    <mat-icon color="warn">error</mat-icon>
+    <span>JSON is invalid. Please correct errors to enable Save.</span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      mat-raised-button
+      (click)="onReset()">Reset
+  </button>
+  <div></div>
+  <button
+      mat-raised-button
+      (click)="onCancel()">Cancel
+  </button>
+  <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!isValidJson"
+      (click)="onSave()">Save
+  </button>
+</mat-dialog-actions>

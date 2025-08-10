@@ -21,8 +21,19 @@ export class ConfigButtonsService {
     Object.assign(ConfigButtonsService.config, config);
   }
 
-
   apiUrlButtons(): Observable<ButtonMapping> {
-    return (this.httpClient.get<ButtonMapping>(ConfigButtonsService.config.apiUrl));
+    return this.httpClient.get<ButtonMapping>(ConfigButtonsService.config.apiUrl);
+  }
+
+  getDefaults(): Observable<ButtonMapping> {
+    return this.httpClient.get<ButtonMapping>(`${ConfigButtonsService.config.apiUrl}/defaults`);
+  }
+
+  saveButtons(mapping: ButtonMapping): Observable<{ success: boolean; message: string }> {
+    return this.httpClient.put<{ success: boolean; message: string }>(`${ConfigButtonsService.config.apiUrl}`, mapping);
+  }
+
+  resetToDefaults(): Observable<ButtonMapping> {
+    return this.httpClient.post<ButtonMapping>(`${ConfigButtonsService.config.apiUrl}/reset`, {});
   }
 }
