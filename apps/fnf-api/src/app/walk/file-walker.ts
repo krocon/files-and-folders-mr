@@ -8,7 +8,7 @@ import * as micromatch from "micromatch";
 export class FileWalker {
 
   private readonly walkData: WalkData = new WalkData();
-  private readonly files: FileItemIf[];
+  private files: FileItemIf[];
   private step = 0;
   private readonly STEPS_PER_MESSAGE: number;
 
@@ -18,18 +18,28 @@ export class FileWalker {
     private readonly cancellings: Record<string, boolean>,
     private readonly server: Server
   ) {
+    this.files = [];
+    this.STEPS_PER_MESSAGE = walkParaData.stepsPerMessage;
+    this.walkData = new WalkData(0, 0, 0, false);
 
-    const initialFiles: FileItemIf[] = walkParaData.files
-      .filter(f => fs.existsSync(f))
-      .map(f => {
-        const stats = fs.statSync(f);
-        return new FileItem(f, '', '', '', stats?.size ?? -1, stats.isDirectory());
-      });
+    // Initialize asynchronously
+    this.initializeAsync();
+  }
+
+  private async initializeAsync(): Promise<void> {
+    const initialFiles: FileItemIf[] = [];
+
+    for (const f of this.walkParaData.files) {
+      try {
+        await fs.access(f); // Check if file exists
+        const stats = await fs.stat(f);
+        initialFiles.push(new FileItem(f, '', '', '', stats?.size ?? -1, stats.isDirectory()));
+      } catch (e) {
+        // File doesn't exist or can't be accessed, skip it
+      }
+    }
 
     this.files = [...initialFiles];
-    this.STEPS_PER_MESSAGE = walkParaData.stepsPerMessage;
-
-    this.walkData = new WalkData(0, 0, 0, false);
     this.emitWithDelay(this.walkParaData.emmitDataKey, this.walkData, () => this.processNextFile());
   }
 
@@ -50,7 +60,7 @@ export class FileWalker {
     return this.step % this.STEPS_PER_MESSAGE === 0;
   }
 
-  private processDirectory(item: FileItemIf): void {
+  private async processDirectory(item: FileItemIf): Promise<void> {
     if (this.matchesPattern(item)) {
       this.walkData.folderCount++;
     }
@@ -61,8 +71,8 @@ export class FileWalker {
     }
 
     try {
-      const entries = fs.readdirSync(item.dir, {withFileTypes: true});
-      this.addNewFilesToProcess(entries, item.dir);
+      const entries = await fs.readdir(item.dir, {withFileTypes: true});
+      await this.addNewFilesToProcess(entries, item.dir);
     } catch (e) {
       console.warn('Error reading directory: ' + item.dir);
     }
@@ -75,11 +85,20 @@ export class FileWalker {
     this.walkData.timestamp = Date.now();
   }
 
-  private addNewFilesToProcess(entries: fs.Dirent[], parentDir: string): void {
-    entries.forEach(entry => {
+  private async addNewFilesToProcess(entries: fs.Dirent[], parentDir: string): Promise<void> {
+    for (const entry of entries) {
       const fullPath = path.join(parentDir, entry.name);
       const isDir = entry.isDirectory();
-      const size = isDir ? 0 : fs.lstatSync(fullPath).size;
+      let size = 0;
+
+      try {
+        if (!isDir) {
+          const stats = await fs.lstat(fullPath);
+          size = stats.size;
+        }
+      } catch (e) {
+        // Error getting file stats, keep size as 0
+      }
 
       this.files.push(new FileItem(
         fullPath,
@@ -90,10 +109,10 @@ export class FileWalker {
         isDir,
         false // abs
       ));
-    });
+    }
   }
 
-  private processNextFile(): void {
+  private async processNextFile(): Promise<void> {
     if (this.isProcessingComplete()) {
       this.emitFinalUpdate();
       return;
@@ -108,7 +127,7 @@ export class FileWalker {
 
     try {
       if (currentItem.isDir) {
-        this.processDirectory(currentItem);
+        await this.processDirectory(currentItem);
       } else {
         this.processFile(currentItem);
       }
@@ -116,11 +135,11 @@ export class FileWalker {
       if (this.shouldEmitProgress()) {
         this.emitWithDelay(this.walkParaData.emmitDataKey, this.walkData, () => this.processNextFile());
       } else {
-        this.processNextFile();
+        setImmediate(() => this.processNextFile()); // Use setImmediate to prevent call stack overflow
       }
     } catch (error) {
       console.error('Error processing file:', error);
-      this.processNextFile();
+      setImmediate(() => this.processNextFile());
     }
   }
 

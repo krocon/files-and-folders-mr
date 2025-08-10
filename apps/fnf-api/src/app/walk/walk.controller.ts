@@ -17,13 +17,14 @@ export class DirController {
     const walkData = new WalkData(0, 0, 0, false);
     const files: FileItemIf[] = [];
 
-    // Process initial files
-    const initialFiles: FileItemIf[] = walkParaData.files
-      .filter(f => fs.existsSync(f))
-      .map(f => {
-        const stats = fs.statSync(f);
+    // Process initial files asynchronously
+    const initialFiles: FileItemIf[] = [];
+    for (const f of walkParaData.files) {
+      try {
+        await fs.access(f); // Check if file exists
+        const stats = await fs.stat(f);
         const parsedPath = path.parse(f);
-        return new FileItem(
+        initialFiles.push(new FileItem(
           parsedPath.dir,
           parsedPath.base,
           parsedPath.ext,
@@ -31,8 +32,11 @@ export class DirController {
           stats?.size ?? 0,
           stats.isDirectory(),
           path.isAbsolute(f) // abs
-        );
-      });
+        ));
+      } catch (e) {
+        // File doesn't exist or can't be accessed, skip it
+      }
+    }
 
     // Add initial files to the processing queue
     files.push(...initialFiles);
@@ -52,9 +56,9 @@ export class DirController {
 
         try {
           const fullDirPath = path.join(currentItem.dir, currentItem.base);
-          const entries = fs.readdirSync(fullDirPath, {withFileTypes: true});
+          const entries = await fs.readdir(fullDirPath, {withFileTypes: true});
 
-          entries.forEach(entry => {
+          for (const entry of entries) {
             const entryPath = path.join(fullDirPath, entry.name);
             const parsedPath = path.parse(entryPath);
             const isDir = entry.isDirectory();
@@ -62,7 +66,7 @@ export class DirController {
 
             try {
               if (!isDir) {
-                const stats = fs.lstatSync(entryPath);
+                const stats = await fs.lstat(entryPath);
                 size = stats.size;
               }
             } catch (e) {
@@ -78,7 +82,7 @@ export class DirController {
               isDir,
               path.isAbsolute(entryPath) // abs
             ));
-          });
+          }
         } catch (e) {
           console.warn('Error reading directory: ' + path.join(currentItem.dir, currentItem.base));
         }
