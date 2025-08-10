@@ -76,7 +76,6 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     'OPEN_GOTO_ANYTHING_DLG',
     '-',
     'RELOAD_DIR',
-    'OPEN_FIND_DLG',
     'OPEN_CHDIR_DLG',
     'TOGGLE_FILTER',
     'TOGGLE_HIDDEN_FILES',
@@ -90,6 +89,8 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
 
   menuItems1: ActionId[] = [
+    'OPEN_FIND_DLG',
+    "-",
     "ENHANCE_SELECTION",
     "REDUCE_SELECTION",
     "TOGGLE_SELECTION",
