@@ -35,7 +35,12 @@ export class ButtonConfigDialogComponent implements OnInit, OnDestroy {
   editorText = '';
   isValidJson = true;
   loading = false;
-  editorOptions: Partial<FnfEditorOptions> = {language: 'json', wordWrap: 'on', minimap: false};
+  editorOptions: Partial<FnfEditorOptions> = {
+    theme: 'vs',
+    language: 'json',
+    wordWrap: 'on',
+    minimap: false
+  };
 
   private alive = true;
   private original?: ButtonMapping;
