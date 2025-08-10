@@ -16,6 +16,7 @@ import {GotoAnythingDialogService} from "./feature/cmd/gotoanything/goto-anythin
 import {ToolService} from "./service/config/tool.service";
 import {FiletypeExtensionsService} from "./service/config/filetype-extensions.service";
 import {ConfigButtonsService} from "./service/config/config-buttons.service";
+import {ConfigFiletypesService} from "./service/config/config-filetypes.service";
 import {AiCompletionService} from "./service/ai/ai-completion.service";
 import {GlobValidatorService} from "./service/glob-validator.service";
 import {CleanService} from "./service/clean.service";
@@ -105,6 +106,7 @@ async function init() {
   ToolService.forRoot(environment.tool);
   FiletypeExtensionsService.forRoot(environment.filetypeExtensions);
   ConfigButtonsService.forRoot(environment.buttons);
+  ConfigFiletypesService.forRoot(environment.filetypeExtensions);
   SearchPatternsService.forRoot(environment.searchPatterns);
   PromptService.forRoot(environment.prompt);
   AiCompletionService.forRoot(environment.multiRename);

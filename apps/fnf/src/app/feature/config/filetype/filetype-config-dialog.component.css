@@ -1,0 +1,17 @@
+
+mat-dialog-content {
+    display: grid;
+
+}
+
+mat-dialog-actions {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 8px;
+}
+
+.validation {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}

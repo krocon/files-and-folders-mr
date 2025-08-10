@@ -131,6 +131,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     "OPEN_SETUP_DLG",
     "OPEN_THEMES_DLG",
     "OPEN_BUTTON_CONFIG_DLG",
+    "OPEN_FILETYPE_CONFIG_DLG",
     "OPEN_SHELL_DLG",
     "OPEN_ABOUT_DLG",
   ];
