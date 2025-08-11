@@ -17,7 +17,7 @@ cutting-edge technology and powered by AI, it transforms mundane file operations
 
 ### 🚀 **Key Highlights**
 
-- 🤖 **AI-Powered Operations** - Let GPT-4 intelligently rename and organize your files
+- 🤖 **AI-Powered Operations** - Let GPT-5 intelligently rename and organize your files
 - 🎯 **Orthodox Interface** - Classic dual-pane design with modern Angular 20 technology
 - 🖥️ **Cross-Platform** - Works seamlessly on Windows, macOS, and Linux
 - 🐳 **Docker Ready** - Deploy anywhere with one command
@@ -397,7 +397,7 @@ We welcome contributions! Here's how to get started:
 
 ## 📄 **License**
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under a Custom Source-Available License (CSAL) - see the [LICENSE](LICENSE) file for details.
 
 ---
 
@@ -415,7 +415,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 💬 **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
 - 📖 **Documentation**: [Wiki](https://github.com/your-repo/wiki)
-- 🐳 **Docker Hub**: [krocon/files-and-folders-mr](https://hub.docker.com/r/krocon/files-and-folders-mr)
+- 🐳 **Docker Hub**: [krocon/files-and-folders](https://hub.docker.com/r/krocon/files-and-folders)
 
 ---
 
