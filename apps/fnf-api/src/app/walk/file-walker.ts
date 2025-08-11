@@ -14,7 +14,6 @@ export class FileWalker {
   private readonly STEPS_PER_MESSAGE: number;
   private readonly MAX_QUEUE_SIZE: number = 10000; // Limit memory usage
   private isDisposed = false;
-  private processingPromise: Promise<void> | null = null;
 
 
   constructor(
@@ -29,6 +28,34 @@ export class FileWalker {
 
     // Initialize asynchronously
     this.initializeAsync();
+  }
+
+  /**
+   * Dispose of resources and cleanup memory
+   */
+  public dispose(): void {
+    if (this.isDisposed) return;
+
+    this.isDisposed = true;
+
+    // Clear the files array to free memory
+    this.files.length = 0;
+    this.files = [];
+
+    // Log final memory usage
+    this.logMemoryUsage('disposal');
+
+    this.logger.log(
+      `FileWalker disposed. Processed ${this.walkData.fileCount} files, ${this.walkData.folderCount} folders`,
+      'FileWalker'
+    );
+  }
+
+  /**
+   * Check if the walker has been disposed
+   */
+  public isDisposedState(): boolean {
+    return this.isDisposed;
   }
 
   private async initializeAsync(): Promise<void> {
@@ -61,7 +88,6 @@ export class FileWalker {
     this.files = [...initialFiles];
     this.emitWithDelay(this.walkParaData.emmitDataKey, this.walkData, () => this.processNextFile());
   }
-
 
   private matchesPattern(item: FileItemIf): boolean {
     if (!this.walkParaData.filePattern) {
@@ -145,10 +171,10 @@ export class FileWalker {
 
   private async processBatch(entries: fs.Dirent[], parentDir: string): Promise<void> {
     const batchItems: FileItemIf[] = [];
-    
+
     for (const entry of entries) {
       if (this.isDisposed) return; // Stop if disposed
-      
+
       const fullPath = path.join(parentDir, entry.name);
       const isDir = entry.isDirectory();
       let size = 0;
@@ -274,34 +300,6 @@ export class FileWalker {
       // Final emit completed - cleanup resources
       this.dispose();
     });
-  }
-
-  /**
-   * Dispose of resources and cleanup memory
-   */
-  public dispose(): void {
-    if (this.isDisposed) return;
-
-    this.isDisposed = true;
-
-    // Clear the files array to free memory
-    this.files.length = 0;
-    this.files = [];
-
-    // Log final memory usage
-    this.logMemoryUsage('disposal');
-
-    this.logger.log(
-      `FileWalker disposed. Processed ${this.walkData.fileCount} files, ${this.walkData.folderCount} folders`,
-      'FileWalker'
-    );
-  }
-
-  /**
-   * Check if the walker has been disposed
-   */
-  public isDisposedState(): boolean {
-    return this.isDisposed;
   }
 
   /**
