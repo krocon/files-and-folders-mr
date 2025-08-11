@@ -1,4 +1,4 @@
-import {Controller, Logger, Post} from "@nestjs/common";
+import {Controller, Post} from "@nestjs/common";
 import {FileService} from "./file.service";
 import {MessageBody} from "@nestjs/websockets";
 import {DirEventIf, DirPara, FilePara, OnDoResponseType} from "@fnf-data";
@@ -7,7 +7,6 @@ import {DirEventIf, DirPara, FilePara, OnDoResponseType} from "@fnf-data";
 @Controller("do")
 export class FileActionController {
 
-  private readonly logger = new Logger(FileActionController.name);
 
   constructor(
     private readonly fileService: FileService

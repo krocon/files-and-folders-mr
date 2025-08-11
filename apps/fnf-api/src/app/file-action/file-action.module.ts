@@ -1,6 +1,6 @@
 import {Module} from "@nestjs/common";
 import {FileService} from "./file.service";
-import {FileActionController} from "./file-action.constroller";
+import {FileActionController} from "./file-action.controller";
 import {FileActionGateway} from "./file-action.gateway";
 
 @Module({
