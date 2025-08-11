@@ -46,6 +46,7 @@ export const config = new Config(
     NestConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', 'apps/fnf-api/.env'],
+      validate: (config) => require('../config/env.validation').validateEnv(config)
     }),
     SysinfoModule,
     PathModule.forRoot(
