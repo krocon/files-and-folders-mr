@@ -315,7 +315,11 @@ describe('EbookGroupingService', () => {
         "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-07.cbr",
         "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-08.cbr",
         "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-09.cbr",
-        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-10.cbr"
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-10.cbr",
+
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_1.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_2.cbr"
+
 
       ];
 
@@ -326,6 +330,10 @@ describe('EbookGroupingService', () => {
         "Dark Souls Redemption": [
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_01_(Altraverse_Manga).cbr",
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_02_(Altraverse_Manga).cbr"
+        ],
+        "Die abenteuerlichen Reisen der Ducks mit der Zeitmaschine": [
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_1.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_2.cbr"
         ],
         "Francois Schuiten/Jenseits der Grenze": [
           "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",

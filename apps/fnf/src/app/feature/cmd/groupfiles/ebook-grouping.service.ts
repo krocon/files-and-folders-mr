@@ -244,6 +244,9 @@ export class EbookGroupingService {
             seriesName = `${match[1].trim()} - ${match[2].trim()}`;
           }
         }
+
+        // Sanitize: remove any trailing separators that might have been captured (e.g., "Title -")
+        seriesName = seriesName.replace(/[\s\-–—:]+$/g, '').trim();
         
         // Filter out very generic or short names
         if (seriesName.length > 2 && !this.isGenericName(seriesName)) {
