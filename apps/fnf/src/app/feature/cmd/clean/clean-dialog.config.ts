@@ -10,5 +10,6 @@ export class CleanDialogConfig extends MatDialogConfig {
     this.minHeight = 200;
     this.minWidth = "800px";
     this.autoFocus = false;
+    this.panelClass = "fnf-dialog-primary";
   }
 }

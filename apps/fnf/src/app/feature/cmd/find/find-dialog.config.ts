@@ -10,5 +10,6 @@ export class FindDialogConfig extends MatDialogConfig {
     this.minHeight = 200;
     this.minWidth = "700px";
     this.autoFocus = false;
+    this.panelClass = "fnf-dialog-primary";
   }
 }

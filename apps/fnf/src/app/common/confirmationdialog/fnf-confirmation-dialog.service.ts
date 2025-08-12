@@ -11,7 +11,8 @@ export class FnfConfirmationDialogService {
   simpleConfirm(title: string, message: string, onConfirm: () => void): Promise<boolean> {
     const dialogRef = this.dialog.open(FnfConfirmationDialogComponent, {
       width: '400px',
-      data: new ConfirmationDialogData(title, message)
+      data: new ConfirmationDialogData(title, message),
+      panelClass: "fnf-dialog-secondary"
     });
 
     return new Promise((resolve) => {
@@ -27,7 +28,8 @@ export class FnfConfirmationDialogService {
   showInfo(messages: string[]): Observable<any> {
     const dialogRef = this.dialog.open(FnfConfirmationDialogComponent, {
       width: '400px',
-      data: new ConfirmationDialogData('Information', messages)
+      data: new ConfirmationDialogData('Information', messages),
+      panelClass: "fnf-dialog-secondary"
     });
 
     return dialogRef.afterClosed();

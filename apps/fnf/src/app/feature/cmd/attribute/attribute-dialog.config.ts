@@ -7,5 +7,6 @@ export class AttributeDialogConfig extends MatDialogConfig {
     super();
     this.minHeight = 350;
     this.minWidth = "500px";
+    this.panelClass = "fnf-dialog-primary";
   }
 }

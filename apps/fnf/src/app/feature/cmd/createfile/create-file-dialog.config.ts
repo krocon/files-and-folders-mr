@@ -8,5 +8,6 @@ export class CreateFileDialogConfig extends MatDialogConfig {
     super();
     this.minHeight = 200;
     this.minWidth = "700px";
+    this.panelClass = "fnf-dialog-primary";
   }
 }

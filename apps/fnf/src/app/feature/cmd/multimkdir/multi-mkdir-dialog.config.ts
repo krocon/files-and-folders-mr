@@ -7,5 +7,6 @@ export class MultiMkDirDialogConfig extends MatDialogConfig {
     super();
     this.minHeight = 'calc(100vh - 20px)';
     this.minWidth = "calc(100vw - 200px)";
+    this.panelClass = "fnf-dialog-primary";
   }
 }

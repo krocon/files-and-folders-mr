@@ -14,7 +14,8 @@ export class PackDialogService {
   open(data: PackDialogData, callback: (result: PackDialogResultData | undefined) => void): void {
     const dialogRef = this.dialog.open(PackDialogComponent, {
       data: data,
-      width: '600px'
+      width: '600px',
+      panelClass: "fnf-dialog-primary"
     });
 
     dialogRef.afterClosed().subscribe(callback);
