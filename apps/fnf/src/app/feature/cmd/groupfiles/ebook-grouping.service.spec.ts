@@ -309,7 +309,14 @@ describe('EbookGroupingService', () => {
         "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_01_-_Die_Entstehung_von_20000_Meilen_unter_dem_Meer_(B71).cbz",
         "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_02_-_Die_geheimnisvolle_Insel.cbz",
         "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 01 (Panini).cbr",
-        "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr"
+        "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr",
+
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-06.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-07.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-08.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-09.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-10.cbr"
+
       ];
 
       const result = service.groupFiles(input);
@@ -323,6 +330,13 @@ describe('EbookGroupingService', () => {
         "Francois Schuiten/Jenseits der Grenze": [
           "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
           "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr"
+        ],
+        "Goofy Magazin": [
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-06.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-07.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-08.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-09.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-10.cbr"
         ],
         "Homunculus - New Edition": [
           "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_01_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
@@ -360,7 +374,7 @@ describe('EbookGroupingService', () => {
         "The Expanse - Dragon Tooth": [
           "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 01 (Panini).cbr",
           "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 02 (Panini).cbr"
-        ]
+        ],
       };
 
       // Verify the result matches the expected structure

@@ -57,7 +57,13 @@ export class EbookGroupingService {
       return yearSeriesMatch;
     }
 
-    // 2. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1", "Jeff Jordan Gesamtausgabe - 1")
+    // 2. Check for date-issue series like "Goofy Magazin - 1979-06"
+    const dateIssueMatch = this.matchDateIssueSeries(fileName);
+    if (dateIssueMatch) {
+      return dateIssueMatch;
+    }
+
+    // 3. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1", "Jeff Jordan Gesamtausgabe - 1")
     const collectionMatch = this.matchCollectionSeries(fileName);
     if (collectionMatch) {
       return collectionMatch;
@@ -147,6 +153,24 @@ export class EbookGroupingService {
       return `${seriesName}/${year}`;
     }
 
+    return null;
+  }
+
+  /**
+   * Matches date-based issues like "Title - 1979-06" and returns the title
+   */
+  private matchDateIssueSeries(fileName: string): string | null {
+    // Match patterns like: "Goofy Magazin - 1979-06" (YYYY-MM)
+    // Be strict: Ensure the dash before the date is the first dash in the string to avoid capturing
+    // titles like "... Gesamtausgabe - 1 - 1956-..." which should be handled by collection logic.
+    const dateIssuePattern = /^([^-]+?)\s*-\s*(\d{4})-(\d{2})/;
+    const match = fileName.match(dateIssuePattern);
+    if (match) {
+      const seriesName = match[1].trim();
+      if (seriesName.length > 2 && !this.isGenericName(seriesName)) {
+        return seriesName;
+      }
+    }
     return null;
   }
 
