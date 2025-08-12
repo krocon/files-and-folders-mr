@@ -7,7 +7,9 @@ import {QueueFileOperationParams} from "../../../task/domain/queue-file-operatio
 @Component({
   selector: 'group-files-target-cell-renderer',
   template: `
-    <div class="ffn-name-cell-label">{{ base }}<b>{{ dir }}</b></div>
+    <div
+        class="ffn-name-cell-label"
+        [title]="dir+base">{{ base }}<b>{{ dir }}</b></div>
   `,
   styles: [`
       :host {

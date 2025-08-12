@@ -318,9 +318,18 @@ describe('EbookGroupingService', () => {
         "/Users/userabc/Filme.nosync/_TODO/comics5/Goofy Magazin - 1979-10.cbr",
 
         "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_1.cbr",
-        "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_2.cbr"
+        "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_2.cbr",
 
+        "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-80.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-81.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-82.cbr",
+        "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-83.cbr",
 
+        "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_1_-_(Carlsen_2015)_(Tommy).cbr",
+        "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_2_-_(Carlsen_2015)_(Tommy).cbr",
+        "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_3_-_(Carlsen_2015)_(Tommy).cbr",
+        "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_4_-_(Carlsen_2015)_(Tommy).cbr",
+        "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_5_-_(Carlsen_2015)_(Tommy).cbr"
       ];
 
       const result = service.groupFiles(input);
@@ -330,6 +339,13 @@ describe('EbookGroupingService', () => {
         "Dark Souls Redemption": [
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_01_(Altraverse_Manga).cbr",
           "/Users/userabc/Filme.nosync/comics4/Dark_Souls_Redemption_02_(Altraverse_Manga).cbr"
+        ],
+        "Der ganze Gaston": [
+          "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_1_-_(Carlsen_2015)_(Tommy).cbr",
+          "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_2_-_(Carlsen_2015)_(Tommy).cbr",
+          "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_3_-_(Carlsen_2015)_(Tommy).cbr",
+          "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_4_-_(Carlsen_2015)_(Tommy).cbr",
+          "/Users/marckronberg/Filme.nosync/_TODO/comics5/Der_ganze_Gaston_-_Buch_5_-_(Carlsen_2015)_(Tommy).cbr"
         ],
         "Die abenteuerlichen Reisen der Ducks mit der Zeitmaschine": [
           "/Users/userabc/Filme.nosync/_TODO/comics5/Die_abenteuerlichen_Reisen_der_Ducks_mit_der_Zeitmaschine_-_1.cbr",
@@ -378,6 +394,12 @@ describe('EbookGroupingService', () => {
         "Reisen unter dem Meer": [
           "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_01_-_Die_Entstehung_von_20000_Meilen_unter_dem_Meer_(B71).cbz",
           "/Users/userabc/Filme.nosync/comics4/Reisen_unter_dem_Meer_02_-_Die_geheimnisvolle_Insel.cbz"
+        ],
+        "SW-SB": [
+          "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-80.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-81.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-82.cbr",
+          "/Users/userabc/Filme.nosync/_TODO/comics5/SW-SB-83.cbr"
         ],
         "The Expanse - Dragon Tooth": [
           "/Users/userabc/Filme.nosync/comics4/The Expanse - Dragon Tooth 01 (Panini).cbr",

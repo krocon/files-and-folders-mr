@@ -195,6 +195,12 @@ export class EbookGroupingService {
         regex: /^(.+?)\s*-\s*(.+?)\s*-\s*(\d{1,3})\s*-/,
         type: 'complex'
       },
+      // Pattern like "SW-SB-80" (series directly followed by hyphen and number, no space before hyphen)
+      // Ensure the character before the hyphen is non-space to avoid matching titles like "Pluto - ..."
+      {
+        regex: /^(.+?\S)-\s*(\d{1,3})(?:\b|\.|$)/,
+        type: 'simple'
+      },
       // Pattern like "Nomad 001 - Lebendige Erinnerung" (3-digit with dash)
       {
         regex: /^(.+?)\s+(\d{3})\s*-/,

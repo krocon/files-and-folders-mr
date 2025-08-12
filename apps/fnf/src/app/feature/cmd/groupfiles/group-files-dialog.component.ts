@@ -8,7 +8,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {ConvertResponseType, FileItem, FileItemIf} from "@fnf-data";
+import {ConvertResponseType, FileItemIf} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
 import {MatFormField, MatLabel} from "@angular/material/input";
@@ -45,10 +45,6 @@ import {FnfConfirmationDialogService} from "../../../common/confirmationdialog/f
 import {TypedDataService} from "../../../common/typed-data.service";
 import {AiCompletionService} from "../../../service/ai/ai-completion.service";
 import {GroupfilesChangeCellRendererComponent} from "./renderer/groupfiles-change-cell-renderer.component";
-import {EbookGroupingService} from "./ebook-grouping.service";
-import {fileItem2Path} from "../../../common/fn/file-item-to-path";
-import {GroupFilesRow} from "./data/group-files-row";
-import {filepath2FileItem} from "../../../common/fn/filepath-to-file-items";
 import {GroupFileDialogResponse} from "./data/group-file-dialog-response";
 
 @Component({
@@ -101,7 +97,7 @@ export class GroupFilesDialogComponent implements OnInit, OnDestroy, AfterViewIn
     verticalBorderVisible: false,
     autoRestoreOptions: {
       ...new AutoRestoreOptions<FileItemIf>(),
-      getStorageKeyFn: () => `fnf-multirename-table`,
+      getStorageKeyFn: () => `fnf-groufiles-table`,
       autoRestoreCollapsedExpandedState: true,
       autoRestoreScrollPosition: true,
       autoRestoreSortingState: true,
