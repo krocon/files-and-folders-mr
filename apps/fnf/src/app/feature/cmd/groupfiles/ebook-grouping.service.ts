@@ -185,6 +185,11 @@ export class EbookGroupingService {
 
     // Pattern for numbered series - look for title followed by number
     const patterns = [
+      // Pattern like "Der ganze Gaston - Buch 1 -" (series with book numbers)
+      {
+        regex: /^(.+?)\s*-\s*Buch\s+(\d{1,3})\s*-/,
+        type: 'book'
+      },
       // Pattern like "Homunculus - New Edition - 01 -" (edition with number) - check this first
       {
         regex: /^(.+?)\s*-\s*(New Edition|Gesamtausgabe|Collection)\s*-\s*(\d{1,3})\s*-/,
@@ -239,7 +244,10 @@ export class EbookGroupingService {
         let seriesName = match[1].trim();
 
         // Handle complex patterns with multiple parts
-        if (pattern.type === 'edition') {
+        if (pattern.type === 'book') {
+          // For patterns like "Der ganze Gaston - Buch 1 -"
+          seriesName = match[1].trim();
+        } else if (pattern.type === 'edition') {
           // For patterns like "Homunculus - New Edition - 01 -"
           if (match[2]) {
             seriesName = `${match[1].trim()} - ${match[2].trim()}`;
