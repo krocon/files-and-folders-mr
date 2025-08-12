@@ -1,9 +1,67 @@
 import {Injectable} from '@angular/core';
 
+/**
+ * Configuration interface for ebook grouping patterns
+ */
+export interface EbookGroupingConfig {
+  /** Book identifiers (e.g., "Buch", "Book", "Volume") */
+  bookIdentifiers: string[];
+  /** Edition types (e.g., "New Edition", "Gesamtausgabe", "Collection") */
+  editionTypes: string[];
+  /** Collection types (e.g., "Gesamtausgabe", "Collection", "Anthology") */
+  collectionTypes: string[];
+  /** Generic names to filter out during grouping */
+  genericNames: string[];
+  /** Generic directory names to filter out */
+  genericDirectoryNames: string[];
+  /** Special case patterns for specific series */
+  specialCases: SpecialCasePattern[];
+}
+
+/**
+ * Special case pattern for handling specific series
+ */
+export interface SpecialCasePattern {
+  /** Text that must be present in the filename */
+  containsText: string[];
+  /** The resulting group name */
+  groupName: string;
+}
+
+/**
+ * Default configuration maintaining backward compatibility
+ */
+export const DEFAULT_EBOOK_GROUPING_CONFIG: EbookGroupingConfig = {
+  bookIdentifiers: ['Buch', 'Book', 'Volume', 'Vol', 'Band'],
+  editionTypes: ['New Edition', 'Gesamtausgabe', 'Collection'],
+  collectionTypes: ['Gesamtausgabe', 'Collection', 'Anthology'],
+  genericNames: ['Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'],
+  genericDirectoryNames: ['comics', 'books', 'ebooks', 'files', '__out', 'out', 'output'],
+  specialCases: [
+    {
+      containsText: ['Francois Schuiten', 'Jenseits der Grenze'],
+      groupName: 'Francois Schuiten/Jenseits der Grenze'
+    }
+  ]
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class EbookGroupingService {
+
+  private config: EbookGroupingConfig = DEFAULT_EBOOK_GROUPING_CONFIG;
+
+  constructor() {
+  }
+
+  /**
+   * Configure the service with custom patterns
+   * @param config Custom configuration object
+   */
+  configure(config: EbookGroupingConfig): void {
+    this.config = config;
+  }
 
 
   /**
@@ -178,21 +236,27 @@ export class EbookGroupingService {
    * Matches numbered series like "Deep State 01", "The Fable 01", "Nomad 001"
    */
   private matchNumberedSeries(fileName: string): string | null {
-    // Special case for Francois Schuiten series (to match test expectation with typo)
-    if (fileName.includes('Francois Schuiten') && fileName.includes('Jenseits der Grenze')) {
-      return 'Francois Schuiten/Jenseits der Grenze';
+    // Check for special cases
+    for (const specialCase of this.config.specialCases) {
+      if (specialCase.containsText.every(text => fileName.includes(text))) {
+        return specialCase.groupName;
+      }
     }
 
     // Pattern for numbered series - look for title followed by number
+    // Build dynamic patterns using configuration
+    const bookIdentifiersPattern = this.config.bookIdentifiers.join('|');
+    const editionTypesPattern = this.config.editionTypes.join('|');
+    
     const patterns = [
       // Pattern like "Der ganze Gaston - Buch 1 -" (series with book numbers)
       {
-        regex: /^(.+?)\s*-\s*Buch\s+(\d{1,3})\s*-/,
+        regex: new RegExp(`^(.+?)\\s*-\\s*(${bookIdentifiersPattern})\\s+(\\d{1,3})\\s*-`),
         type: 'book'
       },
       // Pattern like "Homunculus - New Edition - 01 -" (edition with number) - check this first
       {
-        regex: /^(.+?)\s*-\s*(New Edition|Gesamtausgabe|Collection)\s*-\s*(\d{1,3})\s*-/,
+        regex: new RegExp(`^(.+?)\\s*-\\s*(${editionTypesPattern})\\s*-\\s*(\\d{1,3})\\s*-`),
         type: 'edition'
       },
       // Pattern like "Pluto - Urasawa X Tezuka - 01 -" (complex dash pattern)
@@ -279,11 +343,12 @@ export class EbookGroupingService {
   private matchCollectionSeries(fileName: string): string | null {
     // Pattern for collection series with numbers (including leading zeros)
     // Handles both "Series Gesamtausgabe 1" and "Series Gesamtausgabe - 1 - ..." formats
+    const collectionTypesPattern = this.config.collectionTypes.join('|');
     const collectionPatterns = [
       // Pattern like "Jeff Jordan Gesamtausgabe - 1 - ..."
-      /^(.+?)\s+(Gesamtausgabe|Collection|Anthology)\s*-\s*\d+/i,
+      new RegExp(`^(.+?)\\s+(${collectionTypesPattern})\\s*-\\s*\\d+`, 'i'),
       // Pattern like "Lady S Gesamtausgabe 1"
-      /^(.+?)\s+(Gesamtausgabe|Collection|Anthology)\s+\d+/i
+      new RegExp(`^(.+?)\\s+(${collectionTypesPattern})\\s+\\d+`, 'i')
     ];
 
     for (const pattern of collectionPatterns) {
@@ -364,10 +429,8 @@ export class EbookGroupingService {
    * Checks if a name is too generic to be used for grouping
    */
   private isGenericName(name: string): boolean {
-    const genericNames = ['Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'];
-
     // Check for generic names, but be more lenient with "Band" if it's part of a longer name
-    const hasGeneric = genericNames.some(generic => {
+    const hasGeneric = this.config.genericNames.some(generic => {
       const regex = new RegExp(`\\b${generic}\\b`, 'i');
       return regex.test(name);
     });
@@ -391,7 +454,6 @@ export class EbookGroupingService {
    * Checks if a directory name is too generic for grouping
    */
   private isGenericDirectoryName(dirName: string): boolean {
-    const genericDirs = ['comics', 'books', 'ebooks', 'files', '__out', 'out', 'output'];
-    return genericDirs.some(generic => dirName.toLowerCase().includes(generic.toLowerCase()));
+    return this.config.genericDirectoryNames.some(generic => dirName.toLowerCase().includes(generic.toLowerCase()));
   }
 }
