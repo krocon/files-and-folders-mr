@@ -29,11 +29,13 @@
     --fnf-header-input-foreground-color: var(--fnf-header-input-color);
     --fnf-header-selected-tab-bg-color: #fff;
     --fnf-header-selected-tab-fg-color: #333;
-    --fnf-header-link-selected-color: var(--fnf-activepanel-table-selected-row-fg-color); /* TODO ? */
+    --fnf-header-link-selected-color: var(--fnf-activepanel-table-selected-row-fg-color);
+
     --fnf-material-accent-color: #4be20b;
     --fnf-material-primary-color: #0098db;
     --fnf-material-secondary-color: #0149ff;
     --fnf-material-warn-color: #e00034;
+
     --fnf-scrollbar-thumb-active-bg-color: #888;
     --fnf-scrollbar-thumb-bg-color: #d2d2d2;
     --fnf-scrollbar-thumb-border-color: #fff;
@@ -52,5 +54,36 @@
     --fnf-tooltip-background-input-color: #fff;
     --fnf-tooltip-color: #fff;
     --fnf-tooltip-input-color: #000;
+
+
+    --fnf-dialog-primary-fg-color: inherit;
+    --fnf-dialog-primary-bg-color: inherit;
+    --fnf-dialog-primary-border-color: inherit;
+
+    --fnf-dialog-secondary-fg-color: inherit;
+    --fnf-dialog-secondary-bg-color: inherit;
+    --fnf-dialog-secondary-border-color: inherit;
+
+    --fnf-dialog-input-fg-color: inherit;
+    --fnf-dialog-input-bg-color: inherit;
+    --fnf-dialog-input-border-color: inherit;
+    --fnf-dialog-button-primary-fg-color: inherit;
+    --fnf-dialog-button-primary-bg-color: inherit;
+    --fnf-dialog-button-primary-border-color: inherit;
+    --fnf-dialog-button-secondary-fg-color: inherit;
+    --fnf-dialog-button-secondary-bg-color: inherit;
+    --fnf-dialog-button-secondary-border-color: inherit;
+    --fnf-dialog-button-accent-fg-color: inherit;
+    --fnf-dialog-button-accent-bg-color: inherit;
+    --fnf-dialog-button-accent-border-color: inherit;
+    --fnf-dialog-button-warn-fg-color: inherit;
+    --fnf-dialog-button-warn-bg-color: inherit;
+    --fnf-dialog-button-warn-border-color: inherit;
+    --fnf-dialog-button-unthemed-fg-color: inherit;
+    --fnf-dialog-button-unthemed-bg-color: inherit;
+    --fnf-dialog-button-unthemed-border-color: inherit;
+
+
+
 
 }

@@ -156,3 +156,62 @@ fnf-root {
 .fnf-warn-bg {
     background-color: var(--fnf-material-warn-color);
 }
+
+
+.fnf-dialog-primary {
+    --mat-dialog-subhead-color: var(--fnf-dialog-primary-fg-color);
+    --mat-sys-on-surface: var(--fnf-dialog-primary-fg-color);
+    --mat-dialog-supporting-text-color: var(--fnf-dialog-primary-fg-color);
+    --mat-sys-on-surface-variant: var(--fnf-dialog-primary-fg-color);
+
+    --mat-dialog-container-color: var(--fnf-dialog-primary-bg-color);
+    --mat-sys-surface: var(--fnf-dialog-primary-bg-color);
+}
+
+.fnf-dialog-secondary {
+    --mat-dialog-subhead-color: var(--fnf-dialog-secondary-fg-color);
+    --mat-sys-on-surface: var(--fnf-dialog-secondary-fg-color);
+    --mat-dialog-supporting-text-color: var(--fnf-dialog-secondary-fg-color);
+    --mat-sys-on-surface-variant: var(--fnf-dialog-secondary-fg-color);
+
+    --mat-dialog-container-color: var(--fnf-dialog-secondary-bg-color);
+    --mat-sys-surface: var(--fnf-dialog-secondary-bg-color);
+}
+
+.fnf-dialog-primary,
+.fnf-dialog-secondary {
+    --xxx: var(--fnf-dialog-input-border-color);
+    --xxx: var(--fnf-dialog-input-fg-color);
+    --xxx: var(--fnf-dialog-input-bg-color);
+    /*--xxx: var(--fnf-dialog-input-border-color);*/
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-line-ripple::after {
+        border-bottom-color: var(--fnf-dialog-input-border-color);
+    }
+
+
+    .mat-unthemed.mat-mdc-raised-button:not(:disabled) {
+        color: var(--fnf-dialog-button-unthemed-fg-color);
+        background-color: var(--fnf-dialog-button-unthemed-bg-color);
+    }
+
+    .mat-primary.mat-mdc-raised-button:not(:disabled) {
+        color: var(--fnf-dialog-button-primary-fg-color);
+        background-color: var(--fnf-dialog-button-primary-bg-color);
+    }
+
+    .mat-secondary.mat-mdc-raised-button:not(:disabled) {
+        color: var(--fnf-dialog-button-secondary-fg-color);
+        background-color: var(--fnf-dialog-button-secondary-bg-color);
+    }
+
+    .mat-warn.mat-mdc-raised-button:not(:disabled) {
+        color: var(--fnf-dialog-button-warn-fg-color);
+        background-color: var(--fnf-dialog-button-warn-bg-color);
+    }
+
+    .mat-accent.mat-mdc-raised-button:not(:disabled) {
+        color: var(--fnf-dialog-button-accent-fg-color);
+        background-color: var(--fnf-dialog-button-accent-bg-color);
+    }
+}

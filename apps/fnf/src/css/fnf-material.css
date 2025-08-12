@@ -85,3 +85,13 @@ fnf-root {
         border-top-right-radius: 12px;
     }
 }
+
+:root {
+    --mat-button-protected-label-text-color: var(--mat-sys-primary);
+    --mat-button-protected-container-color: var(--mat-sys-surface);
+}
+
+/*.mat-mdc-raised-button:not(:disabled) {*/
+/*    color: var(--mat-button-protected-label-text-color, var(--mat-sys-primary));*/
+/*    background-color: var(--mat-button-protected-container-color, var(--mat-sys-surface));*/
+/*}*/

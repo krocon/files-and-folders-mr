@@ -1,6 +1,6 @@
 .color-input-container {
     display: grid;
-    grid-template-columns: auto 250px auto;
+    grid-template-columns: auto 250px auto auto;
     justify-content: start;
     align-items: top;
     gap: 4px;

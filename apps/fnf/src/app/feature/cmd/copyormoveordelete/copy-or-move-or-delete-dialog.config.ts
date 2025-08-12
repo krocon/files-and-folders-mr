@@ -10,5 +10,6 @@ export class CopyOrMoveOrDeleteDialogConfig extends MatDialogConfig {
     this.data = data;
     this.minHeight = 200;
     this.minWidth = "700px";
+    this.panelClass = "fnf-dialog-primary";
   }
 }

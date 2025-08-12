@@ -18,6 +18,11 @@
         placeholder="CSS color or variable">
 
     @if (endsWithKey('-color')) {
+      <input
+          (ngModelChange)="onValueChangeSingle($event)"
+          [ngModel]="rows && rows.length ? rows[0].value : ''"
+          type="color">
+
       <button
           class="tune-button"
           (click)="openColorChangeDialog()"

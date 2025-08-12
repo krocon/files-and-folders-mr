@@ -96,6 +96,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.loadThemeNames();
     this.setupFormSubscriptions();
     const theme = this.lookAndFeelService.getTheme();
+    console.info('theme', theme)
     this.onThemeSelect(theme);
     this.loadTheme(theme);
   }
@@ -367,7 +368,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
 
   private createForm(): FormGroup {
     return this.formBuilder.group({
-      selectedThemeName: [''],
+      selectedThemeName: [this.lookAndFeelService.getTheme()],
       saveThemeName: [''],
       tableFilter: [''],
       panels: this.formBuilder.group({
