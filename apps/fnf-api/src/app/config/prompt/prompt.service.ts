@@ -17,7 +17,7 @@ export class PromptService {
   async getCustomNames(): Promise<string[]> {
     try {
       const names: string[] = await fs.readdir(this.customPath);
-      return names.map(name => name.replace('.yaml', '')).sort();
+      return names.filter(n => n.endsWith('.yaml')).map(name => name.replace('.yaml', '')).sort();
     } catch (error) {
       this.logger.error(`Failed to get custom prompt names:`, error);
       throw error;

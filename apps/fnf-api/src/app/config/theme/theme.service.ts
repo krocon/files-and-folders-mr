@@ -16,7 +16,7 @@ export class ThemeService {
   async getCustomNames(): Promise<string[]> {
     try {
       const names: string[] = await fs.readdir(this.customPath);
-      return names.map(name => name.replace('.json', '')).sort();
+      return names.filter(n => n.endsWith('.json')).map(name => name.replace('.json', '')).sort();
     } catch (error) {
       this.logger.error(`Failed to get custom color names:`, error);
       throw error;
