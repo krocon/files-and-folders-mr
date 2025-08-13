@@ -1,459 +1,182 @@
 import {Injectable} from '@angular/core';
 
-/**
- * Configuration interface for ebook grouping patterns
- */
-export interface EbookGroupingConfig {
-  /** Book identifiers (e.g., "Buch", "Book", "Volume") */
-  bookIdentifiers: string[];
-  /** Edition types (e.g., "New Edition", "Gesamtausgabe", "Collection") */
-  editionTypes: string[];
-  /** Collection types (e.g., "Gesamtausgabe", "Collection", "Anthology") */
-  collectionTypes: string[];
-  /** Generic names to filter out during grouping */
-  genericNames: string[];
-  /** Generic directory names to filter out */
-  genericDirectoryNames: string[];
-  /** Special case patterns for specific series */
-  specialCases: SpecialCasePattern[];
-}
 
-/**
- * Special case pattern for handling specific series
- */
-export interface SpecialCasePattern {
-  /** Text that must be present in the filename */
-  containsText: string[];
-  /** The resulting group name */
-  groupName: string;
-}
+/*
 
-/**
- * Default configuration maintaining backward compatibility
- */
-export const DEFAULT_EBOOK_GROUPING_CONFIG: EbookGroupingConfig = {
-  bookIdentifiers: ['Buch', 'Book', 'Volume', 'Vol', 'Band'],
-  editionTypes: ['New Edition', 'Gesamtausgabe', 'Collection'],
-  collectionTypes: ['Gesamtausgabe', 'Collection', 'Anthology'],
-  genericNames: ['Teil', 'Volume', 'Vol', 'Book', 'Buch', 'Heft', 'Issue'],
-  genericDirectoryNames: ['comics', 'books', 'ebooks', 'files', '__out', 'out', 'output'],
-  specialCases: [
-    {
-      containsText: ['Francois Schuiten', 'Jenseits der Grenze'],
-      groupName: 'Francois Schuiten/Jenseits der Grenze'
-    }
+# Erweitere ComicFileService, so dass die Methode groupFiles() folgendes macht:
+
+Eine Liste von Dateinamen (string[]) wird in eine Map von Gruppennamen (string) und Dateinamen (string[]) umgewandelt.
+Beispiel:
+
+const input = [
+    "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_08_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
+    "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_09_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
+    "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_10_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
+    "/Users/userabc/Filme.nosync/comics4/Nomad_001_-_Lebendige_Erinnerung_(1995)_(Kult)_(c2c)_(danyberg).cbr",
+    "/Users/userabc/Filme.nosync/comics4/Nomad_002_-_Gai-Jin_(1995)_(Kult)_(c2c)_(danyberg).cbr",
+    "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
+    "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr",
+    "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 01.cbr",
+    "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 02.cbr"
+]
+
+output:
+{
+  "Homunculus/New Edition": [
+      "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_08_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
+      "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_09_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
+      "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_10_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz"
+  ].
+  "Nomad": [
+      "/Users/userabc/Filme.nosync/comics4/Nomad_001_-_Lebendige_Erinnerung_(1995)_(Kult)_(c2c)_(danyberg).cbr",
+      "/Users/userabc/Filme.nosync/comics4/Nomad_002_-_Gai-Jin_(1995)_(Kult)_(c2c)_(danyberg).cbr"
+  ],
+  "Francois Schuiten/Jenseits der Grenze": [
+      "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
+      "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr"
+  ],
+  "Mickyvision II Serie 1967": [
+      "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 01.cbr",
+      "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 02.cbr"
   ]
-};
+}
 
+Key: Gruppe (string)
+Value: Array von original Dateinamen
+
+
+## Gehe wie folgt vor:
+
+Grundsätzlich: arbeite sehr generisch. Nutze keine Listen (Regex) mit hartkodierten Wörtern wie 'Buch', 'Teil', 'Part' usw.
+
+1) Schaue dir den File base an:  "Homunculus_-_New_Edition_-_08_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz".
+
+  Ignoriere in der Base alles in '[...]' und '(...)', z.B. [GER] oder (Panini)
+
+  Suche in Base eine Running-Number, wie z.B. 08. Bei der Suche kannst du dir die Vorgänger und Nachfolger anschauen,
+  ob es sich wirklich um eine  Running-Number handelt.
+  Eine Running-Number kann bestehen aus lateinischen Zahlen (0-9) oder römischen Zahlem (I,II,III,IV...) bestehen.
+
+2a)  Wenn es sich um eine Running-Number handelt, betrachten wir den linken Teil , z.B. "Homunculus_-_New_Edition_-_".
+   -  Wir ersetzen '_' durch ' ' und trimmen den String: "Homunculus - New_Edition"
+   -  Wenn der String kein '-' enthält, dann ist der String die Gruppe, z.B. "Nomad".
+   -  Wenn der String  '-' enthält, dann wird diese dort gesplittet und (nach trim) germerged mit '/', also Gruppe = "Homunculus/New Edition".
+
+     Aber 1: Das Wort an der Running-Number, das nicht mit '-' von der Nummer getrennt ist (z.B. "Band 1"), wird beim merge nicht berücksichtig,
+     also "Francois Schuiten - Jenseits der Grenze - Band 1.cbr" -> ["Francois Schuiten", "Jenseits der Grenze"] -> "Francois Schuiten/Jenseits der Grenze".
+     Regel: "WORD1 - WORD2 - WORD3 RUNNING_NUMBER" -> "WORD1 - WORD2" -> Group: "WORD1/WORD2"
+
+2b) Wenn wir keine Running-Number gefunden haben, dann lautet die Gruppe "_various".
+
+*/
 @Injectable({
   providedIn: 'root'
 })
 export class EbookGroupingService {
 
-  private config: EbookGroupingConfig = DEFAULT_EBOOK_GROUPING_CONFIG;
+  groupFiles(files: string[]): { [key: string]: string[] } {
+    if (files.length === 0) return {};
 
-  constructor() {
-  }
-
-  /**
-   * Configure the service with custom patterns
-   * @param config Custom configuration object
-   */
-  configure(config: EbookGroupingConfig): void {
-    this.config = config;
-  }
-
-
-  /**
-   * Groups an array of file paths into logical groups based on series names, volumes, and years.
-   * @param input Array of file paths to group
-   * @returns Object with group names as keys and arrays of file paths as values
-   */
-  groupFiles(input: string[]): { [key: string]: string[] } {
     const groups: { [key: string]: string[] } = {};
-    const various: string[] = [];
 
-    // Process each file path
-    for (const filePath of input) {
-      const groupKey = this.determineGroupKey(filePath);
+    for (const file of files) {
+      const groupName = this.extractGroupName(file);
 
-      if (groupKey === '_various') {
-        various.push(filePath);
-      } else {
-        if (!groups[groupKey]) {
-          groups[groupKey] = [];
-        }
-        groups[groupKey].push(filePath);
+      if (!groups[groupName]) {
+        groups[groupName] = [];
       }
-    }
-
-    // Add _various files if any exist
-    if (various.length > 0) {
-      groups['_various'] = various;
+      groups[groupName].push(file);
     }
 
     return groups;
   }
 
-  /**
-   * Determines the appropriate group key for a given file path
-   * @param filePath The file path to analyze
-   * @returns The group key or '_various' if no pattern is found
-   */
-  private determineGroupKey(filePath: string): string {
-    // Extract filename from path and strip [*] prefix patterns
-    const rawFileName = this.extractFileName(filePath);
-    const strippedFileName = this.stripPrefixPatterns(rawFileName);
-    // Normalize filename by converting underscores to spaces for better pattern matching
-    const fileName = this.normalizeFileName(strippedFileName);
+  private extractGroupName(filePath: string): string {
+    try {
+      // Extract filename from full path
+      const filename = filePath.split('/').pop() || filePath;
 
-    // Try different grouping strategies in order of specificity
+      const basename = filename
+        .replace(/\.[^/.]+$/, '')// Remove file extension
+        .replace(/\.[,;]+$/, '');// Remove ,; extension
 
-    // 1. Check for series with year patterns (e.g., "Mickyvision II Serie 1967 01")
-    const yearSeriesMatch = this.matchYearSeries(fileName);
-    if (yearSeriesMatch) {
-      return yearSeriesMatch;
-    }
+      // Remove content in [...] and (...) brackets
+      const cleaned = basename.replace(/\[[^\]]*\]/g, '').replace(/\([^\)]*\)/g, '').trim();
 
-    // 2. Check for date-issue series like "Goofy Magazin - 1979-06"
-    const dateIssueMatch = this.matchDateIssueSeries(fileName);
-    if (dateIssueMatch) {
-      return dateIssueMatch;
-    }
+      // Find the last number in the string (running number)
+      const numberMatch = this.findLastNumber(cleaned);
 
-    // 3. Check for gesamtausgabe/collection series (e.g., "Lady S Gesamtausgabe 1", "Jeff Jordan Gesamtausgabe - 1")
-    const collectionMatch = this.matchCollectionSeries(fileName);
-    if (collectionMatch) {
-      return collectionMatch;
-    }
-
-    // 3. Check for titles with parenthetical information (e.g., "Bleierne Hitze (Edition 52 2013)(KeiPsf)")
-    const parentheticalMatch = this.matchParentheticalTitles(fileName);
-    if (parentheticalMatch) {
-      return parentheticalMatch;
-    }
-
-    // 4. Check for numbered series (e.g., "Deep State 01", "The Fable 01")
-    const numberedSeriesMatch = this.matchNumberedSeries(fileName);
-    if (numberedSeriesMatch) {
-      return numberedSeriesMatch;
-    }
-
-    // 5. Check for directory-based grouping (files in same subdirectory)
-    const directoryMatch = this.matchDirectoryGroup(filePath);
-    if (directoryMatch) {
-      return directoryMatch;
-    }
-
-    // 6. Check for similar title patterns (e.g., "Staehlerne Herzen 01", "Staehlerne Herzen 02")
-    const titleMatch = this.matchSimilarTitles(fileName);
-    if (titleMatch) {
-      return titleMatch;
-    }
-
-    return '_various';
-  }
-
-  /**
-   * Extracts the filename from a full path
-   */
-  private extractFileName(filePath: string): string {
-    return filePath.split('/').pop() || filePath;
-  }
-
-  /**
-   * Strips [*] patterns from the beginning of filenames
-   * e.g., "[GER] Das Hoellenpack 01" becomes "Das Hoellenpack 01"
-   */
-  private stripPrefixPatterns(fileName: string): string {
-    // Remove [*] patterns from the beginning of the filename
-    return fileName.replace(/^\[.*?\]\s*/, '');
-  }
-
-  /**
-   * Normalizes filename for better pattern matching
-   * - Converts underscores to spaces
-   * - Cleans up multiple spaces
-   */
-  private normalizeFileName(fileName: string): string {
-    return fileName
-      .replace(/_/g, ' ')  // Convert underscores to spaces
-      .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .trim();
-  }
-
-  /**
-   * Matches series with year patterns like "Mickyvision II Serie 1967 01"
-   * Only matches when the year is part of the series structure, not publication metadata in parentheses
-   */
-  private matchYearSeries(fileName: string): string | null {
-    // Pattern for series with years like "Mickyvision II Serie 1967 01"
-    // But exclude cases where the year appears inside parentheses (publication metadata)
-    const yearPattern = /^(.+?)\s+(\d{4})\s+\d+/;
-    const match = fileName.match(yearPattern);
-
-    if (match) {
-      const fullMatch = match[0];
-      const seriesName = match[1].trim();
-      const year = match[2];
-
-      // Don't match if the year appears to be inside parentheses (publication metadata)
-      // Check if there's an opening parenthesis before the year without a closing one
-      const beforeYear = fileName.substring(0, fileName.indexOf(year));
-      const openParens = (beforeYear.match(/\(/g) || []).length;
-      const closeParens = (beforeYear.match(/\)/g) || []).length;
-
-      if (openParens > closeParens) {
-        // Year is inside parentheses, likely publication metadata
-        return null;
+      if (!numberMatch) {
+        return '_various';
       }
-      
-      return `${seriesName}/${year}`;
-    }
 
-    return null;
+      // Get everything before the number
+      let leftPart = cleaned.substring(0, numberMatch.index).trim();
+
+      // Remove trailing separators
+      leftPart = leftPart.replace(/[-_\s]+$/, '').trim();
+
+      if (!leftPart) return '_various';
+
+      // Process the group name
+      return this.createGroupName(leftPart);
+
+    } catch (error) {
+      return '_various';
+    }
   }
 
-  /**
-   * Matches date-based issues like "Title - 1979-06" and returns the title
-   */
-  private matchDateIssueSeries(fileName: string): string | null {
-    // Match patterns like: "Goofy Magazin - 1979-06" (YYYY-MM)
-    // Be strict: Ensure the dash before the date is the first dash in the string to avoid capturing
-    // titles like "... Gesamtausgabe - 1 - 1956-..." which should be handled by collection logic.
-    const dateIssuePattern = /^([^-]+?)\s*-\s*(\d{4})-(\d{2})/;
-    const match = fileName.match(dateIssuePattern);
-    if (match) {
-      const seriesName = match[1].trim();
-      if (seriesName.length > 2 && !this.isGenericName(seriesName)) {
-        return seriesName;
+  private findLastNumber(text: string): { index: number, number: string } | null {
+    const matches: { index: number, number: string }[] = [];
+
+    // Find Arabic numbers
+    const arabicRegex = /\d+/g;
+    let match: RegExpExecArray | null;
+    while ((match = arabicRegex.exec(text)) !== null) {
+      matches.push({index: match.index, number: match[0]});
+    }
+
+    // Find Roman numerals (require at least one Roman letter) using word boundaries
+    // Simpler and safe regex that cannot match empty strings
+    const romanRegex = /\b[MDCLXVI]+\b/gi;
+    while ((match = romanRegex.exec(text)) !== null) {
+      // Safety: guard against zero-length matches to avoid infinite loops in some engines
+      if (!match[0]) {
+        romanRegex.lastIndex++;
+        continue;
+      }
+      matches.push({index: match.index, number: match[0]});
+    }
+
+    if (matches.length === 0) return null;
+    // Return the rightmost match by index
+    let rightmost = matches[0];
+    for (let i = 1; i < matches.length; i++) {
+      if (matches[i].index >= rightmost.index) {
+        rightmost = matches[i];
       }
     }
-    return null;
+    return rightmost;
   }
 
-  /**
-   * Matches numbered series like "Deep State 01", "The Fable 01", "Nomad 001"
-   */
-  private matchNumberedSeries(fileName: string): string | null {
-    // Check for special cases
-    for (const specialCase of this.config.specialCases) {
-      if (specialCase.containsText.every(text => fileName.includes(text))) {
-        return specialCase.groupName;
+
+  private createGroupName(leftPart: string): string {
+    // Replace underscores with spaces
+    let processed = leftPart.replace(/_/g, ' ').trim();
+
+    // Split only on dash separators that have spaces around them (" - ")
+    const parts = processed.split(/\s+-\s+/).map(p => p.trim()).filter(p => p.length > 0);
+
+    if (parts.length > 1) {
+      // If the last segment is a single word (e.g., "Band" or "Volume") adjacent to the number, drop it
+      if (parts[parts.length - 1].split(/\s+/).length === 1) {
+        parts.pop();
       }
+      return parts.join('/');
     }
 
-    // Pattern for numbered series - look for title followed by number
-    // Build dynamic patterns using configuration
-    const bookIdentifiersPattern = this.config.bookIdentifiers.join('|');
-    const editionTypesPattern = this.config.editionTypes.join('|');
-    
-    const patterns = [
-      // Pattern like "Der ganze Gaston - Buch 1 -" (series with book numbers)
-      {
-        regex: new RegExp(`^(.+?)\\s*-\\s*(${bookIdentifiersPattern})\\s+(\\d{1,3})\\s*-`),
-        type: 'book'
-      },
-      // Pattern like "Homunculus - New Edition - 01 -" (edition with number) - check this first
-      {
-        regex: new RegExp(`^(.+?)\\s*-\\s*(${editionTypesPattern})\\s*-\\s*(\\d{1,3})\\s*-`),
-        type: 'edition'
-      },
-      // Pattern like "Pluto - Urasawa X Tezuka - 01 -" (complex dash pattern)
-      {
-        regex: /^(.+?)\s*-\s*(.+?)\s*-\s*(\d{1,3})\s*-/,
-        type: 'complex'
-      },
-      // Pattern like "SW-SB-80" (series directly followed by hyphen and number, no space before hyphen)
-      // Ensure the character before the hyphen is non-space to avoid matching titles like "Pluto - ..."
-      {
-        regex: /^(.+?\S)-\s*(\d{1,3})(?:\b|\.|$)/,
-        type: 'simple'
-      },
-      // Pattern like "Nomad 001 - Lebendige Erinnerung" (3-digit with dash)
-      {
-        regex: /^(.+?)\s+(\d{3})\s*-/,
-        type: 'simple'
-      },
-      // Pattern like "Deep State 01 Die dunklere Seite"
-      {
-        regex: /^(.+?)\s+(\d{1,3})\s+/,
-        type: 'simple'
-      },
-      // Pattern like "Adolf 01 (GER)"
-      {
-        regex: /^(.+?)\s+(\d{1,3})\s*\(/,
-        type: 'simple'
-      },
-      // Pattern like "Star Fantasy 1 [13]"
-      {
-        regex: /^(.+?)\s+(\d{1,3})\s*\[/,
-        type: 'simple'
-      },
-      // Pattern like "Himmel in Truemmern 01.cbr" or "Series 05.jpg"
-      {
-        regex: /^(.+?)\s+(\d{1,3})\./,
-        type: 'simple'
-      },
-      // Pattern like "LTB Crime 01"
-      {
-        regex: /^(.+?)\s+(\d{1,3})(?:\s|$)/,
-        type: 'simple'
-      }
-    ];
-
-    for (const pattern of patterns) {
-      const match = fileName.match(pattern.regex);
-      if (match) {
-        let seriesName = match[1].trim();
-
-        // Handle complex patterns with multiple parts
-        if (pattern.type === 'book') {
-          // For patterns like "Der ganze Gaston - Buch 1 -"
-          seriesName = match[1].trim();
-        } else if (pattern.type === 'edition') {
-          // For patterns like "Homunculus - New Edition - 01 -"
-          if (match[2]) {
-            seriesName = `${match[1].trim()} - ${match[2].trim()}`;
-          }
-        } else if (pattern.type === 'complex') {
-          // For patterns like "Pluto - Urasawa X Tezuka - 01 -"
-          if (match[2]) {
-            seriesName = `${match[1].trim()} - ${match[2].trim()}`;
-          }
-        }
-
-        // Sanitize: remove any trailing separators that might have been captured (e.g., "Title -")
-        seriesName = seriesName.replace(/[\s\-–—:]+$/g, '').trim();
-        
-        // Filter out very generic or short names
-        if (seriesName.length > 2 && !this.isGenericName(seriesName)) {
-          return seriesName;
-        }
-      }
-    }
-
-    return null;
+    // No dash-separated sections: return the processed title as-is
+    return processed;
   }
 
-  /**
-   * Matches collection series like "Lady S Gesamtausgabe 1" or "Lady S Gesamtausgabe 03"
-   * Also handles patterns with dash separators like "Jeff Jordan Gesamtausgabe - 1 - ..."
-   */
-  private matchCollectionSeries(fileName: string): string | null {
-    // Pattern for collection series with numbers (including leading zeros)
-    // Handles both "Series Gesamtausgabe 1" and "Series Gesamtausgabe - 1 - ..." formats
-    const collectionTypesPattern = this.config.collectionTypes.join('|');
-    const collectionPatterns = [
-      // Pattern like "Jeff Jordan Gesamtausgabe - 1 - ..."
-      new RegExp(`^(.+?)\\s+(${collectionTypesPattern})\\s*-\\s*\\d+`, 'i'),
-      // Pattern like "Lady S Gesamtausgabe 1"
-      new RegExp(`^(.+?)\\s+(${collectionTypesPattern})\\s+\\d+`, 'i')
-    ];
-
-    for (const pattern of collectionPatterns) {
-      const match = fileName.match(pattern);
-      if (match) {
-        // Return the full series name including the collection type (e.g., "Jeff Jordan Gesamtausgabe")
-        return `${match[1].trim()} ${match[2]}`;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Matches files in the same subdirectory for grouping
-   */
-  private matchDirectoryGroup(filePath: string): string | null {
-    const pathParts = filePath.split('/');
-
-    // If file is in a subdirectory (not root Comics.nosync), use directory name
-    if (pathParts.length > 3) {
-      const directoryName = pathParts[pathParts.length - 2];
-
-      // Skip generic directory names
-      if (!this.isGenericDirectoryName(directoryName)) {
-        return directoryName;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Matches titles with parenthetical information like "Bleierne Hitze (Edition 52 2013)(KeiPsf)"
-   * Only matches when there's no numbered series pattern anywhere in the title
-   */
-  private matchParentheticalTitles(fileName: string): string | null {
-    // Don't match if this contains any numbers before the parenthesis (likely a numbered series)
-    const hasNumbersPattern = /^[^(]*\d+[^(]*\(/;
-    if (hasNumbersPattern.test(fileName)) {
-      return null;
-    }
-
-    // Pattern for titles followed by parenthetical information (no numbers before parenthesis)
-    const parentheticalPattern = /^(.+?)\s*\(/;
-    const match = fileName.match(parentheticalPattern);
-
-    if (match) {
-      const title = match[1].trim();
-      // Only return if title is meaningful (not too short, not generic)
-      if (title.length > 3 && !this.isGenericName(title)) {
-        return title;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Matches similar titles that might be part of a series
-   */
-  private matchSimilarTitles(fileName: string): string | null {
-    // Look for patterns like "Staehlerne Herzen 01", "Staehlerne Herzen 02"
-    const titlePattern = /^(.+?)\s+\d{1,3}(?:\s|$|\()/;
-    const match = fileName.match(titlePattern);
-
-    if (match) {
-      const title = match[1].trim();
-      if (title.length > 3 && !this.isGenericName(title)) {
-        return title;
-      }
-    }
-
-    return null;
-  }
-
-  /**
-   * Checks if a name is too generic to be used for grouping
-   */
-  private isGenericName(name: string): boolean {
-    // Check for generic names, but be more lenient with "Band" if it's part of a longer name
-    const hasGeneric = this.config.genericNames.some(generic => {
-      const regex = new RegExp(`\\b${generic}\\b`, 'i');
-      return regex.test(name);
-    });
-
-    if (hasGeneric) {
-      return true;
-    }
-
-    // Special handling for "Band" - only consider it generic if it's the only meaningful word
-    // or if the name is very short
-    if (/\bBand\b/i.test(name)) {
-      // Allow "Band" if it's part of a longer, meaningful title
-      const words = name.split(/\s+/).filter(word => word.length > 2);
-      return words.length <= 2; // Generic if only "Band" + one other short word
-    }
-
-    return false;
-  }
-
-  /**
-   * Checks if a directory name is too generic for grouping
-   */
-  private isGenericDirectoryName(dirName: string): boolean {
-    return this.config.genericDirectoryNames.some(generic => dirName.toLowerCase().includes(generic.toLowerCase()));
-  }
 }

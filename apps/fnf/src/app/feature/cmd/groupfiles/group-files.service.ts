@@ -10,7 +10,7 @@ import {GroupFilesRow} from './data/group-files-row';
 import {fixPath, path2DirBase} from "../../../common/fn/path-2-dir-base.fn";
 import {filepath2FileItem} from "../../../common/fn/filepath-to-file-items";
 import {fileItem2Path} from "../../../common/fn/file-item-to-path";
-import {ComicFileService} from "./comic-file.service";
+import {EbookGroupingService} from "./ebook-grouping.service";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class GroupFilesService {
 
   constructor(
     private readonly commandService: CommandService,
-    private readonly ebookGroupingService: ComicFileService,
+    private readonly ebookGroupingService: EbookGroupingService,
   ) {
   }
 
