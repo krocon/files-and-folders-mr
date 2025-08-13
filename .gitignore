@@ -213,3 +213,9 @@ apps/fnf/src/assets/screens_old/
 /apps/fnf-api/src/assets/tool/custom/linux.json
 
 /apps/screenshot/.junie/
+
+# macOS files
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
