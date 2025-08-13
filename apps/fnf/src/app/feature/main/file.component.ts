@@ -20,13 +20,12 @@ import {SplitPaneMouseService} from '../../service/splitpane/split-pane-mouse.se
 import {WindowResizeService} from '../../service/splitpane/window-resize.service';
 import {ButtonPanelComponent} from './footer/buttonpanel/buttonpanel.component';
 
-import {ButtonEnableStates, FileItemIf, Sysinfo, SysinfoIf} from "@fnf-data";
+import {ButtonEnableStates, FileItemIf, PanelIndex, Sysinfo, SysinfoIf} from "@fnf-data";
 import {AppService} from "../../app.service";
 import {FileTableComponent} from "./filetable/file-table.component";
 import {CommonModule} from "@angular/common";
 import {BreadcrumbComponent} from "./header/breadcrumb/breadcrumb.component";
 import {TabpanelComponent} from "./header/tabpanel/tabpanel.component";
-import {PanelIndex} from "@fnf-data";
 import {SummaryLabel} from "./footer/summarylabel/summary-label";
 import {TabsPanelData} from "../../domain/filepagedata/data/tabs-panel.data";
 import {SelectionEvent} from "../../domain/filepagedata/data/selection-event";
@@ -303,6 +302,7 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
 
   // ----------------------------------
 
+
   onShellfocusChanged(hasFocus: boolean) {
     this.shellInputHasFocus = hasFocus;
   }
@@ -358,4 +358,23 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
   private normalizePath(path: string): string {
     return path.replace(/\\/g, "/").replace(/\/\//g, "/");
   }
+
+  isFullScreen: boolean = false;
+
+
+  async toggleFullScreen(): Promise<void> {
+    try {
+      const el = document.documentElement;
+      if (!document.fullscreenElement) {
+        await el.requestFullscreen();
+        this.isFullScreen = true;
+      } else {
+        await document.exitFullscreen();
+        this.isFullScreen = false;
+      }
+    } catch (err) {
+      // ignore
+    }
+  }
+
 }

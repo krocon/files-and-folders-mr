@@ -1,9 +1,16 @@
-
 <div
     #splitPaneMain
     (keydown)="onKeyDown($event)"
     (keyup)="onKeyUp($event)"
     class="fnf-main-div">
+
+  <div class="fullscreen-toggle-div">
+    <button
+        mat-icon-button
+        (click)="toggleFullScreen()">
+      <mat-icon>{{ isFullScreen ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+    </button>
+  </div>
 
   <div class="header-top-div split-div fnf-header-bg-color fnf-header-fg-color">
     <div
