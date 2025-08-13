@@ -32,14 +32,23 @@ import {ThemeModule} from "./config/theme/theme.module";
 import {SearchPatternModule} from "./config/search/search-pattern.module";
 import {SetupModule} from "./config/setup/setup.module";
 import {environment} from "../environments/environment";
+import * as os from 'os';
+
+const  win = os.platform().indexOf("win") === 0;
 
 export const config = new Config(
   process.env.FNF_INCOMPATIBLE_PATHS ? process.env.FNF_INCOMPATIBLE_PATHS.split(",") : [],
   process.env.FNF_CONTAINER_PATHS ? process.env.FNF_CONTAINER_PATHS.split(",") : [],
-  process.env.FNF_START_PATH ? process.env.FNF_START_PATH :
-    process.env.FNF_CONTAINER_PATHS ? process.env.FNF_CONTAINER_PATHS.split(",")[0] : '/',
+  getStartPath(),
   process.env.FNF_DOCKER_ROOT ? process.env.FNF_DOCKER_ROOT : undefined,
 );
+
+function getStartPath() {
+    if (process.env.FNF_START_PATH) return process.env.FNF_START_PATH;
+    if ( process.env.FNF_CONTAINER_PATHS) return process.env.FNF_CONTAINER_PATHS.split(",")[0];
+    if (win) return 'C:/';
+    return '/';
+}
 
 @Module({
   imports: [
