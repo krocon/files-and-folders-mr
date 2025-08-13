@@ -34,10 +34,6 @@ describe('ComicFileService', () => {
 
       const result = service.groupFiles(input);
 
-      // Debug output to understand what's happening
-      console.log('DEBUG: Actual result:', JSON.stringify(result, null, 2));
-      console.log('DEBUG: Result keys:', Object.keys(result));
-
       expect(result["Homunculus/New Edition"]).toEqual([
         "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_08_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
         "/Users/userabc/Filme.nosync/comics4/Homunculus_-_New_Edition_-_09_-_(Egmont)_-_GER_-_Hideo_Yamamoto.cbz",
