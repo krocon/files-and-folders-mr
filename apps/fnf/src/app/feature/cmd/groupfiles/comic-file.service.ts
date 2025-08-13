@@ -35,7 +35,7 @@ output:
       "/Users/userabc/Filme.nosync/comics4/Francois Schuiten - Jenseits der Grenze - Band 1.cbr",
       "/Users/userabc/Filme.nosync/comics4/Francois_Schuiten_-_Jenseits_der_Grenze_-_Band_2.cbr"
   ],
-  "Mickyvision II/Serie/1967": [
+  "Mickyvision II Serie 1967": [
       "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 01.cbr",
       "/Users/userabc/Comics.nosync/Mickyvision/Mickyvision II Serie 1967 02.cbr"
   ]
@@ -64,8 +64,7 @@ Grundsätzlich: arbeite sehr generisch. Nutze keine Listen (Regex) mit hartkodie
 
      Aber 1: Das Wort an der Running-Number, das nicht mit '-' von der Nummer getrennt ist (z.B. "Band 1"), wird beim merge nicht berücksichtig,
      also "Francois Schuiten - Jenseits der Grenze - Band 1.cbr" -> ["Francois Schuiten", "Jenseits der Grenze"] -> "Francois Schuiten/Jenseits der Grenze".
-
-     Aber 2: wenn ein gespittetes Wort nur 2 Zeichen hat ("II" in "Mickyvision II Serie 1967 01.cbr"), dann wird es mit dem Wort davor verbunden: "Mickyvision II"
+     Regel: "WORD1 - WORD2 - WORD3 RUNNING_NUMBER" -> "WORD1 - WORD2" -> Group: "WORD1/WORD2"
 
 2b) Wenn wir keine Running-Number gefunden haben, dann lautet die Gruppe "_various".
 
@@ -80,6 +79,104 @@ export class ComicFileService {
 
     const groups: { [key: string]: string[] } = {};
 
+    for (const file of files) {
+      const groupName = this.extractGroupName(file);
+
+      if (!groups[groupName]) {
+        groups[groupName] = [];
+      }
+      groups[groupName].push(file);
+    }
+
     return groups;
   }
+
+  private extractGroupName(filePath: string): string {
+    try {
+      // Extract filename from full path
+      const filename = filePath.split('/').pop() || filePath;
+
+      const basename = filename
+        .replace(/\.[^/.]+$/, '')// Remove file extension
+        .replace(/\.[,;]+$/, '');// Remove ,; extension
+
+      // Remove content in [...] and (...) brackets
+      const cleaned = basename.replace(/\[[^\]]*\]/g, '').replace(/\([^\)]*\)/g, '').trim();
+
+      // Find the last number in the string (running number)
+      const numberMatch = this.findLastNumber(cleaned);
+
+      if (!numberMatch) {
+        return '_various';
+      }
+
+      // Get everything before the number
+      let leftPart = cleaned.substring(0, numberMatch.index).trim();
+
+      // Remove trailing separators
+      leftPart = leftPart.replace(/[-_\s]+$/, '').trim();
+
+      if (!leftPart) return '_various';
+
+      // Process the group name
+      return this.createGroupName(leftPart);
+
+    } catch (error) {
+      return '_various';
+    }
+  }
+
+  private findLastNumber(text: string): { index: number, number: string } | null {
+    const matches: { index: number, number: string }[] = [];
+
+    // Find Arabic numbers
+    const arabicRegex = /\d+/g;
+    let match: RegExpExecArray | null;
+    while ((match = arabicRegex.exec(text)) !== null) {
+      matches.push({index: match.index, number: match[0]});
+    }
+
+    // Find Roman numerals (require at least one Roman letter) using word boundaries
+    // Simpler and safe regex that cannot match empty strings
+    const romanRegex = /\b[MDCLXVI]+\b/gi;
+    while ((match = romanRegex.exec(text)) !== null) {
+      // Safety: guard against zero-length matches to avoid infinite loops in some engines
+      if (!match[0]) {
+        romanRegex.lastIndex++;
+        continue;
+      }
+      matches.push({index: match.index, number: match[0]});
+    }
+
+    if (matches.length === 0) return null;
+    // Return the rightmost match by index
+    let rightmost = matches[0];
+    for (let i = 1; i < matches.length; i++) {
+      if (matches[i].index >= rightmost.index) {
+        rightmost = matches[i];
+      }
+    }
+    return rightmost;
+  }
+
+
+  private createGroupName(leftPart: string): string {
+    // Replace underscores with spaces
+    let processed = leftPart.replace(/_/g, ' ').trim();
+
+    // Split only on dash separators that have spaces around them (" - ")
+    const parts = processed.split(/\s+-\s+/).map(p => p.trim()).filter(p => p.length > 0);
+
+    if (parts.length > 1) {
+      // If the last segment is a single word (e.g., "Band" or "Volume") adjacent to the number, drop it
+      if (parts[parts.length - 1].split(/\s+/).length === 1) {
+        parts.pop();
+      }
+      return parts.join('/');
+    }
+
+    // No dash-separated sections: return the processed title as-is
+    return processed;
+  }
+
 }
