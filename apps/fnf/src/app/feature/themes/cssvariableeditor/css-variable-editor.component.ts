@@ -156,7 +156,7 @@ export class CssVariableEditorComponent {
   }
 
   endsWithKey(suffix: string): boolean {
-    const key = this.rows && this.rows.length ? this.rows[0].key : undefined;
+    const key = this.rows && this.rows.length ? this.rows[0]?.key : undefined;
     if (!key) {
       return false;
     }

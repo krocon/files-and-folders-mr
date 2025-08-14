@@ -70,16 +70,6 @@ export class ThemesComponent implements OnInit, OnDestroy {
   public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
-  getIndexFromVarValue(value: string): number {
-    const key = value.replace('var(', '').replace(')', '');
-    return this.filteredTableData.findIndex(row => row.key === key);
-  }
-
-  getRowFromVarValue(value: string): ThemeTableRow {
-    const idx = this.getIndexFromVarValue(value);
-    return this.filteredTableData[idx];
-  }
-
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly configThemesService: ConfigThemesService,
@@ -92,11 +82,21 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.themeForm = this.createForm();
   }
 
+  getIndexFromVarValue(value: string): number {
+    const key = value.replace('var(', '').replace(')', '');
+    return this.filteredTableData.findIndex(row => row.key === key);
+  }
+
+  getRowFromVarValue(value: string): ThemeTableRow {
+    const idx = this.getIndexFromVarValue(value);
+    return this.filteredTableData[idx];
+  }
+
   ngOnInit(): void {
     this.loadThemeNames();
     this.setupFormSubscriptions();
     const theme = this.lookAndFeelService.getTheme();
-    console.info('theme', theme)
+
     this.onThemeSelect(theme);
     this.loadTheme(theme);
   }
@@ -207,7 +207,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.refreshIndex++;
 
     if (index >= 0 && index < this.filteredTableData.length) {
-      const value = rows && rows.length ? rows[0].value : '';
+      const value = rows && rows.length ? rows[0]?.value : '';
       this.filteredTableData[index].value = value;
       this.updateOriginalData(index, value);
 
@@ -359,6 +359,16 @@ export class ThemesComponent implements OnInit, OnDestroy {
         }
       )
     }
+  }
+
+  onHeaderDblClick(column: ThemeTableColumn): void {
+    if (this.sortColumn === column) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = column;
+      this.sortDirection = 'asc';
+    }
+    this.applySort();
   }
 
   private countSelections() {
@@ -535,18 +545,9 @@ export class ThemesComponent implements OnInit, OnDestroy {
     }
 
     this.filteredTableData = filtered;
-    this.cdr.detectChanges();
+    //this.cdr.detectChanges();
+    console.info('###', this.filteredTableData);
     this.countSelections();
-  }
-
-  onHeaderDblClick(column: ThemeTableColumn): void {
-    if (this.sortColumn === column) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortColumn = column;
-      this.sortDirection = 'asc';
-    }
-    this.applySort();
   }
 
   private applySort(): void {
@@ -585,57 +586,37 @@ export class ThemesComponent implements OnInit, OnDestroy {
   }
 
   private checkPanelsFilter(key: string, panelsGroup: any): boolean {
+    if (panelsGroup?.value?.all) return true;
+
     const activepanelChecked = panelsGroup.get('activepanel')?.value;
-    const inactivepanelChecked = panelsGroup.get('inactivepanel')?.value;
-
-    if (activepanelChecked && inactivepanelChecked) return true;
-    if (!activepanelChecked && !inactivepanelChecked) return false;
-
-
     if (activepanelChecked) {
       return key.includes('activepanel');
     }
-    // 'inactivepanel' is checked
-    return !key.includes('activepanel');
+    const inactivepanelChecked = panelsGroup.get('inactivepanel')?.value;
+    if (inactivepanelChecked) {
+      return !key.includes('activepanel');
+    }
+    return false;
   }
 
   private checkAreasFilter(key: string, areasGroup: any): boolean {
-    const areas = ['header', 'table', 'footer', 'tooltip', 'material', 'scrollbar'];
-    const errorPanelChecked = areasGroup.get('errorPanel')?.value;
+    if (areasGroup?.value?.all) return true;
 
-    // Special case for error-panel (mapped to errorPanel in form)
-    if (key.includes('error-panel')) {
-      return errorPanelChecked;
-    }
+    const checked = Object
+      .keys(areasGroup.value)
+      .filter(key => areasGroup.value[key]);
 
-    // Check other areas
-    for (const area of areas) {
-      if (key.includes(area)) {
-        return areasGroup.get(area)?.value;
-      }
-    }
-
-    // If key doesn't contain area-specific terms, it passes if any area filter is checked
-    return areas.some(area => areasGroup.get(area)?.value) || errorPanelChecked;
+    return checked.some(area => key.includes(area));
   }
 
   private checkPropertyFilter(key: string, propertyGroup: any): boolean {
-    const fgChecked = propertyGroup.get('fg')?.value;
-    const bgChecked = propertyGroup.get('bg')?.value;
-    const borderChecked = propertyGroup.get('border')?.value;
+    if (propertyGroup?.value?.all) return true;
 
-    if (key.includes('-fg-') || key.endsWith('-fg-color')) {
-      return fgChecked;
-    }
-    if (key.includes('-bg-') || key.endsWith('-bg-color')) {
-      return bgChecked;
-    }
-    if (key.includes('-border-') || key.endsWith('-border-color')) {
-      return borderChecked;
-    }
+    const checked = Object
+      .keys(propertyGroup.value)
+      .filter(key => propertyGroup.value[key]);
 
-    // If key doesn't contain property-specific terms, it passes if any property filter is checked
-    return fgChecked || bgChecked || borderChecked;
+    return checked.some(area => key.includes(area));
   }
 
   private updateNameValidation(): void {

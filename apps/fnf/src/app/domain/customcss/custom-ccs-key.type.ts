@@ -46,7 +46,7 @@ export const customCcsKeys = [
   "--fnf-table-hover-row-bg-color",
   "--fnf-table-selected-row-bg-color",
   "--fnf-table-selected-row-fg-color",
-  "--fnf-tooltip-background-color",
+  "--fnf-tooltip-bg-color",
   "--fnf-tooltip-background-input-color",
   "--fnf-tooltip-color",
   "--fnf-tooltip-input-color"

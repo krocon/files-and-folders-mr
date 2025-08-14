@@ -50,7 +50,7 @@
     --fnf-table-hover-row-bg-color: var(--fnf-activepanel-header-bg-color);
     --fnf-table-selected-row-bg-color: var(--fnf-table-bg-color);
     --fnf-table-selected-row-fg-color: #e00034;
-    --fnf-tooltip-background-color: rgba(0, 0, 0, 0.75);
+    --fnf-tooltip-bg-color: rgba(0, 0, 0, 0.75);
     --fnf-tooltip-background-input-color: #fff;
     --fnf-tooltip-color: #fff;
     --fnf-tooltip-input-color: #000;

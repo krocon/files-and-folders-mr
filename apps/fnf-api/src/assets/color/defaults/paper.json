@@ -45,7 +45,7 @@
     "--fnf-table-hover-row-bg-color": "#E7E5DF",
     "--fnf-table-selected-row-bg-color": "#E7E5DF",
     "--fnf-table-selected-row-fg-color": "red",
-    "--fnf-tooltip-background-color": "rgba(0, 0, 0, 0.75)",
+    "--fnf-tooltip-bg-color": "rgba(0, 0, 0, 0.75)",
     "--fnf-tooltip-background-input-color": "#DDD9CE",
     "--fnf-tooltip-color": "#DDD9CE",
     "--fnf-tooltip-input-color": "#000",

@@ -4,13 +4,13 @@
       @if (endsWithKey('-color')) {
         <input
             (ngModelChange)="onValueChangeSingle($event)"
-            [ngModel]="getColorPreview(rows && rows.length ? rows[0].value : '')"
+            [ngModel]="getColorPreview(rows && rows.length && rows[0] ? rows[0].value : '')"
             type="color">
       }
     </div>
     <input
         (ngModelChange)="onValueChangeSingle($event)"
-        [ngModel]="rows && rows.length ? rows[0].value : ''"
+        [ngModel]="rows && rows.length && rows[0] ? rows[0].value : ''"
         class="color-text-input"
         placeholder="CSS color or variable">
     <button
@@ -42,7 +42,7 @@
     </button>
     <mat-menu #menu2="matMenu">
       @for (item of allThemeTableData; track item) {
-        @if (item.key && rows && rows.length && rows[0].key !== item.key) {
+        @if (item.key && rows && rows.length && rows[0]?.key !== item.key) {
           <div
               [style.background-color]="'var('+item.key+')'"
               [style.color]="getInvertedColorForVarKey(item.key)"

@@ -214,7 +214,7 @@
                 <td>
                   @if (row.value.startsWith('var(')) {
                     <div class="two-column-div">
-                      <div>&larr;&nbsp;&nbsp;{{ getRowFromVarValue(row.value).key }}</div>
+                      <div>&larr;&nbsp;&nbsp;{{ getRowFromVarValue(row.value)?.key }}</div>
 
                       <app-css-variable-editor
                           [refresh]="refreshIndex"
