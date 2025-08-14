@@ -2,13 +2,20 @@
     display: grid;
     grid-template-columns: auto 250px auto auto;
     justify-content: start;
-    align-items: top;
-    gap: 4px;
+    align-items: center;
+    gap: 0;
     position: relative;
 
-    .color-text-input,
-    & > * {
-        height: 36px !important;
+    .color-text-input {
+        height: 34px !important;
+    }
+
+    & > input[type="color"] {
+        height: 40px !important;
+        width: 40px;
+        padding: 0;
+        cursor: pointer;
+        border-radius: 3px;
     }
 
     .color-preview {

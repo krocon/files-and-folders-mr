@@ -2,13 +2,13 @@
   <div class="color-input-container">
     <div>
       @if (endsWithKey('-color')) {
-        <div
+        <!--div
             class="color-preview"
             [style.background-color]="getColorPreview(rows && rows.length ? rows[0].value : '')"
             [colorPicker]="rows && rows.length ? rows[0].value : ''"
             (colorPickerChange)="onColorArrayChange([$event])"
             [cpPosition]="cpPosition"
-            [cpPresetColors]="presetColors"></div>
+            [cpPresetColors]="presetColors"></div-->
       }
     </div>
     <input
@@ -20,7 +20,7 @@
     @if (endsWithKey('-color')) {
       <input
           (ngModelChange)="onValueChangeSingle($event)"
-          [ngModel]="rows && rows.length ? rows[0].value : ''"
+          [ngModel]="getColorPreview(rows && rows.length ? rows[0].value : '')"
           type="color">
 
       <button
