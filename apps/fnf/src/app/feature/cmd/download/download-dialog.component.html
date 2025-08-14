@@ -37,13 +37,17 @@
           <button mat-icon-button matSuffix [matMenuTriggerFor]="menu" type="button">
             <mat-icon>folder_open</mat-icon>
           </button>
-          <mat-error *ngIf="formGroup.get('targetDirectory')?.hasError('required')">
-            Target directory is required
-          </mat-error>
+          @if (formGroup.get('targetDirectory')?.hasError('required')) {
+            <mat-error>
+              Target directory is required
+            </mat-error>
+          }
           <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngFor="let suggestion of suggestions" (click)="onSuggestionClicked(suggestion)">
-              {{suggestion}}
-            </button>
+            @for (suggestion of suggestions; track suggestion) {
+              <button mat-menu-item (click)="onSuggestionClicked(suggestion)">
+                {{suggestion}}
+              </button>
+            }
           </mat-menu>
         </mat-form-field>
       </div-->

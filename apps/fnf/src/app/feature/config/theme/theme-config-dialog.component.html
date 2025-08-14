@@ -9,16 +9,14 @@
         [(value)]="selectedTheme"
         (selectionChange)="onThemeChange($event)">
       <mat-optgroup label="Custom Themes">
-        <mat-option
-            *ngFor="let theme of customThemes"
-            [value]="theme">{{ theme }}
-        </mat-option>
+        @for (theme of customThemes; track theme) {
+          <mat-option [value]="theme">{{ theme }}</mat-option>
+        }
       </mat-optgroup>
       <mat-optgroup label="Predefined Themes">
-        <mat-option
-            *ngFor="let theme of predefinedThemes"
-            [value]="theme">{{ theme }}
-        </mat-option>
+        @for (theme of predefinedThemes; track theme) {
+          <mat-option [value]="theme">{{ theme }}</mat-option>
+        }
       </mat-optgroup>
     </mat-select>
   </mat-form-field>
