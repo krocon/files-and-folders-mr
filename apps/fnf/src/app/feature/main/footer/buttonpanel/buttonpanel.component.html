@@ -2,7 +2,7 @@
   <div class="button-panel">
 
     <!-- Action Buttons -->
-    @for (id of currentButtons; track id) {
+    @for (id of currentButtons; track $index) {
       <button
           (click)="onButtonClick(id)"
           [disabled]="!buttonEnableStates[id]"
@@ -36,7 +36,7 @@
       <div class="menu-container">
         <div>
           <mat-list>
-            @for (id of menuItems0; track id) {
+            @for (id of menuItems0; track $index) {
               @if (id === '-') {
                 <mat-divider></mat-divider>
               } @else {
@@ -54,7 +54,7 @@
 
         <div>
           <mat-list>
-            @for (id of menuItems1; track id) {
+            @for (id of menuItems1; track $index) {
               @if (id === '-') {
                 <mat-divider></mat-divider>
               } @else {
@@ -72,7 +72,7 @@
 
         <div>
           <mat-list>
-            @for (id of menuItems2; track id) {
+            @for (id of menuItems2; track $index) {
               @if (id === '-') {
                 <mat-divider></mat-divider>
               } @else {
@@ -90,7 +90,7 @@
 
         <div>
           <mat-list>
-            @for (id of menuItems3; track id) {
+            @for (id of menuItems3; track $index) {
               @if (id === '-') {
                 <mat-divider></mat-divider>
               } @else {
