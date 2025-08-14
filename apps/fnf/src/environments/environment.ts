@@ -2,8 +2,8 @@ const apiPrefix1 = `${location.protocol}//${location.hostname}:3333/api`;
 
 export const environment = {
 
-  version: '14.08.2025 15:29',
-  commitHash: '4046b19',
+  version: '14.08.2025 19:09',
+  commitHash: 'd65017a',
 
   config: {
     apiUrl: apiPrefix1 + "/config"

@@ -42,6 +42,7 @@ import {GroupFileDialogResponse} from "../feature/cmd/groupfiles/data/group-file
 import {ButtonConfigDialogService} from "../feature/config/button/button-config-dialog.service";
 import {FiletypeConfigDialogService} from "../feature/config/filetype/filetype-config-dialog.service";
 import {ToolConfigDialogService} from "../feature/config/tool/tool-config-dialog.service";
+import {ThemeConfigDialogService} from "../feature/config/theme/theme-config-dialog.service";
 
 @Injectable({
   providedIn: 'root'
@@ -80,6 +81,7 @@ export class ActionExecutionService {
     private readonly buttonConfigDialogService: ButtonConfigDialogService,
     private readonly filetypeConfigDialogService: FiletypeConfigDialogService,
     private readonly toolConfigDialogService: ToolConfigDialogService,
+    private readonly themeConfigDialogService: ThemeConfigDialogService,
   ) {
 
   }
@@ -160,6 +162,10 @@ export class ActionExecutionService {
 
     } else if (id === "OPEN_TOOL_CONFIG_DLG") {
       this.toolConfigDialogService.open(() => {
+      });
+
+    } else if (id === "OPEN_THEME_CONFIG_DLG") {
+      this.themeConfigDialogService.open(() => {
       });
 
     } else if (id === "OPEN_SHELL_DLG") {

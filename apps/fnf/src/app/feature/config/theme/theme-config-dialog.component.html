@@ -1,0 +1,79 @@
+<h2 mat-dialog-title>Edit Theme Configuration</h2>
+
+<div class="title-bar no-subscript-wrapper">
+  <mat-form-field
+      appearance="outline"
+      style="width: 250px;">
+    <mat-label>Theme</mat-label>
+    <mat-select
+        [(value)]="selectedTheme"
+        (selectionChange)="onThemeChange($event)">
+      <mat-optgroup label="Custom Themes">
+        <mat-option
+            *ngFor="let theme of customThemes"
+            [value]="theme">{{ theme }}
+        </mat-option>
+      </mat-optgroup>
+      <mat-optgroup label="Predefined Themes">
+        <mat-option
+            *ngFor="let theme of predefinedThemes"
+            [value]="theme">{{ theme }}
+        </mat-option>
+      </mat-optgroup>
+    </mat-select>
+  </mat-form-field>
+  <button
+      mat-icon-button
+      color="warn"
+      [disabled]="!isDeleteEnabled()"
+      (click)="onDeleteTheme()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content style="padding-right: 0;">
+  <app-fnf-editor
+      [options]="editorOptions"
+      [(text)]="editorText"
+      (textChange)="onEditorChange($event)"></app-fnf-editor>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button
+      mat-raised-button
+      (click)="onReset()">Reset
+  </button>
+  <div>
+    @if (!isValidJson) {
+      <span class="validation">
+        <mat-icon color="warn">error</mat-icon>
+      </span><span>JSON is invalid. Please correct errors to enable Save.</span>
+    }
+    @if (isThemeNamePredefined && isValidJson) {
+      <span class="validation">
+        <mat-icon color="warn">lock</mat-icon>
+      </span><span>Cannot overwrite predefined theme names. Choose a different name.</span>
+    }
+  </div>
+  <mat-form-field
+      appearance="outline"
+      class="no-subscript-wrapper"
+      style="width: 200px;">
+    <mat-label>Theme Name</mat-label>
+    <input
+        matInput
+        [(ngModel)]="themeName"
+        (ngModelChange)="onThemeNameChange()"
+        placeholder="Enter theme name">
+  </mat-form-field>
+  <button
+      mat-raised-button
+      (click)="onCancel()">Cancel
+  </button>
+  <button
+      mat-raised-button
+      color="primary"
+      [disabled]="!canSave"
+      (click)="onSave()">Save
+  </button>
+</mat-dialog-actions>
