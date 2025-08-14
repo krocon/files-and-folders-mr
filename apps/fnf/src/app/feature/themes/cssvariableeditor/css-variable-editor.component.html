@@ -24,7 +24,7 @@
     <mat-menu #menu="matMenu">
       @for (item of presetColors; track item) {
         <div
-            style="background-color: {{ item }};"
+            [style.background-color]="item"
             mat-menu-item
             (click)="onMenuItemClicked(item)">
           {{ item }}
@@ -42,12 +42,10 @@
     </button>
     <mat-menu #menu2="matMenu">
       @for (item of allThemeTableData; track item) {
-        @if (item.key) {
+        @if (item.key && rows && rows.length && rows[0].key !== item.key) {
           <div
-              [attr.style]="
-              'background-color: var('+item.key+');'+
-              'color: var('+item.key+');'
-              "
+              [style.background-color]="'var('+item.key+')'"
+              [style.color]="getInvertedColorForVarKey(item.key)"
               mat-menu-item
               (click)="onMenuItemClicked('var('+item.key+')')">
             {{ item.key }}

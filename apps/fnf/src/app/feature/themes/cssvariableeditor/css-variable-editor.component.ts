@@ -37,6 +37,25 @@ export class CssVariableEditorComponent {
   @Output() valueChange = new EventEmitter<ThemeTableRow[]>();
   @Output() colorChange = new EventEmitter<ThemeTableRow[]>();
 
+  /**
+   * Returns an inverted color string for the given CSS variable key (e.g. '--primary-color').
+   * It resolves var() chains using the theme table data and then applies inversion via ColorService.
+   * If resolution or inversion fails, returns '#000000' as a safe fallback.
+   */
+  getInvertedColorForVarKey(key: string): string {
+    if (!key) {
+      return '#000000';
+    }
+    try {
+      const raw = this.getColorValue(key) || '';
+      const resolved = raw ? this.getColorPreview(raw) : '';
+      const inverted = resolved ? this.colorService.invertCssColor(resolved) : '';
+      // Fallbacks
+      return (inverted && this.colorService.isColorValue(inverted)) ? inverted : '#000000';
+    } catch {
+      return '#000000';
+    }
+  }
 
   constructor(
     private readonly colorService: ColorService,
