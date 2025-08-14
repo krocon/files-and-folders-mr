@@ -105,7 +105,7 @@
             }
             <mat-divider></mat-divider>
 
-            @for (tool of tools; track tool) {
+            @for (tool of tools; track $index) {
               <button
                   mat-menu-item
                   (click)="onToolClicked(tool)">{{ tool.label }}
@@ -133,7 +133,7 @@
       <mat-icon>palette</mat-icon>
     </button>
     <mat-menu #menuSettings="matMenu">
-      @for (th of themeCustomNames; track th) {
+      @for (th of themeCustomNames; track $index) {
         <button
             (click)="setTheme(th)"
             mat-menu-item>
@@ -143,7 +143,7 @@
       @if (themeCustomNames.length && themeDefaultNames.length) {
         <mat-divider></mat-divider>
       }
-      @for (th of themeDefaultNames; track th) {
+      @for (th of themeDefaultNames; track $index) {
         <button
             (click)="setTheme(th)"
             mat-menu-item>

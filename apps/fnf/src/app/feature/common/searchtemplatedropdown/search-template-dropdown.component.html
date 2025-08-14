@@ -8,7 +8,7 @@
     #menuFileTypes="matMenu"
     class="fnf-search-template-menu">
 
-  @for (ft of fileTypes; track ft) {
+  @for (ft of fileTypes; track $index) {
     <button
         (click)="onItemClicked(ft)"
         mat-menu-item>

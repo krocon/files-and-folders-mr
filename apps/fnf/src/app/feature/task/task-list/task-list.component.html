@@ -32,7 +32,7 @@
           <td>Actions</td>
         </tr>
         </thead>
-        @for (action of queue.actions; track action) {
+        @for (action of queue.actions; track $index) {
           <tr class="row">
             <td>{{ action.id }}</td>
             <td>{{ action.filePara.cmd.toLowerCase() }}</td>

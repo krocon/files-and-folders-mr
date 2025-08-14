@@ -20,7 +20,7 @@
       animationDuration="0ms"
       style="">
 
-    @for (tab of tabsPanelData?.tabs; track tab.id; let i = $index) {
+    @for (tab of tabsPanelData?.tabs; track tab.path; let i = $index) {
       <mat-tab>
         <ng-template mat-tab-label>
           @if (tabsPanelData) {

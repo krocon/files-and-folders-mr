@@ -35,7 +35,7 @@
         <mat-menu
             #menuSuggestions="matMenu"
             class="fnf-suggestion-template-menu">
-          @for (s of suggestions; track s) {
+          @for (s of suggestions; track $index) {
             <button
                 (click)="onSuggestionClicked(s)"
                 mat-menu-item>

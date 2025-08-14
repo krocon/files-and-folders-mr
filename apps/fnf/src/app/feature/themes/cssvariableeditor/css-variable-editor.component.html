@@ -22,7 +22,7 @@
       <mat-icon>palette</mat-icon>
     </button>
     <mat-menu #menu="matMenu">
-      @for (item of presetColors; track item) {
+      @for (item of presetColors; track $index) {
         <div
             [style.background-color]="item"
             mat-menu-item
@@ -41,7 +41,7 @@
       <mat-icon>keyboard_arrow_down</mat-icon>
     </button>
     <mat-menu #menu2="matMenu">
-      @for (item of allThemeTableData; track item) {
+      @for (item of allThemeTableData; track $index) {
         @if (item.key && rows && rows.length && rows[0].key !== item.key) {
           <div
               [style.background-color]="'var('+item.key+')'"

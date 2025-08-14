@@ -53,12 +53,12 @@
       </tr>
       </thead>
       <tbody>
-        @for (item of actionIdLabelShortcuts; track item) {
+        @for (item of actionIdLabelShortcuts; track $index) {
           <tr class="shortcut-row">
             <td class="shortcut-cell">{{ item.actionId }}</td>
             <td class="shortcut-cell">{{ item.label }}</td>
             <td class="shortcut-cell sc">
-              @for (shortcut of item.shortcuts; track shortcut) {
+              @for (shortcut of item.shortcuts; track $index) {
                 <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut><br>
               }
             </td>

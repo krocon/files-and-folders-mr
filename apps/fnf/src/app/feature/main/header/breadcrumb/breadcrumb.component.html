@@ -11,7 +11,7 @@
 @if (!this.pattern && fileItem) {
   <div class="breadcrumb-div">
     /
-    @for (item of fileItems; track item) {
+    @for (item of fileItems; track item.dir + '/' + item.base) {
       <div
           (click)="onPathClicked(item)"
           class="file-item-div">{{ item.base }}/

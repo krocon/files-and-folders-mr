@@ -8,7 +8,7 @@
     #menuFileTypes="matMenu"
     class="fnf-select-folder-menu">
 
-  @for (ft of folders; track ft) {
+  @for (ft of folders; track $index) {
     <button
         (click)="onItemClicked(ft)"
         mat-menu-item>

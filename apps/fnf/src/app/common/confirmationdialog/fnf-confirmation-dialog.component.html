@@ -18,7 +18,7 @@
 
   <div mat-dialog-content>
     @if (data.phrases) {
-      @for (phrase of data.phrases; track phrase) {
+      @for (phrase of data.phrases; track $index) {
         <p>{{ phrase }}</p>
       }
     }
@@ -26,7 +26,7 @@
     @if (data.inputs && data.inputs.length) {
       <div class="inputs-div">
         <form>
-          @for (input of data.inputs; track input) {
+          @for (input of data.inputs; track input.key) {
             <div>
               @if (input.type === 'text') {
                 <mat-form-field class="fnf-full-width">
@@ -59,7 +59,7 @@
         align="end"
         class="buttons-vertical-div"
         layout-align="vertical">
-      @for (btn of data.buttons; track btn; let i = $index) {
+      @for (btn of data.buttons; track $index; let i = $index) {
         <button
             (click)="onButtonClicked(btn)"
             [attr.data-test-id]="'confirm-dialog-button-v-' + i"
@@ -77,7 +77,7 @@
         align="end"
         class="buttons-horizontal-div">
       @if (data.buttons) {
-        @for (btn of data.buttons; track btn; let i = $index) {
+        @for (btn of data.buttons; track $index; let i = $index) {
           <button
               (click)="onButtonClicked(btn)"
               [attr.data-test-id]="'confirm-dialog-button-h-' + i"

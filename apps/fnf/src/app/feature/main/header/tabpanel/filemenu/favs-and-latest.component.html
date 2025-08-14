@@ -25,7 +25,7 @@
         <div class="fnf-menu-label">Volumes:</div>
       </mat-list-item>
     }
-    @for (drv of volumes; track drv) {
+    @for (drv of volumes; track $index) {
       <button
           (click)="onItemClicked(drv)"
           mat-menu-item>
@@ -40,7 +40,7 @@
       <div class="fnf-menu-label">Drives:</div>
     </mat-list-item>
   }
-  @for (drv of winDrives; track drv) {
+  @for (drv of winDrives; track $index) {
     <button
         (click)="onItemClicked(drv)"
         mat-menu-item>
@@ -57,7 +57,7 @@
       <div class="fnf-menu-label">Favs:</div>
     </mat-list-item>
   }
-  @for (fav of favs; track fav) {
+  @for (fav of favs; track $index) {
     <button
         (click)="onItemClicked(fav)"
         mat-menu-item>
@@ -74,7 +74,7 @@
       <div class="fnf-menu-label">Latest:</div>
     </mat-list-item>
   }
-  @for (latestItem of latest; track latestItem) {
+  @for (latestItem of latest; track $index) {
     <button
         (click)="onItemClicked(latestItem)"
         mat-menu-item>

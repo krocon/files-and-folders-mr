@@ -23,7 +23,7 @@
       </mat-form-field>
 
       <mat-menu #menuSettings="matMenu">
-        @for (fe of filetypeExtensions; track fe) {
+        @for (fe of filetypeExtensions; track $index) {
           <button
               (click)="setText(fe)"
               mat-menu-item>{{ fe.label }}</button>

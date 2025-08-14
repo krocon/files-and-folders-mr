@@ -27,7 +27,7 @@
         matInput/>
 
     <mat-autocomplete #auto="matAutocomplete">
-      @for (command of filteredCommands; track command) {
+      @for (command of filteredCommands; track $index) {
         <mat-option
             [value]="command"
             (click)="onOptionSelected(command)">

@@ -18,7 +18,7 @@
             [fnfAutofocus]="true"
             formControlName="target"
             placeholder="Extract to folder name">
-          @for (directory of directories; track directory) {
+          @for (directory of directories; track $index) {
             <mat-option [value]="directory">
               {{ directory }}
             </mat-option>
