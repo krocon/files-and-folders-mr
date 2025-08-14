@@ -241,6 +241,14 @@ export class MultiRenameDialogComponent implements OnInit, OnDestroy, AfterViewI
     return this.formGroup.get('replacements') as FormArray;
   }
 
+  trackByReplacementIndex(index: number, item: AbstractControl): number {
+    return index;
+  }
+
+  trackByMakroTitle(index: number, item: Makro): string {
+    return item.title;
+  }
+
   ngOnDestroy(): void {
     this.alive = false;
   }

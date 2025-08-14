@@ -140,7 +140,7 @@
     <div class="row-5">
       <ng-container formArrayName="replacements">
         @if (replacements.controls && formGroup.get('replacementsChecked')?.value) {
-          @for (replacementForm of replacements.controls; track replacementForm; let i = $index) {
+          @for (replacementForm of replacements.controls; track trackByReplacementIndex($index, replacementForm); let i = $index) {
           <div [formGroupName]="i" class="replacement-row">
 
             <mat-checkbox formControlName="checked">Replace</mat-checkbox>
@@ -156,7 +156,7 @@
               <mat-menu
                   #menuMakros="matMenu"
                   class="fnf-search-template-menu">
-                  @for (ft of data.makros; track ft) {
+                @for (ft of data.makros; track trackByMakroTitle($index, ft)) {
                     <button
                         (click)="onMakroClicked(ft, i, replacementForm)"
                         mat-menu-item>
