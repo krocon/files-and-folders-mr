@@ -32,6 +32,7 @@ export class FnfActionLabels {
     OPEN_BUTTON_CONFIG_DLG: "Button Configuration...",
     OPEN_FILETYPE_CONFIG_DLG: "File Type Configuration...",
     OPEN_TOOL_CONFIG_DLG: "Tool Configuration...",
+    OPEN_PROMPT_CONFIG_DLG: "Prompt Configuration...",
 
     OPEN_ABOUT_DLG: "About...",
     OPEN_SHELL_DLG: "Server Shell...",
