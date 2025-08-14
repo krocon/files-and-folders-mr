@@ -25,7 +25,7 @@ import {FnfFilenameValidation} from "../../../common/fnf-filename-validation";
 import {filepath2FileItem} from "../../../common/fn/filepath-to-file-items";
 
 @Component({
-  selector: "fnf-mkdir-dialog",
+  selector: "fnf-create-file-dialog",
   templateUrl: "./create-file-dialog.component.html",
   imports: [
     MatDialogTitle,
