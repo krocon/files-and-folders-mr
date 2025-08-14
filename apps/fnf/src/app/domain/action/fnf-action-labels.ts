@@ -26,7 +26,7 @@ export class FnfActionLabels {
     OPEN_MENU: "Menu",
     OPEN_TASK_DLG: "Taskmanager...",
     OPEN_SETUP_DLG: "Setup...",
-    OPEN_THEMES_DLG: "Create Themes...",
+    OPEN_THEMES_DLG: "Fancy Theme Editor...",
     OPEN_THEME_CONFIG_DLG: "Theme Configuration...",
 
     OPEN_BUTTON_CONFIG_DLG: "Button Configuration...",
