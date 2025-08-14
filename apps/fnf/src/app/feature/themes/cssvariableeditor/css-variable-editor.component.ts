@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {ColorPickerDirective} from 'ngx-color-picker';
 import {ColorService} from '../service/color.service';
 import {ThemeTableRow} from '../theme-table-row.model';
 import {MatDialog} from '@angular/material/dialog';
@@ -10,6 +9,7 @@ import {MatIconButton} from '@angular/material/button';
 import {ColorChangeDialogComponent} from '../colorchangedialog/color-change-dialog.component';
 import {ColorChangeDialogResult} from "../colorchangedialog/color-change-dialog.result";
 import {ColorChangeDialogData} from "../colorchangedialog/color-change-dialog.data";
+import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 
 
 @Component({
@@ -18,9 +18,11 @@ import {ColorChangeDialogData} from "../colorchangedialog/color-change-dialog.da
   imports: [
     CommonModule,
     FormsModule,
-    ColorPickerDirective,
     MatIconModule,
-    MatIconButton
+    MatIconButton,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger
   ],
   templateUrl: './css-variable-editor.component.html',
   styleUrls: ['./css-variable-editor.component.css'],
@@ -34,6 +36,7 @@ export class CssVariableEditorComponent {
   @Input() allThemeTableData: ThemeTableRow[] = [];
   @Output() valueChange = new EventEmitter<ThemeTableRow[]>();
   @Output() colorChange = new EventEmitter<ThemeTableRow[]>();
+
 
   constructor(
     private readonly colorService: ColorService,
@@ -97,23 +100,23 @@ export class CssVariableEditorComponent {
     this.valueChange.emit(updated);
   }
 
-  onColorArrayChange(colors: string[]): void {
-    const len = Math.max(1, this.rows?.length || 0);
-    const arr = (colors && colors.length)
-      ? colors.slice(0, len).concat(new Array(Math.max(0, len - colors.length)).fill(colors[0]))
-      : new Array(len).fill(this.firstValueStr());
-    const updated: ThemeTableRow[] = [];
-    for (let i = 0; i < len; i++) {
-      const base = this.rows && this.rows[i] ? this.rows[i] : (this.rows && this.rows[0] ? this.rows[0] : {
-        selected: false,
-        key: '',
-        value: ''
-      });
-      updated.push({...base, value: arr[i]});
-    }
-    this.rows = updated;
-    this.colorChange.emit(updated);
-  }
+  // onColorArrayChange(colors: string[]): void {
+  //   const len = Math.max(1, this.rows?.length || 0);
+  //   const arr = (colors && colors.length)
+  //     ? colors.slice(0, len).concat(new Array(Math.max(0, len - colors.length)).fill(colors[0]))
+  //     : new Array(len).fill(this.firstValueStr());
+  //   const updated: ThemeTableRow[] = [];
+  //   for (let i = 0; i < len; i++) {
+  //     const base = this.rows && this.rows[i] ? this.rows[i] : (this.rows && this.rows[0] ? this.rows[0] : {
+  //       selected: false,
+  //       key: '',
+  //       value: ''
+  //     });
+  //     updated.push({...base, value: arr[i]});
+  //   }
+  //   this.rows = updated;
+  //   this.colorChange.emit(updated);
+  // }
 
   onColorRowsChange(rows: ThemeTableRow[]): void {
     // Normalize to current length
@@ -158,12 +161,15 @@ export class CssVariableEditorComponent {
     return value;
   }
 
+  onMenuItemClicked(item: string) {
+    this.onValueChangeSingle(item);
+  }
+
   private getColorValue(key: string): string {
     return this.allThemeTableData.filter(row => row.key === key)[0]?.value || '';
   }
 
-  private firstValueStr(): string {
-    return (this.rows && this.rows.length > 0) ? this.rows[0].value : '';
-  }
-
+  // private firstValueStr(): string {
+  //   return (this.rows && this.rows.length > 0) ? this.rows[0].value : '';
+  // }
 }

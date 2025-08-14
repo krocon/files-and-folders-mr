@@ -101,16 +101,17 @@
 }
 
 .dlg-actions-div {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-gap: 12px;
     align-items: baseline;
     padding: 15px 15px 0 15px;
-    gap: 12px;
     min-height: 40px;
     border-top: 1px solid var(--fnf-header-border-color, #ddd);
 
     .multi-edit-div {
         display: grid;
-        grid-template-columns: auto auto auto auto;
+        grid-template-columns: auto auto auto 1fr;
         gap: 12px;
         align-items: center;
     }

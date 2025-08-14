@@ -2,13 +2,10 @@
   <div class="color-input-container">
     <div>
       @if (endsWithKey('-color')) {
-        <!--div
-            class="color-preview"
-            [style.background-color]="getColorPreview(rows && rows.length ? rows[0].value : '')"
-            [colorPicker]="rows && rows.length ? rows[0].value : ''"
-            (colorPickerChange)="onColorArrayChange([$event])"
-            [cpPosition]="cpPosition"
-            [cpPresetColors]="presetColors"></div-->
+        <input
+            (ngModelChange)="onValueChangeSingle($event)"
+            [ngModel]="getColorPreview(rows && rows.length ? rows[0].value : '')"
+            type="color">
       }
     </div>
     <input
@@ -16,13 +13,50 @@
         [ngModel]="rows && rows.length ? rows[0].value : ''"
         class="color-text-input"
         placeholder="CSS color or variable">
+    <button
+        class="menu-button"
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        type="button"
+        matIconButton>
+      <mat-icon>palette</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      @for (item of presetColors; track item) {
+        <div
+            style="background-color: {{ item }};"
+            mat-menu-item
+            (click)="onMenuItemClicked(item)">
+          {{ item }}
+        </div>
+      }
+    </mat-menu>
+
+    <button
+        class="menu-button"
+        mat-icon-button
+        [matMenuTriggerFor]="menu2"
+        type="button"
+        matIconButton>
+      <mat-icon>keyboard_arrow_down</mat-icon>
+    </button>
+    <mat-menu #menu2="matMenu">
+      @for (item of allThemeTableData; track item) {
+        @if (item.key) {
+          <div
+              [attr.style]="
+              'background-color: var('+item.key+');'+
+              'color: var('+item.key+');'
+              "
+              mat-menu-item
+              (click)="onMenuItemClicked('var('+item.key+')')">
+            {{ item.key }}
+          </div>
+        }
+      }
+    </mat-menu>
 
     @if (endsWithKey('-color')) {
-      <input
-          (ngModelChange)="onValueChangeSingle($event)"
-          [ngModel]="getColorPreview(rows && rows.length ? rows[0].value : '')"
-          type="color">
-
       <button
           class="tune-button"
           (click)="openColorChangeDialog()"

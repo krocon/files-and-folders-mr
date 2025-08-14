@@ -1,6 +1,6 @@
 .color-input-container {
     display: grid;
-    grid-template-columns: auto 250px auto auto;
+    grid-template-columns: auto 250px auto auto auto auto;
     justify-content: start;
     align-items: center;
     gap: 0;
@@ -10,7 +10,7 @@
         height: 34px !important;
     }
 
-    & > input[type="color"] {
+    input[type="color"] {
         height: 40px !important;
         width: 40px;
         padding: 0;
