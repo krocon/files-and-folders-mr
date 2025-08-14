@@ -15,7 +15,7 @@
         </button>
 
         <mat-menu #themeMenu="matMenu">
-          @for (themeName of customThemeNames; track themeName) {
+          @for (themeName of customThemeNames; track trackByThemeName($index, themeName)) {
             <button
                 mat-menu-item
                 (click)="onThemeSelect(themeName)">
@@ -23,7 +23,7 @@
             </button>
           }
           <mat-divider></mat-divider>
-          @for (themeName of defaultThemeNames; track themeName) {
+          @for (themeName of defaultThemeNames; track trackByThemeName($index, themeName)) {
             <button
                 mat-menu-item
                 (click)="onThemeSelect(themeName)">
@@ -72,7 +72,7 @@
         <span class="filter-label">Panels:</span>
         <mat-checkbox
             (change)="onAllCheckboxChange('panels', $event.checked)"
-            [indeterminate]="isIndeterminate('panels')"
+            [indeterminate]="cachedIsGroupIndeterminate('panels')"
             formControlName="all">all
         </mat-checkbox>
         <mat-checkbox
@@ -92,7 +92,7 @@
         <span class="filter-label">Areas:</span>
         <mat-checkbox
             (change)="onAllCheckboxChange('areas', $event.checked)"
-            [indeterminate]="isIndeterminate('areas')"
+            [indeterminate]="cachedIsGroupIndeterminate('areas')"
             formControlName="all">all
         </mat-checkbox>
         <mat-checkbox
@@ -132,7 +132,7 @@
         <span class="filter-label">Property:</span>
         <mat-checkbox
             (change)="onAllCheckboxChange('property', $event.checked)"
-            [indeterminate]="isIndeterminate('property')"
+            [indeterminate]="cachedIsGroupIndeterminate('property')"
             formControlName="all">all
         </mat-checkbox>
         <mat-checkbox
@@ -187,7 +187,7 @@
           </thead>
 
           <tbody>
-            @for (row of filteredTableData; track row.key; let i = $index) {
+            @for (row of filteredTableData; track trackByRowKey($index, row); let i = $index) {
               <tr
                   class="table-row"
                   [class.selected]="row.selected">
@@ -218,7 +218,7 @@
 
                       <app-css-variable-editor
                           [refresh]="refreshIndex"
-                          [rows]="[getRowFromVarValue(row.value)]"
+                          [rows]="getRowFromVarValue(row.value) ? [getRowFromVarValue(row.value)!] : []"
                           [presetColors]="presetColors"
                           [allThemeTableData]="themeTableData"
                           (valueChange)="onColorChange(getIndexFromVarValue(row.value), $event)"
@@ -259,8 +259,8 @@
   <div class="multi-edit-div">
     <mat-checkbox
         (change)="onToggleAllSelections($event.checked)"
-        [checked]="isAllSelected()"
-        [indeterminate]="isIndeterminate()"
+        [checked]="cachedIsAllSelected"
+        [indeterminate]="cachedIsIndeterminate"
         class="selection-toggle-checkbox">
       &nbsp;&nbsp;
     </mat-checkbox>

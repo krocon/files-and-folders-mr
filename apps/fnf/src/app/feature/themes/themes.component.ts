@@ -70,6 +70,17 @@ export class ThemesComponent implements OnInit, OnDestroy {
   public selectionCount = 0;
   private destroy$ = new Subject<void>();
 
+  // Performance optimization: cached lookups
+  private _varLookupCache = new Map<string, { row: ThemeTableRow | undefined, index: number }>();
+  private _stateCache = {
+    isAllSelected: false,
+    isIndeterminate: false,
+    panelsIndeterminate: false,
+    areasIndeterminate: false,
+    propertyIndeterminate: false,
+    lastDataHash: ''
+  };
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly configThemesService: ConfigThemesService,
@@ -82,14 +93,62 @@ export class ThemesComponent implements OnInit, OnDestroy {
     this.themeForm = this.createForm();
   }
 
+  // Performance optimization: trackBy functions
+  trackByThemeName = (index: number, themeName: string): string => themeName;
+  trackByRowKey = (index: number, row: ThemeTableRow): string => row.key;
+
+  // Optimized cached lookup methods
   getIndexFromVarValue(value: string): number {
+    if (this._varLookupCache.has(value)) {
+      return this._varLookupCache.get(value)!.index;
+    }
     const key = value.replace('var(', '').replace(')', '');
-    return this.filteredTableData.findIndex(row => row.key === key);
+    const index = this.filteredTableData.findIndex(row => row.key === key);
+    const row = index >= 0 ? this.filteredTableData[index] : undefined;
+    this._varLookupCache.set(value, {row, index});
+    return index;
   }
 
-  getRowFromVarValue(value: string): ThemeTableRow {
+  getRowFromVarValue(value: string): ThemeTableRow | undefined {
+    if (this._varLookupCache.has(value)) {
+      return this._varLookupCache.get(value)!.row;
+    }
     const idx = this.getIndexFromVarValue(value);
-    return this.filteredTableData[idx];
+    return idx >= 0 ? this.filteredTableData[idx] : undefined;
+  }
+
+  // Optimized state checking methods with caching
+  get cachedIsAllSelected(): boolean {
+    const dataHash = this.getDataHash();
+    if (this._stateCache.lastDataHash !== dataHash) {
+      this.updateStateCache();
+    }
+    return this._stateCache.isAllSelected;
+  }
+
+  get cachedIsIndeterminate(): boolean {
+    const dataHash = this.getDataHash();
+    if (this._stateCache.lastDataHash !== dataHash) {
+      this.updateStateCache();
+    }
+    return this._stateCache.isIndeterminate;
+  }
+
+  cachedIsGroupIndeterminate(groupName: 'panels' | 'areas' | 'property'): boolean {
+    const dataHash = this.getDataHash();
+    if (this._stateCache.lastDataHash !== dataHash) {
+      this.updateStateCache();
+    }
+    switch (groupName) {
+      case 'panels':
+        return this._stateCache.panelsIndeterminate;
+      case 'areas':
+        return this._stateCache.areasIndeterminate;
+      case 'property':
+        return this._stateCache.propertyIndeterminate;
+      default:
+        return false;
+    }
   }
 
   ngOnInit(): void {
@@ -119,6 +178,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
         this.rebuildMultiValueFromSelection();
       }
       this.countSelections();
+      this.invalidateCache();
       this.cdr.detectChanges();
     }
   }
@@ -199,6 +259,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     });
 
     this.countSelections();
+    this.invalidateCache();
     this.cdr.detectChanges();
   }
 
@@ -548,6 +609,7 @@ export class ThemesComponent implements OnInit, OnDestroy {
     //this.cdr.detectChanges();
     console.info('###', this.filteredTableData);
     this.countSelections();
+    this.invalidateCache();
   }
 
   private applySort(): void {
@@ -671,5 +733,43 @@ export class ThemesComponent implements OnInit, OnDestroy {
       colors[t.key] = t.value;
     }
     return colors;
+  }
+
+  // Performance optimization: cache helper methods
+  private getDataHash(): string {
+    // Create a simple hash based on data that affects the state calculations
+    const selectedKeys = this.filteredTableData.filter(row => row.selected).map(row => row.key).join(',');
+    const formValues = JSON.stringify(this.themeForm.value);
+    return `${this.filteredTableData.length}-${selectedKeys}-${formValues}`;
+  }
+
+  private updateStateCache(): void {
+    const selectedCount = this.filteredTableData.filter(row => row.selected).length;
+    this._stateCache.isAllSelected = this.filteredTableData.length > 0 && selectedCount === this.filteredTableData.length;
+    this._stateCache.isIndeterminate = selectedCount > 0 && selectedCount < this.filteredTableData.length;
+
+    // Update group indeterminate states
+    this._stateCache.panelsIndeterminate = this.calculateGroupIndeterminate('panels');
+    this._stateCache.areasIndeterminate = this.calculateGroupIndeterminate('areas');
+    this._stateCache.propertyIndeterminate = this.calculateGroupIndeterminate('property');
+
+    this._stateCache.lastDataHash = this.getDataHash();
+  }
+
+  private calculateGroupIndeterminate(groupName: 'panels' | 'areas' | 'property'): boolean {
+    const group = this.themeForm.get(groupName) as FormGroup;
+    if (!group) return false;
+
+    const controls = Object.keys(group.controls).filter(key => key !== 'all');
+    const checkedCount = controls.filter(controlName =>
+      group.get(controlName)?.value === true
+    ).length;
+
+    return checkedCount > 0 && checkedCount < controls.length;
+  }
+
+  private invalidateCache(): void {
+    this._varLookupCache.clear();
+    this._stateCache.lastDataHash = '';
   }
 }
