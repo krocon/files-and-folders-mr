@@ -29,6 +29,8 @@ import {ConfigButtonsService} from "../../../../service/config/config-buttons.se
 import {ConfigThemesService} from "../../../../service/config/config-themes.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MetaKeys} from "../../../../domain/meta-keys.if";
+import {CallActionDialogService} from "../../../cmd/callaction/call-action-dialog.service";
+
 
 @Component({
   selector: 'app-button-panel',
@@ -56,11 +58,8 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
   @ViewChild('trigger') menuTrigger!: MatMenuTrigger;
 
-
-
   themeDefaultNames: string[] = [];
   themeCustomNames: string[] = [];
-
   buttons: { [key: string]: ButtonEnableStatesKey[] } = {};
 
 
@@ -142,10 +141,9 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
 
 
   tools: CmdIf[] = [];
-  private alive = true;
-
   // Current button list based on modifier keys
   currentButtons: ButtonEnableStatesKey[] = [];
+  private alive = true;
 
   constructor(
     private readonly appService: AppService,
@@ -155,6 +153,7 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
     private readonly configThemesService: ConfigThemesService,
     private readonly configButtonsService: ConfigButtonsService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly callActionDialogService: CallActionDialogService,
   ) {
   }
 
@@ -281,6 +280,15 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
   @HostListener('window:keyup', ['$event'])
   onKeyUp(event: KeyboardEvent): void {
     this.updateButtonList(event);
+  }
+
+  openCallAction() {
+    this.callActionDialogService.open(
+      (target: string | undefined) => {
+        if (target) {
+          this.actionExecutionService.executeActionById(target);
+        }
+      });
   }
 
   private updateButtonList(event: KeyboardEvent): void {

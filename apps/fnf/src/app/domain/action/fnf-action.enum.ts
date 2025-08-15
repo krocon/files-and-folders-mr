@@ -6,7 +6,7 @@ export const PSEUDO_ACTIONS = [
 ];
 
 
-export const actionIds = [
+export const actionIds: string[] = [
   "ADD_NEW_TAB",
   "ARROW_DOWN",
   "ARROW_UP",
