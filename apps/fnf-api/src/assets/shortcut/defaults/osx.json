@@ -84,6 +84,7 @@
   "cmd ctrl f15": "OPEN_FILETYPE_CONFIG_DLG",
   "cmd ctrl f16": "OPEN_TOOL_CONFIG_DLG",
   "cmd ctrl f17": "OPEN_THEME_CONFIG_DLG",
+  "cmd ctrl f18": "OPEN_PROMPT_CONFIG_DLG",
   "ctrl f11": "OPEN_TASK_DLG",
   "ctrl f12": "OPEN_MENU",
   "cmd ctrl alt f1": "CHANGE_LAF_BITBUCKET",

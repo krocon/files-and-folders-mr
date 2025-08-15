@@ -1,0 +1,59 @@
+.title-bar {
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 0;
+}
+
+.predefined-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #ff9800;
+    font-size: 0.875rem;
+}
+
+.validation {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #f44336;
+    font-size: 0.875rem;
+}
+
+
+mat-dialog-actions > div {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+app-fnf-editor {
+    height: calc(100vh - 300px);
+    min-height: 400px;
+}
+
+mat-optgroup {
+    font-weight: 600;
+}
+
+mat-option {
+    font-weight: normal;
+}
+
+.prompt-type-label {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: normal;
+    margin-left: 8px;
+}
+
+
+.mat-mdc-dialog-actions {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto;
+    gap: 8px;
+    align-items: center;
+}

@@ -43,4 +43,5 @@ export class PromptService {
   resetToDefaults(key: string): Observable<PromptDataIf> {
     return this.httpClient.post<PromptDataIf>(`${PromptService.config.apiUrl}/${key}/reset`, {});
   }
+
 }
