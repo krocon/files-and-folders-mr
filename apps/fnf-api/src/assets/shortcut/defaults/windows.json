@@ -1,4 +1,5 @@
 {
+  "f12": "OPEN_CALL_ACTION_DLG",
   "f3": "OPEN_VIEW_DLG",
   "f4": "OPEN_EDIT_DLG",
   "shift f4": "OPEN_CREATE_FILE_DLG",

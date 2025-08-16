@@ -15,6 +15,7 @@ export interface ScreenshotConfig {
   laf: string;
   name: string;
   url: string;
+  actionId?: string;
   shortcuts?: string[];
 }
 

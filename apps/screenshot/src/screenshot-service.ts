@@ -83,12 +83,13 @@ export class ScreenshotService {
         for (let j = 0; j < this.lafs.length; j++) {
           const laf = this.lafs[j];
           const view = views[i];
-          let {name, url, shortcuts} = view;
+
+          let {name, url, shortcuts, actionId} = view;
           if (shortcuts !== undefined && Array.isArray(shortcuts)) {
             shortcuts = ['(CHANGE_LAF_' + laf.toUpperCase() + ')', ...shortcuts];
             validatedViews.push({name, url, shortcuts, laf});
           } else {
-            validatedViews.push({name, url, laf});
+            validatedViews.push(view);
           }
         }
       }
@@ -115,7 +116,7 @@ export class ScreenshotService {
       throw new ScreenshotError('Page not initialized', config.name);
     }
 
-    const {name, url, shortcuts, laf} = config;
+    const {name, url, shortcuts, laf, actionId} = config;
 
     try {
       console.log(`\n📸 Capturing: ${name} → ${url}`);
@@ -129,8 +130,11 @@ export class ScreenshotService {
       // Initialize localStorage after navigation (only once)
       await this.initializeLocalStorage();
 
-      // Execute shortcuts if provided
-      if (Array.isArray(shortcuts) && shortcuts.length > 0) {
+      console.info('actionId', actionId);
+      if (actionId) {
+        await this.executeActionId(actionId);
+
+      } else if (Array.isArray(shortcuts) && shortcuts.length > 0) {
         await this.executeShortcuts(shortcuts, actionIdMapping, name);
       }
 
@@ -166,7 +170,7 @@ export class ScreenshotService {
     if (!configs || configs.length === 0) {
       throw new ScreenshotError('No screenshot configurations provided');
     }
-
+    console.log('configs', configs);
     const results: { name: string; success: boolean; error?: string }[] = [];
 
     for (const config of configs) {
@@ -276,6 +280,46 @@ export class ScreenshotService {
     } catch (error) {
       // localStorage may not be accessible in some contexts
       console.log('⚠️ Could not initialize localStorage:', error);
+    }
+  }
+
+  /**
+   * Executes an action by actionId using the Call Action dialog
+   */
+  async executeActionId(actionId: string): Promise<void> {
+    if (!this.page) {
+      throw new ScreenshotError('Page not initialized');
+    }
+
+    try {
+      console.log(`🎯 Executing actionId: ${actionId}`);
+
+      // Open dialog by pressing F12
+      await this.page.keyboard.press('F12');
+      console.log('📂 Call Action dialog opened with F12');
+
+      // Wait for the dialog to appear and the input field to be ready
+      await this.page.waitForSelector('input[formcontrolname="target"]', {visible: true});
+      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
+
+      // Clear any existing content and insert the actionId
+      await this.page.click('input[formcontrolname="target"]');
+      await this.page.keyboard.down('Control');
+      await this.page.keyboard.press('KeyA');
+      await this.page.keyboard.up('Control');
+      await this.page.type('input[formcontrolname="target"]', actionId);
+      console.log(`⌨️ ActionId entered: ${actionId}`);
+
+      // Press ENTER to confirm and execute the action
+      await this.page.keyboard.press('Enter');
+      console.log('✅ Action executed (ENTER pressed)');
+
+      // Wait for the action to complete
+      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new ScreenshotError(`Failed to execute actionId "${actionId}": ${errorMessage}`);
     }
   }
 

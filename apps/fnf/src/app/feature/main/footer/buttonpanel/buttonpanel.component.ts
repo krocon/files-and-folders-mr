@@ -202,6 +202,9 @@ export class ButtonPanelComponent implements OnInit, OnDestroy {
         if (action === 'OPEN_TASK_DLG') {
           this.openTaskManager();
 
+        } else if (action === 'OPEN_CALL_ACTION_DLG') {
+          this.openCallAction();
+
         } else if (action === 'OPEN_MENU') {
           this.menuTrigger.openMenu();
 

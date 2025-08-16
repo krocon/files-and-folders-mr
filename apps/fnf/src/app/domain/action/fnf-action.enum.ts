@@ -7,6 +7,7 @@ export const PSEUDO_ACTIONS = [
 
 
 export const actionIds: string[] = [
+  "OPEN_CALL_ACTION_DLG",
   "ADD_NEW_TAB",
   "ARROW_DOWN",
   "ARROW_UP",

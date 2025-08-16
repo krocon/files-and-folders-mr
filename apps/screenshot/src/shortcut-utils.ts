@@ -1,6 +1,6 @@
-import {Page, KeyInput} from "puppeteer";
-import {KeyboardKey, ActionIdMapping} from "./types.js";
-import {KEYS, MODIFIER_KEYS, KEY_MAPPINGS, CONFIG} from "./config.js";
+import {KeyInput, Page} from "puppeteer";
+import {ActionIdMapping, KeyboardKey} from "./types.js";
+import {CONFIG, KEY_MAPPINGS, KEYS, MODIFIER_KEYS} from "./config.js";
 
 /**
  * Utility function to create a delay
@@ -158,7 +158,7 @@ export function convertShortcutFormat(shortcut: string): string {
  * Example: "(OPEN_COPY_DLG)(Users)(Enter)" -> "(Control|Meta|c)(Users)(Enter)"
  */
 export function convertActionIdShortcuts(shortcutString: string, actionIdMapping: ActionIdMapping): string {
-  if (!shortcutString || typeof shortcutString !== 'string') {
+  if (!shortcutString) {
     throw new Error('Shortcut string must be a non-empty string');
   }
 
