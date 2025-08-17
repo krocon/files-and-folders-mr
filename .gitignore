@@ -219,3 +219,11 @@ apps/fnf/src/assets/screens_old/
 **/.DS_Store
 .AppleDouble
 .LSOverride
+/apps/fnf-desktop/development.cer
+/apps/fnf-desktop/mac_app.cer
+/apps/fnf-desktop/DeployFnF.provisionprofile
+
+# Electron desktop: exclude compiled artifacts in repo
+/apps/fnf-desktop/dist-electron/
+/apps/fnf-desktop/release/
+/apps/fnf-desktop/resources/renderer/

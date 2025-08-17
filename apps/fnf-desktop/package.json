@@ -1,0 +1,78 @@
+{
+  "name": "fnf-desktop",
+  "version": "0.1.0",
+  "author": "Marc Kronberg",
+  "private": true,
+  "description": "Electron desktop app for Files and Folders (renderer: apps/fnf)",
+  "main": "dist-electron/main.js",
+  "types": "electron-preload/bridge.d.ts",
+  "scripts": {
+    "predev": "pnpm --filter fnf-data build",
+    "dev": "pnpm predev && concurrently -k -n FNF,ELECTRON -c green,cyan \"pnpm -C ../fnf start\" \"wait-on http://localhost:4200 && cross-env FNF_DEV_SERVER_URL=http://localhost:4200 vite\"",
+    "build": "pnpm --filter fnf-data build && pnpm -C ../fnf build && node scripts/copy-renderer.mjs && vite build",
+    "pack": "pnpm build && electron-builder",
+    "pack:unsigned": "pnpm build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false SKIP_NOTARIZE=true electron-builder -c build/unsigned.json",
+    "clean": "rimraf dist-electron resources/renderer",
+    "typecheck": "tsc -p tsconfig.node.json --noEmit"
+  },
+  "dependencies": {
+    "fnf-data": "workspace:*",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "cpx2": "^6.0.0",
+    "electron": "^30.4.0",
+    "electron-builder": "^24.13.3",
+    "@electron/notarize": "^2.3.0",
+    "fs-extra": "^11.2.0",
+    "rimraf": "^5.0.7",
+    "typescript": "~5.4.5",
+    "vite": "^5.4.2",
+    "vite-plugin-electron": "^0.28.7",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "afterSign": "scripts/notarize.js",
+    "appId": "com.krocon.filesandfolders.desktop",
+    "productName": "Files and Folders",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist-electron/**",
+      "resources/**",
+      "package.json"
+    ],
+    "asar": true,
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.productivity",
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}
