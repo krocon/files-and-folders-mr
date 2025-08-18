@@ -1,9 +1,14 @@
-const apiPrefix1 = `${location.protocol}//${location.hostname}:3333/api`;
+// In Electron packaged app the renderer runs under file://. Fall back to http://localhost
+const isFileProtocol = location.protocol === 'file:';
+const resolvedProtocol = isFileProtocol ? 'http:' : location.protocol;
+const resolvedHostname = isFileProtocol ? 'localhost' : (location.hostname || 'localhost');
 
+const apiPrefix1 = `${resolvedProtocol}//${resolvedHostname}:3333/api`;
+// const apiPrefix1 = `${location.protocol}//${location.hostname}:3333/api`;
 export const environment = {
 
-  version: '17.08.2025 17:11',
-  commitHash: '792e788',
+  version: '18.08.2025 08:53',
+  commitHash: '837866d',
 
   config: {
     apiUrl: apiPrefix1 + "/config"

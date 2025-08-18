@@ -5,14 +5,40 @@ import * as fs from "node:fs";
 
 const getEnvironmentVariables = () => {
 
-  const version = '17.08.2025 17:11';
-  const commitHash = '792e788';
+  const version = '18.08.2025 08:53';
+  const commitHash = '837866d';
+
+  // const dockerAssetPrefix = process.env.FNF_ASSETS_ROOT || '/usr/src/app/apps/fnf-api/assets';
+  // const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
+  //
+  // const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
+  // const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
+
 
   const dockerAssetPrefix = process.env.FNF_ASSETS_ROOT || '/usr/src/app/apps/fnf-api/assets';
-  const assetsPrefix = fs.existsSync(dockerAssetPrefix) ? dockerAssetPrefix : join(__dirname, '..', 'src/assets');
+
+  function resolveAssetsPrefix(): string {
+    const candidates = [
+      process.env.FNF_ASSETS_ROOT,
+      '/usr/src/app/apps/fnf-api/assets',
+      join(__dirname, '..', 'assets'),
+      join(__dirname, '..', 'src', 'assets'),
+      join(process.cwd(), 'apps', 'fnf-api', 'assets'),
+      join(process.cwd(), 'apps', 'fnf-api', 'src', 'assets')
+    ].filter(Boolean) as string[];
+    for (const p of candidates) {
+      try {
+        if (p && fs.existsSync(p)) return p;
+      } catch {
+      }
+    }
+    return join(__dirname, '..', 'assets');
+  }
+
+  const assetsPrefix = resolveAssetsPrefix();
 
   const frontendPort = process.env.frontendPort ? Number(process.env.frontendPort) : 4201;
-  const websocketPort = process.env.websocketPort ? Number(process.env.websocketPort) : 3334;
+  const websocketPort = process.env.WS_PORT ? Number(process.env.WS_PORT) : 3334;
 
   const shortcutsDefaultsPath = assetsPrefix + '/shortcut/defaults';
   const shortcutsCustomPath = assetsPrefix + '/shortcut/custom';

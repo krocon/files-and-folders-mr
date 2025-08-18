@@ -7,15 +7,21 @@ declare global {
 
 const availableApiPorts: number[] = window.apiPorts?.split(',').map(p => parseInt(p, 10)) || [3333];
 const apiPort1 = availableApiPorts[0];
-const prefix1 = `${location.protocol}//${location.hostname}:${apiPort1}`;
+
+// In Electron packaged app the renderer runs under file://. Fall back to http://localhost
+const isFileProtocol = location.protocol === 'file:';
+const resolvedProtocol = isFileProtocol ? 'http:' : location.protocol;
+const resolvedHostname = isFileProtocol ? 'localhost' : (location.hostname || 'localhost');
+
+const prefix1 = `${resolvedProtocol}//${resolvedHostname}:${apiPort1}`;
 const apiPrefix1 = prefix1 + "/api";
 const apiPrefix2 = availableApiPorts.length > 1 ? (apiPrefix1.replaceAll(/:\d\d\d\d/g, `:${availableApiPorts[1]}`)) : apiPrefix1;
 const apiPrefix3 = availableApiPorts.length > 2 ? (apiPrefix1.replaceAll(/:\d\d\d\d/g, `:${availableApiPorts[2]}`)) : apiPrefix1;
 
 export const environment = {
 
-  version: '17.08.2025 17:11',
-  commitHash: '792e788',
+  version: '18.08.2025 08:53',
+  commitHash: '837866d',
 
   availableApiPorts,
 

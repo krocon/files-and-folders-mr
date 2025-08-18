@@ -8,7 +8,7 @@
   "types": "electron-preload/bridge.d.ts",
   "scripts": {
     "predev": "pnpm --filter fnf-data build",
-    "dev": "pnpm predev && concurrently -k -n FNF,ELECTRON -c green,cyan \"pnpm -C ../fnf start\" \"wait-on http://localhost:4200 && cross-env FNF_DEV_SERVER_URL=http://localhost:4200 vite\"",
+    "dev": "pnpm predev && concurrently -k -n FNF,API,ELECTRON -c green,magenta,cyan \"pnpm -C ../fnf start\" \"pnpm -C ../fnf-api start:dev\" \"wait-on http://localhost:4200 http://localhost:3333/api/apiPortTest && cross-env FNF_DEV_SERVER_URL=http://localhost:4200 vite\"",
     "build": "pnpm --filter fnf-data build && pnpm -C ../fnf build && node scripts/copy-renderer.mjs && vite build",
     "pack": "pnpm build && electron-builder",
     "pack:unsigned": "pnpm build && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false SKIP_NOTARIZE=true electron-builder -c build/unsigned.json",

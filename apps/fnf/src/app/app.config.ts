@@ -55,7 +55,14 @@ export async function initPorts() {
     const timeoutId = setTimeout(() => controller.abort(), 1000);
 
     try {
-      const url = `${location.protocol}//${location.hostname}:${port}/api/apiPortTest?t=${Date.now()}`;
+      const isFileProtocol = location.protocol === 'file:';
+      const protocol = isFileProtocol ? 'http:' : location.protocol;
+      const hostname = isFileProtocol ? 'localhost' : (location.hostname || 'localhost');
+      const url = `${protocol}//${hostname}:${port}/api/apiPortTest?t=${Date.now()}`;
+
+      // const url = `${location.protocol}//${location.hostname}:${port}/api/apiPortTest?t=${Date.now()}`;
+
+
       const response = await fetch(url, {
         method: 'GET',
         signal: controller.signal
@@ -91,7 +98,7 @@ export async function initPorts() {
   return availableApiPorts;
 }
 
-async function init() {
+async function init(): Promise<number[]> {
 
   const ports: number[] = await initPorts();
 
@@ -125,32 +132,38 @@ async function init() {
   WalkdirSyncService.forRoot(environment.walkdir);
   WalkSocketService.forRoot(environment.walkdir);
 
-
   console.info('        > Services configured');
+
+  return ports;
 }
-
-
-const config: SocketIoConfig = {
-  url: "http://localhost:3334",
-  options: {
-    reconnection: true,
-    autoConnect: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 5000,
-    timeout: 20000
-  }
-};
 
 // Factory function to create a Socket instance with the config and ApplicationRef
 export function socketFactory(config: SocketIoConfig, appRef: ApplicationRef): Socket {
   return new Socket(config, appRef);
 }
 
-
 export async function getAppConfig(): Promise<ApplicationConfig> {
   console.info('Files and Folders');
-  await init();
+  const ports: number[] = await init();
+
+  // Compute Socket.IO URL: map first detected HTTP API port to WS port (+1)
+  const isFileProtocol = location.protocol === 'file:';
+  const protocol = isFileProtocol ? 'http:' : location.protocol;
+  const hostname = isFileProtocol ? 'localhost' : (location.hostname || 'localhost');
+  const wsPort = ((ports && ports.length > 0 ? ports[0] : 3333) + 1);
+  const wsUrl = `${protocol}//${hostname}:${wsPort}`;
+
+  const socketConfig: SocketIoConfig = {
+    url: wsUrl,
+    options: {
+      reconnection: true,
+      autoConnect: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000
+    }
+  };
 
   return {
     providers: [
@@ -158,7 +171,7 @@ export async function getAppConfig(): Promise<ApplicationConfig> {
       provideRouter(routes/*, withDebugTracing()*/),
       provideAnimations(),
       provideHttpClient(),
-      {provide: SOCKET_CONFIG_TOKEN, useValue: config},
+      {provide: SOCKET_CONFIG_TOKEN, useValue: socketConfig},
       {provide: Socket, useFactory: socketFactory, deps: [SOCKET_CONFIG_TOKEN, ApplicationRef]},
     ]
   }

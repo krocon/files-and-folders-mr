@@ -215,3 +215,85 @@ xattr -dr com.apple.quarantine "apps/fnf-desktop/release/mac-arm64/Files and Fol
 ```
 
 Important: Do not distribute unsigned builds. Use signing + notarization for anything shared with users.
+
+
+---
+
+## Electron: API endpoint and DevTools
+
+### API endpoint
+
+- The fnf-api runs on http://localhost:3333 with global prefix `/api` → Base URL: http://localhost:3333/api.
+- The desktop app (packaged) runs the Angular renderer under `file://`. The app now detects this and uses
+  `http://localhost:<port>/api` automatically (defaults to port 3333 and also probes 3335, 3337, 3339).
+- Development (desktop): `pnpm -C apps/fnf-desktop dev` now starts Angular (4200), fnf-api (3333/3334), and Electron
+  together, and waits for both 4200 and 3333 to be ready before opening the window.
+- Docker/Standalone: you can still start the API manually (e.g. `pnpm start:fnf-api`). With Docker, use the scripts in
+  the root `package.json` which expose 3333/3334.
+
+### DevTools (Developer Console)
+
+- Development (`pnpm -C apps/fnf-desktop dev`): DevTools are enabled.
+- Packaged build: set `FNF_ENABLE_DEVTOOLS=1` (or `true|yes|on`) to enable DevTools, then use the shortcuts:
+    - macOS: Cmd+Alt+I
+    - Windows/Linux: Ctrl+Alt+I
+    - Any: F12
+- .env loading:
+    - During development, `.env` is read from `apps/fnf-desktop/.env` automatically.
+    - Packaged builds do NOT bundle your `.env`. To enable DevTools in a packaged app, place a `.env` file next to the
+      app resources at runtime:
+        - macOS: `Files and Folders.app/Contents/Resources/.env`
+        - Windows: `<InstallDir>\\resources\\.env`
+        - Linux: `<AppDir>/resources/.env`
+    - Only the key `FNF_ENABLE_DEVTOOLS` is needed in that file. Do not put signing/notarization secrets in a runtime
+      `.env`.
+
+### Notes
+
+- Electron main can call the API via IPC channel `api:request` using `FNF_API_URL` (defaults to http://localhost:3333).
+- The Angular renderer calls the API directly over HTTP; no special CORS settings are required for Electron.
+
+---
+
+## Internal HTTP server (renderer ↔ main communication)
+
+The Electron main process now exposes a lightweight internal HTTP server instead of ipcMain handlers.
+This change centralizes communication via HTTP and avoids direct IPC wiring.
+
+- Host: FNF_DESKTOP_HTTP_HOST (default: 127.0.0.1)
+- Port: FNF_DESKTOP_HTTP_PORT (default: 4765)
+
+Endpoints:
+
+- GET /app/version → { "version": string }
+- POST /app/open-external with JSON body { "url": string } → { "ok": boolean }
+- POST /api/request with JSON body { "method": "GET|POST|PUT|PATCH|DELETE", "path": string, "headers"?: Record<
+  string,string>, "body"?: any } → { "ok": boolean, "status": number, "data"?: any }
+
+Notes:
+
+- CORS: permissive (Access-Control-Allow-Origin: *), OPTIONS preflight supported.
+- The server starts on app ready and stops on will-quit.
+- Set FNF_DESKTOP_HTTP_HOST/PORT in .env to customize binding.
+
+Examples:
+
+```bash
+# Get app version
+curl -s http://127.0.0.1:4765/app/version
+
+# Open external URL
+curl -s -X POST http://127.0.0.1:4765/app/open-external \
+  -H 'Content-Type: application/json' \
+  -d '{"url":"https://example.com"}'
+
+# Proxy API request to FNF_API_URL
+curl -s -X POST http://127.0.0.1:4765/api/request \
+  -H 'Content-Type: application/json' \
+  -d '{"method":"GET","path":"/api/apiPortTest"}'
+```
+
+Renderer migration hint:
+
+- If your renderer code relied on window.bridge (ipc), point it to the HTTP endpoints above or implement a thin fetch
+  wrapper.
