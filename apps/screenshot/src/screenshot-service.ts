@@ -143,11 +143,15 @@ export class ScreenshotService {
       // Reset localStorage initialization flag to ensure clean state
       this.localStorageInitialized = false;
 
+
       // Navigate to the URL with timeout (this refreshes the page for clean state)
       await this.page.goto(url, {
         waitUntil: "networkidle0", // Wait for network to be idle for better rendering
         timeout: 30000
       });
+
+      // Wait for page scripts to finish loading before localStorage initialization
+      await delay(1000); // Give page scripts time to complete initialization
 
       // Initialize localStorage after navigation (fresh for each screenshot)
       await this.initializeLocalStorage();
@@ -348,61 +352,107 @@ export class ScreenshotService {
       return;
     }
 
-    try {
-      await this.page.evaluate('localStorage.clear()');
+    const maxRetries = 3;
+    let lastError: Error | null = null;
 
-      await this.page.evaluate("localStorage.setItem(\"activePanelIndex\", \"1\")");
-      await this.page.evaluate("localStorage.setItem(\"theme\", \"light\")");
-      await this.page.evaluate("localStorage.setItem(\"fav\", JSON.stringify([\"Users\"]))");
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      try {
+        console.log(`🔄 localStorage initialization attempt ${attempt + 1}/${maxRetries}`);
 
-      const t0 = {
-        "panelIndex": 0, "tabs": [
-          {
-            "path": this.cwd,
-            "history": ["/Users", this.cwd],
-            "filterActive": false,
-            "hiddenFilesVisible": false,
-            "filterText": "",
-            "id": 10,
-            "historyIndex": 0
-          },
-          {
-            "path": "/Users",
-            "history": ["/Users"],
-            "filterActive": false,
-            "hiddenFilesVisible": false,
-            "filterText": "",
-            "id": 11,
-            "historyIndex": 0
-          }
-        ], "selectedTabIndex": 1
-      };
-      const tabs0Json = JSON.stringify(t0).replace(/"/g, '\\"');
-      await this.page.evaluate(`localStorage.setItem("tabs0", "${tabs0Json}")`);
-      console.info('this.cwd', this.cwd)
-      const t1 = {
-        "panelIndex": 1, "tabs": [
-          {
-            "path": this.cwd + "/screenshots",
-            "history": ["/Users", this.cwd],
-            "filterActive": false,
-            "hiddenFilesVisible": false,
-            "filterText": "",
-            "id": 25,
-            "historyIndex": 0
-          }
-        ], "selectedTabIndex": 0
-      };
-      const tabs1Json = JSON.stringify(t1).replace(/"/g, '\\"');
-      await this.page.evaluate(`localStorage.setItem("tabs1", "${tabs1Json}")`);
+        // Clear localStorage first
+        await this.page.evaluate('localStorage.clear()');
 
-      this.localStorageInitialized = true;
-      console.log('✅ localStorage initialized successfully');
+        // Set basic localStorage items
+        await this.page.evaluate("localStorage.setItem(\"activePanelIndex\", \"1\")");
+        await this.page.evaluate("localStorage.setItem(\"theme\", \"light\")");
+        await this.page.evaluate("localStorage.setItem(\"fav\", JSON.stringify([\"Users\"]))");
 
-    } catch (error) {
-      // localStorage may not be accessible in some contexts
-      console.log('⚠️ Could not initialize localStorage:', error);
+        // Set tabs0 configuration
+        const t0 = {
+          "panelIndex": 0, "tabs": [
+            {
+              "path": this.cwd,
+              "history": ["/Users", this.cwd],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 10,
+              "historyIndex": 0
+            },
+            {
+              "path": "/Users",
+              "history": ["/Users"],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 11,
+              "historyIndex": 0
+            }
+          ], "selectedTabIndex": 1
+        };
+        const tabs0Json = JSON.stringify(t0).replace(/"/g, '\\"');
+        await this.page.evaluate(`localStorage.setItem("tabs0", "${tabs0Json}")`);
+
+        // Set tabs1 configuration
+        const t1 = {
+          "panelIndex": 1, "tabs": [
+            {
+              "path": this.cwd + "/screenshots",
+              "history": ["/Users", this.cwd],
+              "filterActive": false,
+              "hiddenFilesVisible": false,
+              "filterText": "",
+              "id": 25,
+              "historyIndex": 0
+            }
+          ], "selectedTabIndex": 0
+        };
+        const tabs1Json = JSON.stringify(t1).replace(/"/g, '\\"');
+        await this.page.evaluate(`localStorage.setItem("tabs1", "${tabs1Json}")`);
+
+        // Verify that localStorage was set correctly
+        const verification = await this.page.evaluate(() => {
+          return {
+            activePanelIndex: localStorage.getItem("activePanelIndex"),
+            theme: localStorage.getItem("theme"),
+            fav: localStorage.getItem("fav"),
+            tabs0: localStorage.getItem("tabs0"),
+            tabs1: localStorage.getItem("tabs1")
+          };
+        });
+
+        // Check if all required values are present
+        if (verification.activePanelIndex === "1" &&
+          verification.theme === "light" &&
+          verification.fav &&
+          verification.tabs0 &&
+          verification.tabs1) {
+
+          this.localStorageInitialized = true;
+          console.log(`✅ localStorage initialized successfully on attempt ${attempt + 1}`);
+          console.info('this.cwd', this.cwd);
+          return;
+        } else {
+          throw new Error(`Verification failed: ${JSON.stringify(verification)}`);
+        }
+
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+        console.warn(`⚠️ localStorage initialization attempt ${attempt + 1} failed:`, lastError.message);
+
+        if (attempt < maxRetries - 1) {
+          // Wait before retrying with exponential backoff
+          const retryDelay = 500 * Math.pow(2, attempt);
+          console.log(`🔄 Retrying in ${retryDelay}ms...`);
+          await delay(retryDelay);
+        }
+      }
     }
+
+    // If all retries failed, throw an error
+    const errorMessage = `Failed to initialize localStorage after ${maxRetries} attempts: ${lastError?.message}`;
+    console.error('❌ ' + errorMessage);
+    throw new ScreenshotError(errorMessage);
   }
 
   /**
