@@ -1,10 +1,5 @@
 [
   {
-    "name": "open-copy-dialog",
-    "url": "http://localhost:4200/",
-    "actionId": "OPEN_COPY_DLG"
-  },
-  {
     "name": "main",
     "url": "http://localhost:4200/",
     "shortcuts": [
@@ -12,118 +7,171 @@
     ]
   },
   {
+    "name": "open-copy-dialog",
+    "url": "http://localhost:4200/",
+    "shortcuts": [
+      "(OPEN_COPY_DLG)"
+    ]
+  },
+  {
     "name": "open-create-file-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_CREATE_FILE_DLG"
+    "shortcuts": [
+      "(OPEN_CREATE_FILE_DLG)"
+    ]
   },
   {
     "name": "open-move-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_MOVE_DLG"
+    "shortcuts": [
+      "(OPEN_MOVE_DLG)"
+    ]
   },
   {
     "name": "open-rename-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_RENAME_DLG"
+    "shortcuts": [
+      "(OPEN_RENAME_DLG)"
+    ]
   },
   {
     "name": "open-multi-rename-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_MULTIRENAME_DLG"
+    "shortcuts": [
+      "(OPEN_MULTIRENAME_DLG)"
+    ]
   },
   {
     "name": "open-mkdir-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_MKDIR_DLG"
+    "shortcuts": [
+      "(OPEN_MKDIR_DLG)"
+    ]
   },
   {
     "name": "open-delete-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_DELETE_DLG"
+    "shortcuts": [
+      "(OPEN_DELETE_DLG)"
+    ]
   },
   {
     "name": "open-goto-anything-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_GOTO_ANYTHING_DLG"
+    "shortcuts": [
+      "(OPEN_GOTO_ANYTHING_DLG)"
+    ]
   },
   {
     "name": "open-chdir-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_CHDIR_DLG"
+    "shortcuts": [
+      "(OPEN_CHDIR_DLG)"
+    ]
   },
   {
     "name": "open-delete-empty-folders-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_DELETE_EMPTY_FOLDERS_DLG"
+    "shortcuts": [
+      "(OPEN_DELETE_EMPTY_FOLDERS_DLG)"
+    ]
   },
   {
     "name": "open-group-files-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_GROUPFILES_DLG"
+    "shortcuts": [
+      "(OPEN_GROUPFILES_DLG)"
+    ]
   },
   {
     "name": "open-find-dublicates-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_FIND_DUBLICATES_DLG"
+    "shortcuts": [
+      "(OPEN_FIND_DUBLICATES_DLG)"
+    ]
   },
   {
     "name": "open-find-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_FIND_DLG"
+    "shortcuts": [
+      "(OPEN_FIND_DLG)"
+    ]
   },
   {
     "name": "open-select-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_SELECT_DLG"
+    "shortcuts": [
+      "(OPEN_SELECT_DLG)"
+    ]
   },
   {
     "name": "open-color-config-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_COLORCONFIG_DLG"
+    "shortcuts": [
+      "(OPEN_COLORCONFIG_DLG)"
+    ]
   },
   {
     "name": "open-job-queue-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_JOB_QUEUE_DLG"
+    "shortcuts": [
+      "(OPEN_JOB_QUEUE_DLG)"
+    ]
   },
   {
     "name": "open-multi-mkdir-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_MULTIMKDIR_DLG"
+    "shortcuts": [
+      "(OPEN_MULTIMKDIR_DLG)"
+    ]
   },
   {
     "name": "open-setup-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_SETUP_DLG"
+    "shortcuts": [
+      "(OPEN_SETUP_DLG)"
+    ]
   },
   {
     "name": "open-shell-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_SHORTCUT_DLG"
+    "shortcuts": [
+      "(OPEN_SHORTCUT_DLG)"
+    ]
   },
   {
     "name": "open-pack-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_PACK_DLG"
+    "shortcuts": [
+      "(OPEN_PACK_DLG)"
+    ]
   },
   {
     "name": "open-download-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_DOWNLOAD_DLG"
+    "shortcuts": [
+      "(OPEN_DOWNLOAD_DLG)"
+    ]
   },
   {
     "name": "open-attribute-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_ATTRIBUTE_DLG"
+    "shortcuts": [
+      "(OPEN_ATTRIBUTE_DLG)"
+    ]
   },
   {
     "name": "open-task-dialog",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_TASK_DLG"
+    "shortcuts": [
+      "(OPEN_TASK_DLG)"
+    ]
   },
   {
     "name": "open-menu",
     "url": "http://localhost:4200/",
-    "actionId": "OPEN_MENU"
+    "shortcuts": [
+      "(OPEN_MENU)"
+    ]
   }
 ]

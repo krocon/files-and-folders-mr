@@ -38,11 +38,29 @@ export class ScreenshotService {
       console.log('🚀 Launching browser...');
       this.browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage',
+          '--disable-web-security',
+          '--disable-features=VizDisplayCompositor',
+          '--force-color-profile=srgb',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--disable-gpu-sandbox',
+          '--enable-font-antialiasing',
+          '--font-render-hinting=medium'
+        ]
       });
 
       this.page = await this.browser.newPage();
       await this.page.setViewport(CONFIG.VIEWPORT);
+
+      // Set color scheme preference for better rendering
+      await this.page.emulateMediaFeatures([
+        {name: 'prefers-color-scheme', value: 'light'}
+      ]);
 
       console.log('✅ Browser initialized successfully');
 
@@ -122,13 +140,16 @@ export class ScreenshotService {
     try {
       console.log(`\n📸 Capturing: ${name} → ${url}`);
 
-      // Navigate to the URL with timeout
+      // Reset localStorage initialization flag to ensure clean state
+      this.localStorageInitialized = false;
+
+      // Navigate to the URL with timeout (this refreshes the page for clean state)
       await this.page.goto(url, {
-        waitUntil: "domcontentloaded",
+        waitUntil: "networkidle0", // Wait for network to be idle for better rendering
         timeout: 30000
       });
 
-      // Initialize localStorage after navigation (only once)
+      // Initialize localStorage after navigation (fresh for each screenshot)
       await this.initializeLocalStorage();
 
       if (actionId) {
@@ -139,7 +160,13 @@ export class ScreenshotService {
       // console.info('actionId done', actionId);
       // console.info('{name, url, shortcuts, laf, actionId}', {name, url, shortcuts, laf, actionId});
 
-      // Wait for UI to settle
+      // Wait for content to be visible and UI to settle
+      try {
+        await this.page.waitForSelector('body', {visible: true, timeout: 5000});
+      } catch (selectorError) {
+        console.warn('⚠️ Body selector not found, continuing anyway...');
+      }
+      
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       // Take screenshot
@@ -151,10 +178,14 @@ export class ScreenshotService {
 
       await this.page.screenshot({
         path: file,
-        fullPage: true // Capture only the viewport
+        fullPage: false // Capture only the viewport
       });
+      await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       console.log(`✅ Screenshot saved: ${file}`);
+      await this.page.keyboard.press('Escape');
+
+      await this.page.keyboard.press('Escape');
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -228,39 +259,84 @@ export class ScreenshotService {
       throw new ScreenshotError('Page not initialized');
     }
 
-    try {
-      await this.page.bringToFront();
-      console.log(`🎯 Executing actionId: ${actionId}`);
+    const maxRetries = 2;
+    let attempt = 0;
 
-      // Open dialog by pressing F12
-      await this.page.keyboard.press('F10');
-      console.log('📂 Call Action dialog opened with F10');
+    while (attempt <= maxRetries) {
+      try {
+        await this.page.bringToFront();
+        console.log(`🎯 Executing actionId: ${actionId} (attempt ${attempt + 1}/${maxRetries + 1})`);
 
-      // Wait for the dialog to appear and the input field to be ready
-      await this.page.waitForSelector('input[formcontrolname="target"]', {visible: true});
+        // Ensure any previous dialogs are closed
+        await this.page.keyboard.press('Escape');
+        await delay(200);
 
-      await this.page.type('input[formcontrolname="target"]', actionId);
-      console.log(`⌨️ ActionId entered: ${actionId}`);
+        // Open dialog by pressing F10
+        await this.page.keyboard.press('F10');
+        console.log('📂 Call Action dialog opened with F10');
 
-      await this.page.screenshot({
-        path: path.join(CONFIG.OUT_DIR, 'f10-01-' + this.idx + '.png') as `${string}.png`,
-        fullPage: true
-      });
-      // Press ENTER to confirm and execute the action
-      await this.page.keyboard.press('Enter');
-      console.log('✅ Action executed (ENTER pressed)');
+        // Wait for the dialog to appear with timeout
+        try {
+          await this.page.waitForSelector('input[formcontrolname="target"]', {
+            visible: true,
+            timeout: 5000 // 5 second timeout instead of default 30 seconds
+          });
+        } catch (selectorError) {
+          console.warn(`⚠️ Dialog selector not found on attempt ${attempt + 1}, retrying...`);
+          if (attempt === maxRetries) {
+            throw new ScreenshotError(`Dialog input selector not found after ${maxRetries + 1} attempts`);
+          }
+          attempt++;
+          await delay(1000); // Wait before retry
+          continue;
+        }
 
-      // Wait for the action to complete
-      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
-      await this.page.screenshot({
-        path: path.join(CONFIG.OUT_DIR, 'f10-02-' + this.idx + '.png') as `${string}.png`,
-        fullPage: true
-      });
-      this.idx++;
+        // Clear any existing text and type the actionId
+        await this.page.click('input[formcontrolname="target"]');
+        await this.page.keyboard.down('Meta'); // Cmd key on Mac
+        await this.page.keyboard.press('KeyA'); // Select all
+        await this.page.keyboard.up('Meta');
+        await this.page.keyboard.press('Backspace'); // Clear
+        await this.page.type('input[formcontrolname="target"]', actionId);
+        console.log(`⌨️ ActionId entered: ${actionId}`);
 
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      throw new ScreenshotError(`Failed to execute actionId "${actionId}": ${errorMessage}`);
+        await this.page.screenshot({
+          path: path.join(CONFIG.OUT_DIR, 'f10-01-' + this.idx + '.png') as `${string}.png`,
+          fullPage: true
+        });
+
+        // Press ENTER to confirm and execute the action
+        await this.page.keyboard.press('Enter');
+        console.log('✅ Action executed (ENTER pressed)');
+
+        // Wait for the action to complete
+        await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
+        await this.page.screenshot({
+          path: path.join(CONFIG.OUT_DIR, 'f10-02-' + this.idx + '.png') as `${string}.png`,
+          fullPage: true
+        });
+        this.idx++;
+
+        // Clean up any remaining dialogs by pressing Escape
+        try {
+          await this.page.keyboard.press('Escape');
+          await delay(200); // Short delay to allow dialog to close
+        } catch (error) {
+          // Ignore errors from cleanup - dialog might already be closed
+        }
+
+        // Success - break out of retry loop
+        break;
+
+      } catch (error) {
+        if (attempt === maxRetries) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          throw new ScreenshotError(`Failed to execute actionId "${actionId}" after ${maxRetries + 1} attempts: ${errorMessage}`);
+        }
+        console.warn(`⚠️ Attempt ${attempt + 1} failed, retrying...`);
+        attempt++;
+        await delay(1000); // Wait before retry
+      }
     }
   }
 

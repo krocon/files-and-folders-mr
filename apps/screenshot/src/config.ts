@@ -8,7 +8,14 @@ export const CONFIG = {
   URLS_INPUT_FILE: "./data.json",
   OUT_DIR: "./screenshots",
   SHORTCUTS_API_URL: "http://localhost:3333/api/shortcuts/osx",
-  VIEWPORT: {width: 1280, height: 720} as ViewportConfig,
+  VIEWPORT: {
+    width: 1280,
+    height: 720,
+    deviceScaleFactor: 1,
+    isMobile: false,
+    hasTouch: false,
+    isLandscape: true
+  } as ViewportConfig,
   DELAYS: {
     BETWEEN_SHORTCUTS: 300,
     BEFORE_SCREENSHOT: 800,

@@ -1,11 +1,15 @@
 import {KeyInput} from "puppeteer";
 
 /**
- * Configuration for browser viewport dimensions
+ * Configuration for browser viewport dimensions and rendering properties
  */
 export interface ViewportConfig {
   width: number;
   height: number;
+  deviceScaleFactor?: number;
+  isMobile?: boolean;
+  hasTouch?: boolean;
+  isLandscape?: boolean;
 }
 
 /**
