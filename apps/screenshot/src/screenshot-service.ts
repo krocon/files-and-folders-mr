@@ -27,6 +27,7 @@ export class ScreenshotService {
   private page: Page | null = null;
   private localStorageInitialized: boolean = false;
   private cwd: string = '';
+  private idx = 0;
 
   /**
    * Initializes the browser and page
@@ -82,7 +83,7 @@ export class ScreenshotService {
       for (let i = 0; i < views.length; i++) {
         for (let j = 0; j < this.lafs.length; j++) {
           const laf = this.lafs[j];
-          const view = views[i];
+          const view = {...views[i], laf} as ScreenshotConfig;
 
           let {name, url, shortcuts, actionId} = view;
           if (shortcuts !== undefined && Array.isArray(shortcuts)) {
@@ -124,27 +125,30 @@ export class ScreenshotService {
       // Navigate to the URL with timeout
       await this.page.goto(url, {
         waitUntil: "networkidle2",
-        timeout: 30000 // 30 second timeout
+        timeout: 10000 // 30 second timeout
       });
 
       // Initialize localStorage after navigation (only once)
       await this.initializeLocalStorage();
 
-      console.info('actionId', actionId);
+      // console.info('actionId', actionId);
       if (actionId) {
         await this.executeActionId(actionId);
 
       } else if (Array.isArray(shortcuts) && shortcuts.length > 0) {
         await this.executeShortcuts(shortcuts, actionIdMapping, name);
       }
+      // console.info('actionId done', actionId);
+      // console.info('{name, url, shortcuts, laf, actionId}', {name, url, shortcuts, laf, actionId});
 
       // Wait for UI to settle
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       // Take screenshot
       const screenshotPath = path.join(CONFIG.OUT_DIR, laf);
-      const file = path.join(CONFIG.OUT_DIR, laf, `${name}.png`) as `${string}.png`;
-
+      // console.info('screenshotPath', screenshotPath)
+      const file = path.join(screenshotPath, `${name}.png`) as `${string}.png`;
+      // console.info('file', file)
       await fs.mkdir(screenshotPath, {recursive: true});
 
       await this.page.screenshot({
@@ -153,6 +157,8 @@ export class ScreenshotService {
       });
 
       console.log(`✅ Screenshot saved: ${file}`);
+      await this.page.reload({waitUntil: "networkidle2"});
+      console.log(`✅ Page reloaded`);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -219,6 +225,49 @@ export class ScreenshotService {
   }
 
   /**
+   * Executes an action by actionId using the Call Action dialog
+   */
+  async executeActionId(actionId: string): Promise<void> {
+    if (!this.page) {
+      throw new ScreenshotError('Page not initialized');
+    }
+
+    try {
+      console.log(`🎯 Executing actionId: ${actionId}`);
+
+      // Open dialog by pressing F12
+      await this.page.keyboard.press('F10');
+      console.log('📂 Call Action dialog opened with F10');
+
+      // Wait for the dialog to appear and the input field to be ready
+      await this.page.waitForSelector('input[formcontrolname="target"]', {visible: true});
+
+      await this.page.type('input[formcontrolname="target"]', actionId);
+      console.log(`⌨️ ActionId entered: ${actionId}`);
+
+      await this.page.screenshot({
+        path: path.join(CONFIG.OUT_DIR, 'f10-01-' + this.idx + '.png') as `${string}.png`,
+        fullPage: true
+      });
+      // Press ENTER to confirm and execute the action
+      await this.page.keyboard.press('Enter');
+      console.log('✅ Action executed (ENTER pressed)');
+
+      // Wait for the action to complete
+      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
+      await this.page.screenshot({
+        path: path.join(CONFIG.OUT_DIR, 'f10-02-' + this.idx + '.png') as `${string}.png`,
+        fullPage: true
+      });
+      this.idx++;
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new ScreenshotError(`Failed to execute actionId "${actionId}": ${errorMessage}`);
+    }
+  }
+
+  /**
    * Initializes localStorage with required values after navigation
    */
   private async initializeLocalStorage(): Promise<void> {
@@ -257,7 +306,7 @@ export class ScreenshotService {
       };
       const tabs0Json = JSON.stringify(t0).replace(/"/g, '\\"');
       await this.page.evaluate(`localStorage.setItem("tabs0", "${tabs0Json}")`);
-
+      console.info('this.cwd', this.cwd)
       const t1 = {
         "panelIndex": 1, "tabs": [
           {
@@ -274,52 +323,12 @@ export class ScreenshotService {
       const tabs1Json = JSON.stringify(t1).replace(/"/g, '\\"');
       await this.page.evaluate(`localStorage.setItem("tabs1", "${tabs1Json}")`);
 
-      this.localStorageInitialized = true;
+      //this.localStorageInitialized = true;
       console.log('✅ localStorage initialized successfully');
 
     } catch (error) {
       // localStorage may not be accessible in some contexts
       console.log('⚠️ Could not initialize localStorage:', error);
-    }
-  }
-
-  /**
-   * Executes an action by actionId using the Call Action dialog
-   */
-  async executeActionId(actionId: string): Promise<void> {
-    if (!this.page) {
-      throw new ScreenshotError('Page not initialized');
-    }
-
-    try {
-      console.log(`🎯 Executing actionId: ${actionId}`);
-
-      // Open dialog by pressing F12
-      await this.page.keyboard.press('F12');
-      console.log('📂 Call Action dialog opened with F12');
-
-      // Wait for the dialog to appear and the input field to be ready
-      await this.page.waitForSelector('input[formcontrolname="target"]', {visible: true});
-      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
-
-      // Clear any existing content and insert the actionId
-      await this.page.click('input[formcontrolname="target"]');
-      await this.page.keyboard.down('Control');
-      await this.page.keyboard.press('KeyA');
-      await this.page.keyboard.up('Control');
-      await this.page.type('input[formcontrolname="target"]', actionId);
-      console.log(`⌨️ ActionId entered: ${actionId}`);
-
-      // Press ENTER to confirm and execute the action
-      await this.page.keyboard.press('Enter');
-      console.log('✅ Action executed (ENTER pressed)');
-
-      // Wait for the action to complete
-      await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
-
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      throw new ScreenshotError(`Failed to execute actionId "${actionId}": ${errorMessage}`);
     }
   }
 

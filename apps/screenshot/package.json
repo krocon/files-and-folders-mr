@@ -9,10 +9,11 @@
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
     "screenshot": "npm run build && node dist/index.js",
-    "dev": "tsc --watch"
+    "dev": "tsc --watch",
+    "ic": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
-    "puppeteer": "^24.15.0",
+    "puppeteer": "24.16.2",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
