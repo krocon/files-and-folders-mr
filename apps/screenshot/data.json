@@ -29,9 +29,7 @@
   {
     "name": "open-multi-rename-dialog",
     "url": "http://localhost:4200/",
-    "actionId": [
-      "OPEN_MULTIRENAME_DLG"
-    ]
+    "actionId": "OPEN_MULTIRENAME_DLG"
   },
   {
     "name": "open-mkdir-dialog",

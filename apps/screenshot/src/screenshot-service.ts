@@ -124,17 +124,15 @@ export class ScreenshotService {
 
       // Navigate to the URL with timeout
       await this.page.goto(url, {
-        waitUntil: "networkidle2",
-        timeout: 10000 // 30 second timeout
+        waitUntil: "domcontentloaded",
+        timeout: 30000
       });
 
       // Initialize localStorage after navigation (only once)
       await this.initializeLocalStorage();
 
-      // console.info('actionId', actionId);
       if (actionId) {
         await this.executeActionId(actionId);
-
       } else if (Array.isArray(shortcuts) && shortcuts.length > 0) {
         await this.executeShortcuts(shortcuts, actionIdMapping, name);
       }
@@ -157,8 +155,6 @@ export class ScreenshotService {
       });
 
       console.log(`✅ Screenshot saved: ${file}`);
-      await this.page.reload({waitUntil: "networkidle2"});
-      console.log(`✅ Page reloaded`);
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -233,6 +229,7 @@ export class ScreenshotService {
     }
 
     try {
+      await this.page.bringToFront();
       console.log(`🎯 Executing actionId: ${actionId}`);
 
       // Open dialog by pressing F12
@@ -323,7 +320,7 @@ export class ScreenshotService {
       const tabs1Json = JSON.stringify(t1).replace(/"/g, '\\"');
       await this.page.evaluate(`localStorage.setItem("tabs1", "${tabs1Json}")`);
 
-      //this.localStorageInitialized = true;
+      this.localStorageInitialized = true;
       console.log('✅ localStorage initialized successfully');
 
     } catch (error) {
@@ -343,6 +340,8 @@ export class ScreenshotService {
     if (!this.page) {
       throw new ScreenshotError('Page not initialized', screenshotName);
     }
+
+    await this.page.bringToFront();
 
     for (const shortcutString of shortcuts) {
       try {
