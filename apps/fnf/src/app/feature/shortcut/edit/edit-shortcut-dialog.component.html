@@ -28,8 +28,7 @@
               } @else {
                 <div class="shortcut-display">
                   @if (shortcut) {
-                    "{{ shortcut|json }}"
-                    <fnf-shortcut [keys]="getShortcutAsLabelTokens(shortcut)"></fnf-shortcut>
+                    <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut>
                   } @else {
                     <span class="empty-shortcut">Empty shortcut</span>
                   }
@@ -59,11 +58,11 @@
       <div class="capture-instructions">
         <div>
           <p><strong>🎯 Capturing shortcut...</strong></p>
-          <p><strong>Instructions:</strong></p>
+          <p>Instructions:</p>
           <ul>
-            <li><strong>Single shortcut:</strong> Press Ctrl+F, then <kbd>ENTER</kbd> to save</li>
-            <li><strong>Chord shortcut:</strong> Press Ctrl+K, then Ctrl+X, then <kbd>ENTER</kbd> to save</li>
-            <li><strong>Cancel:</strong> Press <kbd>ESC</kbd> to cancel capture</li>
+            <li>Single shortcut: Press Ctrl+F, then <kbd>ENTER</kbd> to save</li>
+            <li>Chord shortcut: Press Ctrl+K, then Ctrl+X, then <kbd>ENTER</kbd> to save</li>
+            <li>Cancel: Press <kbd>ESC</kbd> to cancel capture</li>
           </ul>
           <p><em>Each keystroke is captured immediately - no waiting required!</em></p>
           @if (currentShortcutInput) {
@@ -77,12 +76,7 @@
               <div class="chord-display">
                 @for (chord of capturedChordSequence; track $index) {
                   <span class="chord-item">
-                    <fnf-shortcut
-                        [keys]="getShortcutAsLabelTokens(chord)"
-                        style="float: inherit"></fnf-shortcut>
-                    @if ($index < capturedChordSequence.length - 1) {
-                      &nbsp;→&nbsp;
-                    }
+                    <fnf-shortcut [keys]="chord.split(' ')"></fnf-shortcut>
                   </span>
                 }
               </div>

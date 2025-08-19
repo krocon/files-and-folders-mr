@@ -245,8 +245,5 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  getShortcutAsLabelTokens(shortcut: string): string[] {
-    return this.shortcutService.getShortcutAsLabelTokens(shortcut);
-  }
 
 }

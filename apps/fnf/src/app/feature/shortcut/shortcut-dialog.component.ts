@@ -113,7 +113,8 @@ export class ShortcutDialogComponent implements OnInit, OnDestroy {
     };
 
     const dialogRef = this.dialog.open(EditShortcutDialogComponent, {
-      width: '600px',
+      width: '700px',
+      minHeight: '550px',
       data: dialogData,
       disableClose: false
     });
