@@ -106,7 +106,6 @@ export class AttributeDialogComponent implements OnInit {
     this.fileSystemService
       .setFileAttributes(para)
       .subscribe(_ => {
-        console.log('para', JSON.stringify(para, null, 2));
         this.dialogRef.close(para);
       });
 

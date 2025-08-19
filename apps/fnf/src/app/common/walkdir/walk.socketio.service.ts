@@ -111,7 +111,6 @@ export class WalkSocketService {
 
   private processPendingWalks(): void {
     if (this.pendingWalks.length > 0) {
-      console.log(`Processing ${this.pendingWalks.length} pending walks`);
       const walks = [...this.pendingWalks];
       this.pendingWalks = [];
       walks.forEach(walk => {

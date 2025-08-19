@@ -211,23 +211,19 @@ export class KeyListenerService {
    */
   private getChordedAction(sequence: string[]): ActionId {
     if (sequence.length < 2) {
-      console.log('[KeyListener] getChordedAction: sequence too short:', sequence);
       return 'DO_NOTHING';
     }
 
     // Create chorded shortcut string (e.g., "cmd k cmd c")
-    console.info('___sequence', sequence);
     const chordedShortcut = sequence.join(KeyListenerService.CHORD_SEPARATOR);
-    console.log('[KeyListener] getChordedAction: looking up chorded shortcut:', chordedShortcut);
 
     // Check in active shortcuts
     const activeShortcuts = this.shortcutService.getActiveShortcuts();
     const action = activeShortcuts[chordedShortcut];
-    console.log('[KeyListener] getChordedAction: found action:', action);
 
     // Also log some similar shortcuts for debugging
-    console.log('[KeyListener] getChordedAction: available shortcuts containing "ctrl":',
-      Object.keys(activeShortcuts).filter(key => key.includes('ctrl')).slice(0, 10));
+    // console.log('[KeyListener] getChordedAction: available shortcuts containing "ctrl":',
+    //   Object.keys(activeShortcuts).filter(key => key.includes('ctrl')).slice(0, 10));
 
     return (action as ActionId) || 'DO_NOTHING';
   }

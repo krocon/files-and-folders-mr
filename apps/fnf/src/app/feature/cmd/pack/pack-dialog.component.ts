@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from "@angular/core";
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {PackDialogData, PackDialogResultData} from "@fnf-data";
+import {PackDialogData, PackDialogResultData, WalkData} from "@fnf-data";
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -8,10 +8,9 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {WalkData} from "@fnf-data";
 
 import {takeWhile} from "rxjs/operators";
-import {MatError, MatFormField, MatInput, MatSuffix, MatLabel} from "@angular/material/input";
+import {MatError, MatFormField, MatInput, MatLabel, MatSuffix} from "@angular/material/input";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {FnfAutofocusDirective} from "../../../common/directive/fnf-autofocus.directive";
@@ -92,7 +91,7 @@ export class PackDialogComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly appService: AppService,
   ) {
-    console.log(data);
+
     if (data.source.length > 1) {
       this.source = data.source.length + " items";
     } else {

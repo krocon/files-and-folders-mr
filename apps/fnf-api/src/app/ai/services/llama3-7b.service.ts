@@ -19,7 +19,6 @@ export class Llama3_7bService {
 
   async hasApiKey(): Promise<boolean> {
     // Check if Llama API key is available
-    console.log('Llama API key:', environment.llamaApiKey);
     return !!environment.llamaApiKey;
   }
 

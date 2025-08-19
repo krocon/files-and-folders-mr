@@ -121,7 +121,6 @@ export class ActionQueueService {
           this.executeAction(actionEvent)
             .subscribe({
               next: (res: OnDoResponseType) => {
-                console.log(' executeAction next res:', res);
                 queue.status = "IDLE"
                 actionEvent.status = "SUCCESS";
                 actionEvent.duration = Date.now() - actionEvent.startTime;

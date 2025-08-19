@@ -9,7 +9,7 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from "@angular/material/dialog";
-import {MatError, MatFormField, MatInput, MatLabel} from "@angular/material/input";
+import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {MatOption, MatSelect} from "@angular/material/select";
 import {MatButton} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
@@ -47,7 +47,6 @@ export class UnzipDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: UnzipDialogData,
     private readonly formBuilder: FormBuilder,
   ) {
-    console.log(data);
     this.source = data.source.dir + '/' + data.source.base;
     this.directories = data.directories;
 
