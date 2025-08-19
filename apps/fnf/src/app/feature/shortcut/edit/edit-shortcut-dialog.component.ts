@@ -50,9 +50,7 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   isCapturingShortcut = false;
   captureIndex = -1;
   capturedChordSequence: string[] = []; // For displaying captured chord sequence in template
-  private captureTimeout: any = null;
-  private capturedKeystrokes: string[] = [];
-  private readonly CAPTURE_DELAY_MS = 800; // Delay for chord sequences - reduced for better UX
+  private captureTimeout: any = null; // Keep for cleanup only
 
   constructor(
     public readonly dialogRef: MatDialogRef<EditShortcutDialogComponent>,
@@ -94,6 +92,12 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Check if ESC key was pressed to cancel capture
+    if (event.key === 'Escape') {
+      this.cancelCapture();
+      return;
+    }
+
     // Skip if it's just modifier keys without any other key pressed
     if (['Control', 'Alt', 'Shift', 'Meta', 'Cmd'].includes(event.key) &&
       !event.ctrlKey && !event.altKey && !event.shiftKey && !event.metaKey) {
@@ -102,28 +106,21 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
 
     const harmonizedShortcut = this.shortcutService.createHarmonizedShortcutByKeyboardEvent(event);
     if (harmonizedShortcut && this.captureIndex >= 0) {
-      // Check if the keystroke already exists in the captured keystrokes to avoid all duplicates
-      const arr = harmonizedShortcut.split(' ');
-      for (let i = 0; i < arr.length; i++) {
-        const ks = arr[i];
-        if (!this.capturedKeystrokes.includes(ks)) {
-          // Add the keystroke to our accumulated list only if it's not a duplicate
-          this.capturedKeystrokes.push(ks);
-        }
-      }
+      // Immediately add the keystroke to the chord sequence - no timeout!
+      // This eliminates timing issues and race conditions
+      this.capturedChordSequence.push(harmonizedShortcut);
 
-      // Update the current input display with accumulated keystrokes
-      this.currentShortcutInput = this.capturedKeystrokes.join(' ');
+      // Update display to show the current building sequence with correct formatting
+      this.currentShortcutInput = this.capturedChordSequence.map(chord => {
+        // Replace spaces with plus signs within individual chords for display
+        return chord.replace(/\s+/g, '+');
+      }).join(' ');
 
-      // Clear any existing timeout
+      // Clear any leftover timeout (shouldn't be needed anymore)
       if (this.captureTimeout) {
         clearTimeout(this.captureTimeout);
+        this.captureTimeout = null;
       }
-
-      // Set a new timeout to add current keystroke combination to chord sequence
-      this.captureTimeout = setTimeout(() => {
-        this.addToChordSequence();
-      }, this.CAPTURE_DELAY_MS);
     }
   }
 
@@ -131,7 +128,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     // Clean up any ongoing capture state
     this.isCapturingShortcut = false;
     this.captureIndex = -1;
-    this.capturedKeystrokes = [];
     this.capturedChordSequence = [];
 
     // Clear timeout to prevent memory leaks
@@ -142,18 +138,19 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
   }
 
   onStopCapturing(): void {
-    // If we have captured keystrokes, add them to chord sequence first
-    if (this.capturedKeystrokes.length > 0) {
-      this.addToChordSequence();
-    }
-
-    // Then finalize the chord sequence if we have any chords
+    // With the new immediate capture approach, just finalize what we have
     if (this.capturedChordSequence.length > 0) {
       this.finalizeChordSequence();
     } else {
       // Otherwise, just clean up the state
       this.cleanupCaptureState();
     }
+  }
+
+  private cancelCapture(): void {
+    // ESC was pressed - cancel the current capture without saving
+    console.log('Capture cancelled by user (ESC pressed)');
+    this.cleanupCaptureState();
   }
 
   onReset(): void {
@@ -208,7 +205,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     this.isCapturingShortcut = true;
     this.captureIndex = index;
     this.currentShortcutInput = '';
-    this.capturedKeystrokes = [];
     this.capturedChordSequence = [];
 
     // Clear any existing timeout
@@ -218,37 +214,19 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  private addToChordSequence(): void {
-    if (this.capturedKeystrokes.length > 0) {
-      // Join all captured keystrokes into a single shortcut string
-      const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
-      const shortcutString = uniqueKeystrokes.join(' ');
-
-      // Add to chord sequence
-      this.capturedChordSequence.push(shortcutString);
-
-      // Reset current keystroke capture for next chord
-      this.capturedKeystrokes = [];
-      this.currentShortcutInput = '';
-
-      // Clear timeout
-      if (this.captureTimeout) {
-        clearTimeout(this.captureTimeout);
-        this.captureTimeout = null;
-      }
-    }
-  }
 
   private finalizeChordSequence(): void {
-    // Add any remaining keystrokes to the sequence
-    if (this.capturedKeystrokes.length > 0) {
-      this.addToChordSequence();
-    }
-
     if (this.captureIndex >= 0 && this.capturedChordSequence.length > 0) {
-      // Join all chord parts with space separator for chorded shortcuts
-      const finalShortcut = this.capturedChordSequence.join(' ');
+      // Format individual chords with plus signs, then join chord sequences with spaces
+      const finalShortcut = this.capturedChordSequence.map(chord => {
+        // Replace spaces with plus signs within individual chords
+        return chord.replace(/\s+/g, '+');
+      }).join(' ');
       this.shortcuts[this.captureIndex] = finalShortcut;
+      console.log(`Finalized shortcut: "${finalShortcut}"`);
+    } else if (this.captureIndex >= 0) {
+      // No chords captured, clear the shortcut
+      this.shortcuts[this.captureIndex] = '';
     }
 
     this.cleanupCaptureState();
@@ -259,7 +237,6 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     this.isCapturingShortcut = false;
     this.captureIndex = -1;
     this.currentShortcutInput = '';
-    this.capturedKeystrokes = [];
     this.capturedChordSequence = [];
 
     if (this.captureTimeout) {
@@ -272,22 +249,4 @@ export class EditShortcutDialogComponent implements OnInit, OnDestroy {
     return this.shortcutService.getShortcutAsLabelTokens(shortcut);
   }
 
-  private finalizeShortcutCapture(): void {
-    if (this.captureIndex >= 0 && this.capturedKeystrokes.length > 0) {
-      // Join all captured keystrokes into a single shortcut string
-      const uniqueKeystrokes = [...new Set(this.capturedKeystrokes)];
-      this.shortcuts[this.captureIndex] = uniqueKeystrokes.join(' ');
-    }
-
-    // Reset capture state
-    this.isCapturingShortcut = false;
-    this.captureIndex = -1;
-    this.currentShortcutInput = '';
-    this.capturedKeystrokes = [];
-
-    if (this.captureTimeout) {
-      clearTimeout(this.captureTimeout);
-      this.captureTimeout = null;
-    }
-  }
 }

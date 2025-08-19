@@ -11,4 +11,9 @@ export class ShortcutComponent {
 
   @Input() keys: string[] = [];
 
+  isMetaKey(s: string) {
+    const k = s.toLowerCase();
+    return k === 'alt' || k === 'ctrl' || k === 'shift' || k === 'meta' || k === 'cmd'
+      || k === '⌘' || k === '⇧' || k === '^';
+  }
 }

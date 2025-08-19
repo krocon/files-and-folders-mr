@@ -28,6 +28,7 @@
               } @else {
                 <div class="shortcut-display">
                   @if (shortcut) {
+                    "{{ shortcut|json }}"
                     <fnf-shortcut [keys]="getShortcutAsLabelTokens(shortcut)"></fnf-shortcut>
                   } @else {
                     <span class="empty-shortcut">Empty shortcut</span>
@@ -57,19 +58,30 @@
     @if (isCapturingShortcut) {
       <div class="capture-instructions">
         <div>
-          <p><strong>Capturing shortcut...</strong></p>
-          <p>Press desired key combination and then press ENTER.</p>
-          <p>For chorded shortcuts: Press first combination, then second combination, then ENTER.</p>
-          <p>Example: Cmd+K, then Cmd+C, then ENTER for a chorded shortcut.</p>
+          <p><strong>🎯 Capturing shortcut...</strong></p>
+          <p><strong>Instructions:</strong></p>
+          <ul>
+            <li><strong>Single shortcut:</strong> Press Ctrl+F, then <kbd>ENTER</kbd> to save</li>
+            <li><strong>Chord shortcut:</strong> Press Ctrl+K, then Ctrl+X, then <kbd>ENTER</kbd> to save</li>
+            <li><strong>Cancel:</strong> Press <kbd>ESC</kbd> to cancel capture</li>
+          </ul>
+          <p><em>Each keystroke is captured immediately - no waiting required!</em></p>
+          @if (currentShortcutInput) {
+            <div class="current-input">
+              <p><strong>Building:</strong> <code>{{ currentShortcutInput }}</code></p>
+            </div>
+          }
           @if (capturedChordSequence.length > 0) {
             <div class="captured-sequence">
               <p><strong>Captured sequence:</strong></p>
               <div class="chord-display">
                 @for (chord of capturedChordSequence; track $index) {
                   <span class="chord-item">
-                    <fnf-shortcut [keys]="getShortcutAsLabelTokens(chord)"></fnf-shortcut>
+                    <fnf-shortcut
+                        [keys]="getShortcutAsLabelTokens(chord)"
+                        style="float: inherit"></fnf-shortcut>
                     @if ($index < capturedChordSequence.length - 1) {
-                      <span class="chord-separator">→</span>
+                      &nbsp;→&nbsp;
                     }
                   </span>
                 }

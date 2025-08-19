@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {of, throwError} from 'rxjs';
+import {of} from 'rxjs';
 import {EditShortcutDialogComponent, EditShortcutDialogData} from './edit-shortcut-dialog.component';
 import {ShortcutService} from '../../../service/config/shortcut.service';
 import {ActionIdLabelShortcut} from '../action-id-label-shortcut';
@@ -18,7 +18,7 @@ describe('EditShortcutDialogComponent', () => {
     const mockActionItem: ActionIdLabelShortcut = {
       actionId: 'TEST_ACTION',
       label: 'Test Action',
-      shortcuts: ['cmd shift f', 'ctrl alt s']
+      shortcuts: ['cmd+shift+f', 'ctrl+alt+s']
     };
 
     mockDialogData = {
@@ -37,10 +37,10 @@ describe('EditShortcutDialogComponent', () => {
     } as unknown as jest.Mocked<ShortcutService>;
 
     mockShortcutService.saveShortcuts.mockReturnValue(of({success: true, message: 'Shortcuts saved successfully'}));
-    mockShortcutService.createHarmonizedShortcutByKeyboardEvent.mockReturnValue('cmd shift t');
+    mockShortcutService.createHarmonizedShortcutByKeyboardEvent.mockReturnValue('cmd shift f');
     mockShortcutService.getActiveShortcuts.mockReturnValue({
-      'cmd shift f': 'TEST_ACTION',
-      'ctrl alt s': 'TEST_ACTION',
+      'cmd+shift+f': 'TEST_ACTION',
+      'ctrl+alt+s': 'TEST_ACTION',
       'cmd c': 'COPY',
       'cmd v': 'PASTE'
     });
@@ -67,7 +67,7 @@ describe('EditShortcutDialogComponent', () => {
   });
 
   it('should initialize with shortcuts from dialog data', () => {
-    expect(component.shortcuts).toEqual(['cmd shift f', 'ctrl alt s']);
+    expect(component.shortcuts).toEqual(['cmd+shift+f', 'ctrl+alt+s']);
   });
 
   it('should add a new empty shortcut when onAddShortcut is called', () => {
@@ -85,7 +85,7 @@ describe('EditShortcutDialogComponent', () => {
     component.onRemoveShortcut(0);
 
     expect(component.shortcuts.length).toBe(initialShortcuts.length - 1);
-    expect(component.shortcuts).toEqual(['ctrl alt s']);
+    expect(component.shortcuts).toEqual(['ctrl+alt+s']);
   });
 
   it('should start capturing shortcut when onEditShortcut is called', () => {
@@ -106,8 +106,6 @@ describe('EditShortcutDialogComponent', () => {
   });
 
   it('should capture keyboard shortcut when in capturing mode', () => {
-    jest.useFakeTimers();
-    
     component.isCapturingShortcut = true;
     component.captureIndex = 0;
 
@@ -120,27 +118,32 @@ describe('EditShortcutDialogComponent', () => {
     jest.spyOn(mockKeyboardEvent, 'preventDefault');
     jest.spyOn(mockKeyboardEvent, 'stopPropagation');
 
+    // Type the shortcut - with new deterministic approach, it's captured immediately
     component.onKeyUp(mockKeyboardEvent);
 
     expect(mockKeyboardEvent.preventDefault).toHaveBeenCalled();
     expect(mockKeyboardEvent.stopPropagation).toHaveBeenCalled();
     expect(mockShortcutService.createHarmonizedShortcutByKeyboardEvent).toHaveBeenCalledWith(mockKeyboardEvent);
 
-    // Initially, the shortcut should not be finalized yet
+    // With new deterministic approach, shortcut is captured immediately to sequence
     expect(component.isCapturingShortcut).toBe(true);
     expect(component.captureIndex).toBe(0);
-    expect(component.currentShortcutInput).toBe('cmd shift t');
+    expect(component.currentShortcutInput).toBe('cmd+shift+f');
+    expect(component.capturedChordSequence).toEqual(['cmd shift f']);
 
-    // Fast-forward time to trigger the timeout
-    jest.advanceTimersByTime(1000);
+    // User presses ENTER to finalize (new deterministic behavior)
+    const enterEvent = new KeyboardEvent('keyup', {key: 'Enter'});
+    jest.spyOn(enterEvent, 'preventDefault');
+    jest.spyOn(enterEvent, 'stopPropagation');
 
-    // Now the shortcut should be finalized
-    expect(component.shortcuts[0]).toBe('cmd shift t');
+    component.onKeyUp(enterEvent);
+
+    // Now the shortcut should be finalized with correct format (plus signs)
+    expect(component.shortcuts[0]).toBe('cmd+shift+f');
     expect(component.isCapturingShortcut).toBe(false);
     expect(component.captureIndex).toBe(-1);
     expect(component.currentShortcutInput).toBe('');
-
-    jest.useRealTimers();
+    expect(component.capturedChordSequence).toEqual([]);
   });
 
   it('should not capture keyboard shortcut when not in capturing mode', () => {
@@ -163,7 +166,7 @@ describe('EditShortcutDialogComponent', () => {
     component.shortcuts = ['modified shortcut'];
     component.onReset();
 
-    expect(component.shortcuts).toEqual(['cmd shift f', 'ctrl alt s']);
+    expect(component.shortcuts).toEqual(['cmd+shift+f', 'ctrl+alt+s']);
   });
 
   it('should close dialog without saving when onCancel is called', () => {
@@ -173,7 +176,7 @@ describe('EditShortcutDialogComponent', () => {
   });
 
   it('should save shortcuts and close dialog when onSave is called', () => {
-    component.shortcuts = ['cmd shift f', '', 'ctrl alt s'];
+    component.shortcuts = ['cmd+shift+f', '', 'ctrl+alt+s'];
     component.onSave();
 
     // Should save complete shortcut mapping with existing shortcuts preserved
@@ -181,8 +184,8 @@ describe('EditShortcutDialogComponent', () => {
     expect(mockShortcutService.saveShortcuts).toHaveBeenCalledWith('osx', {
       'cmd c': 'COPY',           // Existing shortcuts for other actions preserved
       'cmd v': 'PASTE',          // Existing shortcuts for other actions preserved
-      'cmd shift f': 'TEST_ACTION',  // New shortcuts for current action
-      'ctrl alt s': 'TEST_ACTION'    // New shortcuts for current action
+      'cmd+shift+f': 'TEST_ACTION',  // New shortcuts for current action
+      'ctrl+alt+s': 'TEST_ACTION'    // New shortcuts for current action
     });
 
     // Wait for the observable to complete
@@ -190,7 +193,7 @@ describe('EditShortcutDialogComponent', () => {
       expect(mockDialogRef.close).toHaveBeenCalledWith({
         actionId: 'TEST_ACTION',
         label: 'Test Action',
-        shortcuts: ['cmd shift f', 'ctrl alt s']
+        shortcuts: ['cmd+shift+f', 'ctrl+alt+s']
       });
     });
   });

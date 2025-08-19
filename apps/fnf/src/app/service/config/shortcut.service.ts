@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "@guiexpert/table";
+import {createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "../../utils/shortcut-util";
 import {ActionId} from "../../domain/action/fnf-action.enum";
 import {HttpClient} from "@angular/common/http";
 import {BrowserOsType} from "@fnf-data";
