@@ -363,7 +363,20 @@ export class ShortcutService {
   }
 
   debug() {
-    console.info('active shortcuts', this.activeShortcuts);
+    console.info('[ShortcutService] Total active shortcuts:', Object.keys(this.activeShortcuts).length);
+    console.info('[ShortcutService] All active shortcuts:', this.activeShortcuts);
+
+    // Show F6 related shortcuts specifically
+    const f6Shortcuts = Object.entries(this.activeShortcuts)
+      .filter(([key]) => key.includes('f6'))
+      .reduce((obj, [key, value]) => ({...obj, [key]: value}), {});
+    console.info('[ShortcutService] F6 related shortcuts:', f6Shortcuts);
+
+    // Show shift related shortcuts
+    const shiftShortcuts = Object.entries(this.activeShortcuts)
+      .filter(([key]) => key.includes('shift'))
+      .reduce((obj, [key, value]) => ({...obj, [key]: value}), {});
+    console.info('[ShortcutService] Shift related shortcuts:', shiftShortcuts);
   }
 
   private fetchShortcutMappings(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {

@@ -304,6 +304,14 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
       return;
     }
 
+    // Also check for single shortcuts in keyUp (important for function keys like F6)
+    // Some browsers prevent function key keyDown events from reaching the application
+    const singleShortcutAction = this.appService.getActionByKeyEvent(keyboardEvent);
+    if (singleShortcutAction && singleShortcutAction !== 'DO_NOTHING' && singleShortcutAction !== '-') {
+      this.appService.triggerAction(singleShortcutAction);
+      return;
+    }
+
     // Continue with existing key handling
     this.appService.onKeyUp$.next(keyboardEvent);
   }

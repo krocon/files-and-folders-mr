@@ -39,23 +39,48 @@ export class KeyListenerService {
    */
   processKeyEvent(event: KeyboardEvent): ActionId | null {
     const harmonizedShortcut = this.shortcutService.createHarmonizedShortcutByKeyboardEvent(event);
-    console.log('[KeyListener] Harmonized shortcut:', harmonizedShortcut);
 
     if (!harmonizedShortcut) {
       return null;
     }
 
     const currentTime = Date.now();
+    
+    // Check if this shortcut exists directly in activeShortcuts (more reliable than getActionByKeyEvent)
+    const activeShortcuts = this.shortcutService.getActiveShortcuts();
+    const directLookup = activeShortcuts[harmonizedShortcut];
+
+    // Check if this shortcut exists directly in activeShortcuts
+    if (directLookup && directLookup !== 'DO_NOTHING') {
+      // If we're not capturing a chord, execute this single shortcut immediately
+      if (!this.chordState.isCapturingChord) {
+        return directLookup as ActionId;
+      } else {
+        // We're in a chord sequence, add this to the sequence
+        this.chordState.currentSequence.push(harmonizedShortcut);
+        this.chordState.lastKeyTime = currentTime;
+        this.updateChordState();
+
+        // Check if this completes a chorded shortcut
+        const chordedAction = this.getChordedAction(this.chordState.currentSequence);
+
+        if (chordedAction !== 'DO_NOTHING') {
+          this.completeChordSequence(chordedAction);
+          return chordedAction;
+        }
+
+        // Continue chord sequence
+        this.resetChordTimeout();
+        return null;
+      }
+    }
 
     // Check if this is a single shortcut first
     const singleShortcutAction = this.shortcutService.getActionByKeyEvent(event);
-    console.log('[KeyListener] Single shortcut action:', singleShortcutAction);
-    console.log('[KeyListener] Current chord state:', this.chordState);
 
     if (singleShortcutAction !== 'DO_NOTHING') {
       // Check if we're in the middle of a chord sequence
       if (this.chordState.isCapturingChord) {
-        console.log('[KeyListener] Adding to chord sequence:', harmonizedShortcut);
         // Add this shortcut to the sequence
         this.chordState.currentSequence.push(harmonizedShortcut);
         this.chordState.lastKeyTime = currentTime;
@@ -63,10 +88,8 @@ export class KeyListenerService {
 
         // Check if this completes a chorded shortcut
         const chordedAction = this.getChordedAction(this.chordState.currentSequence);
-        console.log('[KeyListener] Checking chorded action for sequence:', this.chordState.currentSequence, 'Result:', chordedAction);
 
         if (chordedAction !== 'DO_NOTHING') {
-          console.log('[KeyListener] Chorded shortcut detected! Action:', chordedAction);
           this.completeChordSequence(chordedAction);
           return chordedAction;
         }
@@ -75,21 +98,14 @@ export class KeyListenerService {
         this.resetChordTimeout();
         return null;
       } else {
-        console.log('[KeyListener] Starting chord sequence with:', harmonizedShortcut);
         // Start a potential chord sequence
         this.startChordSequence(harmonizedShortcut, currentTime);
-
-        // Also check if this single shortcut should be executed immediately
-        // (for backward compatibility with single shortcuts)
         this.resetChordTimeout();
         return null; // Don't execute single shortcuts immediately when starting chord
       }
     } else {
-      console.log('[KeyListener] No single shortcut found for:', harmonizedShortcut);
-
       // Even if no single shortcut exists, we might want to start or continue a chord sequence
       if (this.chordState.isCapturingChord) {
-        console.log('[KeyListener] Adding to chord sequence (no single shortcut):', harmonizedShortcut);
         // Add this shortcut to the sequence
         this.chordState.currentSequence.push(harmonizedShortcut);
         this.chordState.lastKeyTime = currentTime;
@@ -97,10 +113,8 @@ export class KeyListenerService {
 
         // Check if this completes a chorded shortcut
         const chordedAction = this.getChordedAction(this.chordState.currentSequence);
-        console.log('[KeyListener] Checking chorded action for sequence (no single):', this.chordState.currentSequence, 'Result:', chordedAction);
 
         if (chordedAction !== 'DO_NOTHING') {
-          console.log('[KeyListener] Chorded shortcut detected! Action:', chordedAction);
           this.completeChordSequence(chordedAction);
           return chordedAction;
         }
@@ -110,7 +124,6 @@ export class KeyListenerService {
         return null;
       } else {
         // Start a potential chord sequence even if no single shortcut exists
-        console.log('[KeyListener] Starting chord sequence (no single shortcut) with:', harmonizedShortcut);
         this.startChordSequence(harmonizedShortcut, currentTime);
         this.resetChordTimeout();
         return null;
