@@ -56,13 +56,14 @@ export class ShortcutService {
     //   );
   }
 
+  public static KEYCHAR_SEPARATOR = "+";
 
   createHarmonizedShortcutByKeyboardEvent(keyboardEvent: KeyboardEvent): string {
     return createHarmonizedShortcutByKeyboardEvent(keyboardEvent)
       .split(' ')
       .filter(s => s)
       .filter((s, i, arr) => arr.indexOf(s) === i)
-      .join(' ');
+      .join(ShortcutService.KEYCHAR_SEPARATOR);
   }
 
   getActionByKeyEvent(keyboardEvent: KeyboardEvent): ActionId {
@@ -73,27 +74,27 @@ export class ShortcutService {
     return action ?? 'DO_NOTHING';
   }
 
-  /**
-   * Get action for a chorded shortcut sequence
-   * @param chordSequence Array of individual shortcut strings
-   * @returns ActionId or 'DO_NOTHING'
-   */
-  getActionByChordSequence(chordSequence: string[]): ActionId {
-    if (chordSequence.length === 0) {
-      return 'DO_NOTHING';
-    }
-
-    if (chordSequence.length === 1) {
-      // Single shortcut
-      const action = this.activeShortcuts[chordSequence[0]] as ActionId;
-      return action ?? 'DO_NOTHING';
-    }
-
-    // Chorded shortcut - join with space separator
-    const chordedShortcut = chordSequence.join(' ');
-    const action = this.activeShortcuts[chordedShortcut] as ActionId;
-    return action ?? 'DO_NOTHING';
-  }
+  // /**
+  //  * Get action for a chorded shortcut sequence
+  //  * @param chordSequence Array of individual shortcut strings
+  //  * @returns ActionId or 'DO_NOTHING'
+  //  */
+  // getActionByChordSequence(chordSequence: string[]): ActionId {
+  //   if (chordSequence.length === 0) {
+  //     return 'DO_NOTHING';
+  //   }
+  //
+  //   if (chordSequence.length === 1) {
+  //     // Single shortcut
+  //     const action = this.activeShortcuts[chordSequence[0]] as ActionId;
+  //     return action ?? 'DO_NOTHING';
+  //   }
+  //
+  //   // Chorded shortcut - join with space separator
+  //   const chordedShortcut = chordSequence.join(' ');
+  //   const action = this.activeShortcuts[chordedShortcut] as ActionId;
+  //   return action ?? 'DO_NOTHING';
+  // }
 
   /**
    * Check if a shortcut string represents a chorded shortcut
@@ -200,7 +201,7 @@ export class ShortcutService {
   }
 
   getShortcutAsLabelTokens(sc: string): string[] {
-    const hs = harmonizeShortcut(sc);
+    const hs = sc; //harmonizeShortcut(sc);
     return hs
       .replace('num_', 'num ')
       .split(' ')
@@ -226,11 +227,6 @@ export class ShortcutService {
       if (this.activeShortcuts[harmonizeShortcut(key)]) {
         console.warn('Shortcut already exists:' + harmonizeShortcut(key));
         console.warn(this.activeShortcuts[harmonizeShortcut(key)], value);
-        // throw new Error(
-        //   'Shortcut already exists:' + harmonizeShortcut(key) +
-        //   ' - ' + this.activeShortcuts[harmonizeShortcut(key)] +
-        //   ' - ' + value
-        // )
       }
       this.activeShortcuts[harmonizeShortcut(key)] = value;
     });
@@ -289,7 +285,7 @@ export class ShortcutService {
       );
   }
 
-  // New methods for shortcut editing functionality
+
 
   /**
    * Reset shortcuts to defaults for a specific OS
@@ -329,38 +325,38 @@ export class ShortcutService {
       );
   }
 
-  /**
-   * Validate shortcut conflicts
-   */
-  validateShortcuts(shortcuts: ShortcutActionMapping): { valid: boolean; conflicts: string[] } {
-    const conflicts: string[] = [];
-    const shortcutKeys = Object.keys(shortcuts);
-
-    // Check for duplicate shortcuts
-    const shortcutCounts = new Map<string, string[]>();
-
-    Object.entries(shortcuts).forEach(([shortcut, action]) => {
-      const harmonized = harmonizeShortcut(shortcut);
-      if (!shortcutCounts.has(harmonized)) {
-        shortcutCounts.set(harmonized, []);
-      }
-      shortcutCounts.get(harmonized)!.push(action);
-    });
-
-    shortcutCounts.forEach((actions, shortcut) => {
-      if (actions.length > 1) {
-        const uniqueActions = [...new Set(actions)];
-        if (uniqueActions.length > 1) {
-          conflicts.push(`Shortcut "${shortcut}" is assigned to multiple actions: ${uniqueActions.join(', ')}`);
-        }
-      }
-    });
-
-    return {
-      valid: conflicts.length === 0,
-      conflicts
-    };
-  }
+  // /**
+  //  * Validate shortcut conflicts
+  //  */
+  // validateShortcuts(shortcuts: ShortcutActionMapping): { valid: boolean; conflicts: string[] } {
+  //   const conflicts: string[] = [];
+  //   const shortcutKeys = Object.keys(shortcuts);
+  //
+  //   // Check for duplicate shortcuts
+  //   const shortcutCounts = new Map<string, string[]>();
+  //
+  //   Object.entries(shortcuts).forEach(([shortcut, action]) => {
+  //     const harmonized = harmonizeShortcut(shortcut);
+  //     if (!shortcutCounts.has(harmonized)) {
+  //       shortcutCounts.set(harmonized, []);
+  //     }
+  //     shortcutCounts.get(harmonized)!.push(action);
+  //   });
+  //
+  //   shortcutCounts.forEach((actions, shortcut) => {
+  //     if (actions.length > 1) {
+  //       const uniqueActions = [...new Set(actions)];
+  //       if (uniqueActions.length > 1) {
+  //         conflicts.push(`Shortcut "${shortcut}" is assigned to multiple actions: ${uniqueActions.join(', ')}`);
+  //       }
+  //     }
+  //   });
+  //
+  //   return {
+  //     valid: conflicts.length === 0,
+  //     conflicts
+  //   };
+  // }
 
   debug() {
     console.info('[ShortcutService] Total active shortcuts:', Object.keys(this.activeShortcuts).length);

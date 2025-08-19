@@ -7,4 +7,5 @@
 .fnf-shortcut-separator {
     margin: 0;
     font-weight: lighter;
+    opacity: 0.5;
 }

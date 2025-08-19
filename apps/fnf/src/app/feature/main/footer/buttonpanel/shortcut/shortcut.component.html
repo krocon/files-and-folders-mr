@@ -1,8 +1,7 @@
 @for (k of keys; track $index) {
-  <b
-      [innerText]="k"
-      class="fnf-shortcut"></b>
-  @if ($index < keys.length - 1 && isMetaKey(k)) {
-    <span class="fnf-shortcut-separator">+</span>
-  }
+  <b class="fnf-shortcut">
+    @for (c of k.split(''); track $index) {
+      <span [class.fnf-shortcut-separator]="c==='+'">{{ c }}</span>
+    }
+  </b>
 }

@@ -45,7 +45,7 @@ export class KeyListenerService {
     }
 
     const currentTime = Date.now();
-    
+
     // Check if this shortcut exists directly in activeShortcuts (more reliable than getActionByKeyEvent)
     const activeShortcuts = this.shortcutService.getActiveShortcuts();
     const directLookup = activeShortcuts[harmonizedShortcut];
@@ -216,6 +216,7 @@ export class KeyListenerService {
     }
 
     // Create chorded shortcut string (e.g., "cmd k cmd c")
+    console.info('___sequence', sequence);
     const chordedShortcut = sequence.join(KeyListenerService.CHORD_SEPARATOR);
     console.log('[KeyListener] getChordedAction: looking up chorded shortcut:', chordedShortcut);
 

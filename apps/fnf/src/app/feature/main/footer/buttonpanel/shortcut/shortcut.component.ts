@@ -4,7 +4,7 @@ import {Component, Input} from "@angular/core";
   standalone: true,
   selector: "fnf-shortcut",
   templateUrl: "./shortcut.component.html",
-  imports: [],
+
   styleUrls: ["./shortcut.component.css"]
 })
 export class ShortcutComponent {
