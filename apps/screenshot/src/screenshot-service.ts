@@ -20,14 +20,13 @@ export class ScreenshotError extends Error {
  */
 export class ScreenshotService {
 
-  private lafs: string[] = [
-    'bitbucket', 'blackboard', 'coffee', 'combat', 'cypress', 'light', 'norton', 'paper'
-  ];
+
   private browser: Browser | null = null;
   private page: Page | null = null;
   private localStorageInitialized: boolean = false;
   private cwd: string = '';
   private idx = 0;
+  private lastUrl = "";
 
   /**
    * Initializes the browser and page
@@ -98,9 +97,10 @@ export class ScreenshotService {
       const validatedViews: ScreenshotConfig[] = [];
 
 
+      const lafs = CONFIG.LOOK_AND_FEELS;
       for (let i = 0; i < views.length; i++) {
-        for (let j = 0; j < this.lafs.length; j++) {
-          const laf = this.lafs[j];
+        for (let j = 0; j < lafs.length; j++) {
+          const laf = lafs[j];
           const view = {...views[i], laf} as ScreenshotConfig;
 
           let {name, url, shortcuts, actionId} = view;
@@ -143,18 +143,36 @@ export class ScreenshotService {
       // Reset localStorage initialization flag to ensure clean state
       this.localStorageInitialized = false;
 
+      // Check for and click dialog cancel button if it exists
+      try {
+        const cancelButton = await this.page.$('[data-test-id="dialog-cancel-button"]');
+        if (cancelButton) {
+          await cancelButton.click();
+          console.log('🔄 Clicked dialog cancel button');
+          await delay(200); // Small delay after clicking
+        }
+      } catch (error) {
+        // Silently ignore errors - button might not be clickable or might disappear
+        console.log('⚠️ Could not click dialog cancel button (this is normal if no dialog is open)');
+      }
 
-      // Navigate to the URL with timeout (this refreshes the page for clean state)
-      await this.page.goto(url, {
-        waitUntil: "networkidle0", // Wait for network to be idle for better rendering
-        timeout: 30000
-      });
+      if (url !== this.lastUrl) {
+        // Navigate to the URL with timeout (this refreshes the page for clean state)
+        await this.page.goto(url, {
+          waitUntil: "networkidle0", // Wait for network to be idle for better rendering
+          timeout: 30000
+        });
+      } else {
+        // await this.page.keyboard.up('Escape');
+      }
+      this.lastUrl = url;
+
 
       // Wait for page scripts to finish loading before localStorage initialization
-      await delay(1000); // Give page scripts time to complete initialization
+      // await delay(1000); // Give page scripts time to complete initialization
 
       // Initialize localStorage after navigation (fresh for each screenshot)
-      await this.initializeLocalStorage();
+      // await this.initializeLocalStorage();
 
       if (actionId) {
         await this.executeActionId(actionId);
@@ -170,7 +188,7 @@ export class ScreenshotService {
       } catch (selectorError) {
         console.warn('⚠️ Body selector not found, continuing anyway...');
       }
-      
+
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       // Take screenshot
@@ -187,9 +205,11 @@ export class ScreenshotService {
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       console.log(`✅ Screenshot saved: ${file}`);
-      await this.page.keyboard.press('Escape');
 
-      await this.page.keyboard.press('Escape');
+
+      // await this.page.keyboard.down('Meta');
+      // await this.page.keyboard.press('KeyR');
+      // await this.page.keyboard.up('Meta');
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
@@ -478,6 +498,8 @@ export class ScreenshotService {
         }
         console.log(`⌨️ Triggering shortcut: ${convertedShortcut}`);
         const keySequences = parseShortcutString(convertedShortcut);
+
+        console.log('keySequences', keySequences);
         for (const sequence of keySequences) {
           await pressShortcut(this.page, sequence);
           await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);

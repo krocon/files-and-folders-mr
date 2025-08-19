@@ -21,6 +21,10 @@ export const CONFIG = {
     BEFORE_SCREENSHOT: 800,
     BETWEEN_KEYS: 100,
   },
+  LOOK_AND_FEELS: [
+    'light'
+    // 'bitbucket', 'blackboard', 'coffee', 'combat', 'cypress', 'light', 'norton', 'paper'
+  ]
 } as const;
 
 /**

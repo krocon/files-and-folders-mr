@@ -1,4 +1,5 @@
 [
+
   {
     "name": "main",
     "url": "http://localhost:4200/",
@@ -10,7 +11,7 @@
     "name": "open-copy-dialog",
     "url": "http://localhost:4200/",
     "shortcuts": [
-      "(OPEN_COPY_DLG)"
+      "(SELECT_ALL)(OPEN_COPY_DLG)"
     ]
   },
   {
@@ -32,13 +33,6 @@
     "url": "http://localhost:4200/",
     "shortcuts": [
       "(OPEN_RENAME_DLG)"
-    ]
-  },
-  {
-    "name": "open-multi-rename-dialog",
-    "url": "http://localhost:4200/",
-    "shortcuts": [
-      "(OPEN_MULTIRENAME_DLG)"
     ]
   },
   {

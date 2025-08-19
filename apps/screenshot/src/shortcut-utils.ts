@@ -14,31 +14,25 @@ export function delay(ms: number): Promise<void> {
  * Example: "(Control|Meta|g)(Users)(Enter)" -> [["Control", "Meta", "g"], ["Users"], ["Enter"]]
  */
 export function parseShortcutString(shortcutString: string): KeyInput[][] {
-  if (!shortcutString || typeof shortcutString !== 'string') {
+  if (!shortcutString) {
     throw new Error('Invalid shortcut string provided');
   }
 
+  // console.log('parseShortcutString, shortcutString:', shortcutString);
   const sequences: KeyInput[][] = [];
+
   const regex = /\(([^)]+)\)/g;
   let match;
-
   while ((match = regex.exec(shortcutString)) !== null) {
-    const keys = match[1].split('|').map(key => {
-      const trimmedKey = key.trim();
-      if (!trimmedKey) {
-        throw new Error(`Empty key found in shortcut: ${shortcutString}`);
-      }
-      return trimmedKey as KeyInput;
-    });
+    const cut = match[1];
+    const keys = cut.split('+').map(normalizeKeyName) as KeyInput[];
     sequences.push(keys);
   }
-
-  if (sequences.length === 0) {
-    throw new Error(`No valid key sequences found in shortcut: ${shortcutString}`);
-  }
+  // console.log('parseShortcutString, sequences:', JSON.stringify(sequences, null, 2));
 
   return sequences;
 }
+
 
 /**
  * Handles keyboard key press, either as a modifier (held down) or a regular key press

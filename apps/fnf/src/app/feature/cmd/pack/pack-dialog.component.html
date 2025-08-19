@@ -88,7 +88,11 @@
 
 <mat-dialog-actions>
   <div></div>
-  <button mat-button (click)="onCancelClicked()">Cancel</button>
+  <button
+      mat-button
+      (click)="onCancelClicked()"
+      data-test-id="dialog-cancel-button">Cancel
+  </button>
   <button mat-raised-button color="primary" (click)="onOkClicked()" [disabled]="formGroup.invalid">
     Pack
   </button>
