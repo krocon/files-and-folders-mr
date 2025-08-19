@@ -47,20 +47,3 @@ export function processFileUrl(fileUrl: string): Array<DirBaseIf> {
   return result;
 }
 
-/**
- * Demonstrates the use of processFileUrl with a specific example.
- * This function logs the results to the console.
- */
-export function demonstrateUrlProcessing(): void {
-  const fileUrl = "/Users/marckronberg/Pictures/__test/i/index.html";
-  console.log("Processing URL:", fileUrl);
-  
-  const results = processFileUrl(fileUrl);
-  
-  results.forEach((item, index) => {
-    console.log(`Iteration ${index + 1}:`);
-    console.log(`   ${item.dir}`);
-    console.log(`   ${item.base}`);
-    console.log("---");
-  });
-}

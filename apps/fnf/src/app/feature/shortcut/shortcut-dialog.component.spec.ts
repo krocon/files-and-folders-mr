@@ -195,7 +195,8 @@ describe('ShortcutDialogComponent', () => {
       // Check that MatDialog.open was called with the correct arguments
       const dialog = TestBed.inject(MatDialog);
       expect(MatDialog.prototype.open).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({
-        width: '600px',
+        width: '700px',
+        minHeight: '550px',
         data: expect.objectContaining({
           actionItem: mockActionItem,
           osType: component.selectedOsType

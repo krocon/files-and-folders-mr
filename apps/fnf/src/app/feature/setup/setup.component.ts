@@ -136,7 +136,6 @@ export class SetupComponent implements OnInit, OnDestroy {
       () => {
         try {
           localStorage.clear();
-          console.log('Local storage cleared successfully');
         } catch (error) {
           console.error('Error clearing local storage:', error);
         }
