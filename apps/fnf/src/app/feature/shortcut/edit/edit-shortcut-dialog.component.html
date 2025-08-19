@@ -28,7 +28,7 @@
               } @else {
                 <div class="shortcut-display">
                   @if (shortcut) {
-                    <fnf-shortcut [keys]="shortcut.split(' ')"></fnf-shortcut>
+                    <fnf-shortcut [keys]="getShortcutAsLabelTokens(shortcut)"></fnf-shortcut>
                   } @else {
                     <span class="empty-shortcut">Empty shortcut</span>
                   }
@@ -58,8 +58,24 @@
       <div class="capture-instructions">
         <div>
           <p><strong>Capturing shortcut...</strong></p>
-          <p>Press the key combination you want to use as a shortcut.</p>
-          <p>Example: Cmd+Shift+F, Ctrl+Alt+S, etc.</p>
+          <p>Press desired key combination and then press ENTER.</p>
+          <p>For chorded shortcuts: Press first combination, then second combination, then ENTER.</p>
+          <p>Example: Cmd+K, then Cmd+C, then ENTER for a chorded shortcut.</p>
+          @if (capturedChordSequence.length > 0) {
+            <div class="captured-sequence">
+              <p><strong>Captured sequence:</strong></p>
+              <div class="chord-display">
+                @for (chord of capturedChordSequence; track $index) {
+                  <span class="chord-item">
+                    <fnf-shortcut [keys]="getShortcutAsLabelTokens(chord)"></fnf-shortcut>
+                    @if ($index < capturedChordSequence.length - 1) {
+                      <span class="chord-separator">→</span>
+                    }
+                  </span>
+                }
+              </div>
+            </div>
+          }
         </div>
         <button
             mat-icon-button

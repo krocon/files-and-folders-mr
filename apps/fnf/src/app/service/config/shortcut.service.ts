@@ -1,8 +1,9 @@
 import {Injectable} from "@angular/core";
-import {ActionId, createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "@guiexpert/table";
+import {createHarmonizedShortcutByKeyboardEvent, harmonizeShortcut} from "@guiexpert/table";
+import {ActionId} from "../../domain/action/fnf-action.enum";
 import {HttpClient} from "@angular/common/http";
 import {BrowserOsType} from "@fnf-data";
-import {Observable, of, from, isObservable} from "rxjs";
+import {from, isObservable, Observable, of} from "rxjs";
 import {catchError, map, tap} from "rxjs/operators";
 import {MetaKeys} from "../../domain/meta-keys.if";
 
@@ -72,12 +73,65 @@ export class ShortcutService {
     return action ?? 'DO_NOTHING';
   }
 
+  /**
+   * Get action for a chorded shortcut sequence
+   * @param chordSequence Array of individual shortcut strings
+   * @returns ActionId or 'DO_NOTHING'
+   */
+  getActionByChordSequence(chordSequence: string[]): ActionId {
+    if (chordSequence.length === 0) {
+      return 'DO_NOTHING';
+    }
+
+    if (chordSequence.length === 1) {
+      // Single shortcut
+      const action = this.activeShortcuts[chordSequence[0]] as ActionId;
+      return action ?? 'DO_NOTHING';
+    }
+
+    // Chorded shortcut - join with space separator
+    const chordedShortcut = chordSequence.join(' ');
+    const action = this.activeShortcuts[chordedShortcut] as ActionId;
+    return action ?? 'DO_NOTHING';
+  }
+
+  /**
+   * Check if a shortcut string represents a chorded shortcut
+   * @param shortcut The shortcut string to check
+   * @returns true if it's a chorded shortcut (contains multiple space-separated shortcuts)
+   */
+  isChordedShortcut(shortcut: string): boolean {
+    // A chorded shortcut contains multiple individual shortcuts separated by spaces
+    // We need to be careful not to confuse modifier keys (like "ctrl shift a") with chord sequences
+    const parts = shortcut.split(' ').filter(part => part.trim());
+
+    // If there are multiple parts, check if any part contains modifiers
+    if (parts.length <= 1) {
+      return false;
+    }
+
+    // Simple heuristic: if we have multiple parts and at least one doesn't contain common modifiers,
+    // it's likely a chorded shortcut
+    const modifierKeywords = ['ctrl', 'cmd', 'alt', 'shift', 'meta'];
+    let nonModifierParts = 0;
+
+    for (const part of parts) {
+      const isModifier = modifierKeywords.some(mod => part.toLowerCase().includes(mod));
+      if (!isModifier) {
+        nonModifierParts++;
+      }
+    }
+
+    // If we have more than one non-modifier part, it's likely a chord sequence
+    return nonModifierParts > 1;
+  }
+
   getShortcutsByAction(action: string): string[] {
     const ret: string[] = [];
     for (const sc in this.activeShortcuts) {
       const a = this.activeShortcuts[sc];
       if (a === action) {
-        ret.push(harmonizeShortcut(sc));
+        ret.push(/*harmonizeShortcut*/(sc));
       }
     }
     return ret;

@@ -32,6 +32,7 @@ import {SelectionEvent} from "../../domain/filepagedata/data/selection-event";
 import {ShellPanelComponent} from "./footer/shellpanel/shell-panel.component";
 import {takeWhile} from "rxjs/operators";
 import {PanelManagementService} from "../../service/panel/panel-management-service";
+import {KeyListenerService} from "../../service/key-listener.service";
 
 
 const CONFIG: ResizeConfig = {
@@ -105,6 +106,7 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
     private readonly appService: AppService,
     // private readonly panelSelectionService: PanelSelectionService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly keyListenerService: KeyListenerService,
   ) {
   }
 
@@ -204,6 +206,17 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
         this.cdr.detectChanges();
       });
 
+    // Subscribe to chorded shortcut detection
+    this.keyListenerService.shortcutDetected$
+      .pipe(
+        takeWhile(() => this.alive)
+      )
+      .subscribe(actionId => {
+        if (actionId && actionId !== 'DO_NOTHING') {
+          this.appService.triggerAction(actionId);
+        }
+      });
+
   }
 
   setSelectionChanged(selectionLabelData: SelectionEvent, panelIndex: PanelIndex) {
@@ -259,12 +272,16 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
     if (this.shellInputHasFocus || this.isInputElement(keyboardEvent)) return; // skip
 
     const key = keyboardEvent.key;
+
+    // Handle Escape key for focus search
     if (key === 'Escape' && this.focusSearches[this.activePanelIndex]) {
       this.focusSearches[this.activePanelIndex] = '';
       this.cdr.detectChanges();
       return;
     }
-    if (key.length === 1 && /^[a-zA-Z0-9]$/.test(key)) {
+
+    // Handle alphanumeric keys for focus search (only if not part of a shortcut)
+    if (key.length === 1 && /^[a-zA-Z0-9]$/.test(key) && !keyboardEvent.ctrlKey && !keyboardEvent.metaKey && !keyboardEvent.altKey) {
       this.focusSearches[this.activePanelIndex] += key;
       console.info('###', this.focusSearches[this.activePanelIndex])
       this.cdr.detectChanges();
@@ -279,7 +296,15 @@ export class FileComponent implements OnInit, AfterViewInit, OnDestroy, DoCheck 
       return;
     }
 
+    // Process keyboard event for potential chorded shortcuts
+    const detectedAction = this.keyListenerService.processKeyEvent(keyboardEvent);
+    if (detectedAction && detectedAction !== 'DO_NOTHING') {
+      // Chorded shortcut detected, trigger the action
+      this.appService.triggerAction(detectedAction);
+      return;
+    }
 
+    // Continue with existing key handling
     this.appService.onKeyUp$.next(keyboardEvent);
   }
 
