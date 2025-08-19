@@ -22,8 +22,8 @@ export const CONFIG = {
     BETWEEN_KEYS: 100,
   },
   LOOK_AND_FEELS: [
-    'light'
-    // 'bitbucket', 'blackboard', 'coffee', 'combat', 'cypress', 'light', 'norton', 'paper'
+    // 'light'
+    'bitbucket', 'blackboard', 'coffee', 'combat', 'cypress', 'light', 'norton', 'paper'
   ]
 } as const;
 

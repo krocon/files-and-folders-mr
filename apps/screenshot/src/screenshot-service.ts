@@ -53,13 +53,7 @@ export class ScreenshotService {
         ]
       });
 
-      this.page = await this.browser.newPage();
-      await this.page.setViewport(CONFIG.VIEWPORT);
-
-      // Set color scheme preference for better rendering
-      await this.page.emulateMediaFeatures([
-        {name: 'prefers-color-scheme', value: 'light'}
-      ]);
+      await this.initNewPage();
 
       console.log('✅ Browser initialized successfully');
 
@@ -68,6 +62,17 @@ export class ScreenshotService {
       const errorMessage = error instanceof Error ? error.message : String(error);
       throw new ScreenshotError(`Failed to initialize browser: ${errorMessage}`);
     }
+  }
+
+  async initNewPage() {
+    if (!this.browser) return;
+    this.page = await this.browser.newPage();
+    await this.page.setViewport(CONFIG.VIEWPORT);
+
+    // Set color scheme preference for better rendering
+    await this.page.emulateMediaFeatures([
+      {name: 'prefers-color-scheme', value: 'light'}
+    ]);
   }
 
   /**
@@ -134,8 +139,16 @@ export class ScreenshotService {
     if (!this.page) {
       throw new ScreenshotError('Page not initialized', config.name);
     }
-
     const {name, url, shortcuts, laf, actionId} = config;
+
+    await this.initNewPage();
+    await this.page.goto(url, {
+      waitUntil: "networkidle0", // Wait for network to be idle for better rendering
+      timeout: 30000
+    });
+    // await this.initializeLocalStorage();
+
+
 
     try {
       console.log(`\n📸 Capturing: ${name} → ${url}`);
@@ -144,27 +157,27 @@ export class ScreenshotService {
       this.localStorageInitialized = false;
 
       // Check for and click dialog cancel button if it exists
-      try {
-        const cancelButton = await this.page.$('[data-test-id="dialog-cancel-button"]');
-        if (cancelButton) {
-          await cancelButton.click();
-          console.log('🔄 Clicked dialog cancel button');
-          await delay(200); // Small delay after clicking
-        }
-      } catch (error) {
-        // Silently ignore errors - button might not be clickable or might disappear
-        console.log('⚠️ Could not click dialog cancel button (this is normal if no dialog is open)');
-      }
+      // try {
+      //   const cancelButton = await this.page.$('[data-test-id="dialog-cancel-button"]');
+      //   if (cancelButton) {
+      //     await cancelButton.click();
+      //     console.log('🔄 Clicked dialog cancel button');
+      //     await delay(200); // Small delay after clicking
+      //   }
+      // } catch (error) {
+      //   // Silently ignore errors - button might not be clickable or might disappear
+      //   console.log('⚠️ Could not click dialog cancel button (this is normal if no dialog is open)');
+      // }
 
-      if (url !== this.lastUrl) {
+      // if (url !== this.lastUrl) {
         // Navigate to the URL with timeout (this refreshes the page for clean state)
-        await this.page.goto(url, {
-          waitUntil: "networkidle0", // Wait for network to be idle for better rendering
-          timeout: 30000
-        });
-      } else {
-        // await this.page.keyboard.up('Escape');
-      }
+      // await this.page.goto(url, {
+      //   waitUntil: "networkidle0", // Wait for network to be idle for better rendering
+      //   timeout: 30000
+      // });
+      // } else {
+      //   // await this.page.keyboard.up('Escape');
+      // }
       this.lastUrl = url;
 
 
@@ -205,7 +218,7 @@ export class ScreenshotService {
       await delay(CONFIG.DELAYS.BEFORE_SCREENSHOT);
 
       console.log(`✅ Screenshot saved: ${file}`);
-
+      await this.page.reload();
 
       // await this.page.keyboard.down('Meta');
       // await this.page.keyboard.press('KeyR');
@@ -499,7 +512,7 @@ export class ScreenshotService {
         console.log(`⌨️ Triggering shortcut: ${convertedShortcut}`);
         const keySequences = parseShortcutString(convertedShortcut);
 
-        console.log('keySequences', keySequences);
+        // console.log('keySequences', keySequences);
         for (const sequence of keySequences) {
           await pressShortcut(this.page, sequence);
           await delay(CONFIG.DELAYS.BETWEEN_SHORTCUTS);
