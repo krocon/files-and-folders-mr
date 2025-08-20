@@ -8,8 +8,6 @@ import {catchError, map, tap} from "rxjs/operators";
 import {MetaKeys} from "../../domain/meta-keys.if";
 
 export type ShortcutActionMapping = { [key: string]: string };
-
-// Reverse mapping from ActionId to key combinations
 export type ActionShortcutMapping = { [actionId: string]: string[] };
 
 @Injectable({
@@ -46,14 +44,6 @@ export class ShortcutService {
 
   getShortcuts(sys: BrowserOsType): Observable<ShortcutActionMapping | undefined> {
     return this.getShortcutsFromApi(sys);
-    // return this.fetchShortcutMappings(sys)
-    //   .pipe(
-    //     tap(shortcutMappings => {
-    //       if (shortcutMappings) {
-    //         this.activeShortcuts = this.updateShortcutMappings(shortcutMappings);
-    //       }
-    //     })
-    //   );
   }
 
   public static KEYCHAR_SEPARATOR = "+";
@@ -74,27 +64,6 @@ export class ShortcutService {
     return action ?? 'DO_NOTHING';
   }
 
-  // /**
-  //  * Get action for a chorded shortcut sequence
-  //  * @param chordSequence Array of individual shortcut strings
-  //  * @returns ActionId or 'DO_NOTHING'
-  //  */
-  // getActionByChordSequence(chordSequence: string[]): ActionId {
-  //   if (chordSequence.length === 0) {
-  //     return 'DO_NOTHING';
-  //   }
-  //
-  //   if (chordSequence.length === 1) {
-  //     // Single shortcut
-  //     const action = this.activeShortcuts[chordSequence[0]] as ActionId;
-  //     return action ?? 'DO_NOTHING';
-  //   }
-  //
-  //   // Chorded shortcut - join with space separator
-  //   const chordedShortcut = chordSequence.join(' ');
-  //   const action = this.activeShortcuts[chordedShortcut] as ActionId;
-  //   return action ?? 'DO_NOTHING';
-  // }
 
   /**
    * Check if a shortcut string represents a chorded shortcut
@@ -325,38 +294,6 @@ export class ShortcutService {
       );
   }
 
-  // /**
-  //  * Validate shortcut conflicts
-  //  */
-  // validateShortcuts(shortcuts: ShortcutActionMapping): { valid: boolean; conflicts: string[] } {
-  //   const conflicts: string[] = [];
-  //   const shortcutKeys = Object.keys(shortcuts);
-  //
-  //   // Check for duplicate shortcuts
-  //   const shortcutCounts = new Map<string, string[]>();
-  //
-  //   Object.entries(shortcuts).forEach(([shortcut, action]) => {
-  //     const harmonized = harmonizeShortcut(shortcut);
-  //     if (!shortcutCounts.has(harmonized)) {
-  //       shortcutCounts.set(harmonized, []);
-  //     }
-  //     shortcutCounts.get(harmonized)!.push(action);
-  //   });
-  //
-  //   shortcutCounts.forEach((actions, shortcut) => {
-  //     if (actions.length > 1) {
-  //       const uniqueActions = [...new Set(actions)];
-  //       if (uniqueActions.length > 1) {
-  //         conflicts.push(`Shortcut "${shortcut}" is assigned to multiple actions: ${uniqueActions.join(', ')}`);
-  //       }
-  //     }
-  //   });
-  //
-  //   return {
-  //     valid: conflicts.length === 0,
-  //     conflicts
-  //   };
-  // }
 
   debug() {
     console.info('[ShortcutService] Total active shortcuts:', Object.keys(this.activeShortcuts).length);

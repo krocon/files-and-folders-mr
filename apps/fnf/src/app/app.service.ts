@@ -268,101 +268,6 @@ export class AppService {
 
   triggerAction(id: ActionId) {
     this.actionExecutionService.executeActionById(id);
-    // console.log('> triggerAction:', id);
-    // const panelIndex = this.pms.getActivePanelIndex();
-    // const tabsPanelData = this.pms.getTabsPanelData(panelIndex);
-    //
-    // if (id === 'TOGGLE_PANEL') {
-    //   this.pms.togglePanelSelection();
-    //
-    // } else if (id === 'NEXT_TAB') {
-    //   tabsPanelData.selectedTabIndex = (tabsPanelData.selectedTabIndex + 1) % tabsPanelData.tabs.length;
-    //   this.pms.updateTabsPanelData(panelIndex, tabsPanelData);
-    //
-    // } else if (id === 'TOGGLE_FILTER') {
-    //   const tab = tabsPanelData.tabs[tabsPanelData.selectedTabIndex];
-    //   tab.filterActive = !tab.filterActive;
-    //   this.pms.updateTabsPanelData(panelIndex, tabsPanelData);
-    //
-    // } else if (id === 'TOGGLE_SHELL') {
-    //   this.setShellVisible(!this.isShellVisible());
-    //
-    // } else if (id === 'TOGGLE_HIDDEN_FILES') {
-    //   const tab = tabsPanelData.tabs[tabsPanelData.selectedTabIndex];
-    //   tab.hiddenFilesVisible = !tab.hiddenFilesVisible;
-    //   this.pms.updateTabsPanelData(panelIndex, tabsPanelData);
-    //
-    // } else if (id === 'REMOVE_TAB') {
-    //   this.removeTab();
-    //
-    // } else if (id === 'ADD_NEW_TAB') {
-    //   this.addNewTab();
-    //
-    // } else if (id === 'SELECT_LEFT_PANEL') {
-    //   this.pms.setPanelActive(0);
-    //
-    // } else if (id === 'SELECT_RIGHT_PANEL') {
-    //   this.pms.setPanelActive(1);
-    //
-    // } else if (id === "COPY_2_CLIPBOARD_FULLNAMES") {
-    //   const rows = this.getSelectedOrFocussedData(this.pms.getActivePanelIndex());
-    //   this.clipboardService.copyFullNames(rows);
-    //
-    // } else if (id === "COPY_2_CLIPBOARD_NAMES") {
-    //   const rows = this.getSelectedOrFocussedData(this.pms.getActivePanelIndex());
-    //   this.clipboardService.copyNames(rows);
-    //
-    // } else if (id === "COPY_2_CLIPBOARD_FULLNAMES_AS_JSON") {
-    //   const rows = this.getSelectedOrFocussedData(this.pms.getActivePanelIndex());
-    //   this.clipboardService.copyFullNamesAsJson(rows);
-    //
-    // } else if (id === "COPY_2_CLIPBOARD_NAMES_AS_JSON") {
-    //   const rows = this.getSelectedOrFocussedData(this.pms.getActivePanelIndex());
-    //   this.clipboardService.copyNamesAsJson(rows);
-    //
-    // } else if (id === "OPEN_ABOUT_DLG") {
-    //   this.router.navigate(['/about']);
-    //
-    // } else if (id === "OPEN_SETUP_DLG") {
-    //   this.router.navigate(['/setup']);
-    //
-    // } else if (id === "OPEN_SHELL_DLG") {
-    //   this.router.navigate(['/shell']);
-    //
-    // } else if (id === "OPEN_RENAME_DLG") {
-    //   this.rename();
-    //
-    // } else if (id === "OPEN_MULTIRENAME_DLG") {
-    //   this.multiRename();
-    //
-    // } else if (id === "OPEN_MULTIMKDIR_DLG") {
-    //   this.multiMkdir();
-    //
-    // } else if (id === "OPEN_GROUPFILES_DLG") {
-    //   this.groupFiles();
-    //
-    // } else if (id === "OPEN_CHDIR_DLG") {
-    //   this.openChangeDirDialog();
-    //
-    // } else if (id === "OPEN_FIND_DLG") {
-    //   this.openFindDialog(null);
-    //
-    // } else if (id === "OPEN_DELETE_EMPTY_FOLDERS_DLG") {
-    //   this.openCleanDialog(null);
-    //
-    // } else if (id === "OPEN_SHORTCUT_DLG") {
-    //   this.shortcutDialogService.open();
-    //
-    // } else {
-    //   for (const tool of this.defaultTools) {
-    //     if (tool.id === id) {
-    //       this.execute(tool);
-    //       return;
-    //     }
-    //   }
-    //   // console.log('> appService this.actionEventsSubject.next(id):', id);
-    //   this.actionEvents$.next(id);
-    // }
   }
 
   debug() {
@@ -401,9 +306,6 @@ export class AppService {
     }
   }
 
-  public changeDirOnActivePabel(path: string) {
-    this.setPathToActiveTabInGivenPanel(path, this.pms.getActivePanelIndex());
-  }
 
   public onChangeDir(path: string, panelIndex: PanelIndex) {
     this.setPathToActiveTabInGivenPanel(path, panelIndex);
