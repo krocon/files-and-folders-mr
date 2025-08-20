@@ -2,9 +2,9 @@
   "name": "combat",
   "colors": {
     "--fnf-activepanel-header-bg-color": "#000",
-    "--fnf-activepanel-header-border-color": "#26272e",
+    "--fnf-activepanel-header-border-color": "#ffffff85",
     "--fnf-activepanel-header-selected-tab-bg-color": "#101010",
-    "--fnf-activepanel-header-selected-tab-fg-color": "#f00032",
+    "--fnf-activepanel-header-selected-tab-fg-color": "#00e0f0",
     "--fnf-activepanel-table-header-bg-color": "#101010",
     "--fnf-activepanel-table-selected-row-bg-color": "#101010",
     "--fnf-activepanel-table-selected-row-fg-color": "#f00032",
