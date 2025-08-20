@@ -7,7 +7,7 @@
 
   .header {
     display: grid;
-    grid-template-columns: auto auto 1fr 80px;
+      grid-template-columns: auto 120px 1fr 80px;
     align-items: center;
     gap: 8px;
     margin-top: 8px;
@@ -31,6 +31,10 @@
         &.col-0 {
           padding-left: 0;
         }
+
+          &.col-2 {
+              min-width: 90px;
+          }
 
         .mat-mdc-icon-button.mat-mdc-button-base {
               --mdc-icon-button-state-layer-size: 28px;

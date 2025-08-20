@@ -1,12 +1,12 @@
 <div class="task-list-div">
 
   <div class="header">
-    <span>Overall: {{ queue.status }}</span>
+    <div>Overall: {{ queue.status }}</div>
     <app-busy-bee [status]="status" [matTooltip]="queue.status"></app-busy-bee>
-    <span>{{ infoText }}</span>
-    <span
+    <div>{{ infoText }}</div>
+    <div
         #remainingTime
-        class="remaining-time"></span>
+        class="remaining-time"></div>
     <!--    <app-countdown [startTimeInMillis]=""></app-countdown>-->
   </div>
 
@@ -24,8 +24,8 @@
         <thead>
         <tr>
           <td class="col-0">Grp</td>
-          <td>Cmd</td>
-          <td>Status</td>
+          <td class="col-1">Cmd</td>
+          <td class="col-2">Status</td>
           <td></td>
           <td>Duration</td>
           <td>File</td>
